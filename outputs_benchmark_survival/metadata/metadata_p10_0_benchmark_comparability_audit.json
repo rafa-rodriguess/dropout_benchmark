@@ -1,0 +1,12 @@
+{
+  "step": "P10.0",
+  "title": "Benchmark Comparability Audit",
+  "purpose": "Audit structural comparability across the current canonical benchmark roster.",
+  "main_diagnosis": "The current benchmark contains one contract stage plus fourteen predictive models. Those predictive models are organized under two paper-facing methodological arms while preserving finer operational subgroups for registry and freeze purposes.",
+  "output_tables": [
+    "outputs_benchmark_survival/tables/table_p10_0_detected_benchmark_related_tables.csv",
+    "outputs_benchmark_survival/tables/table_p10_0_benchmark_comparability_audit.csv",
+    "outputs_benchmark_survival/tables/table_p10_0_benchmark_comparability_summary.csv"
+  ],
+  "canonical_roster_table": "table_5_16_model_inventory"
+}

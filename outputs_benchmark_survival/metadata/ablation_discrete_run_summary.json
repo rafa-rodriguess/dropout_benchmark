@@ -1,0 +1,22 @@
+{
+  "models_run": [
+    "gb_weekly_tuned",
+    "linear_tuned",
+    "neural_tuned",
+    "poisson_pexp_tuned"
+  ],
+  "scenarios_run": [
+    "drop_static_structural",
+    "drop_temporal_signal",
+    "full_features",
+    "only_static_structural",
+    "only_temporal_signal"
+  ],
+  "horizons": [
+    10,
+    20,
+    30
+  ],
+  "n_total_runs": 20,
+  "placeholder_reason": null
+}

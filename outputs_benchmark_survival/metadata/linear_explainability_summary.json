@@ -1,0 +1,8 @@
+{
+  "model_id": "linear_tuned",
+  "model_file_used": "/Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/models/linear_discrete_time_hazard_not_weighted_tuned_w4.joblib",
+  "preprocessor_file_used": "/Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/models/linear_discrete_time_not_weighted_preprocessor_w4.joblib",
+  "n_transformed_features": 46,
+  "top_feature_by_abs_coef": "num__n_vle_rows_week",
+  "top_feature_block_by_mean_abs_coef": "dynamic_temporal_behavioral"
+}

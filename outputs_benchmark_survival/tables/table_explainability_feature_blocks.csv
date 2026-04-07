@@ -1,0 +1,5 @@
+block_id,block_label,applies_to,examples,interpretation_goal
+static_structural,Static structural covariates,all_families,"gender, region, highest_education, imd_band, age_band, num_of_prev_attempts, studied_credits, disability",Assess contribution of background and structural covariates.
+early_window_behavior,Early-window behavioral summaries,comparable_quartet,"clicks_first_4_weeks, active_weeks_first_4, mean_clicks_first_4_weeks",Assess contribution of compressed early-course behavior.
+dynamic_temporal_behavioral,Weekly temporal-behavioral features,dynamic_arm,"total_clicks_week, active_this_week, n_vle_rows_week, cum_clicks_until_t, recency, streak",Assess contribution of dynamic weekly behavioral signals.
+discrete_time_index,Discrete time index (week),dynamic_arm,week,Assess contribution of elapsed time (week index) as a standalone signal.

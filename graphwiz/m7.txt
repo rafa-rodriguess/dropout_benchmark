@@ -1,0 +1,73 @@
+digraph M7 {
+  graph [
+    rankdir=TB,
+    labelloc=t,
+    label="Two-arm structural comparison",
+    fontname="Helvetica",
+    fontsize=18,
+    pad=0.35,
+    nodesep=0.28,
+    ranksep=0.6,
+    splines=ortho,
+    bgcolor="white"
+  ];
+
+  node [
+    shape=box,
+    style="rounded,filled",
+    fontname="Helvetica",
+    fontsize=10,
+    color="#264653",
+    fillcolor="#F7FBFF",
+    margin="0.14,0.09"
+  ];
+
+  edge [
+    color="#5C677D",
+    penwidth=1.3,
+    arrowsize=0.8,
+    fontname="Helvetica",
+    fontsize=9
+  ];
+
+  subgraph cluster_dyn {
+    label="Dynamic arm";
+    color="#9AD1D4";
+    style="rounded";
+
+    dyn_data  [label="Input: weekly person-period rows\nOne row per enrollment x week", fillcolor="#F2FBFB"];
+    dyn_train [label="Train on weekly binary outcome\nP(dropout at week t)", fillcolor="#F2FBFB"];
+    dyn_pred  [label="Predict weekly hazard h(t)\nOne value per enrollment per week", fillcolor="#F2FBFB"];
+    dyn_agg   [label="Reconstruct enrollment-level S(t)\nChain h(t) across weeks with IPCW", fillcolor="#F2FBFB"];
+
+    dyn_data -> dyn_train -> dyn_pred -> dyn_agg;
+  }
+
+  subgraph cluster_comp {
+    label="Comparable arm";
+    color="#F4A261";
+    style="rounded";
+
+    comp_data  [label="Input: enrollment-level feature vector\nFixed early-window snapshot per enrollment", fillcolor="#FFF8F1"];
+    comp_train [label="Train on time-to-event outcome\nT and delta per enrollment", fillcolor="#FFF8F1"];
+    comp_pred  [label="Predict survival function S(t)\nDirect enrollment-level output", fillcolor="#FFF8F1"];
+
+    comp_data -> comp_train -> comp_pred;
+  }
+
+  eval [
+    label="Common evaluation metric footprint\nIBS · TD concordance · Brier at horizons 10 / 20 / 30\nIPCW-weighted throughout",
+    fillcolor="#EAF4EA"
+  ];
+
+  note [
+    shape=note,
+    label="Different risk representations · same metric contract\nResults reported within each arm separately;\nno single cross-arm ranking claimed",
+    fillcolor="#FFFDEB",
+    color="#B08900"
+  ];
+
+  dyn_agg   -> eval;
+  comp_pred -> eval;
+  eval -> note;
+}

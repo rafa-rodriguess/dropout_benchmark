@@ -1,0 +1,5 @@
+[START] G0 - 2026-04-04 20:15:47
+Traceback (most recent call last):
+  File "/Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/dropout_bench_v3_G_explainability_paper_refatorado_v7.py", line 138, in <module>
+    con = duckdb.connect(str(DUCKDB_PATH))
+_duckdb.IOException: IO Error: Could not set lock on file "/Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/benchmark_survival.duckdb": Conflicting lock is held in /Users/rafars/.pyenv/versions/3.9.13/bin/python3.9 (PID 43053) by user rafars. See also https://duckdb.org/docs/stable/connect/concurrency

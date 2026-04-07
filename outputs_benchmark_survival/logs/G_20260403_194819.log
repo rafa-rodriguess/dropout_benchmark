@@ -1,0 +1,77 @@
+[START] 2026-04-03 19:48:19 Stage G run
+[START] G0 - 2026-04-03 19:48:19
+Runtime context ready.
+- NOTEBOOK_NAME: dropout_bench_v3_G_explainability_paper.ipynb
+- RUN_ID       : f3e86c2afbd246e2814123195c22d973
+- DUCKDB_PATH  : /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/benchmark_survival.duckdb
+- MONOLITHIC   : /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/dropout_bench.ipynb
+[END] G0 - 2026-04-03 19:48:20
+[START] G0.1 - 2026-04-03 19:48:20
+Runtime contract validated.
+[END] G0.1 - 2026-04-03 19:48:20
+[START] G0.2 - 2026-04-03 19:48:20
+Shared globals harmonized for G notebook.
+- DATA_DIR    : /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/data
+- TABLES_DIR  : /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/tables
+- METADATA_DIR: /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/metadata
+[END] G0.2 - 2026-04-03 19:48:20
+[START] G1 - 2026-04-03 19:48:20
+
+======================================================================
+G1 — Define Explainability Protocol
+======================================================================
+Methodological note: this step defines the explainability study only.
+No model is trained and no explanation is computed here.
+G1: materialized DuckDB table -> table_explainability_model_registry
+G1: materialized DuckDB table -> table_explainability_feature_blocks
+G1: materialized DuckDB table -> table_explainability_outputs
+
+Explainability model registry:
+         model_id  ...                                   positioning_note
+0       cox_tuned  ...  Classical comparable continuous-time anchor wi...
+1  deepsurv_tuned  ...  Nonlinear comparable continuous-time benchmark...
+2       rsf_tuned  ...  Tree-based comparable benchmark and the curren...
+3      mtlr_tuned  ...  Discrete-time-inspired continuous-time compara...
+
+[4 rows x 9 columns]
+
+Explainability feature blocks:
+                block_id  ...                                interpretation_goal
+0      static_structural  ...  Assess contribution of background and structur...
+1  early_window_behavior  ...  Assess contribution of compressed early-course...
+
+[2 rows x 5 columns]
+
+Explainability planned outputs:
+                             output_id  ...          planned_for
+0               global_feature_ranking  ...           all_models
+1                feature_block_summary  ...           all_models
+2                  signed_effect_table  ...            cox_tuned
+3  cross_family_explainability_summary  ...  final_consolidation
+
+[4 rows x 3 columns]
+
+Explainability protocol summary:
+               scope  ...                             paper_positioning_note
+0  tuned_models_only  ...  Explainability is treated here as a post-bench...
+
+[1 rows x 5 columns]
+
+Saved:
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/tables/table_explainability_model_registry.csv
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/tables/table_explainability_feature_blocks.csv
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/tables/table_explainability_outputs.csv
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/metadata/explainability_config.json
+[END] G1 - 2026-04-03 19:48:20
+[START] G2 - 2026-04-03 19:48:20
+
+======================================================================
+G2 — Explainability for Linear Tuned
+======================================================================
+Methodological note: this step computes global explainability
+for the tuned linear discrete-time hazard model.
+Traceback (most recent call last):
+  File "/Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/dropout_bench_v3_G_explainability_paper_refatorado_v7.py", line 656, in <module>
+    raise FileNotFoundError(f"Tuned model file not found: {model_path}")
+FileNotFoundError: Tuned model file not found: /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/models/linear_discrete_time_hazard_tuned.joblib
+[FAIL] 2026-04-03 19:48:21 Stage G run exit=1

@@ -1,0 +1,106 @@
+{
+  "model_name": "gb_weekly_hazard_weighted_tuned",
+  "family_name": "discrete_time_dynamic",
+  "model_family": "discrete_time_boosted",
+  "model_type": "gradient_boosted_weekly_hazard",
+  "implementation": "sklearn_hist_gradient_boosting",
+  "candidate_grid": [
+    {
+      "max_depth": 2,
+      "learning_rate": 0.02,
+      "max_iter": 80,
+      "min_samples_leaf": 300,
+      "l2_regularization": 5.0
+    },
+    {
+      "max_depth": 3,
+      "learning_rate": 0.03,
+      "max_iter": 120,
+      "min_samples_leaf": 200,
+      "l2_regularization": 5.0
+    },
+    {
+      "max_depth": 3,
+      "learning_rate": 0.05,
+      "max_iter": 200,
+      "min_samples_leaf": 160,
+      "l2_regularization": 10.0
+    },
+    {
+      "max_depth": 2,
+      "learning_rate": 0.05,
+      "max_iter": 120,
+      "min_samples_leaf": 300,
+      "l2_regularization": 1.0
+    }
+  ],
+  "selection_metric": "val_log_loss_on_discrete_hazard",
+  "validation_split": {
+    "method": "GroupShuffleSplit",
+    "test_size": 0.2,
+    "group_column": "enrollment_id",
+    "random_seed": 42
+  },
+  "guardrails": {
+    "active_window_weeks": 2,
+    "search_row_cap": 53348,
+    "final_row_cap": 66712,
+    "search_rows_selected": 53348,
+    "final_rows_selected": 66712,
+    "subtrain_total_rows": 53348,
+    "full_total_rows": 66712,
+    "n_features": 46,
+    "subtrain_event_rate": 0.02127539926520207,
+    "full_event_rate": 0.02109065835232042,
+    "sampled_subtrain_event_rate": 0.02127539926520207,
+    "sampled_full_event_rate": 0.02109065835232042,
+    "positive_weight_subtrain_raw": 46.00264317180617,
+    "positive_weight_full_raw": 46.414356787491116,
+    "sample_weight_strategy": "none",
+    "implementation": "sklearn_hist_gradient_boosting"
+  },
+  "benchmark_horizons": [
+    10,
+    20,
+    30
+  ],
+  "calibration_bins": 10,
+  "active_window_weeks": 2,
+  "best_candidate": {
+    "candidate_id": 3,
+    "params": {
+      "max_depth": 3,
+      "learning_rate": 0.05,
+      "max_iter": 200,
+      "min_samples_leaf": 160,
+      "l2_regularization": 10.0
+    },
+    "val_log_loss": 0.5120854727315067
+  },
+  "preprocessing": {
+    "categorical_features": [
+      "gender",
+      "region",
+      "highest_education",
+      "imd_band",
+      "age_band",
+      "disability"
+    ],
+    "numeric_features": [
+      "num_of_prev_attempts",
+      "studied_credits",
+      "week",
+      "total_clicks_week",
+      "active_this_week",
+      "n_vle_rows_week",
+      "n_distinct_sites_week",
+      "cum_clicks_until_t",
+      "recency",
+      "streak"
+    ],
+    "categorical_encoder": "OneHotEncoder(handle_unknown=ignore, sparse_output=True)",
+    "numeric_scaler": "MaxAbsScaler"
+  },
+  "weighting_strategy": "positive-class weighting is applied from the guarded class imbalance ratio while preserving the same candidate grid and evaluation contract as D5.7.",
+  "design_note": "This variant keeps the same weekly benchmark arm and enables positive-class weighting to test whether reconstructed survival remains better behaved under the same conservative boosted configuration."
+}

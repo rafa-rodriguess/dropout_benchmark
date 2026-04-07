@@ -1,0 +1,16 @@
+{
+  "step_id": "F9_ph_scope_boundary",
+  "source_tables": [
+    "table_appendix_cox_ph_global_summary.csv"
+  ],
+  "models_covered": [
+    "Cox Comparable (Tuned)",
+    "DeepSurv (Tuned)"
+  ],
+  "formal_ph_coverage_models": [
+    "Cox Comparable (Tuned)"
+  ],
+  "non_equivalent_coverage_models": [
+    "DeepSurv (Tuned)"
+  ]
+}

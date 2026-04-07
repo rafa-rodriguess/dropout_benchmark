@@ -1,0 +1,14 @@
+{
+  "step": "E3",
+  "title": "Horizon-wise Calibration Slope and Intercept Audit",
+  "audit_status": "computed_from_canonical_upstream_table",
+  "notes": [
+    "E3 now consumes the canonical slope/intercept table materialized by the D-stage pipeline.",
+    "When the upstream table is absent, E3 materializes empty placeholders and records the missing dependency instead of aborting the full audit run."
+  ],
+  "missing_upstream_tables": [],
+  "output_tables": [
+    "table_p11_1_calibration_slope_intercept_by_horizon",
+    "table_p11_1_calibration_slope_intercept_summary"
+  ]
+}

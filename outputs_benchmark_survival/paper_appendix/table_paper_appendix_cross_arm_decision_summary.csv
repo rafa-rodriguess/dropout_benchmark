@@ -1,0 +1,4 @@
+decision_key,decision_value,notes
+cross_arm_window_winners,"random_survival_forest,random_survival_forest,random_survival_forest,random_survival_forest,random_survival_forest","Ordered winning models across sensitivity windows 2,4,6,8,10 under the primary ranking rule lowest IBS then highest c-index then lowest stage order."
+cross_arm_window_winning_arms,"comparable,comparable,comparable,comparable,comparable","Ordered winning arms across sensitivity windows 2,4,6,8,10."
+cross_arm_changes_main_benchmark_narrative,no,Set to yes if any sensitivity window selects the dynamic arm over the comparable arm.

@@ -1,0 +1,2 @@
+Split unit,Stratification,Total,Train,Test,Train event rate,Test event rate,Identity leakage,Shared modules,Shared presentations,Shared module-presentations
+enrollment,event status + coarse event-time bucket,32593,22815,9778,0.2266,0.2266,no,7/7,4/4,22/22

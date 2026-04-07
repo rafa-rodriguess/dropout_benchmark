@@ -1,0 +1,76 @@
+digraph M3 {
+  graph [
+    rankdir=TB,
+    labelloc=t,
+    label="Post-benchmark interpretation layers",
+    fontname="Helvetica",
+    fontsize=18,
+    pad=0.35,
+    nodesep=0.28,
+    ranksep=0.52,
+    splines=polyline,
+    bgcolor="white",
+    compound=true
+  ];
+
+  node [
+    shape=box,
+    style="rounded,filled",
+    fontname="Helvetica",
+    fontsize=10,
+    color="#264653",
+    fillcolor="#F7FBFF",
+    margin="0.14,0.09"
+  ];
+
+  edge [
+    color="#5C677D",
+    penwidth=1.3,
+    arrowsize=0.8,
+    fontname="Helvetica",
+    fontsize=9
+  ];
+
+  upstream [
+    label="Benchmark outputs\nTuned artifacts · predictions · evaluation tables",
+    fillcolor="#E9F5F2"
+  ];
+
+  // ── Explainability column (left) ──────────────────────────────────────
+  subgraph cluster_explain {
+    label="Explainability layer";
+    color="#9AD1D4";
+    style="rounded";
+
+    e1 [label="Apply family-matched methods\nCoefficients · permutation importance", fillcolor="#F2FBFB"];
+    e2 [label="Assign feature-block taxonomy\nStatic · temporal-behavioral · early-window", fillcolor="#F2FBFB"];
+    e3 [label=<Consolidate block-level importance<BR/>Normalize and compare across families<BR/><B><FONT COLOR="darkgreen">&#8594; Table 'Cross-Family Explainability Summary'</FONT></B><BR/><B><FONT COLOR="darkgreen">&#8594; Figure 'Explainability Block Dominance'</FONT></B>>, fillcolor="#F2FBFB"];
+
+    e1 -> e2 -> e3 [weight=10];
+  }
+
+  // ── Calibration column (right) ────────────────────────────────────────
+  subgraph cluster_calibration {
+    label="Calibration layer";
+    color="#F4A261";
+    style="rounded";
+
+    c1 [label="Collect calibration evidence\nBins · support · predicted-vs-observed", fillcolor="#FFF8F1"];
+    c2 [label=<Audit calibration coherence<BR/>Slope / intercept by horizon · gap<BR/><B><FONT COLOR="darkgreen">&#8594; Table 'Calibration Gap Summary'</FONT></B><BR/><B><FONT COLOR="darkgreen">&#8594; Figure 'Reliability Diagrams — Comparable Arm'</FONT></B><BR/><B><FONT COLOR="darkgreen">&#8594; Figure 'Reliability Diagrams — Dynamic Arm'</FONT></B>>, fillcolor="#FFF8F1"];
+
+    c1 -> c2 [weight=10];
+  }
+
+  takeaway [
+    shape=note,
+    label="Translates benchmark scores into:\nwhich feature blocks drive risk\nhow coherent predicted probabilities remain",
+    fillcolor="#FFFDEB",
+    color="#B08900"
+  ];
+
+  upstream -> e1 [lhead=cluster_explain];
+  upstream -> c1 [lhead=cluster_calibration];
+
+  e3 -> takeaway [ltail=cluster_explain];
+  c2 -> takeaway [ltail=cluster_calibration];
+}

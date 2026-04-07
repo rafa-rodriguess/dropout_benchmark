@@ -1,0 +1,30 @@
+{
+  "step": "B6",
+  "title": "Define Canonical Modeling Configuration Layer",
+  "random_seed": 42,
+  "test_size": 0.3,
+  "early_window_weeks": 4,
+  "main_enrollment_window_weeks": 4,
+  "benchmark_arms": [
+    "comparable_arm",
+    "dynamic_arm"
+  ],
+  "evaluation_overlays": [
+    "main_split",
+    "context_heldout_v1"
+  ],
+  "model_variants": [
+    "continuous_time",
+    "continuous_time_neural",
+    "discrete_time_comparable_minimal",
+    "discrete_time",
+    "discrete_time_neural"
+  ],
+  "canonical_comparable_click_feature": "clicks_first_4_weeks",
+  "modeling_contract_toml": "/Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/benchmark_modeling_contract.toml",
+  "output_tables": [
+    "table_p10_canonical_modeling_configuration",
+    "table_b_feature_contract",
+    "table_b_modeling_contract_key_value"
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "ablation_scope": "manuscript_audit_subset",
+  "included_models": [
+    "poisson_pexp_tuned",
+    "linear_tuned",
+    "gb_weekly_tuned",
+    "neural_tuned",
+    "cox_tuned",
+    "deepsurv_tuned",
+    "rsf_tuned",
+    "mtlr_tuned"
+  ],
+  "canonical_benchmark_context": {
+    "total_stage_count": 15,
+    "predictive_roster_size": 14,
+    "contract_stage_count": 1,
+    "contract_stage_excluded_from_model_counts": true,
+    "source_inventory_table": "table_5_16_model_inventory",
+    "source_primary_summary_table": "table_5_16_model_primary_summary"
+  },
+  "subset_context": {
+    "subset_model_count": 8,
+    "scope_decision": "selective_manuscript_audit_subset",
+    "rationale": "The main benchmark roster is larger, but ablation remains deliberately selective so the paper can compare structural versus early-window dependence across the retained comparable-arm representatives that remain scientifically interpretable after D16."
+  },
+  "main_question": "How much of model performance is driven by structural covariates versus early-window behavioral summaries?",
+  "secondary_question": "Does the relative importance of structural versus early-window information vary across the retained comparable model families?",
+  "evaluation_protocol": {
+    "reuse_existing_train_test_split": true,
+    "reuse_existing_horizons": [
+      10,
+      20,
+      30
+    ],
+    "reuse_existing_primary_metrics": [
+      "ibs",
+      "c_index",
+      "brier_at_horizon",
+      "calibration_at_horizon",
+      "risk_auc_at_horizon"
+    ],
+    "primary_comparison_logic": "Compare each ablation scenario against the full tuned version within the same model family."
+  },
+  "interpretation_rules": {
+    "large_drop_after_removal": "The removed block is important for that family.",
+    "small_drop_after_removal": "The removed block contributes little incremental signal.",
+    "strong_only_block_performance": "That block alone carries substantial predictive information.",
+    "cross_family_difference": "Different model families may exploit the same information blocks differently."
+  },
+  "paper_positioning_note": "The ablation study is intended to explain performance sources after the benchmark ranking is already established, and it should be read as a selective interpretive layer rather than as a re-ranking of the full 14-model predictive roster."
+}

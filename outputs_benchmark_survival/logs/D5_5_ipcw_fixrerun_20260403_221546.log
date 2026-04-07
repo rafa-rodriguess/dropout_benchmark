@@ -1,0 +1,3587 @@
+[START] 2026-04-03 22:15:46 D5.5 IPCW rerun
+[RUN_PLAN] comparable_window_weeks=2 script=dropout_bench_v3_D_05_comparable_neural_deepsurv.py
+[START] 5.5 - 2026-04-03 22:15:48
+# ==============================================================
+# 5.5.1 - Lightweight runtime bootstrap
+# ==============================================================
+ARTIFACT | benchmark_shared_config | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/benchmark_shared_config.toml
+ARTIFACT | benchmark_modeling_contract | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/benchmark_modeling_contract.toml
+ARTIFACT | run_metadata | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/metadata/run_metadata.json
+ARTIFACT | duckdb_path | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/benchmark_survival.duckdb
+{
+  "run_id": "f3e86c2afbd246e2814123195c22d973",
+  "random_seed": 42,
+  "test_size": 0.3,
+  "validation_test_size": 0.2,
+  "cpu_cores": 8,
+  "early_window_weeks": 4,
+  "main_enrollment_window_weeks": 4,
+  "effective_window_weeks": 2,
+  "input_train_table": "enrollment_deepsurv_ready_train_w2",
+  "input_test_table": "enrollment_deepsurv_ready_test_w2",
+  "benchmark_horizons": [
+    10,
+    20,
+    30
+  ],
+  "calibration_bins": 10
+}
+[END] 5.5.1 - 2026-04-03 22:15:49
+[START] 5.5 - 2026-04-03 22:15:49
+# ==============================================================
+# 5.5.2 - Build comparable-window DeepSurv treatment
+# ==============================================================
+[Stage 5.5.2 table_deepsurv_preprocessing_summary - DeepSurv preprocessing summary]
+table_name=table_deepsurv_preprocessing_summary_w2
+rows=1, cols=18
+model_family  train_rows  test_rows  n_input_features_raw  n_numeric_features  n_categorical_features  n_features_after_transform  n_events_train  n_events_test  mean_duration_train  mean_duration_test                              numeric_prefill_policy categorical_imputation          categorical_encoding                   numeric_scaling output_dtype                                           comparability_note  window_weeks
+    deepsurv       22815       9778                    11                   5                       6                          41            5171           2216            30.536182           30.539476 deterministic_train_median_or_zero_when_all_missing       constant_missing one_hot_handle_unknown_ignore standard_scaler_fit_on_train_only      float32 same conceptual input design as the comparable Cox benchmark             2
+ARTIFACT | Stage 5.5.2 table_deepsurv_preprocessing_summary - DeepSurv preprocessing summary | duckdb://table_deepsurv_preprocessing_summary_w2
+[Stage 5.5.2 table_deepsurv_raw_feature_manifest - DeepSurv raw feature manifest]
+table_name=table_deepsurv_raw_feature_manifest_w2
+rows=11, cols=7
+ feature_name_operational feature_role                feature_scope  present_in_train  present_in_test  covered_by_canonical_config  numeric_prefill_value
+                   gender  categorical   fixed_demographic_metadata              True             True                        False                    NaN
+                   region  categorical   fixed_demographic_metadata              True             True                        False                    NaN
+        highest_education  categorical   fixed_demographic_metadata              True             True                        False                    NaN
+                 imd_band  categorical   fixed_demographic_metadata              True             True                        False                    NaN
+                 age_band  categorical   fixed_demographic_metadata              True             True                        False                    NaN
+               disability  categorical   fixed_demographic_metadata              True             True                        False                    NaN
+     num_of_prev_attempts      numeric canonical_comparable_numeric              True             True                         True                    0.0
+          studied_credits      numeric canonical_comparable_numeric              True             True                         True                   60.0
+     clicks_first_2_weeks      numeric canonical_comparable_numeric              True             True                         True                    0.0
+     active_weeks_first_2      numeric canonical_comparable_numeric              True             True                         True                    0.0
+mean_clicks_first_2_weeks      numeric canonical_comparable_numeric              True             True                         True                    0.0
+ARTIFACT | Stage 5.5.2 table_deepsurv_raw_feature_manifest - DeepSurv raw feature manifest | duckdb://table_deepsurv_raw_feature_manifest_w2
+[Stage 5.5.2 table_deepsurv_feature_names_out - DeepSurv output feature manifest]
+table_name=table_deepsurv_feature_names_out_w2
+rows=41, cols=1
+                feature_name_out
+       num__num_of_prev_attempts
+            num__studied_credits
+       num__clicks_first_2_weeks
+       num__active_weeks_first_2
+  num__mean_clicks_first_2_weeks
+                   cat__gender_F
+                   cat__gender_M
+ cat__region_East Anglian Region
+cat__region_East Midlands Region
+             cat__region_Ireland
+       cat__region_London Region
+        cat__region_North Region
+cat__region_North Western Region
+            cat__region_Scotland
+   cat__region_South East Region
+        cat__region_South Region
+   cat__region_South West Region
+               cat__region_Wales
+cat__region_West Midlands Region
+    cat__region_Yorkshire Region
+ARTIFACT | Stage 5.5.2 table_deepsurv_feature_names_out - DeepSurv output feature manifest | duckdb://table_deepsurv_feature_names_out_w2
+ARTIFACT | deepsurv_preprocessing_config | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/metadata/deepsurv_preprocessing_config_w2.json
+{
+  "model_family": "deepsurv",
+  "duration_column": "duration",
+  "event_column": "event",
+  "categorical_features": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability"
+  ],
+  "numeric_features": [
+    "num_of_prev_attempts",
+    "studied_credits",
+    "clicks_first_2_weeks",
+    "active_weeks_first_2",
+    "mean_clicks_first_2_weeks"
+  ],
+  "raw_feature_columns": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability",
+    "num_of_prev_attempts",
+    "studied_credits",
+    "clicks_first_2_weeks",
+    "active_weeks_first_2",
+    "mean_clicks_first_2_weeks"
+  ],
+  "expected_features_raw": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "num_of_prev_attempts",
+    "studied_credits",
+    "clicks_first_2_weeks",
+    "active_weeks_first_2",
+    "mean_clicks_first_2_weeks"
+  ],
+  "expected_features_resolved": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "clicks_first_2_weeks",
+    "active_weeks_first_2",
+    "mean_clicks_first_2_weeks"
+  ],
+  "numeric_prefill_policy": "deterministic_train_median_or_zero_when_all_missing",
+  "numeric_fill_values": {
+    "num_of_prev_attempts": 0.0,
+    "studied_credits": 60.0,
+    "clicks_first_2_weeks": 0.0,
+    "active_weeks_first_2": 0.0,
+    "mean_clicks_first_2_weeks": 0.0
+  },
+  "categorical_imputation": "constant_missing",
+  "categorical_encoding": "one_hot_handle_unknown_ignore",
+  "numeric_scaling": "standard_scaler_fit_on_train_only",
+  "feature_names_out": [
+    "num__num_of_prev_attempts",
+    "num__studied_credits",
+    "num__clicks_first_2_weeks",
+    "num__active_weeks_first_2",
+    "num__mean_clicks_first_2_weeks",
+    "cat__gender_F",
+    "cat__gender_M",
+    "cat__region_East Anglian Region",
+    "cat__region_East Midlands Region",
+    "cat__region_Ireland",
+    "cat__region_London Region",
+    "cat__region_North Region",
+    "cat__region_North Western Region",
+    "cat__region_Scotland",
+    "cat__region_South East Region",
+    "cat__region_South Region",
+    "cat__region_South West Region",
+    "cat__region_Wales",
+    "cat__region_West Midlands Region",
+    "cat__region_Yorkshire Region",
+    "cat__highest_education_A Level or Equivalent",
+    "cat__highest_education_HE Qualification",
+    "cat__highest_education_Lower Than A Level",
+    "cat__highest_education_No Formal quals",
+    "cat__highest_education_Post Graduate Qualification",
+    "cat__imd_band_0-10%",
+    "cat__imd_band_10-20",
+    "cat__imd_band_20-30%",
+    "cat__imd_band_30-40%",
+    "cat__imd_band_40-50%",
+    "cat__imd_band_50-60%",
+    "cat__imd_band_60-70%",
+    "cat__imd_band_70-80%",
+    "cat__imd_band_80-90%",
+    "cat__imd_band_90-100%",
+    "cat__imd_band_None",
+    "cat__age_band_0-35",
+    "cat__age_band_35-55",
+    "cat__age_band_55<=",
+    "cat__disability_N",
+    "cat__disability_Y"
+  ],
+  "comparability_note": "same conceptual input design as the comparable Cox benchmark",
+  "window_weeks": 2
+}
+
+[END] 5.5.2 - 2026-04-03 22:15:49
+[START] 5.5 - 2026-04-03 22:15:49
+# ==============================================================
+# 5.5.3 - Tune and evaluate the comparable-window DeepSurv model
+# ==============================================================
+[Stage 5.5.3 table_deepsurv_tuning_results - DeepSurv tuning results]
+table_name=table_deepsurv_tuning_results_w2
+rows=24, cols=7
+ candidate_id hidden_dims  dropout  learning_rate  weight_decay  best_val_loss  best_epoch
+           16    [64, 32]      0.3         0.0010       0.00010       8.243052          32
+           15    [64, 32]      0.3         0.0010       0.00001       8.243404          20
+           23   [128, 64]      0.3         0.0010       0.00001       8.247472          18
+           21   [128, 64]      0.3         0.0005       0.00001       8.248232          17
+           14    [64, 32]      0.3         0.0005       0.00010       8.248466          41
+           22   [128, 64]      0.3         0.0005       0.00010       8.249633          14
+           12    [64, 32]      0.1         0.0010       0.00010       8.250446           5
+           24   [128, 64]      0.3         0.0010       0.00010       8.250985           7
+           19   [128, 64]      0.1         0.0010       0.00001       8.251239           4
+            8    [32, 16]      0.3         0.0010       0.00010       8.251272          33
+            7    [32, 16]      0.3         0.0010       0.00001       8.251309          22
+            2    [32, 16]      0.1         0.0005       0.00010       8.251795          30
+            5    [32, 16]      0.3         0.0005       0.00001       8.251795          45
+            6    [32, 16]      0.3         0.0005       0.00010       8.253398          28
+           13    [64, 32]      0.3         0.0005       0.00001       8.254103          24
+            1    [32, 16]      0.1         0.0005       0.00001       8.255099          14
+           10    [64, 32]      0.1         0.0005       0.00010       8.255380          25
+           20   [128, 64]      0.1         0.0010       0.00010       8.255687           4
+            9    [64, 32]      0.1         0.0005       0.00001       8.256435          16
+            3    [32, 16]      0.1         0.0010       0.00001       8.257678          15
+ARTIFACT | Stage 5.5.3 table_deepsurv_tuning_results - DeepSurv tuning results | duckdb://table_deepsurv_tuning_results_w2
+[Stage 5.5.3 table_deepsurv_tuned_training_history - DeepSurv best-candidate training history]
+table_name=table_deepsurv_tuned_training_history_w2
+rows=42, cols=4
+ epoch  train_loss  val_loss  candidate_id
+     1    5.521120  8.286218            16
+     2    5.412285  8.269942            16
+     3    5.380389  8.266406            16
+     4    5.370358  8.263339            16
+     5    5.365522  8.258747            16
+     6    5.358130  8.256098            16
+     7    5.347281  8.254062            16
+     8    5.345848  8.253901            16
+     9    5.346904  8.252896            16
+    10    5.334477  8.251141            16
+    11    5.340065  8.250992            16
+    12    5.336774  8.251121            16
+    13    5.334892  8.248437            16
+    14    5.340345  8.248108            16
+    15    5.332072  8.249086            16
+    16    5.337776  8.248532            16
+    17    5.331923  8.247807            16
+    18    5.325858  8.249282            16
+    19    5.322279  8.247432            16
+    20    5.321331  8.247581            16
+ARTIFACT | Stage 5.5.3 table_deepsurv_tuned_training_history - DeepSurv best-candidate training history | duckdb://table_deepsurv_tuned_training_history_w2
+[Stage 5.5.3 table_deepsurv_tuned_test_predictions - DeepSurv test predictions]
+table_name=table_deepsurv_tuned_test_predictions_w2
+rows=29334, cols=6
+      enrollment_id  event  duration  horizon_week  pred_survival_h  pred_risk_h
+ 100561||DDD||2014J      0        37            10         0.875464     0.124536
+ 100621||CCC||2014B      1         6            10         0.886539     0.113461
+ 101187||DDD||2014J      0        37            10         0.872838     0.127162
+ 101279||DDD||2014J      0        37            10         0.920675     0.079325
+ 101414||EEE||2013J      0        38            10         0.851737     0.148263
+ 101700||CCC||2014J      0        38            10         0.841552     0.158448
+ 101781||AAA||2013J      0        38            10         0.891813     0.108187
+ 102209||CCC||2014J      1        15            10         0.940149     0.059851
+ 102343||FFF||2013J      0        38            10         0.939025     0.060975
+1023623||CCC||2014J      0        38            10         0.859059     0.140941
+1033968||DDD||2014B      1        13            10         0.828339     0.171661
+ 103891||DDD||2014B      0        34            10         0.948653     0.051347
+ 104316||FFF||2014B      0        34            10         0.891596     0.108404
+1045203||AAA||2014J      0        38            10         0.900660     0.099340
+1047645||CCC||2014B      0        34            10         0.859531     0.140469
+1053702||EEE||2013J      0        38            10         0.898168     0.101832
+ 105629||FFF||2013J      0        38            10         0.909524     0.090476
+1057883||CCC||2014B      0        34            10         0.909387     0.090613
+ 106383||BBB||2014J      1        21            10         0.940380     0.059620
+ 106553||DDD||2014J      0        37            10         0.854938     0.145062
+ARTIFACT | Stage 5.5.3 table_deepsurv_tuned_test_predictions - DeepSurv test predictions | duckdb://table_deepsurv_tuned_test_predictions_w2
+[Stage 5.5.3 table_deepsurv_tuned_primary_metrics - DeepSurv primary metrics]
+table_name=table_deepsurv_tuned_primary_metrics_w2
+rows=2, cols=4
+metric_name metric_category  metric_value                         notes
+        ibs         primary      0.122439 sksurv_integrated_brier_score
+    c_index      co_primary      0.593497          pycox_concordance_td
+ARTIFACT | Stage 5.5.3 table_deepsurv_tuned_primary_metrics - DeepSurv primary metrics | duckdb://table_deepsurv_tuned_primary_metrics_w2
+[Stage 5.5.3 table_deepsurv_tuned_brier_by_horizon - DeepSurv Brier scores by horizon]
+table_name=table_deepsurv_tuned_brier_by_horizon_w2
+rows=3, cols=5
+ horizon_week      metric_name metric_category  metric_value              notes
+           10 brier_at_horizon         primary      0.106239 sksurv_brier_score
+           20 brier_at_horizon         primary      0.143059 sksurv_brier_score
+           30 brier_at_horizon         primary      0.167062 sksurv_brier_score
+ARTIFACT | Stage 5.5.3 table_deepsurv_tuned_brier_by_horizon - DeepSurv Brier scores by horizon | duckdb://table_deepsurv_tuned_brier_by_horizon_w2
+[Stage 5.5.3 table_deepsurv_tuned_secondary_metrics - DeepSurv secondary metrics]
+table_name=table_deepsurv_tuned_secondary_metrics_w2
+rows=6, cols=5
+ horizon_week         metric_name metric_category  metric_value                                                                                  notes
+           10 risk_auc_at_horizon       secondary      0.632058                                                            roc_auc_on_evaluable_subset
+           10  time_dependent_auc       secondary      0.631207 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.631207; local_ipcw_auc
+           20 risk_auc_at_horizon       secondary      0.606543                                                            roc_auc_on_evaluable_subset
+           20  time_dependent_auc       secondary      0.607107 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.607107; local_ipcw_auc
+           30 risk_auc_at_horizon       secondary      0.598065                                                            roc_auc_on_evaluable_subset
+           30  time_dependent_auc       secondary      0.600271 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.600271; local_ipcw_auc
+ARTIFACT | Stage 5.5.3 table_deepsurv_tuned_secondary_metrics - DeepSurv secondary metrics | duckdb://table_deepsurv_tuned_secondary_metrics_w2
+[Stage 5.5.3 table_deepsurv_tuned_td_auc_support_audit - DeepSurv IPCW support audit]
+table_name=table_deepsurv_tuned_td_auc_support_audit_w2
+rows=3, cols=6
+ horizon_week  max_ipcw_time  n_total_test_enrollments  n_supported_test_enrollments  mean_auc                                                      notes
+           10           38.0                      9778                          6742  0.631207 IPCW-supported subset used for DeepSurv time-dependent AUC
+           20           38.0                      9778                          6742  0.607107 IPCW-supported subset used for DeepSurv time-dependent AUC
+           30           38.0                      9778                          6742  0.600271 IPCW-supported subset used for DeepSurv time-dependent AUC
+ARTIFACT | Stage 5.5.3 table_deepsurv_tuned_td_auc_support_audit - DeepSurv IPCW support audit | duckdb://table_deepsurv_tuned_td_auc_support_audit_w2
+[Stage 5.5.3 table_deepsurv_tuned_row_diagnostics - DeepSurv row-level diagnostics]
+table_name=table_deepsurv_tuned_row_diagnostics_w2
+rows=1, cols=6
+    model_name  row_level_roc_auc  row_level_pr_auc  row_level_log_loss  row_level_brier                                                                    diagnostic_note
+deepsurv_tuned           0.186752          0.137479            0.715558         0.216183 auxiliary enrollment-level proxy only; not a primary cross-family benchmark metric
+ARTIFACT | Stage 5.5.3 table_deepsurv_tuned_row_diagnostics - DeepSurv row-level diagnostics | duckdb://table_deepsurv_tuned_row_diagnostics_w2
+[Stage 5.5.3 table_deepsurv_tuned_support_by_horizon - DeepSurv support by horizon]
+table_name=table_deepsurv_tuned_support_by_horizon_w2
+rows=3, cols=4
+ horizon_week  n_evaluable_enrollments  n_events_by_horizon  event_rate_by_horizon
+           10                     9778                 1215               0.124259
+           20                     9778                 1736               0.177541
+           30                     9778                 2129               0.217734
+ARTIFACT | Stage 5.5.3 table_deepsurv_tuned_support_by_horizon - DeepSurv support by horizon | duckdb://table_deepsurv_tuned_support_by_horizon_w2
+[Stage 5.5.3 table_deepsurv_tuned_calibration_summary - DeepSurv calibration summary]
+table_name=table_deepsurv_tuned_calibration_summary_w2
+rows=3, cols=5
+ horizon_week            metric_name metric_category  metric_value                                         notes
+           10 calibration_at_horizon         primary      0.008512 Weighted absolute calibration gap across bins
+           20 calibration_at_horizon         primary      0.013512 Weighted absolute calibration gap across bins
+           30 calibration_at_horizon         primary      0.014935 Weighted absolute calibration gap across bins
+ARTIFACT | Stage 5.5.3 table_deepsurv_tuned_calibration_summary - DeepSurv calibration summary | duckdb://table_deepsurv_tuned_calibration_summary_w2
+[Stage 5.5.3 table_deepsurv_tuned_calibration_bins_by_horizon - DeepSurv calibration bins]
+table_name=table_deepsurv_tuned_calibration_bins_by_horizon_w2
+rows=30, cols=6
+ calibration_bin   n  mean_predicted_risk  observed_event_rate  horizon_week  abs_calibration_gap
+               0 978             0.054948             0.054192            10             0.000756
+               1 978             0.076941             0.067485            10             0.009456
+               2 978             0.089233             0.092025            10             0.002792
+               3 977             0.101747             0.084954            10             0.016793
+               4 978             0.113621             0.110429            10             0.003192
+               5 978             0.124850             0.120654            10             0.004196
+               6 977             0.137910             0.152508            10             0.014597
+               7 978             0.150674             0.159509            10             0.008835
+               8 978             0.168874             0.182004            10             0.013130
+               9 978             0.207424             0.218814            10             0.011390
+               0 978             0.080758             0.104294            20             0.023536
+               1 978             0.112498             0.107362            20             0.005136
+               2 978             0.130060             0.149284            20             0.019224
+               3 977             0.147819             0.140225            20             0.007594
+               4 978             0.164559             0.154397            20             0.010163
+               5 978             0.180287             0.162577            20             0.017710
+               6 977             0.198453             0.225179            20             0.026726
+               7 978             0.216080             0.219836            20             0.003756
+               8 978             0.240980             0.235174            20             0.005806
+               9 978             0.292571             0.277096            20             0.015475
+ARTIFACT | Stage 5.5.3 table_deepsurv_tuned_calibration_bins_by_horizon - DeepSurv calibration bins | duckdb://table_deepsurv_tuned_calibration_bins_by_horizon_w2
+[Stage 5.5.3 table_deepsurv_tuned_predicted_vs_observed_survival - DeepSurv predicted versus observed survival]
+table_name=table_deepsurv_tuned_predicted_vs_observed_survival_w2
+rows=3, cols=5
+ horizon_week  n_evaluable_enrollments  mean_predicted_survival  mean_observed_survival  abs_gap
+           10                     9778                 0.877377                0.875741 0.001636
+           20                     9778                 0.823593                0.822459 0.001134
+           30                     9778                 0.782502                0.782266 0.000236
+ARTIFACT | Stage 5.5.3 table_deepsurv_tuned_predicted_vs_observed_survival - DeepSurv predicted versus observed survival | duckdb://table_deepsurv_tuned_predicted_vs_observed_survival_w2
+ARTIFACT | deepsurv_model | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/models/deepsurv_tuned_w2.pt
+ARTIFACT | deepsurv_preprocessor | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/models/deepsurv_preprocessor_w2.joblib
+ARTIFACT | deepsurv_tuned_model_config | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/metadata/deepsurv_tuned_model_config_w2.json
+{
+  "model_name": "deepsurv_tuned",
+  "selection_metric": "lowest_validation_loss",
+  "validation_split": {
+    "method": "GroupShuffleSplit",
+    "test_size": 0.2,
+    "group_column": "enrollment_id",
+    "random_seed": 42
+  },
+  "effective_window_weeks": 2,
+  "input_train_table": "enrollment_deepsurv_ready_train_w2",
+  "input_test_table": "enrollment_deepsurv_ready_test_w2",
+  "search_space": [
+    {
+      "candidate_id": 1,
+      "hidden_dims": [
+        32,
+        16
+      ],
+      "dropout": 0.1,
+      "learning_rate": 0.0005,
+      "weight_decay": 1e-05
+    },
+    {
+      "candidate_id": 2,
+      "hidden_dims": [
+        32,
+        16
+      ],
+      "dropout": 0.1,
+      "learning_rate": 0.0005,
+      "weight_decay": 0.0001
+    },
+    {
+      "candidate_id": 3,
+      "hidden_dims": [
+        32,
+        16
+      ],
+      "dropout": 0.1,
+      "learning_rate": 0.001,
+      "weight_decay": 1e-05
+    },
+    {
+      "candidate_id": 4,
+      "hidden_dims": [
+        32,
+        16
+      ],
+      "dropout": 0.1,
+      "learning_rate": 0.001,
+      "weight_decay": 0.0001
+    },
+    {
+      "candidate_id": 5,
+      "hidden_dims": [
+        32,
+        16
+      ],
+      "dropout": 0.3,
+      "learning_rate": 0.0005,
+      "weight_decay": 1e-05
+    },
+    {
+      "candidate_id": 6,
+      "hidden_dims": [
+        32,
+        16
+      ],
+      "dropout": 0.3,
+      "learning_rate": 0.0005,
+      "weight_decay": 0.0001
+    },
+    {
+      "candidate_id": 7,
+      "hidden_dims": [
+        32,
+        16
+      ],
+      "dropout": 0.3,
+      "learning_rate": 0.001,
+      "weight_decay": 1e-05
+    },
+    {
+      "candidate_id": 8,
+      "hidden_dims": [
+        32,
+        16
+      ],
+      "dropout": 0.3,
+      "learning_rate": 0.001,
+      "weight_decay": 0.0001
+    },
+    {
+      "candidate_id": 9,
+      "hidden_dims": [
+        64,
+        32
+      ],
+      "dropout": 0.1,
+      "learning_rate": 0.0005,
+      "weight_decay": 1e-05
+    },
+    {
+      "candidate_id": 10,
+      "hidden_dims": [
+        64,
+        32
+      ],
+      "dropout": 0.1,
+      "learning_rate": 0.0005,
+      "weight_decay": 0.0001
+    },
+    {
+      "candidate_id": 11,
+      "hidden_dims": [
+        64,
+        32
+      ],
+      "dropout": 0.1,
+      "learning_rate": 0.001,
+      "weight_decay": 1e-05
+    },
+    {
+      "candidate_id": 12,
+      "hidden_dims": [
+        64,
+        32
+      ],
+      "dropout": 0.1,
+      "learning_rate": 0.001,
+      "weight_decay": 0.0001
+    },
+    {
+      "candidate_id": 13,
+      "hidden_dims": [
+        64,
+        32
+      ],
+      "dropout": 0.3,
+      "learning_rate": 0.0005,
+      "weight_decay": 1e-05
+    },
+    {
+      "candidate_id": 14,
+      "hidden_dims": [
+        64,
+        32
+      ],
+      "dropout": 0.3,
+      "learning_rate": 0.0005,
+      "weight_decay": 0.0001
+    },
+    {
+      "candidate_id": 15,
+      "hidden_dims": [
+        64,
+        32
+      ],
+      "dropout": 0.3,
+      "learning_rate": 0.001,
+      "weight_decay": 1e-05
+    },
+    {
+      "candidate_id": 16,
+      "hidden_dims": [
+        64,
+        32
+      ],
+      "dropout": 0.3,
+      "learning_rate": 0.001,
+      "weight_decay": 0.0001
+    },
+    {
+      "candidate_id": 17,
+      "hidden_dims": [
+        128,
+        64
+      ],
+      "dropout": 0.1,
+      "learning_rate": 0.0005,
+      "weight_decay": 1e-05
+    },
+    {
+      "candidate_id": 18,
+      "hidden_dims": [
+        128,
+        64
+      ],
+      "dropout": 0.1,
+      "learning_rate": 0.0005,
+      "weight_decay": 0.0001
+    },
+    {
+      "candidate_id": 19,
+      "hidden_dims": [
+        128,
+        64
+      ],
+      "dropout": 0.1,
+      "learning_rate": 0.001,
+      "weight_decay": 1e-05
+    },
+    {
+      "candidate_id": 20,
+      "hidden_dims": [
+        128,
+        64
+      ],
+      "dropout": 0.1,
+      "learning_rate": 0.001,
+      "weight_decay": 0.0001
+    },
+    {
+      "candidate_id": 21,
+      "hidden_dims": [
+        128,
+        64
+      ],
+      "dropout": 0.3,
+      "learning_rate": 0.0005,
+      "weight_decay": 1e-05
+    },
+    {
+      "candidate_id": 22,
+      "hidden_dims": [
+        128,
+        64
+      ],
+      "dropout": 0.3,
+      "learning_rate": 0.0005,
+      "weight_decay": 0.0001
+    },
+    {
+      "candidate_id": 23,
+      "hidden_dims": [
+        128,
+        64
+      ],
+      "dropout": 0.3,
+      "learning_rate": 0.001,
+      "weight_decay": 1e-05
+    },
+    {
+      "candidate_id": 24,
+      "hidden_dims": [
+        128,
+        64
+      ],
+      "dropout": 0.3,
+      "learning_rate": 0.001,
+      "weight_decay": 0.0001
+    }
+  ],
+  "batch_norm": true,
+  "output_bias": false,
+  "batch_size": 256,
+  "epochs": 100,
+  "patience": 10,
+  "benchmark_horizons": [
+    10,
+    20,
+    30
+  ],
+  "calibration_bins": 10,
+  "calibration_contract_version": "v2_ipcw_km_observed_risk",
+  "calibration_observed_risk_method": "ipcw_km_pseudo_event_rate",
+  "best_candidate": {
+    "candidate_id": 16,
+    "hidden_dims": [
+      64,
+      32
+    ],
+    "dropout": 0.3,
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001,
+    "best_val_loss": 8.243051528930664,
+    "best_epoch": 32
+  },
+  "preprocessing": {
+    "categorical_features": [
+      "gender",
+      "region",
+      "highest_education",
+      "imd_band",
+      "age_band",
+      "disability"
+    ],
+    "numeric_features": [
+      "num_of_prev_attempts",
+      "studied_credits",
+      "clicks_first_2_weeks",
+      "active_weeks_first_2",
+      "mean_clicks_first_2_weeks"
+    ],
+    "numeric_prefill_values": {
+      "num_of_prev_attempts": 0.0,
+      "studied_credits": 60.0,
+      "clicks_first_2_weeks": 0.0,
+      "active_weeks_first_2": 0.0,
+      "mean_clicks_first_2_weeks": 0.0
+    },
+    "feature_names_out": [
+      "num__num_of_prev_attempts",
+      "num__studied_credits",
+      "num__clicks_first_2_weeks",
+      "num__active_weeks_first_2",
+      "num__mean_clicks_first_2_weeks",
+      "cat__gender_F",
+      "cat__gender_M",
+      "cat__region_East Anglian Region",
+      "cat__region_East Midlands Region",
+      "cat__region_Ireland",
+      "cat__region_London Region",
+      "cat__region_North Region",
+      "cat__region_North Western Region",
+      "cat__region_Scotland",
+      "cat__region_South East Region",
+      "cat__region_South Region",
+      "cat__region_South West Region",
+      "cat__region_Wales",
+      "cat__region_West Midlands Region",
+      "cat__region_Yorkshire Region",
+      "cat__highest_education_A Level or Equivalent",
+      "cat__highest_education_HE Qualification",
+      "cat__highest_education_Lower Than A Level",
+      "cat__highest_education_No Formal quals",
+      "cat__highest_education_Post Graduate Qualification",
+      "cat__imd_band_0-10%",
+      "cat__imd_band_10-20",
+      "cat__imd_band_20-30%",
+      "cat__imd_band_30-40%",
+      "cat__imd_band_40-50%",
+      "cat__imd_band_50-60%",
+      "cat__imd_band_60-70%",
+      "cat__imd_band_70-80%",
+      "cat__imd_band_80-90%",
+      "cat__imd_band_90-100%",
+      "cat__imd_band_None",
+      "cat__age_band_0-35",
+      "cat__age_band_35-55",
+      "cat__age_band_55<=",
+      "cat__disability_N",
+      "cat__disability_Y"
+    ]
+  },
+  "design_note": "The comparable DeepSurv arm integrates deterministic numeric prefill, canonical enrollment ordering, and a local IPCW-supported time-dependent AUC path directly into D5.5 so no downstream repair stage is required."
+}
+
+ candidate_id hidden_dims  dropout  learning_rate  weight_decay  best_val_loss  best_epoch
+           16    [64, 32]      0.3          0.001        0.0001       8.243052          32
+[END] 5.5.3 - 2026-04-03 22:16:44
+[START] 5.5 - 2026-04-03 22:16:44
+# ==============================================================
+# 5.5.4 - Close runtime resources
+# ==============================================================
+DuckDB connection closed.
+ARTIFACT | duckdb_connection | closed::/Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/benchmark_survival.duckdb
+[END] 5.5.4 - 2026-04-03 22:16:44
+[RUN_PLAN] comparable_window_weeks=4 script=dropout_bench_v3_D_05_comparable_neural_deepsurv.py
+[START] 5.5 - 2026-04-03 22:16:44
+# ==============================================================
+# 5.5.1 - Lightweight runtime bootstrap
+# ==============================================================
+ARTIFACT | benchmark_shared_config | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/benchmark_shared_config.toml
+ARTIFACT | benchmark_modeling_contract | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/benchmark_modeling_contract.toml
+ARTIFACT | run_metadata | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/metadata/run_metadata.json
+ARTIFACT | duckdb_path | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/benchmark_survival.duckdb
+{
+  "run_id": "f3e86c2afbd246e2814123195c22d973",
+  "random_seed": 42,
+  "test_size": 0.3,
+  "validation_test_size": 0.2,
+  "cpu_cores": 8,
+  "early_window_weeks": 4,
+  "main_enrollment_window_weeks": 4,
+  "effective_window_weeks": 4,
+  "input_train_table": "enrollment_deepsurv_ready_train",
+  "input_test_table": "enrollment_deepsurv_ready_test",
+  "benchmark_horizons": [
+    10,
+    20,
+    30
+  ],
+  "calibration_bins": 10
+}
+[END] 5.5.1 - 2026-04-03 22:16:45
+[START] 5.5 - 2026-04-03 22:16:45
+# ==============================================================
+# 5.5.2 - Build comparable-window DeepSurv treatment
+# ==============================================================
+[Stage 5.5.2 table_deepsurv_preprocessing_summary - DeepSurv preprocessing summary]
+table_name=table_deepsurv_preprocessing_summary
+rows=1, cols=18
+model_family  train_rows  test_rows  n_input_features_raw  n_numeric_features  n_categorical_features  n_features_after_transform  n_events_train  n_events_test  mean_duration_train  mean_duration_test                              numeric_prefill_policy categorical_imputation          categorical_encoding                   numeric_scaling output_dtype                                           comparability_note  window_weeks
+    deepsurv       22815       9778                    11                   5                       6                          41            5171           2216            30.536182           30.539476 deterministic_train_median_or_zero_when_all_missing       constant_missing one_hot_handle_unknown_ignore standard_scaler_fit_on_train_only      float32 same conceptual input design as the comparable Cox benchmark             4
+ARTIFACT | Stage 5.5.2 table_deepsurv_preprocessing_summary - DeepSurv preprocessing summary | duckdb://table_deepsurv_preprocessing_summary
+[Stage 5.5.2 table_deepsurv_raw_feature_manifest - DeepSurv raw feature manifest]
+table_name=table_deepsurv_raw_feature_manifest
+rows=11, cols=7
+ feature_name_operational feature_role                feature_scope  present_in_train  present_in_test  covered_by_canonical_config  numeric_prefill_value
+                   gender  categorical   fixed_demographic_metadata              True             True                        False                    NaN
+                   region  categorical   fixed_demographic_metadata              True             True                        False                    NaN
+        highest_education  categorical   fixed_demographic_metadata              True             True                        False                    NaN
+                 imd_band  categorical   fixed_demographic_metadata              True             True                        False                    NaN
+                 age_band  categorical   fixed_demographic_metadata              True             True                        False                    NaN
+               disability  categorical   fixed_demographic_metadata              True             True                        False                    NaN
+     num_of_prev_attempts      numeric canonical_comparable_numeric              True             True                         True                    0.0
+          studied_credits      numeric canonical_comparable_numeric              True             True                         True                   60.0
+     clicks_first_4_weeks      numeric canonical_comparable_numeric              True             True                         True                    0.0
+     active_weeks_first_4      numeric canonical_comparable_numeric              True             True                         True                    0.0
+mean_clicks_first_4_weeks      numeric canonical_comparable_numeric              True             True                         True                    0.0
+ARTIFACT | Stage 5.5.2 table_deepsurv_raw_feature_manifest - DeepSurv raw feature manifest | duckdb://table_deepsurv_raw_feature_manifest
+[Stage 5.5.2 table_deepsurv_feature_names_out - DeepSurv output feature manifest]
+table_name=table_deepsurv_feature_names_out
+rows=41, cols=1
+                feature_name_out
+       num__num_of_prev_attempts
+            num__studied_credits
+       num__clicks_first_4_weeks
+       num__active_weeks_first_4
+  num__mean_clicks_first_4_weeks
+                   cat__gender_F
+                   cat__gender_M
+ cat__region_East Anglian Region
+cat__region_East Midlands Region
+             cat__region_Ireland
+       cat__region_London Region
+        cat__region_North Region
+cat__region_North Western Region
+            cat__region_Scotland
+   cat__region_South East Region
+        cat__region_South Region
+   cat__region_South West Region
+               cat__region_Wales
+cat__region_West Midlands Region
+    cat__region_Yorkshire Region
+ARTIFACT | Stage 5.5.2 table_deepsurv_feature_names_out - DeepSurv output feature manifest | duckdb://table_deepsurv_feature_names_out
+ARTIFACT | deepsurv_preprocessing_config | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/metadata/deepsurv_preprocessing_config.json
+{
+  "model_family": "deepsurv",
+  "duration_column": "duration",
+  "event_column": "event",
+  "categorical_features": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability"
+  ],
+  "numeric_features": [
+    "num_of_prev_attempts",
+    "studied_credits",
+    "clicks_first_4_weeks",
+    "active_weeks_first_4",
+    "mean_clicks_first_4_weeks"
+  ],
+  "raw_feature_columns": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability",
+    "num_of_prev_attempts",
+    "studied_credits",
+    "clicks_first_4_weeks",
+    "active_weeks_first_4",
+    "mean_clicks_first_4_weeks"
+  ],
+  "expected_features_raw": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "studied_credits",
+    "num_of_prev_attempts",
+    "clicks_first_4_weeks",
+    "active_weeks_first_4",
+    "mean_clicks_first_4_weeks"
+  ],
+  "expected_features_resolved": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "clicks_first_4_weeks",
+    "active_weeks_first_4",
+    "mean_clicks_first_4_weeks"
+  ],
+  "numeric_prefill_policy": "deterministic_train_median_or_zero_when_all_missing",
+  "numeric_fill_values": {
+    "num_of_prev_attempts": 0.0,
+    "studied_credits": 60.0,
+    "clicks_first_4_weeks": 0.0,
+    "active_weeks_first_4": 0.0,
+    "mean_clicks_first_4_weeks": 0.0
+  },
+  "categorical_imputation": "constant_missing",
+  "categorical_encoding": "one_hot_handle_unknown_ignore",
+  "numeric_scaling": "standard_scaler_fit_on_train_only",
+  "feature_names_out": [
+    "num__num_of_prev_attempts",
+    "num__studied_credits",
+    "num__clicks_first_4_weeks",
+    "num__active_weeks_first_4",
+    "num__mean_clicks_first_4_weeks",
+    "cat__gender_F",
+    "cat__gender_M",
+    "cat__region_East Anglian Region",
+    "cat__region_East Midlands Region",
+    "cat__region_Ireland",
+    "cat__region_London Region",
+    "cat__region_North Region",
+    "cat__region_North Western Region",
+    "cat__region_Scotland",
+    "cat__region_South East Region",
+    "cat__region_South Region",
+    "cat__region_South West Region",
+    "cat__region_Wales",
+    "cat__region_West Midlands Region",
+    "cat__region_Yorkshire Region",
+    "cat__highest_education_A Level or Equivalent",
+    "cat__highest_education_HE Qualification",
+    "cat__highest_education_Lower Than A Level",
+    "cat__highest_education_No Formal quals",
+    "cat__highest_education_Post Graduate Qualification",
+    "cat__imd_band_0-10%",
+    "cat__imd_band_10-20",
+    "cat__imd_band_20-30%",
+    "cat__imd_band_30-40%",
+    "cat__imd_band_40-50%",
+    "cat__imd_band_50-60%",
+    "cat__imd_band_60-70%",
+    "cat__imd_band_70-80%",
+    "cat__imd_band_80-90%",
+    "cat__imd_band_90-100%",
+    "cat__imd_band_None",
+    "cat__age_band_0-35",
+    "cat__age_band_35-55",
+    "cat__age_band_55<=",
+    "cat__disability_N",
+    "cat__disability_Y"
+  ],
+  "comparability_note": "same conceptual input design as the comparable Cox benchmark",
+  "window_weeks": 4
+}
+
+[END] 5.5.2 - 2026-04-03 22:16:45
+[START] 5.5 - 2026-04-03 22:16:45
+# ==============================================================
+# 5.5.3 - Tune and evaluate the comparable-window DeepSurv model
+# ==============================================================
+[Stage 5.5.3 table_deepsurv_tuning_results - DeepSurv tuning results]
+table_name=table_deepsurv_tuning_results
+rows=24, cols=7
+ candidate_id hidden_dims  dropout  learning_rate  weight_decay  best_val_loss  best_epoch
+           16    [64, 32]      0.3         0.0010       0.00010       8.243052          32
+           15    [64, 32]      0.3         0.0010       0.00001       8.243404          20
+           23   [128, 64]      0.3         0.0010       0.00001       8.247472          18
+           21   [128, 64]      0.3         0.0005       0.00001       8.248232          17
+           14    [64, 32]      0.3         0.0005       0.00010       8.248466          41
+           22   [128, 64]      0.3         0.0005       0.00010       8.249633          14
+           12    [64, 32]      0.1         0.0010       0.00010       8.250446           5
+           24   [128, 64]      0.3         0.0010       0.00010       8.250985           7
+           19   [128, 64]      0.1         0.0010       0.00001       8.251239           4
+            8    [32, 16]      0.3         0.0010       0.00010       8.251272          33
+            7    [32, 16]      0.3         0.0010       0.00001       8.251309          22
+            2    [32, 16]      0.1         0.0005       0.00010       8.251795          30
+            5    [32, 16]      0.3         0.0005       0.00001       8.251795          45
+            6    [32, 16]      0.3         0.0005       0.00010       8.253398          28
+           13    [64, 32]      0.3         0.0005       0.00001       8.254103          24
+            1    [32, 16]      0.1         0.0005       0.00001       8.255099          14
+           10    [64, 32]      0.1         0.0005       0.00010       8.255380          25
+           20   [128, 64]      0.1         0.0010       0.00010       8.255687           4
+            9    [64, 32]      0.1         0.0005       0.00001       8.256435          16
+            3    [32, 16]      0.1         0.0010       0.00001       8.257678          15
+ARTIFACT | Stage 5.5.3 table_deepsurv_tuning_results - DeepSurv tuning results | duckdb://table_deepsurv_tuning_results
+[Stage 5.5.3 table_deepsurv_tuned_training_history - DeepSurv best-candidate training history]
+table_name=table_deepsurv_tuned_training_history
+rows=42, cols=4
+ epoch  train_loss  val_loss  candidate_id
+     1    5.521120  8.286218            16
+     2    5.412285  8.269942            16
+     3    5.380389  8.266406            16
+     4    5.370358  8.263339            16
+     5    5.365522  8.258747            16
+     6    5.358130  8.256098            16
+     7    5.347281  8.254062            16
+     8    5.345848  8.253901            16
+     9    5.346904  8.252896            16
+    10    5.334477  8.251141            16
+    11    5.340065  8.250992            16
+    12    5.336774  8.251121            16
+    13    5.334892  8.248437            16
+    14    5.340345  8.248108            16
+    15    5.332072  8.249086            16
+    16    5.337776  8.248532            16
+    17    5.331923  8.247807            16
+    18    5.325858  8.249282            16
+    19    5.322279  8.247432            16
+    20    5.321331  8.247581            16
+ARTIFACT | Stage 5.5.3 table_deepsurv_tuned_training_history - DeepSurv best-candidate training history | duckdb://table_deepsurv_tuned_training_history
+[Stage 5.5.3 table_deepsurv_tuned_test_predictions - DeepSurv test predictions]
+table_name=table_deepsurv_tuned_test_predictions
+rows=29334, cols=6
+      enrollment_id  event  duration  horizon_week  pred_survival_h  pred_risk_h
+ 100561||DDD||2014J      0        37            10         0.875464     0.124536
+ 100621||CCC||2014B      1         6            10         0.886539     0.113461
+ 101187||DDD||2014J      0        37            10         0.872838     0.127162
+ 101279||DDD||2014J      0        37            10         0.920675     0.079325
+ 101414||EEE||2013J      0        38            10         0.851737     0.148263
+ 101700||CCC||2014J      0        38            10         0.841552     0.158448
+ 101781||AAA||2013J      0        38            10         0.891813     0.108187
+ 102209||CCC||2014J      1        15            10         0.940149     0.059851
+ 102343||FFF||2013J      0        38            10         0.939025     0.060975
+1023623||CCC||2014J      0        38            10         0.859059     0.140941
+1033968||DDD||2014B      1        13            10         0.828339     0.171661
+ 103891||DDD||2014B      0        34            10         0.948653     0.051347
+ 104316||FFF||2014B      0        34            10         0.891596     0.108404
+1045203||AAA||2014J      0        38            10         0.900660     0.099340
+1047645||CCC||2014B      0        34            10         0.859531     0.140469
+1053702||EEE||2013J      0        38            10         0.898168     0.101832
+ 105629||FFF||2013J      0        38            10         0.909524     0.090476
+1057883||CCC||2014B      0        34            10         0.909387     0.090613
+ 106383||BBB||2014J      1        21            10         0.940380     0.059620
+ 106553||DDD||2014J      0        37            10         0.854938     0.145062
+ARTIFACT | Stage 5.5.3 table_deepsurv_tuned_test_predictions - DeepSurv test predictions | duckdb://table_deepsurv_tuned_test_predictions
+[Stage 5.5.3 table_deepsurv_tuned_primary_metrics - DeepSurv primary metrics]
+table_name=table_deepsurv_tuned_primary_metrics
+rows=2, cols=4
+metric_name metric_category  metric_value                         notes
+        ibs         primary      0.122439 sksurv_integrated_brier_score
+    c_index      co_primary      0.593497          pycox_concordance_td
+ARTIFACT | Stage 5.5.3 table_deepsurv_tuned_primary_metrics - DeepSurv primary metrics | duckdb://table_deepsurv_tuned_primary_metrics
+[Stage 5.5.3 table_deepsurv_tuned_brier_by_horizon - DeepSurv Brier scores by horizon]
+table_name=table_deepsurv_tuned_brier_by_horizon
+rows=3, cols=5
+ horizon_week      metric_name metric_category  metric_value              notes
+           10 brier_at_horizon         primary      0.106239 sksurv_brier_score
+           20 brier_at_horizon         primary      0.143059 sksurv_brier_score
+           30 brier_at_horizon         primary      0.167062 sksurv_brier_score
+ARTIFACT | Stage 5.5.3 table_deepsurv_tuned_brier_by_horizon - DeepSurv Brier scores by horizon | duckdb://table_deepsurv_tuned_brier_by_horizon
+[Stage 5.5.3 table_deepsurv_tuned_secondary_metrics - DeepSurv secondary metrics]
+table_name=table_deepsurv_tuned_secondary_metrics
+rows=6, cols=5
+ horizon_week         metric_name metric_category  metric_value                                                                                  notes
+           10 risk_auc_at_horizon       secondary      0.632058                                                            roc_auc_on_evaluable_subset
+           10  time_dependent_auc       secondary      0.631207 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.631207; local_ipcw_auc
+           20 risk_auc_at_horizon       secondary      0.606543                                                            roc_auc_on_evaluable_subset
+           20  time_dependent_auc       secondary      0.607107 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.607107; local_ipcw_auc
+           30 risk_auc_at_horizon       secondary      0.598065                                                            roc_auc_on_evaluable_subset
+           30  time_dependent_auc       secondary      0.600271 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.600271; local_ipcw_auc
+ARTIFACT | Stage 5.5.3 table_deepsurv_tuned_secondary_metrics - DeepSurv secondary metrics | duckdb://table_deepsurv_tuned_secondary_metrics
+[Stage 5.5.3 table_deepsurv_tuned_td_auc_support_audit - DeepSurv IPCW support audit]
+table_name=table_deepsurv_tuned_td_auc_support_audit
+rows=3, cols=6
+ horizon_week  max_ipcw_time  n_total_test_enrollments  n_supported_test_enrollments  mean_auc                                                      notes
+           10           38.0                      9778                          6742  0.631207 IPCW-supported subset used for DeepSurv time-dependent AUC
+           20           38.0                      9778                          6742  0.607107 IPCW-supported subset used for DeepSurv time-dependent AUC
+           30           38.0                      9778                          6742  0.600271 IPCW-supported subset used for DeepSurv time-dependent AUC
+ARTIFACT | Stage 5.5.3 table_deepsurv_tuned_td_auc_support_audit - DeepSurv IPCW support audit | duckdb://table_deepsurv_tuned_td_auc_support_audit
+[Stage 5.5.3 table_deepsurv_tuned_row_diagnostics - DeepSurv row-level diagnostics]
+table_name=table_deepsurv_tuned_row_diagnostics
+rows=1, cols=6
+    model_name  row_level_roc_auc  row_level_pr_auc  row_level_log_loss  row_level_brier                                                                    diagnostic_note
+deepsurv_tuned           0.186752          0.137479            0.715558         0.216183 auxiliary enrollment-level proxy only; not a primary cross-family benchmark metric
+ARTIFACT | Stage 5.5.3 table_deepsurv_tuned_row_diagnostics - DeepSurv row-level diagnostics | duckdb://table_deepsurv_tuned_row_diagnostics
+[Stage 5.5.3 table_deepsurv_tuned_support_by_horizon - DeepSurv support by horizon]
+table_name=table_deepsurv_tuned_support_by_horizon
+rows=3, cols=4
+ horizon_week  n_evaluable_enrollments  n_events_by_horizon  event_rate_by_horizon
+           10                     9778                 1215               0.124259
+           20                     9778                 1736               0.177541
+           30                     9778                 2129               0.217734
+ARTIFACT | Stage 5.5.3 table_deepsurv_tuned_support_by_horizon - DeepSurv support by horizon | duckdb://table_deepsurv_tuned_support_by_horizon
+[Stage 5.5.3 table_deepsurv_tuned_calibration_summary - DeepSurv calibration summary]
+table_name=table_deepsurv_tuned_calibration_summary
+rows=3, cols=5
+ horizon_week            metric_name metric_category  metric_value                                         notes
+           10 calibration_at_horizon         primary      0.008512 Weighted absolute calibration gap across bins
+           20 calibration_at_horizon         primary      0.013512 Weighted absolute calibration gap across bins
+           30 calibration_at_horizon         primary      0.014935 Weighted absolute calibration gap across bins
+ARTIFACT | Stage 5.5.3 table_deepsurv_tuned_calibration_summary - DeepSurv calibration summary | duckdb://table_deepsurv_tuned_calibration_summary
+[Stage 5.5.3 table_deepsurv_tuned_calibration_bins_by_horizon - DeepSurv calibration bins]
+table_name=table_deepsurv_tuned_calibration_bins_by_horizon
+rows=30, cols=6
+ calibration_bin   n  mean_predicted_risk  observed_event_rate  horizon_week  abs_calibration_gap
+               0 978             0.054948             0.054192            10             0.000756
+               1 978             0.076941             0.067485            10             0.009456
+               2 978             0.089233             0.092025            10             0.002792
+               3 977             0.101747             0.084954            10             0.016793
+               4 978             0.113621             0.110429            10             0.003192
+               5 978             0.124850             0.120654            10             0.004196
+               6 977             0.137910             0.152508            10             0.014597
+               7 978             0.150674             0.159509            10             0.008835
+               8 978             0.168874             0.182004            10             0.013130
+               9 978             0.207424             0.218814            10             0.011390
+               0 978             0.080758             0.104294            20             0.023536
+               1 978             0.112498             0.107362            20             0.005136
+               2 978             0.130060             0.149284            20             0.019224
+               3 977             0.147819             0.140225            20             0.007594
+               4 978             0.164559             0.154397            20             0.010163
+               5 978             0.180287             0.162577            20             0.017710
+               6 977             0.198453             0.225179            20             0.026726
+               7 978             0.216080             0.219836            20             0.003756
+               8 978             0.240980             0.235174            20             0.005806
+               9 978             0.292571             0.277096            20             0.015475
+ARTIFACT | Stage 5.5.3 table_deepsurv_tuned_calibration_bins_by_horizon - DeepSurv calibration bins | duckdb://table_deepsurv_tuned_calibration_bins_by_horizon
+[Stage 5.5.3 table_deepsurv_tuned_predicted_vs_observed_survival - DeepSurv predicted versus observed survival]
+table_name=table_deepsurv_tuned_predicted_vs_observed_survival
+rows=3, cols=5
+ horizon_week  n_evaluable_enrollments  mean_predicted_survival  mean_observed_survival  abs_gap
+           10                     9778                 0.877377                0.875741 0.001636
+           20                     9778                 0.823593                0.822459 0.001134
+           30                     9778                 0.782502                0.782266 0.000236
+ARTIFACT | Stage 5.5.3 table_deepsurv_tuned_predicted_vs_observed_survival - DeepSurv predicted versus observed survival | duckdb://table_deepsurv_tuned_predicted_vs_observed_survival
+ARTIFACT | deepsurv_model | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/models/deepsurv_tuned.pt
+ARTIFACT | deepsurv_preprocessor | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/models/deepsurv_preprocessor.joblib
+ARTIFACT | deepsurv_tuned_model_config | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/metadata/deepsurv_tuned_model_config.json
+{
+  "model_name": "deepsurv_tuned",
+  "selection_metric": "lowest_validation_loss",
+  "validation_split": {
+    "method": "GroupShuffleSplit",
+    "test_size": 0.2,
+    "group_column": "enrollment_id",
+    "random_seed": 42
+  },
+  "effective_window_weeks": 4,
+  "input_train_table": "enrollment_deepsurv_ready_train",
+  "input_test_table": "enrollment_deepsurv_ready_test",
+  "search_space": [
+    {
+      "candidate_id": 1,
+      "hidden_dims": [
+        32,
+        16
+      ],
+      "dropout": 0.1,
+      "learning_rate": 0.0005,
+      "weight_decay": 1e-05
+    },
+    {
+      "candidate_id": 2,
+      "hidden_dims": [
+        32,
+        16
+      ],
+      "dropout": 0.1,
+      "learning_rate": 0.0005,
+      "weight_decay": 0.0001
+    },
+    {
+      "candidate_id": 3,
+      "hidden_dims": [
+        32,
+        16
+      ],
+      "dropout": 0.1,
+      "learning_rate": 0.001,
+      "weight_decay": 1e-05
+    },
+    {
+      "candidate_id": 4,
+      "hidden_dims": [
+        32,
+        16
+      ],
+      "dropout": 0.1,
+      "learning_rate": 0.001,
+      "weight_decay": 0.0001
+    },
+    {
+      "candidate_id": 5,
+      "hidden_dims": [
+        32,
+        16
+      ],
+      "dropout": 0.3,
+      "learning_rate": 0.0005,
+      "weight_decay": 1e-05
+    },
+    {
+      "candidate_id": 6,
+      "hidden_dims": [
+        32,
+        16
+      ],
+      "dropout": 0.3,
+      "learning_rate": 0.0005,
+      "weight_decay": 0.0001
+    },
+    {
+      "candidate_id": 7,
+      "hidden_dims": [
+        32,
+        16
+      ],
+      "dropout": 0.3,
+      "learning_rate": 0.001,
+      "weight_decay": 1e-05
+    },
+    {
+      "candidate_id": 8,
+      "hidden_dims": [
+        32,
+        16
+      ],
+      "dropout": 0.3,
+      "learning_rate": 0.001,
+      "weight_decay": 0.0001
+    },
+    {
+      "candidate_id": 9,
+      "hidden_dims": [
+        64,
+        32
+      ],
+      "dropout": 0.1,
+      "learning_rate": 0.0005,
+      "weight_decay": 1e-05
+    },
+    {
+      "candidate_id": 10,
+      "hidden_dims": [
+        64,
+        32
+      ],
+      "dropout": 0.1,
+      "learning_rate": 0.0005,
+      "weight_decay": 0.0001
+    },
+    {
+      "candidate_id": 11,
+      "hidden_dims": [
+        64,
+        32
+      ],
+      "dropout": 0.1,
+      "learning_rate": 0.001,
+      "weight_decay": 1e-05
+    },
+    {
+      "candidate_id": 12,
+      "hidden_dims": [
+        64,
+        32
+      ],
+      "dropout": 0.1,
+      "learning_rate": 0.001,
+      "weight_decay": 0.0001
+    },
+    {
+      "candidate_id": 13,
+      "hidden_dims": [
+        64,
+        32
+      ],
+      "dropout": 0.3,
+      "learning_rate": 0.0005,
+      "weight_decay": 1e-05
+    },
+    {
+      "candidate_id": 14,
+      "hidden_dims": [
+        64,
+        32
+      ],
+      "dropout": 0.3,
+      "learning_rate": 0.0005,
+      "weight_decay": 0.0001
+    },
+    {
+      "candidate_id": 15,
+      "hidden_dims": [
+        64,
+        32
+      ],
+      "dropout": 0.3,
+      "learning_rate": 0.001,
+      "weight_decay": 1e-05
+    },
+    {
+      "candidate_id": 16,
+      "hidden_dims": [
+        64,
+        32
+      ],
+      "dropout": 0.3,
+      "learning_rate": 0.001,
+      "weight_decay": 0.0001
+    },
+    {
+      "candidate_id": 17,
+      "hidden_dims": [
+        128,
+        64
+      ],
+      "dropout": 0.1,
+      "learning_rate": 0.0005,
+      "weight_decay": 1e-05
+    },
+    {
+      "candidate_id": 18,
+      "hidden_dims": [
+        128,
+        64
+      ],
+      "dropout": 0.1,
+      "learning_rate": 0.0005,
+      "weight_decay": 0.0001
+    },
+    {
+      "candidate_id": 19,
+      "hidden_dims": [
+        128,
+        64
+      ],
+      "dropout": 0.1,
+      "learning_rate": 0.001,
+      "weight_decay": 1e-05
+    },
+    {
+      "candidate_id": 20,
+      "hidden_dims": [
+        128,
+        64
+      ],
+      "dropout": 0.1,
+      "learning_rate": 0.001,
+      "weight_decay": 0.0001
+    },
+    {
+      "candidate_id": 21,
+      "hidden_dims": [
+        128,
+        64
+      ],
+      "dropout": 0.3,
+      "learning_rate": 0.0005,
+      "weight_decay": 1e-05
+    },
+    {
+      "candidate_id": 22,
+      "hidden_dims": [
+        128,
+        64
+      ],
+      "dropout": 0.3,
+      "learning_rate": 0.0005,
+      "weight_decay": 0.0001
+    },
+    {
+      "candidate_id": 23,
+      "hidden_dims": [
+        128,
+        64
+      ],
+      "dropout": 0.3,
+      "learning_rate": 0.001,
+      "weight_decay": 1e-05
+    },
+    {
+      "candidate_id": 24,
+      "hidden_dims": [
+        128,
+        64
+      ],
+      "dropout": 0.3,
+      "learning_rate": 0.001,
+      "weight_decay": 0.0001
+    }
+  ],
+  "batch_norm": true,
+  "output_bias": false,
+  "batch_size": 256,
+  "epochs": 100,
+  "patience": 10,
+  "benchmark_horizons": [
+    10,
+    20,
+    30
+  ],
+  "calibration_bins": 10,
+  "calibration_contract_version": "v2_ipcw_km_observed_risk",
+  "calibration_observed_risk_method": "ipcw_km_pseudo_event_rate",
+  "best_candidate": {
+    "candidate_id": 16,
+    "hidden_dims": [
+      64,
+      32
+    ],
+    "dropout": 0.3,
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001,
+    "best_val_loss": 8.243051528930664,
+    "best_epoch": 32
+  },
+  "preprocessing": {
+    "categorical_features": [
+      "gender",
+      "region",
+      "highest_education",
+      "imd_band",
+      "age_band",
+      "disability"
+    ],
+    "numeric_features": [
+      "num_of_prev_attempts",
+      "studied_credits",
+      "clicks_first_4_weeks",
+      "active_weeks_first_4",
+      "mean_clicks_first_4_weeks"
+    ],
+    "numeric_prefill_values": {
+      "num_of_prev_attempts": 0.0,
+      "studied_credits": 60.0,
+      "clicks_first_4_weeks": 0.0,
+      "active_weeks_first_4": 0.0,
+      "mean_clicks_first_4_weeks": 0.0
+    },
+    "feature_names_out": [
+      "num__num_of_prev_attempts",
+      "num__studied_credits",
+      "num__clicks_first_4_weeks",
+      "num__active_weeks_first_4",
+      "num__mean_clicks_first_4_weeks",
+      "cat__gender_F",
+      "cat__gender_M",
+      "cat__region_East Anglian Region",
+      "cat__region_East Midlands Region",
+      "cat__region_Ireland",
+      "cat__region_London Region",
+      "cat__region_North Region",
+      "cat__region_North Western Region",
+      "cat__region_Scotland",
+      "cat__region_South East Region",
+      "cat__region_South Region",
+      "cat__region_South West Region",
+      "cat__region_Wales",
+      "cat__region_West Midlands Region",
+      "cat__region_Yorkshire Region",
+      "cat__highest_education_A Level or Equivalent",
+      "cat__highest_education_HE Qualification",
+      "cat__highest_education_Lower Than A Level",
+      "cat__highest_education_No Formal quals",
+      "cat__highest_education_Post Graduate Qualification",
+      "cat__imd_band_0-10%",
+      "cat__imd_band_10-20",
+      "cat__imd_band_20-30%",
+      "cat__imd_band_30-40%",
+      "cat__imd_band_40-50%",
+      "cat__imd_band_50-60%",
+      "cat__imd_band_60-70%",
+      "cat__imd_band_70-80%",
+      "cat__imd_band_80-90%",
+      "cat__imd_band_90-100%",
+      "cat__imd_band_None",
+      "cat__age_band_0-35",
+      "cat__age_band_35-55",
+      "cat__age_band_55<=",
+      "cat__disability_N",
+      "cat__disability_Y"
+    ]
+  },
+  "design_note": "The comparable DeepSurv arm integrates deterministic numeric prefill, canonical enrollment ordering, and a local IPCW-supported time-dependent AUC path directly into D5.5 so no downstream repair stage is required."
+}
+
+ candidate_id hidden_dims  dropout  learning_rate  weight_decay  best_val_loss  best_epoch
+           16    [64, 32]      0.3          0.001        0.0001       8.243052          32
+[END] 5.5.3 - 2026-04-03 22:17:38
+[START] 5.5 - 2026-04-03 22:17:38
+# ==============================================================
+# 5.5.4 - Close runtime resources
+# ==============================================================
+DuckDB connection closed.
+ARTIFACT | duckdb_connection | closed::/Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/benchmark_survival.duckdb
+[END] 5.5.4 - 2026-04-03 22:17:38
+[RUN_PLAN] comparable_window_weeks=6 script=dropout_bench_v3_D_05_comparable_neural_deepsurv.py
+[START] 5.5 - 2026-04-03 22:17:38
+# ==============================================================
+# 5.5.1 - Lightweight runtime bootstrap
+# ==============================================================
+ARTIFACT | benchmark_shared_config | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/benchmark_shared_config.toml
+ARTIFACT | benchmark_modeling_contract | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/benchmark_modeling_contract.toml
+ARTIFACT | run_metadata | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/metadata/run_metadata.json
+ARTIFACT | duckdb_path | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/benchmark_survival.duckdb
+{
+  "run_id": "f3e86c2afbd246e2814123195c22d973",
+  "random_seed": 42,
+  "test_size": 0.3,
+  "validation_test_size": 0.2,
+  "cpu_cores": 8,
+  "early_window_weeks": 4,
+  "main_enrollment_window_weeks": 4,
+  "effective_window_weeks": 6,
+  "input_train_table": "enrollment_deepsurv_ready_train_w6",
+  "input_test_table": "enrollment_deepsurv_ready_test_w6",
+  "benchmark_horizons": [
+    10,
+    20,
+    30
+  ],
+  "calibration_bins": 10
+}
+[END] 5.5.1 - 2026-04-03 22:17:38
+[START] 5.5 - 2026-04-03 22:17:38
+# ==============================================================
+# 5.5.2 - Build comparable-window DeepSurv treatment
+# ==============================================================
+[Stage 5.5.2 table_deepsurv_preprocessing_summary - DeepSurv preprocessing summary]
+table_name=table_deepsurv_preprocessing_summary_w6
+rows=1, cols=18
+model_family  train_rows  test_rows  n_input_features_raw  n_numeric_features  n_categorical_features  n_features_after_transform  n_events_train  n_events_test  mean_duration_train  mean_duration_test                              numeric_prefill_policy categorical_imputation          categorical_encoding                   numeric_scaling output_dtype                                           comparability_note  window_weeks
+    deepsurv       22815       9778                    11                   5                       6                          41            5171           2216            30.536182           30.539476 deterministic_train_median_or_zero_when_all_missing       constant_missing one_hot_handle_unknown_ignore standard_scaler_fit_on_train_only      float32 same conceptual input design as the comparable Cox benchmark             6
+ARTIFACT | Stage 5.5.2 table_deepsurv_preprocessing_summary - DeepSurv preprocessing summary | duckdb://table_deepsurv_preprocessing_summary_w6
+[Stage 5.5.2 table_deepsurv_raw_feature_manifest - DeepSurv raw feature manifest]
+table_name=table_deepsurv_raw_feature_manifest_w6
+rows=11, cols=7
+ feature_name_operational feature_role                feature_scope  present_in_train  present_in_test  covered_by_canonical_config  numeric_prefill_value
+                   gender  categorical   fixed_demographic_metadata              True             True                        False                    NaN
+                   region  categorical   fixed_demographic_metadata              True             True                        False                    NaN
+        highest_education  categorical   fixed_demographic_metadata              True             True                        False                    NaN
+                 imd_band  categorical   fixed_demographic_metadata              True             True                        False                    NaN
+                 age_band  categorical   fixed_demographic_metadata              True             True                        False                    NaN
+               disability  categorical   fixed_demographic_metadata              True             True                        False                    NaN
+     num_of_prev_attempts      numeric canonical_comparable_numeric              True             True                         True                    0.0
+          studied_credits      numeric canonical_comparable_numeric              True             True                         True                   60.0
+     clicks_first_6_weeks      numeric canonical_comparable_numeric              True             True                         True                    0.0
+     active_weeks_first_6      numeric canonical_comparable_numeric              True             True                         True                    0.0
+mean_clicks_first_6_weeks      numeric canonical_comparable_numeric              True             True                         True                    0.0
+ARTIFACT | Stage 5.5.2 table_deepsurv_raw_feature_manifest - DeepSurv raw feature manifest | duckdb://table_deepsurv_raw_feature_manifest_w6
+[Stage 5.5.2 table_deepsurv_feature_names_out - DeepSurv output feature manifest]
+table_name=table_deepsurv_feature_names_out_w6
+rows=41, cols=1
+                feature_name_out
+       num__num_of_prev_attempts
+            num__studied_credits
+       num__clicks_first_6_weeks
+       num__active_weeks_first_6
+  num__mean_clicks_first_6_weeks
+                   cat__gender_F
+                   cat__gender_M
+ cat__region_East Anglian Region
+cat__region_East Midlands Region
+             cat__region_Ireland
+       cat__region_London Region
+        cat__region_North Region
+cat__region_North Western Region
+            cat__region_Scotland
+   cat__region_South East Region
+        cat__region_South Region
+   cat__region_South West Region
+               cat__region_Wales
+cat__region_West Midlands Region
+    cat__region_Yorkshire Region
+ARTIFACT | Stage 5.5.2 table_deepsurv_feature_names_out - DeepSurv output feature manifest | duckdb://table_deepsurv_feature_names_out_w6
+ARTIFACT | deepsurv_preprocessing_config | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/metadata/deepsurv_preprocessing_config_w6.json
+{
+  "model_family": "deepsurv",
+  "duration_column": "duration",
+  "event_column": "event",
+  "categorical_features": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability"
+  ],
+  "numeric_features": [
+    "num_of_prev_attempts",
+    "studied_credits",
+    "clicks_first_6_weeks",
+    "active_weeks_first_6",
+    "mean_clicks_first_6_weeks"
+  ],
+  "raw_feature_columns": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability",
+    "num_of_prev_attempts",
+    "studied_credits",
+    "clicks_first_6_weeks",
+    "active_weeks_first_6",
+    "mean_clicks_first_6_weeks"
+  ],
+  "expected_features_raw": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "num_of_prev_attempts",
+    "studied_credits",
+    "clicks_first_6_weeks",
+    "active_weeks_first_6",
+    "mean_clicks_first_6_weeks"
+  ],
+  "expected_features_resolved": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "clicks_first_6_weeks",
+    "active_weeks_first_6",
+    "mean_clicks_first_6_weeks"
+  ],
+  "numeric_prefill_policy": "deterministic_train_median_or_zero_when_all_missing",
+  "numeric_fill_values": {
+    "num_of_prev_attempts": 0.0,
+    "studied_credits": 60.0,
+    "clicks_first_6_weeks": 0.0,
+    "active_weeks_first_6": 0.0,
+    "mean_clicks_first_6_weeks": 0.0
+  },
+  "categorical_imputation": "constant_missing",
+  "categorical_encoding": "one_hot_handle_unknown_ignore",
+  "numeric_scaling": "standard_scaler_fit_on_train_only",
+  "feature_names_out": [
+    "num__num_of_prev_attempts",
+    "num__studied_credits",
+    "num__clicks_first_6_weeks",
+    "num__active_weeks_first_6",
+    "num__mean_clicks_first_6_weeks",
+    "cat__gender_F",
+    "cat__gender_M",
+    "cat__region_East Anglian Region",
+    "cat__region_East Midlands Region",
+    "cat__region_Ireland",
+    "cat__region_London Region",
+    "cat__region_North Region",
+    "cat__region_North Western Region",
+    "cat__region_Scotland",
+    "cat__region_South East Region",
+    "cat__region_South Region",
+    "cat__region_South West Region",
+    "cat__region_Wales",
+    "cat__region_West Midlands Region",
+    "cat__region_Yorkshire Region",
+    "cat__highest_education_A Level or Equivalent",
+    "cat__highest_education_HE Qualification",
+    "cat__highest_education_Lower Than A Level",
+    "cat__highest_education_No Formal quals",
+    "cat__highest_education_Post Graduate Qualification",
+    "cat__imd_band_0-10%",
+    "cat__imd_band_10-20",
+    "cat__imd_band_20-30%",
+    "cat__imd_band_30-40%",
+    "cat__imd_band_40-50%",
+    "cat__imd_band_50-60%",
+    "cat__imd_band_60-70%",
+    "cat__imd_band_70-80%",
+    "cat__imd_band_80-90%",
+    "cat__imd_band_90-100%",
+    "cat__imd_band_None",
+    "cat__age_band_0-35",
+    "cat__age_band_35-55",
+    "cat__age_band_55<=",
+    "cat__disability_N",
+    "cat__disability_Y"
+  ],
+  "comparability_note": "same conceptual input design as the comparable Cox benchmark",
+  "window_weeks": 6
+}
+
+[END] 5.5.2 - 2026-04-03 22:17:38
+[START] 5.5 - 2026-04-03 22:17:38
+# ==============================================================
+# 5.5.3 - Tune and evaluate the comparable-window DeepSurv model
+# ==============================================================
+[Stage 5.5.3 table_deepsurv_tuning_results - DeepSurv tuning results]
+table_name=table_deepsurv_tuning_results_w6
+rows=24, cols=7
+ candidate_id hidden_dims  dropout  learning_rate  weight_decay  best_val_loss  best_epoch
+           16    [64, 32]      0.3         0.0010       0.00010       8.243052          32
+           15    [64, 32]      0.3         0.0010       0.00001       8.243404          20
+           23   [128, 64]      0.3         0.0010       0.00001       8.247472          18
+           21   [128, 64]      0.3         0.0005       0.00001       8.248232          17
+           14    [64, 32]      0.3         0.0005       0.00010       8.248466          41
+           22   [128, 64]      0.3         0.0005       0.00010       8.249633          14
+           12    [64, 32]      0.1         0.0010       0.00010       8.250446           5
+           24   [128, 64]      0.3         0.0010       0.00010       8.250985           7
+           19   [128, 64]      0.1         0.0010       0.00001       8.251239           4
+            8    [32, 16]      0.3         0.0010       0.00010       8.251272          33
+            7    [32, 16]      0.3         0.0010       0.00001       8.251309          22
+            2    [32, 16]      0.1         0.0005       0.00010       8.251795          30
+            5    [32, 16]      0.3         0.0005       0.00001       8.251795          45
+            6    [32, 16]      0.3         0.0005       0.00010       8.253398          28
+           13    [64, 32]      0.3         0.0005       0.00001       8.254103          24
+            1    [32, 16]      0.1         0.0005       0.00001       8.255099          14
+           10    [64, 32]      0.1         0.0005       0.00010       8.255380          25
+           20   [128, 64]      0.1         0.0010       0.00010       8.255687           4
+            9    [64, 32]      0.1         0.0005       0.00001       8.256435          16
+            3    [32, 16]      0.1         0.0010       0.00001       8.257678          15
+ARTIFACT | Stage 5.5.3 table_deepsurv_tuning_results - DeepSurv tuning results | duckdb://table_deepsurv_tuning_results_w6
+[Stage 5.5.3 table_deepsurv_tuned_training_history - DeepSurv best-candidate training history]
+table_name=table_deepsurv_tuned_training_history_w6
+rows=42, cols=4
+ epoch  train_loss  val_loss  candidate_id
+     1    5.521120  8.286218            16
+     2    5.412285  8.269942            16
+     3    5.380389  8.266406            16
+     4    5.370358  8.263339            16
+     5    5.365522  8.258747            16
+     6    5.358130  8.256098            16
+     7    5.347281  8.254062            16
+     8    5.345848  8.253901            16
+     9    5.346904  8.252896            16
+    10    5.334477  8.251141            16
+    11    5.340065  8.250992            16
+    12    5.336774  8.251121            16
+    13    5.334892  8.248437            16
+    14    5.340345  8.248108            16
+    15    5.332072  8.249086            16
+    16    5.337776  8.248532            16
+    17    5.331923  8.247807            16
+    18    5.325858  8.249282            16
+    19    5.322279  8.247432            16
+    20    5.321331  8.247581            16
+ARTIFACT | Stage 5.5.3 table_deepsurv_tuned_training_history - DeepSurv best-candidate training history | duckdb://table_deepsurv_tuned_training_history_w6
+[Stage 5.5.3 table_deepsurv_tuned_test_predictions - DeepSurv test predictions]
+table_name=table_deepsurv_tuned_test_predictions_w6
+rows=29334, cols=6
+      enrollment_id  event  duration  horizon_week  pred_survival_h  pred_risk_h
+ 100561||DDD||2014J      0        37            10         0.875464     0.124536
+ 100621||CCC||2014B      1         6            10         0.886539     0.113461
+ 101187||DDD||2014J      0        37            10         0.872838     0.127162
+ 101279||DDD||2014J      0        37            10         0.920675     0.079325
+ 101414||EEE||2013J      0        38            10         0.851737     0.148263
+ 101700||CCC||2014J      0        38            10         0.841552     0.158448
+ 101781||AAA||2013J      0        38            10         0.891813     0.108187
+ 102209||CCC||2014J      1        15            10         0.940149     0.059851
+ 102343||FFF||2013J      0        38            10         0.939025     0.060975
+1023623||CCC||2014J      0        38            10         0.859059     0.140941
+1033968||DDD||2014B      1        13            10         0.828339     0.171661
+ 103891||DDD||2014B      0        34            10         0.948653     0.051347
+ 104316||FFF||2014B      0        34            10         0.891596     0.108404
+1045203||AAA||2014J      0        38            10         0.900660     0.099340
+1047645||CCC||2014B      0        34            10         0.859531     0.140469
+1053702||EEE||2013J      0        38            10         0.898168     0.101832
+ 105629||FFF||2013J      0        38            10         0.909524     0.090476
+1057883||CCC||2014B      0        34            10         0.909387     0.090613
+ 106383||BBB||2014J      1        21            10         0.940380     0.059620
+ 106553||DDD||2014J      0        37            10         0.854938     0.145062
+ARTIFACT | Stage 5.5.3 table_deepsurv_tuned_test_predictions - DeepSurv test predictions | duckdb://table_deepsurv_tuned_test_predictions_w6
+[Stage 5.5.3 table_deepsurv_tuned_primary_metrics - DeepSurv primary metrics]
+table_name=table_deepsurv_tuned_primary_metrics_w6
+rows=2, cols=4
+metric_name metric_category  metric_value                         notes
+        ibs         primary      0.122439 sksurv_integrated_brier_score
+    c_index      co_primary      0.593497          pycox_concordance_td
+ARTIFACT | Stage 5.5.3 table_deepsurv_tuned_primary_metrics - DeepSurv primary metrics | duckdb://table_deepsurv_tuned_primary_metrics_w6
+[Stage 5.5.3 table_deepsurv_tuned_brier_by_horizon - DeepSurv Brier scores by horizon]
+table_name=table_deepsurv_tuned_brier_by_horizon_w6
+rows=3, cols=5
+ horizon_week      metric_name metric_category  metric_value              notes
+           10 brier_at_horizon         primary      0.106239 sksurv_brier_score
+           20 brier_at_horizon         primary      0.143059 sksurv_brier_score
+           30 brier_at_horizon         primary      0.167062 sksurv_brier_score
+ARTIFACT | Stage 5.5.3 table_deepsurv_tuned_brier_by_horizon - DeepSurv Brier scores by horizon | duckdb://table_deepsurv_tuned_brier_by_horizon_w6
+[Stage 5.5.3 table_deepsurv_tuned_secondary_metrics - DeepSurv secondary metrics]
+table_name=table_deepsurv_tuned_secondary_metrics_w6
+rows=6, cols=5
+ horizon_week         metric_name metric_category  metric_value                                                                                  notes
+           10 risk_auc_at_horizon       secondary      0.632058                                                            roc_auc_on_evaluable_subset
+           10  time_dependent_auc       secondary      0.631207 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.631207; local_ipcw_auc
+           20 risk_auc_at_horizon       secondary      0.606543                                                            roc_auc_on_evaluable_subset
+           20  time_dependent_auc       secondary      0.607107 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.607107; local_ipcw_auc
+           30 risk_auc_at_horizon       secondary      0.598065                                                            roc_auc_on_evaluable_subset
+           30  time_dependent_auc       secondary      0.600271 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.600271; local_ipcw_auc
+ARTIFACT | Stage 5.5.3 table_deepsurv_tuned_secondary_metrics - DeepSurv secondary metrics | duckdb://table_deepsurv_tuned_secondary_metrics_w6
+[Stage 5.5.3 table_deepsurv_tuned_td_auc_support_audit - DeepSurv IPCW support audit]
+table_name=table_deepsurv_tuned_td_auc_support_audit_w6
+rows=3, cols=6
+ horizon_week  max_ipcw_time  n_total_test_enrollments  n_supported_test_enrollments  mean_auc                                                      notes
+           10           38.0                      9778                          6742  0.631207 IPCW-supported subset used for DeepSurv time-dependent AUC
+           20           38.0                      9778                          6742  0.607107 IPCW-supported subset used for DeepSurv time-dependent AUC
+           30           38.0                      9778                          6742  0.600271 IPCW-supported subset used for DeepSurv time-dependent AUC
+ARTIFACT | Stage 5.5.3 table_deepsurv_tuned_td_auc_support_audit - DeepSurv IPCW support audit | duckdb://table_deepsurv_tuned_td_auc_support_audit_w6
+[Stage 5.5.3 table_deepsurv_tuned_row_diagnostics - DeepSurv row-level diagnostics]
+table_name=table_deepsurv_tuned_row_diagnostics_w6
+rows=1, cols=6
+    model_name  row_level_roc_auc  row_level_pr_auc  row_level_log_loss  row_level_brier                                                                    diagnostic_note
+deepsurv_tuned           0.186752          0.137479            0.715558         0.216183 auxiliary enrollment-level proxy only; not a primary cross-family benchmark metric
+ARTIFACT | Stage 5.5.3 table_deepsurv_tuned_row_diagnostics - DeepSurv row-level diagnostics | duckdb://table_deepsurv_tuned_row_diagnostics_w6
+[Stage 5.5.3 table_deepsurv_tuned_support_by_horizon - DeepSurv support by horizon]
+table_name=table_deepsurv_tuned_support_by_horizon_w6
+rows=3, cols=4
+ horizon_week  n_evaluable_enrollments  n_events_by_horizon  event_rate_by_horizon
+           10                     9778                 1215               0.124259
+           20                     9778                 1736               0.177541
+           30                     9778                 2129               0.217734
+ARTIFACT | Stage 5.5.3 table_deepsurv_tuned_support_by_horizon - DeepSurv support by horizon | duckdb://table_deepsurv_tuned_support_by_horizon_w6
+[Stage 5.5.3 table_deepsurv_tuned_calibration_summary - DeepSurv calibration summary]
+table_name=table_deepsurv_tuned_calibration_summary_w6
+rows=3, cols=5
+ horizon_week            metric_name metric_category  metric_value                                         notes
+           10 calibration_at_horizon         primary      0.008512 Weighted absolute calibration gap across bins
+           20 calibration_at_horizon         primary      0.013512 Weighted absolute calibration gap across bins
+           30 calibration_at_horizon         primary      0.014935 Weighted absolute calibration gap across bins
+ARTIFACT | Stage 5.5.3 table_deepsurv_tuned_calibration_summary - DeepSurv calibration summary | duckdb://table_deepsurv_tuned_calibration_summary_w6
+[Stage 5.5.3 table_deepsurv_tuned_calibration_bins_by_horizon - DeepSurv calibration bins]
+table_name=table_deepsurv_tuned_calibration_bins_by_horizon_w6
+rows=30, cols=6
+ calibration_bin   n  mean_predicted_risk  observed_event_rate  horizon_week  abs_calibration_gap
+               0 978             0.054948             0.054192            10             0.000756
+               1 978             0.076941             0.067485            10             0.009456
+               2 978             0.089233             0.092025            10             0.002792
+               3 977             0.101747             0.084954            10             0.016793
+               4 978             0.113621             0.110429            10             0.003192
+               5 978             0.124850             0.120654            10             0.004196
+               6 977             0.137910             0.152508            10             0.014597
+               7 978             0.150674             0.159509            10             0.008835
+               8 978             0.168874             0.182004            10             0.013130
+               9 978             0.207424             0.218814            10             0.011390
+               0 978             0.080758             0.104294            20             0.023536
+               1 978             0.112498             0.107362            20             0.005136
+               2 978             0.130060             0.149284            20             0.019224
+               3 977             0.147819             0.140225            20             0.007594
+               4 978             0.164559             0.154397            20             0.010163
+               5 978             0.180287             0.162577            20             0.017710
+               6 977             0.198453             0.225179            20             0.026726
+               7 978             0.216080             0.219836            20             0.003756
+               8 978             0.240980             0.235174            20             0.005806
+               9 978             0.292571             0.277096            20             0.015475
+ARTIFACT | Stage 5.5.3 table_deepsurv_tuned_calibration_bins_by_horizon - DeepSurv calibration bins | duckdb://table_deepsurv_tuned_calibration_bins_by_horizon_w6
+[Stage 5.5.3 table_deepsurv_tuned_predicted_vs_observed_survival - DeepSurv predicted versus observed survival]
+table_name=table_deepsurv_tuned_predicted_vs_observed_survival_w6
+rows=3, cols=5
+ horizon_week  n_evaluable_enrollments  mean_predicted_survival  mean_observed_survival  abs_gap
+           10                     9778                 0.877377                0.875741 0.001636
+           20                     9778                 0.823593                0.822459 0.001134
+           30                     9778                 0.782502                0.782266 0.000236
+ARTIFACT | Stage 5.5.3 table_deepsurv_tuned_predicted_vs_observed_survival - DeepSurv predicted versus observed survival | duckdb://table_deepsurv_tuned_predicted_vs_observed_survival_w6
+ARTIFACT | deepsurv_model | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/models/deepsurv_tuned_w6.pt
+ARTIFACT | deepsurv_preprocessor | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/models/deepsurv_preprocessor_w6.joblib
+ARTIFACT | deepsurv_tuned_model_config | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/metadata/deepsurv_tuned_model_config_w6.json
+{
+  "model_name": "deepsurv_tuned",
+  "selection_metric": "lowest_validation_loss",
+  "validation_split": {
+    "method": "GroupShuffleSplit",
+    "test_size": 0.2,
+    "group_column": "enrollment_id",
+    "random_seed": 42
+  },
+  "effective_window_weeks": 6,
+  "input_train_table": "enrollment_deepsurv_ready_train_w6",
+  "input_test_table": "enrollment_deepsurv_ready_test_w6",
+  "search_space": [
+    {
+      "candidate_id": 1,
+      "hidden_dims": [
+        32,
+        16
+      ],
+      "dropout": 0.1,
+      "learning_rate": 0.0005,
+      "weight_decay": 1e-05
+    },
+    {
+      "candidate_id": 2,
+      "hidden_dims": [
+        32,
+        16
+      ],
+      "dropout": 0.1,
+      "learning_rate": 0.0005,
+      "weight_decay": 0.0001
+    },
+    {
+      "candidate_id": 3,
+      "hidden_dims": [
+        32,
+        16
+      ],
+      "dropout": 0.1,
+      "learning_rate": 0.001,
+      "weight_decay": 1e-05
+    },
+    {
+      "candidate_id": 4,
+      "hidden_dims": [
+        32,
+        16
+      ],
+      "dropout": 0.1,
+      "learning_rate": 0.001,
+      "weight_decay": 0.0001
+    },
+    {
+      "candidate_id": 5,
+      "hidden_dims": [
+        32,
+        16
+      ],
+      "dropout": 0.3,
+      "learning_rate": 0.0005,
+      "weight_decay": 1e-05
+    },
+    {
+      "candidate_id": 6,
+      "hidden_dims": [
+        32,
+        16
+      ],
+      "dropout": 0.3,
+      "learning_rate": 0.0005,
+      "weight_decay": 0.0001
+    },
+    {
+      "candidate_id": 7,
+      "hidden_dims": [
+        32,
+        16
+      ],
+      "dropout": 0.3,
+      "learning_rate": 0.001,
+      "weight_decay": 1e-05
+    },
+    {
+      "candidate_id": 8,
+      "hidden_dims": [
+        32,
+        16
+      ],
+      "dropout": 0.3,
+      "learning_rate": 0.001,
+      "weight_decay": 0.0001
+    },
+    {
+      "candidate_id": 9,
+      "hidden_dims": [
+        64,
+        32
+      ],
+      "dropout": 0.1,
+      "learning_rate": 0.0005,
+      "weight_decay": 1e-05
+    },
+    {
+      "candidate_id": 10,
+      "hidden_dims": [
+        64,
+        32
+      ],
+      "dropout": 0.1,
+      "learning_rate": 0.0005,
+      "weight_decay": 0.0001
+    },
+    {
+      "candidate_id": 11,
+      "hidden_dims": [
+        64,
+        32
+      ],
+      "dropout": 0.1,
+      "learning_rate": 0.001,
+      "weight_decay": 1e-05
+    },
+    {
+      "candidate_id": 12,
+      "hidden_dims": [
+        64,
+        32
+      ],
+      "dropout": 0.1,
+      "learning_rate": 0.001,
+      "weight_decay": 0.0001
+    },
+    {
+      "candidate_id": 13,
+      "hidden_dims": [
+        64,
+        32
+      ],
+      "dropout": 0.3,
+      "learning_rate": 0.0005,
+      "weight_decay": 1e-05
+    },
+    {
+      "candidate_id": 14,
+      "hidden_dims": [
+        64,
+        32
+      ],
+      "dropout": 0.3,
+      "learning_rate": 0.0005,
+      "weight_decay": 0.0001
+    },
+    {
+      "candidate_id": 15,
+      "hidden_dims": [
+        64,
+        32
+      ],
+      "dropout": 0.3,
+      "learning_rate": 0.001,
+      "weight_decay": 1e-05
+    },
+    {
+      "candidate_id": 16,
+      "hidden_dims": [
+        64,
+        32
+      ],
+      "dropout": 0.3,
+      "learning_rate": 0.001,
+      "weight_decay": 0.0001
+    },
+    {
+      "candidate_id": 17,
+      "hidden_dims": [
+        128,
+        64
+      ],
+      "dropout": 0.1,
+      "learning_rate": 0.0005,
+      "weight_decay": 1e-05
+    },
+    {
+      "candidate_id": 18,
+      "hidden_dims": [
+        128,
+        64
+      ],
+      "dropout": 0.1,
+      "learning_rate": 0.0005,
+      "weight_decay": 0.0001
+    },
+    {
+      "candidate_id": 19,
+      "hidden_dims": [
+        128,
+        64
+      ],
+      "dropout": 0.1,
+      "learning_rate": 0.001,
+      "weight_decay": 1e-05
+    },
+    {
+      "candidate_id": 20,
+      "hidden_dims": [
+        128,
+        64
+      ],
+      "dropout": 0.1,
+      "learning_rate": 0.001,
+      "weight_decay": 0.0001
+    },
+    {
+      "candidate_id": 21,
+      "hidden_dims": [
+        128,
+        64
+      ],
+      "dropout": 0.3,
+      "learning_rate": 0.0005,
+      "weight_decay": 1e-05
+    },
+    {
+      "candidate_id": 22,
+      "hidden_dims": [
+        128,
+        64
+      ],
+      "dropout": 0.3,
+      "learning_rate": 0.0005,
+      "weight_decay": 0.0001
+    },
+    {
+      "candidate_id": 23,
+      "hidden_dims": [
+        128,
+        64
+      ],
+      "dropout": 0.3,
+      "learning_rate": 0.001,
+      "weight_decay": 1e-05
+    },
+    {
+      "candidate_id": 24,
+      "hidden_dims": [
+        128,
+        64
+      ],
+      "dropout": 0.3,
+      "learning_rate": 0.001,
+      "weight_decay": 0.0001
+    }
+  ],
+  "batch_norm": true,
+  "output_bias": false,
+  "batch_size": 256,
+  "epochs": 100,
+  "patience": 10,
+  "benchmark_horizons": [
+    10,
+    20,
+    30
+  ],
+  "calibration_bins": 10,
+  "calibration_contract_version": "v2_ipcw_km_observed_risk",
+  "calibration_observed_risk_method": "ipcw_km_pseudo_event_rate",
+  "best_candidate": {
+    "candidate_id": 16,
+    "hidden_dims": [
+      64,
+      32
+    ],
+    "dropout": 0.3,
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001,
+    "best_val_loss": 8.243051528930664,
+    "best_epoch": 32
+  },
+  "preprocessing": {
+    "categorical_features": [
+      "gender",
+      "region",
+      "highest_education",
+      "imd_band",
+      "age_band",
+      "disability"
+    ],
+    "numeric_features": [
+      "num_of_prev_attempts",
+      "studied_credits",
+      "clicks_first_6_weeks",
+      "active_weeks_first_6",
+      "mean_clicks_first_6_weeks"
+    ],
+    "numeric_prefill_values": {
+      "num_of_prev_attempts": 0.0,
+      "studied_credits": 60.0,
+      "clicks_first_6_weeks": 0.0,
+      "active_weeks_first_6": 0.0,
+      "mean_clicks_first_6_weeks": 0.0
+    },
+    "feature_names_out": [
+      "num__num_of_prev_attempts",
+      "num__studied_credits",
+      "num__clicks_first_6_weeks",
+      "num__active_weeks_first_6",
+      "num__mean_clicks_first_6_weeks",
+      "cat__gender_F",
+      "cat__gender_M",
+      "cat__region_East Anglian Region",
+      "cat__region_East Midlands Region",
+      "cat__region_Ireland",
+      "cat__region_London Region",
+      "cat__region_North Region",
+      "cat__region_North Western Region",
+      "cat__region_Scotland",
+      "cat__region_South East Region",
+      "cat__region_South Region",
+      "cat__region_South West Region",
+      "cat__region_Wales",
+      "cat__region_West Midlands Region",
+      "cat__region_Yorkshire Region",
+      "cat__highest_education_A Level or Equivalent",
+      "cat__highest_education_HE Qualification",
+      "cat__highest_education_Lower Than A Level",
+      "cat__highest_education_No Formal quals",
+      "cat__highest_education_Post Graduate Qualification",
+      "cat__imd_band_0-10%",
+      "cat__imd_band_10-20",
+      "cat__imd_band_20-30%",
+      "cat__imd_band_30-40%",
+      "cat__imd_band_40-50%",
+      "cat__imd_band_50-60%",
+      "cat__imd_band_60-70%",
+      "cat__imd_band_70-80%",
+      "cat__imd_band_80-90%",
+      "cat__imd_band_90-100%",
+      "cat__imd_band_None",
+      "cat__age_band_0-35",
+      "cat__age_band_35-55",
+      "cat__age_band_55<=",
+      "cat__disability_N",
+      "cat__disability_Y"
+    ]
+  },
+  "design_note": "The comparable DeepSurv arm integrates deterministic numeric prefill, canonical enrollment ordering, and a local IPCW-supported time-dependent AUC path directly into D5.5 so no downstream repair stage is required."
+}
+
+ candidate_id hidden_dims  dropout  learning_rate  weight_decay  best_val_loss  best_epoch
+           16    [64, 32]      0.3          0.001        0.0001       8.243052          32
+[END] 5.5.3 - 2026-04-03 22:18:31
+[START] 5.5 - 2026-04-03 22:18:31
+# ==============================================================
+# 5.5.4 - Close runtime resources
+# ==============================================================
+DuckDB connection closed.
+ARTIFACT | duckdb_connection | closed::/Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/benchmark_survival.duckdb
+[END] 5.5.4 - 2026-04-03 22:18:32
+[RUN_PLAN] comparable_window_weeks=8 script=dropout_bench_v3_D_05_comparable_neural_deepsurv.py
+[START] 5.5 - 2026-04-03 22:18:32
+# ==============================================================
+# 5.5.1 - Lightweight runtime bootstrap
+# ==============================================================
+ARTIFACT | benchmark_shared_config | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/benchmark_shared_config.toml
+ARTIFACT | benchmark_modeling_contract | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/benchmark_modeling_contract.toml
+ARTIFACT | run_metadata | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/metadata/run_metadata.json
+ARTIFACT | duckdb_path | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/benchmark_survival.duckdb
+{
+  "run_id": "f3e86c2afbd246e2814123195c22d973",
+  "random_seed": 42,
+  "test_size": 0.3,
+  "validation_test_size": 0.2,
+  "cpu_cores": 8,
+  "early_window_weeks": 4,
+  "main_enrollment_window_weeks": 4,
+  "effective_window_weeks": 8,
+  "input_train_table": "enrollment_deepsurv_ready_train_w8",
+  "input_test_table": "enrollment_deepsurv_ready_test_w8",
+  "benchmark_horizons": [
+    10,
+    20,
+    30
+  ],
+  "calibration_bins": 10
+}
+[END] 5.5.1 - 2026-04-03 22:18:32
+[START] 5.5 - 2026-04-03 22:18:32
+# ==============================================================
+# 5.5.2 - Build comparable-window DeepSurv treatment
+# ==============================================================
+[Stage 5.5.2 table_deepsurv_preprocessing_summary - DeepSurv preprocessing summary]
+table_name=table_deepsurv_preprocessing_summary_w8
+rows=1, cols=18
+model_family  train_rows  test_rows  n_input_features_raw  n_numeric_features  n_categorical_features  n_features_after_transform  n_events_train  n_events_test  mean_duration_train  mean_duration_test                              numeric_prefill_policy categorical_imputation          categorical_encoding                   numeric_scaling output_dtype                                           comparability_note  window_weeks
+    deepsurv       22815       9778                    11                   5                       6                          41            5171           2216            30.536182           30.539476 deterministic_train_median_or_zero_when_all_missing       constant_missing one_hot_handle_unknown_ignore standard_scaler_fit_on_train_only      float32 same conceptual input design as the comparable Cox benchmark             8
+ARTIFACT | Stage 5.5.2 table_deepsurv_preprocessing_summary - DeepSurv preprocessing summary | duckdb://table_deepsurv_preprocessing_summary_w8
+[Stage 5.5.2 table_deepsurv_raw_feature_manifest - DeepSurv raw feature manifest]
+table_name=table_deepsurv_raw_feature_manifest_w8
+rows=11, cols=7
+ feature_name_operational feature_role                feature_scope  present_in_train  present_in_test  covered_by_canonical_config  numeric_prefill_value
+                   gender  categorical   fixed_demographic_metadata              True             True                        False                    NaN
+                   region  categorical   fixed_demographic_metadata              True             True                        False                    NaN
+        highest_education  categorical   fixed_demographic_metadata              True             True                        False                    NaN
+                 imd_band  categorical   fixed_demographic_metadata              True             True                        False                    NaN
+                 age_band  categorical   fixed_demographic_metadata              True             True                        False                    NaN
+               disability  categorical   fixed_demographic_metadata              True             True                        False                    NaN
+     num_of_prev_attempts      numeric canonical_comparable_numeric              True             True                         True                    0.0
+          studied_credits      numeric canonical_comparable_numeric              True             True                         True                   60.0
+     clicks_first_8_weeks      numeric canonical_comparable_numeric              True             True                         True                    0.0
+     active_weeks_first_8      numeric canonical_comparable_numeric              True             True                         True                    0.0
+mean_clicks_first_8_weeks      numeric canonical_comparable_numeric              True             True                         True                    0.0
+ARTIFACT | Stage 5.5.2 table_deepsurv_raw_feature_manifest - DeepSurv raw feature manifest | duckdb://table_deepsurv_raw_feature_manifest_w8
+[Stage 5.5.2 table_deepsurv_feature_names_out - DeepSurv output feature manifest]
+table_name=table_deepsurv_feature_names_out_w8
+rows=41, cols=1
+                feature_name_out
+       num__num_of_prev_attempts
+            num__studied_credits
+       num__clicks_first_8_weeks
+       num__active_weeks_first_8
+  num__mean_clicks_first_8_weeks
+                   cat__gender_F
+                   cat__gender_M
+ cat__region_East Anglian Region
+cat__region_East Midlands Region
+             cat__region_Ireland
+       cat__region_London Region
+        cat__region_North Region
+cat__region_North Western Region
+            cat__region_Scotland
+   cat__region_South East Region
+        cat__region_South Region
+   cat__region_South West Region
+               cat__region_Wales
+cat__region_West Midlands Region
+    cat__region_Yorkshire Region
+ARTIFACT | Stage 5.5.2 table_deepsurv_feature_names_out - DeepSurv output feature manifest | duckdb://table_deepsurv_feature_names_out_w8
+ARTIFACT | deepsurv_preprocessing_config | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/metadata/deepsurv_preprocessing_config_w8.json
+{
+  "model_family": "deepsurv",
+  "duration_column": "duration",
+  "event_column": "event",
+  "categorical_features": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability"
+  ],
+  "numeric_features": [
+    "num_of_prev_attempts",
+    "studied_credits",
+    "clicks_first_8_weeks",
+    "active_weeks_first_8",
+    "mean_clicks_first_8_weeks"
+  ],
+  "raw_feature_columns": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability",
+    "num_of_prev_attempts",
+    "studied_credits",
+    "clicks_first_8_weeks",
+    "active_weeks_first_8",
+    "mean_clicks_first_8_weeks"
+  ],
+  "expected_features_raw": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "num_of_prev_attempts",
+    "studied_credits",
+    "clicks_first_8_weeks",
+    "active_weeks_first_8",
+    "mean_clicks_first_8_weeks"
+  ],
+  "expected_features_resolved": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "clicks_first_8_weeks",
+    "active_weeks_first_8",
+    "mean_clicks_first_8_weeks"
+  ],
+  "numeric_prefill_policy": "deterministic_train_median_or_zero_when_all_missing",
+  "numeric_fill_values": {
+    "num_of_prev_attempts": 0.0,
+    "studied_credits": 60.0,
+    "clicks_first_8_weeks": 0.0,
+    "active_weeks_first_8": 0.0,
+    "mean_clicks_first_8_weeks": 0.0
+  },
+  "categorical_imputation": "constant_missing",
+  "categorical_encoding": "one_hot_handle_unknown_ignore",
+  "numeric_scaling": "standard_scaler_fit_on_train_only",
+  "feature_names_out": [
+    "num__num_of_prev_attempts",
+    "num__studied_credits",
+    "num__clicks_first_8_weeks",
+    "num__active_weeks_first_8",
+    "num__mean_clicks_first_8_weeks",
+    "cat__gender_F",
+    "cat__gender_M",
+    "cat__region_East Anglian Region",
+    "cat__region_East Midlands Region",
+    "cat__region_Ireland",
+    "cat__region_London Region",
+    "cat__region_North Region",
+    "cat__region_North Western Region",
+    "cat__region_Scotland",
+    "cat__region_South East Region",
+    "cat__region_South Region",
+    "cat__region_South West Region",
+    "cat__region_Wales",
+    "cat__region_West Midlands Region",
+    "cat__region_Yorkshire Region",
+    "cat__highest_education_A Level or Equivalent",
+    "cat__highest_education_HE Qualification",
+    "cat__highest_education_Lower Than A Level",
+    "cat__highest_education_No Formal quals",
+    "cat__highest_education_Post Graduate Qualification",
+    "cat__imd_band_0-10%",
+    "cat__imd_band_10-20",
+    "cat__imd_band_20-30%",
+    "cat__imd_band_30-40%",
+    "cat__imd_band_40-50%",
+    "cat__imd_band_50-60%",
+    "cat__imd_band_60-70%",
+    "cat__imd_band_70-80%",
+    "cat__imd_band_80-90%",
+    "cat__imd_band_90-100%",
+    "cat__imd_band_None",
+    "cat__age_band_0-35",
+    "cat__age_band_35-55",
+    "cat__age_band_55<=",
+    "cat__disability_N",
+    "cat__disability_Y"
+  ],
+  "comparability_note": "same conceptual input design as the comparable Cox benchmark",
+  "window_weeks": 8
+}
+
+[END] 5.5.2 - 2026-04-03 22:18:32
+[START] 5.5 - 2026-04-03 22:18:32
+# ==============================================================
+# 5.5.3 - Tune and evaluate the comparable-window DeepSurv model
+# ==============================================================
+[Stage 5.5.3 table_deepsurv_tuning_results - DeepSurv tuning results]
+table_name=table_deepsurv_tuning_results_w8
+rows=24, cols=7
+ candidate_id hidden_dims  dropout  learning_rate  weight_decay  best_val_loss  best_epoch
+           16    [64, 32]      0.3         0.0010       0.00010       8.243052          32
+           15    [64, 32]      0.3         0.0010       0.00001       8.243404          20
+           23   [128, 64]      0.3         0.0010       0.00001       8.247472          18
+           21   [128, 64]      0.3         0.0005       0.00001       8.248232          17
+           14    [64, 32]      0.3         0.0005       0.00010       8.248466          41
+           22   [128, 64]      0.3         0.0005       0.00010       8.249633          14
+           12    [64, 32]      0.1         0.0010       0.00010       8.250446           5
+           24   [128, 64]      0.3         0.0010       0.00010       8.250985           7
+           19   [128, 64]      0.1         0.0010       0.00001       8.251239           4
+            8    [32, 16]      0.3         0.0010       0.00010       8.251272          33
+            7    [32, 16]      0.3         0.0010       0.00001       8.251309          22
+            2    [32, 16]      0.1         0.0005       0.00010       8.251795          30
+            5    [32, 16]      0.3         0.0005       0.00001       8.251795          45
+            6    [32, 16]      0.3         0.0005       0.00010       8.253398          28
+           13    [64, 32]      0.3         0.0005       0.00001       8.254103          24
+            1    [32, 16]      0.1         0.0005       0.00001       8.255099          14
+           10    [64, 32]      0.1         0.0005       0.00010       8.255380          25
+           20   [128, 64]      0.1         0.0010       0.00010       8.255687           4
+            9    [64, 32]      0.1         0.0005       0.00001       8.256435          16
+            3    [32, 16]      0.1         0.0010       0.00001       8.257678          15
+ARTIFACT | Stage 5.5.3 table_deepsurv_tuning_results - DeepSurv tuning results | duckdb://table_deepsurv_tuning_results_w8
+[Stage 5.5.3 table_deepsurv_tuned_training_history - DeepSurv best-candidate training history]
+table_name=table_deepsurv_tuned_training_history_w8
+rows=42, cols=4
+ epoch  train_loss  val_loss  candidate_id
+     1    5.521120  8.286218            16
+     2    5.412285  8.269942            16
+     3    5.380389  8.266406            16
+     4    5.370358  8.263339            16
+     5    5.365522  8.258747            16
+     6    5.358130  8.256098            16
+     7    5.347281  8.254062            16
+     8    5.345848  8.253901            16
+     9    5.346904  8.252896            16
+    10    5.334477  8.251141            16
+    11    5.340065  8.250992            16
+    12    5.336774  8.251121            16
+    13    5.334892  8.248437            16
+    14    5.340345  8.248108            16
+    15    5.332072  8.249086            16
+    16    5.337776  8.248532            16
+    17    5.331923  8.247807            16
+    18    5.325858  8.249282            16
+    19    5.322279  8.247432            16
+    20    5.321331  8.247581            16
+ARTIFACT | Stage 5.5.3 table_deepsurv_tuned_training_history - DeepSurv best-candidate training history | duckdb://table_deepsurv_tuned_training_history_w8
+[Stage 5.5.3 table_deepsurv_tuned_test_predictions - DeepSurv test predictions]
+table_name=table_deepsurv_tuned_test_predictions_w8
+rows=29334, cols=6
+      enrollment_id  event  duration  horizon_week  pred_survival_h  pred_risk_h
+ 100561||DDD||2014J      0        37            10         0.875464     0.124536
+ 100621||CCC||2014B      1         6            10         0.886539     0.113461
+ 101187||DDD||2014J      0        37            10         0.872838     0.127162
+ 101279||DDD||2014J      0        37            10         0.920675     0.079325
+ 101414||EEE||2013J      0        38            10         0.851737     0.148263
+ 101700||CCC||2014J      0        38            10         0.841552     0.158448
+ 101781||AAA||2013J      0        38            10         0.891813     0.108187
+ 102209||CCC||2014J      1        15            10         0.940149     0.059851
+ 102343||FFF||2013J      0        38            10         0.939025     0.060975
+1023623||CCC||2014J      0        38            10         0.859059     0.140941
+1033968||DDD||2014B      1        13            10         0.828339     0.171661
+ 103891||DDD||2014B      0        34            10         0.948653     0.051347
+ 104316||FFF||2014B      0        34            10         0.891596     0.108404
+1045203||AAA||2014J      0        38            10         0.900660     0.099340
+1047645||CCC||2014B      0        34            10         0.859531     0.140469
+1053702||EEE||2013J      0        38            10         0.898168     0.101832
+ 105629||FFF||2013J      0        38            10         0.909524     0.090476
+1057883||CCC||2014B      0        34            10         0.909387     0.090613
+ 106383||BBB||2014J      1        21            10         0.940380     0.059620
+ 106553||DDD||2014J      0        37            10         0.854938     0.145062
+ARTIFACT | Stage 5.5.3 table_deepsurv_tuned_test_predictions - DeepSurv test predictions | duckdb://table_deepsurv_tuned_test_predictions_w8
+[Stage 5.5.3 table_deepsurv_tuned_primary_metrics - DeepSurv primary metrics]
+table_name=table_deepsurv_tuned_primary_metrics_w8
+rows=2, cols=4
+metric_name metric_category  metric_value                         notes
+        ibs         primary      0.122439 sksurv_integrated_brier_score
+    c_index      co_primary      0.593497          pycox_concordance_td
+ARTIFACT | Stage 5.5.3 table_deepsurv_tuned_primary_metrics - DeepSurv primary metrics | duckdb://table_deepsurv_tuned_primary_metrics_w8
+[Stage 5.5.3 table_deepsurv_tuned_brier_by_horizon - DeepSurv Brier scores by horizon]
+table_name=table_deepsurv_tuned_brier_by_horizon_w8
+rows=3, cols=5
+ horizon_week      metric_name metric_category  metric_value              notes
+           10 brier_at_horizon         primary      0.106239 sksurv_brier_score
+           20 brier_at_horizon         primary      0.143059 sksurv_brier_score
+           30 brier_at_horizon         primary      0.167062 sksurv_brier_score
+ARTIFACT | Stage 5.5.3 table_deepsurv_tuned_brier_by_horizon - DeepSurv Brier scores by horizon | duckdb://table_deepsurv_tuned_brier_by_horizon_w8
+[Stage 5.5.3 table_deepsurv_tuned_secondary_metrics - DeepSurv secondary metrics]
+table_name=table_deepsurv_tuned_secondary_metrics_w8
+rows=6, cols=5
+ horizon_week         metric_name metric_category  metric_value                                                                                  notes
+           10 risk_auc_at_horizon       secondary      0.632058                                                            roc_auc_on_evaluable_subset
+           10  time_dependent_auc       secondary      0.631207 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.631207; local_ipcw_auc
+           20 risk_auc_at_horizon       secondary      0.606543                                                            roc_auc_on_evaluable_subset
+           20  time_dependent_auc       secondary      0.607107 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.607107; local_ipcw_auc
+           30 risk_auc_at_horizon       secondary      0.598065                                                            roc_auc_on_evaluable_subset
+           30  time_dependent_auc       secondary      0.600271 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.600271; local_ipcw_auc
+ARTIFACT | Stage 5.5.3 table_deepsurv_tuned_secondary_metrics - DeepSurv secondary metrics | duckdb://table_deepsurv_tuned_secondary_metrics_w8
+[Stage 5.5.3 table_deepsurv_tuned_td_auc_support_audit - DeepSurv IPCW support audit]
+table_name=table_deepsurv_tuned_td_auc_support_audit_w8
+rows=3, cols=6
+ horizon_week  max_ipcw_time  n_total_test_enrollments  n_supported_test_enrollments  mean_auc                                                      notes
+           10           38.0                      9778                          6742  0.631207 IPCW-supported subset used for DeepSurv time-dependent AUC
+           20           38.0                      9778                          6742  0.607107 IPCW-supported subset used for DeepSurv time-dependent AUC
+           30           38.0                      9778                          6742  0.600271 IPCW-supported subset used for DeepSurv time-dependent AUC
+ARTIFACT | Stage 5.5.3 table_deepsurv_tuned_td_auc_support_audit - DeepSurv IPCW support audit | duckdb://table_deepsurv_tuned_td_auc_support_audit_w8
+[Stage 5.5.3 table_deepsurv_tuned_row_diagnostics - DeepSurv row-level diagnostics]
+table_name=table_deepsurv_tuned_row_diagnostics_w8
+rows=1, cols=6
+    model_name  row_level_roc_auc  row_level_pr_auc  row_level_log_loss  row_level_brier                                                                    diagnostic_note
+deepsurv_tuned           0.186752          0.137479            0.715558         0.216183 auxiliary enrollment-level proxy only; not a primary cross-family benchmark metric
+ARTIFACT | Stage 5.5.3 table_deepsurv_tuned_row_diagnostics - DeepSurv row-level diagnostics | duckdb://table_deepsurv_tuned_row_diagnostics_w8
+[Stage 5.5.3 table_deepsurv_tuned_support_by_horizon - DeepSurv support by horizon]
+table_name=table_deepsurv_tuned_support_by_horizon_w8
+rows=3, cols=4
+ horizon_week  n_evaluable_enrollments  n_events_by_horizon  event_rate_by_horizon
+           10                     9778                 1215               0.124259
+           20                     9778                 1736               0.177541
+           30                     9778                 2129               0.217734
+ARTIFACT | Stage 5.5.3 table_deepsurv_tuned_support_by_horizon - DeepSurv support by horizon | duckdb://table_deepsurv_tuned_support_by_horizon_w8
+[Stage 5.5.3 table_deepsurv_tuned_calibration_summary - DeepSurv calibration summary]
+table_name=table_deepsurv_tuned_calibration_summary_w8
+rows=3, cols=5
+ horizon_week            metric_name metric_category  metric_value                                         notes
+           10 calibration_at_horizon         primary      0.008512 Weighted absolute calibration gap across bins
+           20 calibration_at_horizon         primary      0.013512 Weighted absolute calibration gap across bins
+           30 calibration_at_horizon         primary      0.014935 Weighted absolute calibration gap across bins
+ARTIFACT | Stage 5.5.3 table_deepsurv_tuned_calibration_summary - DeepSurv calibration summary | duckdb://table_deepsurv_tuned_calibration_summary_w8
+[Stage 5.5.3 table_deepsurv_tuned_calibration_bins_by_horizon - DeepSurv calibration bins]
+table_name=table_deepsurv_tuned_calibration_bins_by_horizon_w8
+rows=30, cols=6
+ calibration_bin   n  mean_predicted_risk  observed_event_rate  horizon_week  abs_calibration_gap
+               0 978             0.054948             0.054192            10             0.000756
+               1 978             0.076941             0.067485            10             0.009456
+               2 978             0.089233             0.092025            10             0.002792
+               3 977             0.101747             0.084954            10             0.016793
+               4 978             0.113621             0.110429            10             0.003192
+               5 978             0.124850             0.120654            10             0.004196
+               6 977             0.137910             0.152508            10             0.014597
+               7 978             0.150674             0.159509            10             0.008835
+               8 978             0.168874             0.182004            10             0.013130
+               9 978             0.207424             0.218814            10             0.011390
+               0 978             0.080758             0.104294            20             0.023536
+               1 978             0.112498             0.107362            20             0.005136
+               2 978             0.130060             0.149284            20             0.019224
+               3 977             0.147819             0.140225            20             0.007594
+               4 978             0.164559             0.154397            20             0.010163
+               5 978             0.180287             0.162577            20             0.017710
+               6 977             0.198453             0.225179            20             0.026726
+               7 978             0.216080             0.219836            20             0.003756
+               8 978             0.240980             0.235174            20             0.005806
+               9 978             0.292571             0.277096            20             0.015475
+ARTIFACT | Stage 5.5.3 table_deepsurv_tuned_calibration_bins_by_horizon - DeepSurv calibration bins | duckdb://table_deepsurv_tuned_calibration_bins_by_horizon_w8
+[Stage 5.5.3 table_deepsurv_tuned_predicted_vs_observed_survival - DeepSurv predicted versus observed survival]
+table_name=table_deepsurv_tuned_predicted_vs_observed_survival_w8
+rows=3, cols=5
+ horizon_week  n_evaluable_enrollments  mean_predicted_survival  mean_observed_survival  abs_gap
+           10                     9778                 0.877377                0.875741 0.001636
+           20                     9778                 0.823593                0.822459 0.001134
+           30                     9778                 0.782502                0.782266 0.000236
+ARTIFACT | Stage 5.5.3 table_deepsurv_tuned_predicted_vs_observed_survival - DeepSurv predicted versus observed survival | duckdb://table_deepsurv_tuned_predicted_vs_observed_survival_w8
+ARTIFACT | deepsurv_model | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/models/deepsurv_tuned_w8.pt
+ARTIFACT | deepsurv_preprocessor | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/models/deepsurv_preprocessor_w8.joblib
+ARTIFACT | deepsurv_tuned_model_config | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/metadata/deepsurv_tuned_model_config_w8.json
+{
+  "model_name": "deepsurv_tuned",
+  "selection_metric": "lowest_validation_loss",
+  "validation_split": {
+    "method": "GroupShuffleSplit",
+    "test_size": 0.2,
+    "group_column": "enrollment_id",
+    "random_seed": 42
+  },
+  "effective_window_weeks": 8,
+  "input_train_table": "enrollment_deepsurv_ready_train_w8",
+  "input_test_table": "enrollment_deepsurv_ready_test_w8",
+  "search_space": [
+    {
+      "candidate_id": 1,
+      "hidden_dims": [
+        32,
+        16
+      ],
+      "dropout": 0.1,
+      "learning_rate": 0.0005,
+      "weight_decay": 1e-05
+    },
+    {
+      "candidate_id": 2,
+      "hidden_dims": [
+        32,
+        16
+      ],
+      "dropout": 0.1,
+      "learning_rate": 0.0005,
+      "weight_decay": 0.0001
+    },
+    {
+      "candidate_id": 3,
+      "hidden_dims": [
+        32,
+        16
+      ],
+      "dropout": 0.1,
+      "learning_rate": 0.001,
+      "weight_decay": 1e-05
+    },
+    {
+      "candidate_id": 4,
+      "hidden_dims": [
+        32,
+        16
+      ],
+      "dropout": 0.1,
+      "learning_rate": 0.001,
+      "weight_decay": 0.0001
+    },
+    {
+      "candidate_id": 5,
+      "hidden_dims": [
+        32,
+        16
+      ],
+      "dropout": 0.3,
+      "learning_rate": 0.0005,
+      "weight_decay": 1e-05
+    },
+    {
+      "candidate_id": 6,
+      "hidden_dims": [
+        32,
+        16
+      ],
+      "dropout": 0.3,
+      "learning_rate": 0.0005,
+      "weight_decay": 0.0001
+    },
+    {
+      "candidate_id": 7,
+      "hidden_dims": [
+        32,
+        16
+      ],
+      "dropout": 0.3,
+      "learning_rate": 0.001,
+      "weight_decay": 1e-05
+    },
+    {
+      "candidate_id": 8,
+      "hidden_dims": [
+        32,
+        16
+      ],
+      "dropout": 0.3,
+      "learning_rate": 0.001,
+      "weight_decay": 0.0001
+    },
+    {
+      "candidate_id": 9,
+      "hidden_dims": [
+        64,
+        32
+      ],
+      "dropout": 0.1,
+      "learning_rate": 0.0005,
+      "weight_decay": 1e-05
+    },
+    {
+      "candidate_id": 10,
+      "hidden_dims": [
+        64,
+        32
+      ],
+      "dropout": 0.1,
+      "learning_rate": 0.0005,
+      "weight_decay": 0.0001
+    },
+    {
+      "candidate_id": 11,
+      "hidden_dims": [
+        64,
+        32
+      ],
+      "dropout": 0.1,
+      "learning_rate": 0.001,
+      "weight_decay": 1e-05
+    },
+    {
+      "candidate_id": 12,
+      "hidden_dims": [
+        64,
+        32
+      ],
+      "dropout": 0.1,
+      "learning_rate": 0.001,
+      "weight_decay": 0.0001
+    },
+    {
+      "candidate_id": 13,
+      "hidden_dims": [
+        64,
+        32
+      ],
+      "dropout": 0.3,
+      "learning_rate": 0.0005,
+      "weight_decay": 1e-05
+    },
+    {
+      "candidate_id": 14,
+      "hidden_dims": [
+        64,
+        32
+      ],
+      "dropout": 0.3,
+      "learning_rate": 0.0005,
+      "weight_decay": 0.0001
+    },
+    {
+      "candidate_id": 15,
+      "hidden_dims": [
+        64,
+        32
+      ],
+      "dropout": 0.3,
+      "learning_rate": 0.001,
+      "weight_decay": 1e-05
+    },
+    {
+      "candidate_id": 16,
+      "hidden_dims": [
+        64,
+        32
+      ],
+      "dropout": 0.3,
+      "learning_rate": 0.001,
+      "weight_decay": 0.0001
+    },
+    {
+      "candidate_id": 17,
+      "hidden_dims": [
+        128,
+        64
+      ],
+      "dropout": 0.1,
+      "learning_rate": 0.0005,
+      "weight_decay": 1e-05
+    },
+    {
+      "candidate_id": 18,
+      "hidden_dims": [
+        128,
+        64
+      ],
+      "dropout": 0.1,
+      "learning_rate": 0.0005,
+      "weight_decay": 0.0001
+    },
+    {
+      "candidate_id": 19,
+      "hidden_dims": [
+        128,
+        64
+      ],
+      "dropout": 0.1,
+      "learning_rate": 0.001,
+      "weight_decay": 1e-05
+    },
+    {
+      "candidate_id": 20,
+      "hidden_dims": [
+        128,
+        64
+      ],
+      "dropout": 0.1,
+      "learning_rate": 0.001,
+      "weight_decay": 0.0001
+    },
+    {
+      "candidate_id": 21,
+      "hidden_dims": [
+        128,
+        64
+      ],
+      "dropout": 0.3,
+      "learning_rate": 0.0005,
+      "weight_decay": 1e-05
+    },
+    {
+      "candidate_id": 22,
+      "hidden_dims": [
+        128,
+        64
+      ],
+      "dropout": 0.3,
+      "learning_rate": 0.0005,
+      "weight_decay": 0.0001
+    },
+    {
+      "candidate_id": 23,
+      "hidden_dims": [
+        128,
+        64
+      ],
+      "dropout": 0.3,
+      "learning_rate": 0.001,
+      "weight_decay": 1e-05
+    },
+    {
+      "candidate_id": 24,
+      "hidden_dims": [
+        128,
+        64
+      ],
+      "dropout": 0.3,
+      "learning_rate": 0.001,
+      "weight_decay": 0.0001
+    }
+  ],
+  "batch_norm": true,
+  "output_bias": false,
+  "batch_size": 256,
+  "epochs": 100,
+  "patience": 10,
+  "benchmark_horizons": [
+    10,
+    20,
+    30
+  ],
+  "calibration_bins": 10,
+  "calibration_contract_version": "v2_ipcw_km_observed_risk",
+  "calibration_observed_risk_method": "ipcw_km_pseudo_event_rate",
+  "best_candidate": {
+    "candidate_id": 16,
+    "hidden_dims": [
+      64,
+      32
+    ],
+    "dropout": 0.3,
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001,
+    "best_val_loss": 8.243051528930664,
+    "best_epoch": 32
+  },
+  "preprocessing": {
+    "categorical_features": [
+      "gender",
+      "region",
+      "highest_education",
+      "imd_band",
+      "age_band",
+      "disability"
+    ],
+    "numeric_features": [
+      "num_of_prev_attempts",
+      "studied_credits",
+      "clicks_first_8_weeks",
+      "active_weeks_first_8",
+      "mean_clicks_first_8_weeks"
+    ],
+    "numeric_prefill_values": {
+      "num_of_prev_attempts": 0.0,
+      "studied_credits": 60.0,
+      "clicks_first_8_weeks": 0.0,
+      "active_weeks_first_8": 0.0,
+      "mean_clicks_first_8_weeks": 0.0
+    },
+    "feature_names_out": [
+      "num__num_of_prev_attempts",
+      "num__studied_credits",
+      "num__clicks_first_8_weeks",
+      "num__active_weeks_first_8",
+      "num__mean_clicks_first_8_weeks",
+      "cat__gender_F",
+      "cat__gender_M",
+      "cat__region_East Anglian Region",
+      "cat__region_East Midlands Region",
+      "cat__region_Ireland",
+      "cat__region_London Region",
+      "cat__region_North Region",
+      "cat__region_North Western Region",
+      "cat__region_Scotland",
+      "cat__region_South East Region",
+      "cat__region_South Region",
+      "cat__region_South West Region",
+      "cat__region_Wales",
+      "cat__region_West Midlands Region",
+      "cat__region_Yorkshire Region",
+      "cat__highest_education_A Level or Equivalent",
+      "cat__highest_education_HE Qualification",
+      "cat__highest_education_Lower Than A Level",
+      "cat__highest_education_No Formal quals",
+      "cat__highest_education_Post Graduate Qualification",
+      "cat__imd_band_0-10%",
+      "cat__imd_band_10-20",
+      "cat__imd_band_20-30%",
+      "cat__imd_band_30-40%",
+      "cat__imd_band_40-50%",
+      "cat__imd_band_50-60%",
+      "cat__imd_band_60-70%",
+      "cat__imd_band_70-80%",
+      "cat__imd_band_80-90%",
+      "cat__imd_band_90-100%",
+      "cat__imd_band_None",
+      "cat__age_band_0-35",
+      "cat__age_band_35-55",
+      "cat__age_band_55<=",
+      "cat__disability_N",
+      "cat__disability_Y"
+    ]
+  },
+  "design_note": "The comparable DeepSurv arm integrates deterministic numeric prefill, canonical enrollment ordering, and a local IPCW-supported time-dependent AUC path directly into D5.5 so no downstream repair stage is required."
+}
+
+ candidate_id hidden_dims  dropout  learning_rate  weight_decay  best_val_loss  best_epoch
+           16    [64, 32]      0.3          0.001        0.0001       8.243052          32
+[END] 5.5.3 - 2026-04-03 22:19:25
+[START] 5.5 - 2026-04-03 22:19:25
+# ==============================================================
+# 5.5.4 - Close runtime resources
+# ==============================================================
+DuckDB connection closed.
+ARTIFACT | duckdb_connection | closed::/Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/benchmark_survival.duckdb
+[END] 5.5.4 - 2026-04-03 22:19:26
+[RUN_PLAN] comparable_window_weeks=10 script=dropout_bench_v3_D_05_comparable_neural_deepsurv.py
+[START] 5.5 - 2026-04-03 22:19:26
+# ==============================================================
+# 5.5.1 - Lightweight runtime bootstrap
+# ==============================================================
+ARTIFACT | benchmark_shared_config | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/benchmark_shared_config.toml
+ARTIFACT | benchmark_modeling_contract | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/benchmark_modeling_contract.toml
+ARTIFACT | run_metadata | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/metadata/run_metadata.json
+ARTIFACT | duckdb_path | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/benchmark_survival.duckdb
+{
+  "run_id": "f3e86c2afbd246e2814123195c22d973",
+  "random_seed": 42,
+  "test_size": 0.3,
+  "validation_test_size": 0.2,
+  "cpu_cores": 8,
+  "early_window_weeks": 4,
+  "main_enrollment_window_weeks": 4,
+  "effective_window_weeks": 10,
+  "input_train_table": "enrollment_deepsurv_ready_train_w10",
+  "input_test_table": "enrollment_deepsurv_ready_test_w10",
+  "benchmark_horizons": [
+    10,
+    20,
+    30
+  ],
+  "calibration_bins": 10
+}
+[END] 5.5.1 - 2026-04-03 22:19:26
+[START] 5.5 - 2026-04-03 22:19:26
+# ==============================================================
+# 5.5.2 - Build comparable-window DeepSurv treatment
+# ==============================================================
+[Stage 5.5.2 table_deepsurv_preprocessing_summary - DeepSurv preprocessing summary]
+table_name=table_deepsurv_preprocessing_summary_w10
+rows=1, cols=18
+model_family  train_rows  test_rows  n_input_features_raw  n_numeric_features  n_categorical_features  n_features_after_transform  n_events_train  n_events_test  mean_duration_train  mean_duration_test                              numeric_prefill_policy categorical_imputation          categorical_encoding                   numeric_scaling output_dtype                                           comparability_note  window_weeks
+    deepsurv       22815       9778                    11                   5                       6                          41            5171           2216            30.536182           30.539476 deterministic_train_median_or_zero_when_all_missing       constant_missing one_hot_handle_unknown_ignore standard_scaler_fit_on_train_only      float32 same conceptual input design as the comparable Cox benchmark            10
+ARTIFACT | Stage 5.5.2 table_deepsurv_preprocessing_summary - DeepSurv preprocessing summary | duckdb://table_deepsurv_preprocessing_summary_w10
+[Stage 5.5.2 table_deepsurv_raw_feature_manifest - DeepSurv raw feature manifest]
+table_name=table_deepsurv_raw_feature_manifest_w10
+rows=11, cols=7
+  feature_name_operational feature_role                feature_scope  present_in_train  present_in_test  covered_by_canonical_config  numeric_prefill_value
+                    gender  categorical   fixed_demographic_metadata              True             True                        False                    NaN
+                    region  categorical   fixed_demographic_metadata              True             True                        False                    NaN
+         highest_education  categorical   fixed_demographic_metadata              True             True                        False                    NaN
+                  imd_band  categorical   fixed_demographic_metadata              True             True                        False                    NaN
+                  age_band  categorical   fixed_demographic_metadata              True             True                        False                    NaN
+                disability  categorical   fixed_demographic_metadata              True             True                        False                    NaN
+      num_of_prev_attempts      numeric canonical_comparable_numeric              True             True                         True                    0.0
+           studied_credits      numeric canonical_comparable_numeric              True             True                         True                   60.0
+     clicks_first_10_weeks      numeric canonical_comparable_numeric              True             True                         True                    0.0
+     active_weeks_first_10      numeric canonical_comparable_numeric              True             True                         True                    0.0
+mean_clicks_first_10_weeks      numeric canonical_comparable_numeric              True             True                         True                    0.0
+ARTIFACT | Stage 5.5.2 table_deepsurv_raw_feature_manifest - DeepSurv raw feature manifest | duckdb://table_deepsurv_raw_feature_manifest_w10
+[Stage 5.5.2 table_deepsurv_feature_names_out - DeepSurv output feature manifest]
+table_name=table_deepsurv_feature_names_out_w10
+rows=41, cols=1
+                feature_name_out
+       num__num_of_prev_attempts
+            num__studied_credits
+      num__clicks_first_10_weeks
+      num__active_weeks_first_10
+ num__mean_clicks_first_10_weeks
+                   cat__gender_F
+                   cat__gender_M
+ cat__region_East Anglian Region
+cat__region_East Midlands Region
+             cat__region_Ireland
+       cat__region_London Region
+        cat__region_North Region
+cat__region_North Western Region
+            cat__region_Scotland
+   cat__region_South East Region
+        cat__region_South Region
+   cat__region_South West Region
+               cat__region_Wales
+cat__region_West Midlands Region
+    cat__region_Yorkshire Region
+ARTIFACT | Stage 5.5.2 table_deepsurv_feature_names_out - DeepSurv output feature manifest | duckdb://table_deepsurv_feature_names_out_w10
+ARTIFACT | deepsurv_preprocessing_config | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/metadata/deepsurv_preprocessing_config_w10.json
+{
+  "model_family": "deepsurv",
+  "duration_column": "duration",
+  "event_column": "event",
+  "categorical_features": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability"
+  ],
+  "numeric_features": [
+    "num_of_prev_attempts",
+    "studied_credits",
+    "clicks_first_10_weeks",
+    "active_weeks_first_10",
+    "mean_clicks_first_10_weeks"
+  ],
+  "raw_feature_columns": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability",
+    "num_of_prev_attempts",
+    "studied_credits",
+    "clicks_first_10_weeks",
+    "active_weeks_first_10",
+    "mean_clicks_first_10_weeks"
+  ],
+  "expected_features_raw": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "num_of_prev_attempts",
+    "studied_credits",
+    "clicks_first_10_weeks",
+    "active_weeks_first_10",
+    "mean_clicks_first_10_weeks"
+  ],
+  "expected_features_resolved": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "clicks_first_10_weeks",
+    "active_weeks_first_10",
+    "mean_clicks_first_10_weeks"
+  ],
+  "numeric_prefill_policy": "deterministic_train_median_or_zero_when_all_missing",
+  "numeric_fill_values": {
+    "num_of_prev_attempts": 0.0,
+    "studied_credits": 60.0,
+    "clicks_first_10_weeks": 0.0,
+    "active_weeks_first_10": 0.0,
+    "mean_clicks_first_10_weeks": 0.0
+  },
+  "categorical_imputation": "constant_missing",
+  "categorical_encoding": "one_hot_handle_unknown_ignore",
+  "numeric_scaling": "standard_scaler_fit_on_train_only",
+  "feature_names_out": [
+    "num__num_of_prev_attempts",
+    "num__studied_credits",
+    "num__clicks_first_10_weeks",
+    "num__active_weeks_first_10",
+    "num__mean_clicks_first_10_weeks",
+    "cat__gender_F",
+    "cat__gender_M",
+    "cat__region_East Anglian Region",
+    "cat__region_East Midlands Region",
+    "cat__region_Ireland",
+    "cat__region_London Region",
+    "cat__region_North Region",
+    "cat__region_North Western Region",
+    "cat__region_Scotland",
+    "cat__region_South East Region",
+    "cat__region_South Region",
+    "cat__region_South West Region",
+    "cat__region_Wales",
+    "cat__region_West Midlands Region",
+    "cat__region_Yorkshire Region",
+    "cat__highest_education_A Level or Equivalent",
+    "cat__highest_education_HE Qualification",
+    "cat__highest_education_Lower Than A Level",
+    "cat__highest_education_No Formal quals",
+    "cat__highest_education_Post Graduate Qualification",
+    "cat__imd_band_0-10%",
+    "cat__imd_band_10-20",
+    "cat__imd_band_20-30%",
+    "cat__imd_band_30-40%",
+    "cat__imd_band_40-50%",
+    "cat__imd_band_50-60%",
+    "cat__imd_band_60-70%",
+    "cat__imd_band_70-80%",
+    "cat__imd_band_80-90%",
+    "cat__imd_band_90-100%",
+    "cat__imd_band_None",
+    "cat__age_band_0-35",
+    "cat__age_band_35-55",
+    "cat__age_band_55<=",
+    "cat__disability_N",
+    "cat__disability_Y"
+  ],
+  "comparability_note": "same conceptual input design as the comparable Cox benchmark",
+  "window_weeks": 10
+}
+
+[END] 5.5.2 - 2026-04-03 22:19:26
+[START] 5.5 - 2026-04-03 22:19:26
+# ==============================================================
+# 5.5.3 - Tune and evaluate the comparable-window DeepSurv model
+# ==============================================================
+[Stage 5.5.3 table_deepsurv_tuning_results - DeepSurv tuning results]
+table_name=table_deepsurv_tuning_results_w10
+rows=24, cols=7
+ candidate_id hidden_dims  dropout  learning_rate  weight_decay  best_val_loss  best_epoch
+           16    [64, 32]      0.3         0.0010       0.00010       8.243052          32
+           15    [64, 32]      0.3         0.0010       0.00001       8.243404          20
+           23   [128, 64]      0.3         0.0010       0.00001       8.247472          18
+           21   [128, 64]      0.3         0.0005       0.00001       8.248232          17
+           14    [64, 32]      0.3         0.0005       0.00010       8.248466          41
+           22   [128, 64]      0.3         0.0005       0.00010       8.249633          14
+           12    [64, 32]      0.1         0.0010       0.00010       8.250446           5
+           24   [128, 64]      0.3         0.0010       0.00010       8.250985           7
+           19   [128, 64]      0.1         0.0010       0.00001       8.251239           4
+            8    [32, 16]      0.3         0.0010       0.00010       8.251272          33
+            7    [32, 16]      0.3         0.0010       0.00001       8.251309          22
+            2    [32, 16]      0.1         0.0005       0.00010       8.251795          30
+            5    [32, 16]      0.3         0.0005       0.00001       8.251795          45
+            6    [32, 16]      0.3         0.0005       0.00010       8.253398          28
+           13    [64, 32]      0.3         0.0005       0.00001       8.254103          24
+            1    [32, 16]      0.1         0.0005       0.00001       8.255099          14
+           10    [64, 32]      0.1         0.0005       0.00010       8.255380          25
+           20   [128, 64]      0.1         0.0010       0.00010       8.255687           4
+            9    [64, 32]      0.1         0.0005       0.00001       8.256435          16
+            3    [32, 16]      0.1         0.0010       0.00001       8.257678          15
+ARTIFACT | Stage 5.5.3 table_deepsurv_tuning_results - DeepSurv tuning results | duckdb://table_deepsurv_tuning_results_w10
+[Stage 5.5.3 table_deepsurv_tuned_training_history - DeepSurv best-candidate training history]
+table_name=table_deepsurv_tuned_training_history_w10
+rows=42, cols=4
+ epoch  train_loss  val_loss  candidate_id
+     1    5.521120  8.286218            16
+     2    5.412285  8.269942            16
+     3    5.380389  8.266406            16
+     4    5.370358  8.263339            16
+     5    5.365522  8.258747            16
+     6    5.358130  8.256098            16
+     7    5.347281  8.254062            16
+     8    5.345848  8.253901            16
+     9    5.346904  8.252896            16
+    10    5.334477  8.251141            16
+    11    5.340065  8.250992            16
+    12    5.336774  8.251121            16
+    13    5.334892  8.248437            16
+    14    5.340345  8.248108            16
+    15    5.332072  8.249086            16
+    16    5.337776  8.248532            16
+    17    5.331923  8.247807            16
+    18    5.325858  8.249282            16
+    19    5.322279  8.247432            16
+    20    5.321331  8.247581            16
+ARTIFACT | Stage 5.5.3 table_deepsurv_tuned_training_history - DeepSurv best-candidate training history | duckdb://table_deepsurv_tuned_training_history_w10
+[Stage 5.5.3 table_deepsurv_tuned_test_predictions - DeepSurv test predictions]
+table_name=table_deepsurv_tuned_test_predictions_w10
+rows=29334, cols=6
+      enrollment_id  event  duration  horizon_week  pred_survival_h  pred_risk_h
+ 100561||DDD||2014J      0        37            10         0.875464     0.124536
+ 100621||CCC||2014B      1         6            10         0.886539     0.113461
+ 101187||DDD||2014J      0        37            10         0.872838     0.127162
+ 101279||DDD||2014J      0        37            10         0.920675     0.079325
+ 101414||EEE||2013J      0        38            10         0.851737     0.148263
+ 101700||CCC||2014J      0        38            10         0.841552     0.158448
+ 101781||AAA||2013J      0        38            10         0.891813     0.108187
+ 102209||CCC||2014J      1        15            10         0.940149     0.059851
+ 102343||FFF||2013J      0        38            10         0.939025     0.060975
+1023623||CCC||2014J      0        38            10         0.859059     0.140941
+1033968||DDD||2014B      1        13            10         0.828339     0.171661
+ 103891||DDD||2014B      0        34            10         0.948653     0.051347
+ 104316||FFF||2014B      0        34            10         0.891596     0.108404
+1045203||AAA||2014J      0        38            10         0.900660     0.099340
+1047645||CCC||2014B      0        34            10         0.859531     0.140469
+1053702||EEE||2013J      0        38            10         0.898168     0.101832
+ 105629||FFF||2013J      0        38            10         0.909524     0.090476
+1057883||CCC||2014B      0        34            10         0.909387     0.090613
+ 106383||BBB||2014J      1        21            10         0.940380     0.059620
+ 106553||DDD||2014J      0        37            10         0.854938     0.145062
+ARTIFACT | Stage 5.5.3 table_deepsurv_tuned_test_predictions - DeepSurv test predictions | duckdb://table_deepsurv_tuned_test_predictions_w10
+[Stage 5.5.3 table_deepsurv_tuned_primary_metrics - DeepSurv primary metrics]
+table_name=table_deepsurv_tuned_primary_metrics_w10
+rows=2, cols=4
+metric_name metric_category  metric_value                         notes
+        ibs         primary      0.122439 sksurv_integrated_brier_score
+    c_index      co_primary      0.593497          pycox_concordance_td
+ARTIFACT | Stage 5.5.3 table_deepsurv_tuned_primary_metrics - DeepSurv primary metrics | duckdb://table_deepsurv_tuned_primary_metrics_w10
+[Stage 5.5.3 table_deepsurv_tuned_brier_by_horizon - DeepSurv Brier scores by horizon]
+table_name=table_deepsurv_tuned_brier_by_horizon_w10
+rows=3, cols=5
+ horizon_week      metric_name metric_category  metric_value              notes
+           10 brier_at_horizon         primary      0.106239 sksurv_brier_score
+           20 brier_at_horizon         primary      0.143059 sksurv_brier_score
+           30 brier_at_horizon         primary      0.167062 sksurv_brier_score
+ARTIFACT | Stage 5.5.3 table_deepsurv_tuned_brier_by_horizon - DeepSurv Brier scores by horizon | duckdb://table_deepsurv_tuned_brier_by_horizon_w10
+[Stage 5.5.3 table_deepsurv_tuned_secondary_metrics - DeepSurv secondary metrics]
+table_name=table_deepsurv_tuned_secondary_metrics_w10
+rows=6, cols=5
+ horizon_week         metric_name metric_category  metric_value                                                                                  notes
+           10 risk_auc_at_horizon       secondary      0.632058                                                            roc_auc_on_evaluable_subset
+           10  time_dependent_auc       secondary      0.631207 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.631207; local_ipcw_auc
+           20 risk_auc_at_horizon       secondary      0.606543                                                            roc_auc_on_evaluable_subset
+           20  time_dependent_auc       secondary      0.607107 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.607107; local_ipcw_auc
+           30 risk_auc_at_horizon       secondary      0.598065                                                            roc_auc_on_evaluable_subset
+           30  time_dependent_auc       secondary      0.600271 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.600271; local_ipcw_auc
+ARTIFACT | Stage 5.5.3 table_deepsurv_tuned_secondary_metrics - DeepSurv secondary metrics | duckdb://table_deepsurv_tuned_secondary_metrics_w10
+[Stage 5.5.3 table_deepsurv_tuned_td_auc_support_audit - DeepSurv IPCW support audit]
+table_name=table_deepsurv_tuned_td_auc_support_audit_w10
+rows=3, cols=6
+ horizon_week  max_ipcw_time  n_total_test_enrollments  n_supported_test_enrollments  mean_auc                                                      notes
+           10           38.0                      9778                          6742  0.631207 IPCW-supported subset used for DeepSurv time-dependent AUC
+           20           38.0                      9778                          6742  0.607107 IPCW-supported subset used for DeepSurv time-dependent AUC
+           30           38.0                      9778                          6742  0.600271 IPCW-supported subset used for DeepSurv time-dependent AUC
+ARTIFACT | Stage 5.5.3 table_deepsurv_tuned_td_auc_support_audit - DeepSurv IPCW support audit | duckdb://table_deepsurv_tuned_td_auc_support_audit_w10
+[Stage 5.5.3 table_deepsurv_tuned_row_diagnostics - DeepSurv row-level diagnostics]
+table_name=table_deepsurv_tuned_row_diagnostics_w10
+rows=1, cols=6
+    model_name  row_level_roc_auc  row_level_pr_auc  row_level_log_loss  row_level_brier                                                                    diagnostic_note
+deepsurv_tuned           0.186752          0.137479            0.715558         0.216183 auxiliary enrollment-level proxy only; not a primary cross-family benchmark metric
+ARTIFACT | Stage 5.5.3 table_deepsurv_tuned_row_diagnostics - DeepSurv row-level diagnostics | duckdb://table_deepsurv_tuned_row_diagnostics_w10
+[Stage 5.5.3 table_deepsurv_tuned_support_by_horizon - DeepSurv support by horizon]
+table_name=table_deepsurv_tuned_support_by_horizon_w10
+rows=3, cols=4
+ horizon_week  n_evaluable_enrollments  n_events_by_horizon  event_rate_by_horizon
+           10                     9778                 1215               0.124259
+           20                     9778                 1736               0.177541
+           30                     9778                 2129               0.217734
+ARTIFACT | Stage 5.5.3 table_deepsurv_tuned_support_by_horizon - DeepSurv support by horizon | duckdb://table_deepsurv_tuned_support_by_horizon_w10
+[Stage 5.5.3 table_deepsurv_tuned_calibration_summary - DeepSurv calibration summary]
+table_name=table_deepsurv_tuned_calibration_summary_w10
+rows=3, cols=5
+ horizon_week            metric_name metric_category  metric_value                                         notes
+           10 calibration_at_horizon         primary      0.008512 Weighted absolute calibration gap across bins
+           20 calibration_at_horizon         primary      0.013512 Weighted absolute calibration gap across bins
+           30 calibration_at_horizon         primary      0.014935 Weighted absolute calibration gap across bins
+ARTIFACT | Stage 5.5.3 table_deepsurv_tuned_calibration_summary - DeepSurv calibration summary | duckdb://table_deepsurv_tuned_calibration_summary_w10
+[Stage 5.5.3 table_deepsurv_tuned_calibration_bins_by_horizon - DeepSurv calibration bins]
+table_name=table_deepsurv_tuned_calibration_bins_by_horizon_w10
+rows=30, cols=6
+ calibration_bin   n  mean_predicted_risk  observed_event_rate  horizon_week  abs_calibration_gap
+               0 978             0.054948             0.054192            10             0.000756
+               1 978             0.076941             0.067485            10             0.009456
+               2 978             0.089233             0.092025            10             0.002792
+               3 977             0.101747             0.084954            10             0.016793
+               4 978             0.113621             0.110429            10             0.003192
+               5 978             0.124850             0.120654            10             0.004196
+               6 977             0.137910             0.152508            10             0.014597
+               7 978             0.150674             0.159509            10             0.008835
+               8 978             0.168874             0.182004            10             0.013130
+               9 978             0.207424             0.218814            10             0.011390
+               0 978             0.080758             0.104294            20             0.023536
+               1 978             0.112498             0.107362            20             0.005136
+               2 978             0.130060             0.149284            20             0.019224
+               3 977             0.147819             0.140225            20             0.007594
+               4 978             0.164559             0.154397            20             0.010163
+               5 978             0.180287             0.162577            20             0.017710
+               6 977             0.198453             0.225179            20             0.026726
+               7 978             0.216080             0.219836            20             0.003756
+               8 978             0.240980             0.235174            20             0.005806
+               9 978             0.292571             0.277096            20             0.015475
+ARTIFACT | Stage 5.5.3 table_deepsurv_tuned_calibration_bins_by_horizon - DeepSurv calibration bins | duckdb://table_deepsurv_tuned_calibration_bins_by_horizon_w10
+[Stage 5.5.3 table_deepsurv_tuned_predicted_vs_observed_survival - DeepSurv predicted versus observed survival]
+table_name=table_deepsurv_tuned_predicted_vs_observed_survival_w10
+rows=3, cols=5
+ horizon_week  n_evaluable_enrollments  mean_predicted_survival  mean_observed_survival  abs_gap
+           10                     9778                 0.877377                0.875741 0.001636
+           20                     9778                 0.823593                0.822459 0.001134
+           30                     9778                 0.782502                0.782266 0.000236
+ARTIFACT | Stage 5.5.3 table_deepsurv_tuned_predicted_vs_observed_survival - DeepSurv predicted versus observed survival | duckdb://table_deepsurv_tuned_predicted_vs_observed_survival_w10
+ARTIFACT | deepsurv_model | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/models/deepsurv_tuned_w10.pt
+ARTIFACT | deepsurv_preprocessor | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/models/deepsurv_preprocessor_w10.joblib
+ARTIFACT | deepsurv_tuned_model_config | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/metadata/deepsurv_tuned_model_config_w10.json
+{
+  "model_name": "deepsurv_tuned",
+  "selection_metric": "lowest_validation_loss",
+  "validation_split": {
+    "method": "GroupShuffleSplit",
+    "test_size": 0.2,
+    "group_column": "enrollment_id",
+    "random_seed": 42
+  },
+  "effective_window_weeks": 10,
+  "input_train_table": "enrollment_deepsurv_ready_train_w10",
+  "input_test_table": "enrollment_deepsurv_ready_test_w10",
+  "search_space": [
+    {
+      "candidate_id": 1,
+      "hidden_dims": [
+        32,
+        16
+      ],
+      "dropout": 0.1,
+      "learning_rate": 0.0005,
+      "weight_decay": 1e-05
+    },
+    {
+      "candidate_id": 2,
+      "hidden_dims": [
+        32,
+        16
+      ],
+      "dropout": 0.1,
+      "learning_rate": 0.0005,
+      "weight_decay": 0.0001
+    },
+    {
+      "candidate_id": 3,
+      "hidden_dims": [
+        32,
+        16
+      ],
+      "dropout": 0.1,
+      "learning_rate": 0.001,
+      "weight_decay": 1e-05
+    },
+    {
+      "candidate_id": 4,
+      "hidden_dims": [
+        32,
+        16
+      ],
+      "dropout": 0.1,
+      "learning_rate": 0.001,
+      "weight_decay": 0.0001
+    },
+    {
+      "candidate_id": 5,
+      "hidden_dims": [
+        32,
+        16
+      ],
+      "dropout": 0.3,
+      "learning_rate": 0.0005,
+      "weight_decay": 1e-05
+    },
+    {
+      "candidate_id": 6,
+      "hidden_dims": [
+        32,
+        16
+      ],
+      "dropout": 0.3,
+      "learning_rate": 0.0005,
+      "weight_decay": 0.0001
+    },
+    {
+      "candidate_id": 7,
+      "hidden_dims": [
+        32,
+        16
+      ],
+      "dropout": 0.3,
+      "learning_rate": 0.001,
+      "weight_decay": 1e-05
+    },
+    {
+      "candidate_id": 8,
+      "hidden_dims": [
+        32,
+        16
+      ],
+      "dropout": 0.3,
+      "learning_rate": 0.001,
+      "weight_decay": 0.0001
+    },
+    {
+      "candidate_id": 9,
+      "hidden_dims": [
+        64,
+        32
+      ],
+      "dropout": 0.1,
+      "learning_rate": 0.0005,
+      "weight_decay": 1e-05
+    },
+    {
+      "candidate_id": 10,
+      "hidden_dims": [
+        64,
+        32
+      ],
+      "dropout": 0.1,
+      "learning_rate": 0.0005,
+      "weight_decay": 0.0001
+    },
+    {
+      "candidate_id": 11,
+      "hidden_dims": [
+        64,
+        32
+      ],
+      "dropout": 0.1,
+      "learning_rate": 0.001,
+      "weight_decay": 1e-05
+    },
+    {
+      "candidate_id": 12,
+      "hidden_dims": [
+        64,
+        32
+      ],
+      "dropout": 0.1,
+      "learning_rate": 0.001,
+      "weight_decay": 0.0001
+    },
+    {
+      "candidate_id": 13,
+      "hidden_dims": [
+        64,
+        32
+      ],
+      "dropout": 0.3,
+      "learning_rate": 0.0005,
+      "weight_decay": 1e-05
+    },
+    {
+      "candidate_id": 14,
+      "hidden_dims": [
+        64,
+        32
+      ],
+      "dropout": 0.3,
+      "learning_rate": 0.0005,
+      "weight_decay": 0.0001
+    },
+    {
+      "candidate_id": 15,
+      "hidden_dims": [
+        64,
+        32
+      ],
+      "dropout": 0.3,
+      "learning_rate": 0.001,
+      "weight_decay": 1e-05
+    },
+    {
+      "candidate_id": 16,
+      "hidden_dims": [
+        64,
+        32
+      ],
+      "dropout": 0.3,
+      "learning_rate": 0.001,
+      "weight_decay": 0.0001
+    },
+    {
+      "candidate_id": 17,
+      "hidden_dims": [
+        128,
+        64
+      ],
+      "dropout": 0.1,
+      "learning_rate": 0.0005,
+      "weight_decay": 1e-05
+    },
+    {
+      "candidate_id": 18,
+      "hidden_dims": [
+        128,
+        64
+      ],
+      "dropout": 0.1,
+      "learning_rate": 0.0005,
+      "weight_decay": 0.0001
+    },
+    {
+      "candidate_id": 19,
+      "hidden_dims": [
+        128,
+        64
+      ],
+      "dropout": 0.1,
+      "learning_rate": 0.001,
+      "weight_decay": 1e-05
+    },
+    {
+      "candidate_id": 20,
+      "hidden_dims": [
+        128,
+        64
+      ],
+      "dropout": 0.1,
+      "learning_rate": 0.001,
+      "weight_decay": 0.0001
+    },
+    {
+      "candidate_id": 21,
+      "hidden_dims": [
+        128,
+        64
+      ],
+      "dropout": 0.3,
+      "learning_rate": 0.0005,
+      "weight_decay": 1e-05
+    },
+    {
+      "candidate_id": 22,
+      "hidden_dims": [
+        128,
+        64
+      ],
+      "dropout": 0.3,
+      "learning_rate": 0.0005,
+      "weight_decay": 0.0001
+    },
+    {
+      "candidate_id": 23,
+      "hidden_dims": [
+        128,
+        64
+      ],
+      "dropout": 0.3,
+      "learning_rate": 0.001,
+      "weight_decay": 1e-05
+    },
+    {
+      "candidate_id": 24,
+      "hidden_dims": [
+        128,
+        64
+      ],
+      "dropout": 0.3,
+      "learning_rate": 0.001,
+      "weight_decay": 0.0001
+    }
+  ],
+  "batch_norm": true,
+  "output_bias": false,
+  "batch_size": 256,
+  "epochs": 100,
+  "patience": 10,
+  "benchmark_horizons": [
+    10,
+    20,
+    30
+  ],
+  "calibration_bins": 10,
+  "calibration_contract_version": "v2_ipcw_km_observed_risk",
+  "calibration_observed_risk_method": "ipcw_km_pseudo_event_rate",
+  "best_candidate": {
+    "candidate_id": 16,
+    "hidden_dims": [
+      64,
+      32
+    ],
+    "dropout": 0.3,
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001,
+    "best_val_loss": 8.243051528930664,
+    "best_epoch": 32
+  },
+  "preprocessing": {
+    "categorical_features": [
+      "gender",
+      "region",
+      "highest_education",
+      "imd_band",
+      "age_band",
+      "disability"
+    ],
+    "numeric_features": [
+      "num_of_prev_attempts",
+      "studied_credits",
+      "clicks_first_10_weeks",
+      "active_weeks_first_10",
+      "mean_clicks_first_10_weeks"
+    ],
+    "numeric_prefill_values": {
+      "num_of_prev_attempts": 0.0,
+      "studied_credits": 60.0,
+      "clicks_first_10_weeks": 0.0,
+      "active_weeks_first_10": 0.0,
+      "mean_clicks_first_10_weeks": 0.0
+    },
+    "feature_names_out": [
+      "num__num_of_prev_attempts",
+      "num__studied_credits",
+      "num__clicks_first_10_weeks",
+      "num__active_weeks_first_10",
+      "num__mean_clicks_first_10_weeks",
+      "cat__gender_F",
+      "cat__gender_M",
+      "cat__region_East Anglian Region",
+      "cat__region_East Midlands Region",
+      "cat__region_Ireland",
+      "cat__region_London Region",
+      "cat__region_North Region",
+      "cat__region_North Western Region",
+      "cat__region_Scotland",
+      "cat__region_South East Region",
+      "cat__region_South Region",
+      "cat__region_South West Region",
+      "cat__region_Wales",
+      "cat__region_West Midlands Region",
+      "cat__region_Yorkshire Region",
+      "cat__highest_education_A Level or Equivalent",
+      "cat__highest_education_HE Qualification",
+      "cat__highest_education_Lower Than A Level",
+      "cat__highest_education_No Formal quals",
+      "cat__highest_education_Post Graduate Qualification",
+      "cat__imd_band_0-10%",
+      "cat__imd_band_10-20",
+      "cat__imd_band_20-30%",
+      "cat__imd_band_30-40%",
+      "cat__imd_band_40-50%",
+      "cat__imd_band_50-60%",
+      "cat__imd_band_60-70%",
+      "cat__imd_band_70-80%",
+      "cat__imd_band_80-90%",
+      "cat__imd_band_90-100%",
+      "cat__imd_band_None",
+      "cat__age_band_0-35",
+      "cat__age_band_35-55",
+      "cat__age_band_55<=",
+      "cat__disability_N",
+      "cat__disability_Y"
+    ]
+  },
+  "design_note": "The comparable DeepSurv arm integrates deterministic numeric prefill, canonical enrollment ordering, and a local IPCW-supported time-dependent AUC path directly into D5.5 so no downstream repair stage is required."
+}
+
+ candidate_id hidden_dims  dropout  learning_rate  weight_decay  best_val_loss  best_epoch
+           16    [64, 32]      0.3          0.001        0.0001       8.243052          32
+[END] 5.5.3 - 2026-04-03 22:20:19
+[START] 5.5 - 2026-04-03 22:20:19
+# ==============================================================
+# 5.5.4 - Close runtime resources
+# ==============================================================
+DuckDB connection closed.
+ARTIFACT | duckdb_connection | closed::/Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/benchmark_survival.duckdb
+[END] 5.5.4 - 2026-04-03 22:20:20
+[DONE] 2026-04-03 22:20:20 D5.5 IPCW rerun

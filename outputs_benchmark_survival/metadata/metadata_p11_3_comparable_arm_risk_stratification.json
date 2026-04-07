@@ -1,0 +1,14 @@
+{
+  "step": "E4.1",
+  "title": "Comparable-Arm Risk Stratification Stability Audit",
+  "audit_status": "computed_from_canonical_prediction_tables",
+  "notes": [
+    "E4.1 uses the canonical tuned test-prediction tables exported upstream by the D-stage pipeline.",
+    "Observed horizon event rates are computed only on evaluable enrollments at each horizon.",
+    "This audit complements the classical Cox PH check by testing ordered empirical risk separation in the comparable arm."
+  ],
+  "output_tables": [
+    "table_p11_3_comparable_arm_risk_stratification_by_horizon",
+    "table_p11_3_comparable_arm_risk_stratification_summary"
+  ]
+}

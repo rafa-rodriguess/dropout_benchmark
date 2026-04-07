@@ -1,0 +1,16 @@
+{
+  "step": "B12",
+  "title": "Early-Window Length Sensitivity Comparison",
+  "windows_evaluated_structurally": [
+    2,
+    4,
+    6,
+    8,
+    10
+  ],
+  "families": [
+    "continuous_time_cox",
+    "continuous_time_deepsurv"
+  ],
+  "purpose": "Consolidate the currently materialized early-window sensitivity variants into a canonical comparison table."
+}

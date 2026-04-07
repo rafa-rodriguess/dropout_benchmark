@@ -1,0 +1,114 @@
+{
+  "model_name": "catboost_weekly_hazard_weighted_tuned",
+  "family_name": "discrete_time_dynamic",
+  "model_type": "catboost_weekly_hazard",
+  "selection_metric": "val_log_loss",
+  "candidate_grid": [
+    {
+      "depth": 4,
+      "learning_rate": 0.05,
+      "iterations": 250,
+      "l2_leaf_reg": 3.0
+    },
+    {
+      "depth": 6,
+      "learning_rate": 0.06,
+      "iterations": 350,
+      "l2_leaf_reg": 3.0
+    },
+    {
+      "depth": 4,
+      "learning_rate": 0.1,
+      "iterations": 250,
+      "l2_leaf_reg": 10.0
+    },
+    {
+      "depth": 6,
+      "learning_rate": 0.05,
+      "iterations": 450,
+      "l2_leaf_reg": 10.0
+    }
+  ],
+  "validation_split": {
+    "method": "GroupShuffleSplit",
+    "test_size": 0.2,
+    "group_column": "enrollment_id",
+    "random_seed": 42
+  },
+  "benchmark_horizons": [
+    10,
+    20,
+    30
+  ],
+  "calibration_bins": 10,
+  "active_window_weeks": 6,
+  "categorical_features": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability"
+  ],
+  "numeric_features": [
+    "num_of_prev_attempts",
+    "studied_credits",
+    "week",
+    "total_clicks_week",
+    "active_this_week",
+    "n_vle_rows_week",
+    "n_distinct_sites_week",
+    "cum_clicks_until_t",
+    "recency",
+    "streak"
+  ],
+  "guardrails": {
+    "active_window_weeks": 6,
+    "validation_test_size": 0.2,
+    "search_row_cap": 120000,
+    "final_row_cap": 151041,
+    "search_rows_selected": 120000,
+    "final_rows_selected": 151041,
+    "subtrain_rows": 120781,
+    "validation_rows": 30260,
+    "full_train_rows": 151041,
+    "subtrain_enrollments": 18252,
+    "validation_enrollments": 4563,
+    "full_train_enrollments": 22815,
+    "n_features": 16,
+    "n_categorical_features": 6,
+    "n_numeric_features": 10,
+    "subtrain_event_rate": 0.014555269454632765,
+    "sampled_subtrain_event_rate": 0.01465,
+    "validation_event_rate": 0.01427627230667548,
+    "full_train_event_rate": 0.014499374342066062,
+    "sampled_full_train_event_rate": 0.014499374342066062,
+    "positive_weight_subtrain": 67.25938566552901,
+    "positive_weight_full": 67.96849315068494,
+    "sample_weight_strategy": "catboost class_weights",
+    "random_seed": 42
+  },
+  "best_candidate": {
+    "depth": 6,
+    "learning_rate": 0.06,
+    "iterations": 350,
+    "l2_leaf_reg": 3.0,
+    "val_log_loss": 0.4428207857739919,
+    "val_brier": 0.1496350418497658,
+    "val_roc_auc": 0.7923407086431342
+  },
+  "implementation": {
+    "library": "catboost",
+    "class_name": "CatBoostClassifier",
+    "loss_function": "Logloss",
+    "eval_metric": "Logloss",
+    "class_weights": [
+      1.0,
+      67.96849315068494
+    ],
+    "thread_count": 1,
+    "allow_writing_files": false
+  },
+  "weighting_strategy": "CatBoost class weights are derived from the guarded positive-class imbalance ratio on sampled person-period rows.",
+  "design_note": "The weighted CatBoost benchmark preserves native categorical columns and the same dynamic feature contract while applying positive-class weighting for Item 6 sensitivity."
+}

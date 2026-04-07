@@ -1,0 +1,26 @@
+{
+  "n_variants_materialized": 40,
+  "models_included": [
+    "cox_tuned",
+    "deepsurv_tuned",
+    "gb_weekly_tuned",
+    "linear_tuned",
+    "mtlr_tuned",
+    "neural_tuned",
+    "poisson_pexp_tuned",
+    "rsf_tuned"
+  ],
+  "scenarios_included": [
+    "drop_static_structural",
+    "drop_temporal_signal",
+    "full_features",
+    "only_static_structural",
+    "only_temporal_signal"
+  ],
+  "data_levels": [
+    "enrollment",
+    "person_period"
+  ],
+  "discrete_time_week_always_retained": false,
+  "storage_contract": "duckdb_only"
+}

@@ -1,0 +1,66 @@
+{
+  "model_name": "neural_discrete_time_survival_weighted_tuned",
+  "search_strategy": "controlled_grid_search",
+  "selection_criterion": "lowest_validation_loss",
+  "validation_split": {
+    "method": "GroupShuffleSplit",
+    "unit": "enrollment_id",
+    "test_size": 0.1,
+    "random_seed": 42
+  },
+  "batch_size": 1024,
+  "max_epochs": 30,
+  "early_stopping_patience": 5,
+  "optimizer": "Adam",
+  "loss": "BCEWithLogitsLoss(pos_weight=guarded_positive_ratio)",
+  "random_state": 42,
+  "run_label": "dynamic_window_w8",
+  "is_window_truncated_run": true,
+  "active_window_weeks": 8,
+  "output_suffix": "_w8",
+  "device": "cpu",
+  "benchmark_horizons": [
+    10,
+    20,
+    30
+  ],
+  "calibration_bins": 10,
+  "best_candidate": {
+    "candidate_id": 2,
+    "hidden_dims": [
+      64,
+      32
+    ],
+    "dropout": 0.1,
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001,
+    "best_val_loss": 1.0844684556910866,
+    "best_epoch": 10
+  },
+  "preprocessing": {
+    "categorical_features": [
+      "gender",
+      "region",
+      "highest_education",
+      "imd_band",
+      "age_band",
+      "disability"
+    ],
+    "numeric_features": [
+      "num_of_prev_attempts",
+      "studied_credits",
+      "week",
+      "total_clicks_week",
+      "active_this_week",
+      "n_vle_rows_week",
+      "n_distinct_sites_week",
+      "cum_clicks_until_t",
+      "recency",
+      "streak"
+    ],
+    "categorical_encoder": "OneHotEncoder(handle_unknown=ignore, sparse_output=False)",
+    "numeric_scaler": "StandardScaler"
+  },
+  "weighting_strategy": "BCEWithLogitsLoss uses a positive-class weight derived from the guarded subtrain imbalance ratio for each candidate.",
+  "design_note": "Enrollment truth and evaluation alignment are derived directly from the neural person-period tables so the Item 6 weighted variant changes only the fitting loss, not the evaluation contract."
+}

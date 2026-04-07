@@ -1,0 +1,9 @@
+{
+  "model_id": "cox_tuned",
+  "model_file_used": "/Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/models/cox_early_window_tuned.joblib",
+  "preprocessor_file_used": "/Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/models/cox_preprocessor.joblib",
+  "n_transformed_features_in_summary": 41,
+  "top_feature_by_abs_coef": "num__clicks_first_4_weeks",
+  "top_feature_block_by_mean_abs_coef": "early_window_behavior",
+  "n_significant_features_p_lt_0_05": 12
+}

@@ -1,0 +1,5 @@
+claim_section,claim_id,source_table,related_tex_label,model_1,model_2,metric,value_1,value_2,gap_value,claim_text
+ablation,max_ibs_ratio,table_paper_ablation_summary.csv,tab:ablation_summary,Cox Comparable (Tuned),,IBS ratio,2.458449150375839,,,Largest temporal-vs-static IBS ratio = 2.4584 for Cox Comparable (Tuned)
+ablation,min_ibs_ratio,table_paper_ablation_summary.csv,tab:ablation_summary,Random Survival Forest (Tuned),,IBS ratio,1.1285285770013134,,,Smallest temporal-vs-static IBS ratio = 1.1285 for Random Survival Forest (Tuned)
+ablation,mean_temporal_loss,table_paper_ablation_summary.csv,tab:ablation_summary,,,mean_delta_ibs_temporal_removed,0.008597326823560951,,,Average IBS change after removing temporal signal = 0.0086
+ablation,mean_static_loss,table_paper_ablation_summary.csv,tab:ablation_summary,,,mean_delta_ibs_static_removed,0.0055259851221337,,,Average IBS change after removing static structure = 0.0055

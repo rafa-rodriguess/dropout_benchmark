@@ -1,0 +1,24 @@
+{
+  "step": "B11",
+  "title": "Early-Window Length Sensitivity Design",
+  "windows_sensitivity": [
+    2,
+    4,
+    6,
+    8,
+    10
+  ],
+  "materialized_duckdb_tables": [
+    "enrollment_window_features_sensitivity",
+    "enrollment_cox_input_w2",
+    "enrollment_cox_input_w4",
+    "enrollment_cox_input_w6",
+    "enrollment_cox_input_w8",
+    "enrollment_cox_input_w10",
+    "enrollment_deepsurv_input_w2",
+    "enrollment_deepsurv_input_w4",
+    "enrollment_deepsurv_input_w6",
+    "enrollment_deepsurv_input_w8",
+    "enrollment_deepsurv_input_w10"
+  ]
+}

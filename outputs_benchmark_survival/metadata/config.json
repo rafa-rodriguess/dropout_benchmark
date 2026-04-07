@@ -1,0 +1,22 @@
+{
+  "seed": 42,
+  "project_root": "/Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1",
+  "data_dir": "/Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/content",
+  "output_dir": "/Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival",
+  "data_output_dir": "/Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/data",
+  "tables_dir": "/Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/tables",
+  "figures_dir": "/Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/figures",
+  "models_dir": "/Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/models",
+  "metadata_dir": "/Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/metadata",
+  "unit_of_analysis": "enrollment",
+  "enrollment_key": [
+    "id_student",
+    "code_module",
+    "code_presentation"
+  ],
+  "time_granularity": "weekly",
+  "event_definition": "Withdrawn with valid date_unregistration",
+  "test_size": 0.3,
+  "temporal_buckets_q": 4,
+  "script_name": "dropout_bench_v3_A_1_foundation.py"
+}

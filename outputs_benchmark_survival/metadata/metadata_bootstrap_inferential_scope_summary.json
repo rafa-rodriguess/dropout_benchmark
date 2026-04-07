@@ -1,0 +1,13 @@
+{
+  "step_id": "F9_bootstrap_scope",
+  "source_tables": [
+    "table_bootstrap_uncertainty_summary_tuned_models.csv",
+    "table_bootstrap_rank_stability_tuned_models.csv",
+    "table_bootstrap_pairwise_stability_tuned_models.csv"
+  ],
+  "n_metrics_summarized": 2,
+  "metrics": [
+    "ibs",
+    "c_index_td"
+  ]
+}

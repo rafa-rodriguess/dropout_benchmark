@@ -1,0 +1,10 @@
+{
+  "model_id": "neural_tuned",
+  "preprocessor_file_used": "/Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/models/neural_discrete_time_not_weighted_preprocessor_w4.joblib",
+  "train_data_used": "pp_neural_hazard_ready_train",
+  "test_data_used": "pp_neural_hazard_ready_test",
+  "n_feature_groups": 16,
+  "baseline_ibs_refit_model": 0.13867203586753168,
+  "top_feature_by_grouped_permutation_ibs": "week",
+  "top_feature_block_by_mean_importance_ibs": "discrete_time_index"
+}

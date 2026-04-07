@@ -1,0 +1,19 @@
+{
+  "n_models": 8,
+  "n_rows_leaderboard": 40,
+  "n_rows_delta": 40,
+  "scenarios_included": [
+    "drop_static_structural",
+    "drop_temporal_signal",
+    "full_features",
+    "only_static_structural",
+    "only_temporal_signal"
+  ],
+  "horizons": [
+    10,
+    20,
+    30
+  ],
+  "benchmark_scope": "manuscript_audit_subset",
+  "canonical_predictive_roster_size": 14
+}

@@ -1,0 +1,18 @@
+{
+  "step": "E4.2",
+  "title": "Recalibration Opportunity Signal Audit",
+  "audit_status": "missing_required_upstream_tables",
+  "notes": [
+    "E4.2 does not fit recalibrated models on the test set.",
+    "Instead, it summarizes where the canonical horizon-wise calibration evidence suggests that a validation-based recalibration experiment would be most informative.",
+    "The classification thresholds are editorially conservative and intended for manuscript synthesis, not for deployment decisions.",
+    "When canonical calibration inputs are absent, E4.2 materializes empty placeholders and records the missing dependencies instead of aborting the full audit run."
+  ],
+  "missing_upstream_tables": [
+    "table_p26_5_all_tuned_calibration_audit"
+  ],
+  "output_tables": [
+    "table_p11_4_recalibration_opportunity_by_horizon",
+    "table_p11_4_recalibration_opportunity_summary"
+  ]
+}

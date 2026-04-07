@@ -1,0 +1,4 @@
+[START] 2026-04-03 22:14:33 D5.9 -> D5.15 run
+[RUN] 2026-04-03 22:14:33 dropout_bench_v3_D_5_9.py
+/Users/rafars/.pyenv/versions/3.9.13/bin/python: can't open file '/Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/dropout_bench_v3_D_5_9.py': [Errno 2] No such file or directory
+[FAIL] 2026-04-03 22:14:33 dropout_bench_v3_D_5_9.py exit=2

@@ -1,0 +1,1251 @@
+[START] 2026-04-04 20:15:06 G re-run
+[START] G0 - 2026-04-04 20:15:06
+Runtime context ready.
+- NOTEBOOK_NAME: dropout_bench_v3_G_explainability_paper.ipynb
+- RUN_ID       : f3e86c2afbd246e2814123195c22d973
+- DUCKDB_PATH  : /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/benchmark_survival.duckdb
+- MONOLITHIC   : /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/dropout_bench.ipynb
+[END] G0 - 2026-04-04 20:15:08
+[START] G0.1 - 2026-04-04 20:15:08
+Runtime contract validated.
+[END] G0.1 - 2026-04-04 20:15:08
+[START] G0.2 - 2026-04-04 20:15:08
+Shared globals harmonized for G notebook.
+- DATA_DIR    : /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/data
+- TABLES_DIR  : /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/tables
+- METADATA_DIR: /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/metadata
+[END] G0.2 - 2026-04-04 20:15:08
+[START] G1 - 2026-04-04 20:15:08
+
+======================================================================
+G1 — Define Explainability Protocol
+======================================================================
+Methodological note: this step defines the explainability study only.
+No model is trained and no explanation is computed here.
+G1: materialized DuckDB table -> table_explainability_model_registry
+G1: materialized DuckDB table -> table_explainability_feature_blocks
+G1: materialized DuckDB table -> table_explainability_block_taxonomy
+G1: materialized DuckDB table -> table_explainability_outputs
+
+Explainability model registry:
+         model_id  ...                                   positioning_note
+0       cox_tuned  ...  Classical comparable continuous-time anchor wi...
+1  deepsurv_tuned  ...  Nonlinear comparable continuous-time benchmark...
+2       rsf_tuned  ...  Tree-based comparable benchmark and the curren...
+3      mtlr_tuned  ...  Discrete-time-inspired continuous-time compara...
+
+[4 rows x 9 columns]
+
+Explainability feature blocks:
+                block_id  ...                                interpretation_goal
+0      static_structural  ...  Assess contribution of background and structur...
+1  early_window_behavior  ...  Assess contribution of compressed early-course...
+
+[2 rows x 5 columns]
+
+Explainability taxonomy:
+                block_id  ...                                  manuscript_reason
+0      static_structural  ...  Captures background and enrollment structure t...
+1  early_window_behavior  ...  Captures compressed early-course engagement pa...
+
+[2 rows x 5 columns]
+
+Explainability planned outputs:
+                             output_id  ...          planned_for
+0               global_feature_ranking  ...           all_models
+1                feature_block_summary  ...           all_models
+2                  signed_effect_table  ...            cox_tuned
+3  cross_family_explainability_summary  ...  final_consolidation
+
+[4 rows x 3 columns]
+
+Explainability protocol summary:
+               scope  ...                             paper_positioning_note
+0  tuned_models_only  ...  Explainability is treated here as a post-bench...
+
+[1 rows x 5 columns]
+
+Saved:
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/tables/table_explainability_model_registry.csv
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/tables/table_explainability_feature_blocks.csv
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/tables/table_explainability_block_taxonomy.csv
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/tables/table_explainability_outputs.csv
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/metadata/explainability_config.json
+[END] G1 - 2026-04-04 20:15:08
+[START] G2 - 2026-04-04 20:15:08
+
+======================================================================
+G2 — Explainability for Linear Tuned
+======================================================================
+Methodological note: this step computes global explainability
+for the tuned linear discrete-time hazard model.
+G2: materialized DuckDB table -> table_linear_explainability_feature_coefficients
+G2: materialized DuckDB table -> table_linear_explainability_signed_effects
+G2: materialized DuckDB table -> table_linear_explainability_block_summary
+G2: materialized DuckDB table -> table_linear_explainability_top_positive
+G2: materialized DuckDB table -> table_linear_explainability_top_negative
+
+Top features by absolute coefficient:
+                                     feature_name_out  ...                    effect_direction
+0                                num__n_vle_rows_week  ...  decreases_log_odds_of_weekly_event
+1                              num__total_clicks_week  ...  decreases_log_odds_of_weekly_event
+2                          num__n_distinct_sites_week  ...  increases_log_odds_of_weekly_event
+3                             num__cum_clicks_until_t  ...  increases_log_odds_of_weekly_event
+4                                num__studied_credits  ...  increases_log_odds_of_weekly_event
+5                           num__num_of_prev_attempts  ...  decreases_log_odds_of_weekly_event
+6                                  cat__imd_band_None  ...  decreases_log_odds_of_weekly_event
+7                                  cat__age_band_55<=  ...  decreases_log_odds_of_weekly_event
+8                                cat__region_Scotland  ...  decreases_log_odds_of_weekly_event
+9                                 cat__age_band_35-55  ...  decreases_log_odds_of_weekly_event
+10                                       num__recency  ...  decreases_log_odds_of_weekly_event
+11                                          num__week  ...  decreases_log_odds_of_weekly_event
+12                                 cat__age_band_0-35  ...  decreases_log_odds_of_weekly_event
+13       cat__highest_education_A Level or Equivalent  ...  decreases_log_odds_of_weekly_event
+14            cat__highest_education_HE Qualification  ...  decreases_log_odds_of_weekly_event
+15                                        num__streak  ...  decreases_log_odds_of_weekly_event
+16                                cat__region_Ireland  ...  decreases_log_odds_of_weekly_event
+17  cat__highest_education_Post Graduate Qualifica...  ...  decreases_log_odds_of_weekly_event
+18                              num__active_this_week  ...  decreases_log_odds_of_weekly_event
+19                                  cat__region_Wales  ...  decreases_log_odds_of_weekly_event
+
+[20 rows x 6 columns]
+
+Top positive effects:
+                          feature_name_out  ...                    effect_direction
+0               num__n_distinct_sites_week  ...  increases_log_odds_of_weekly_event
+1                  num__cum_clicks_until_t  ...  increases_log_odds_of_weekly_event
+2                     num__studied_credits  ...  increases_log_odds_of_weekly_event
+3                 cat__region_North Region  ...  increases_log_odds_of_weekly_event
+4                     cat__imd_band_20-30%  ...  increases_log_odds_of_weekly_event
+5             cat__region_Yorkshire Region  ...  increases_log_odds_of_weekly_event
+6                      cat__imd_band_10-20  ...  increases_log_odds_of_weekly_event
+7                cat__region_London Region  ...  increases_log_odds_of_weekly_event
+8            cat__region_South West Region  ...  increases_log_odds_of_weekly_event
+9         cat__region_West Midlands Region  ...  increases_log_odds_of_weekly_event
+10  cat__highest_education_No Formal quals  ...  increases_log_odds_of_weekly_event
+11                    cat__imd_band_30-40%  ...  increases_log_odds_of_weekly_event
+12                     cat__imd_band_0-10%  ...  increases_log_odds_of_weekly_event
+13                    cat__imd_band_60-70%  ...                             neutral
+14        cat__region_North Western Region  ...  decreases_log_odds_of_weekly_event
+
+[15 rows x 6 columns]
+
+Top negative effects:
+                                     feature_name_out  ...                    effect_direction
+0                                num__n_vle_rows_week  ...  decreases_log_odds_of_weekly_event
+1                              num__total_clicks_week  ...  decreases_log_odds_of_weekly_event
+2                           num__num_of_prev_attempts  ...  decreases_log_odds_of_weekly_event
+3                                  cat__imd_band_None  ...  decreases_log_odds_of_weekly_event
+4                                  cat__age_band_55<=  ...  decreases_log_odds_of_weekly_event
+5                                cat__region_Scotland  ...  decreases_log_odds_of_weekly_event
+6                                 cat__age_band_35-55  ...  decreases_log_odds_of_weekly_event
+7                                        num__recency  ...  decreases_log_odds_of_weekly_event
+8                                           num__week  ...  decreases_log_odds_of_weekly_event
+9                                  cat__age_band_0-35  ...  decreases_log_odds_of_weekly_event
+10       cat__highest_education_A Level or Equivalent  ...  decreases_log_odds_of_weekly_event
+11            cat__highest_education_HE Qualification  ...  decreases_log_odds_of_weekly_event
+12                                        num__streak  ...  decreases_log_odds_of_weekly_event
+13                                cat__region_Ireland  ...  decreases_log_odds_of_weekly_event
+14  cat__highest_education_Post Graduate Qualifica...  ...  decreases_log_odds_of_weekly_event
+
+[15 rows x 6 columns]
+
+Feature-block summary:
+                 feature_block  ...  mean_coefficient
+0  dynamic_temporal_behavioral  ...         -1.754639
+1          discrete_time_index  ...         -0.825334
+2            static_structural  ...         -0.229147
+
+[3 rows x 6 columns]
+
+Saved:
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/tables/table_linear_explainability_feature_coefficients.csv
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/tables/table_linear_explainability_signed_effects.csv
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/tables/table_linear_explainability_block_summary.csv
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/tables/table_linear_explainability_top_positive.csv
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/tables/table_linear_explainability_top_negative.csv
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/metadata/linear_explainability_summary.json
+[END] G2 - 2026-04-04 20:15:09
+[START] G3 - 2026-04-04 20:15:09
+
+======================================================================
+G3 — Explainability for Neural Tuned (Revised v2)
+======================================================================
+Methodological note: this step computes global explainability
+for the tuned neural discrete-time survival model using GROUPED
+permutation importance at the original-feature level.
+[END] G3 - 2026-04-04 20:15:12
+[START] G3.1 - 2026-04-04 20:15:12
+[END] G3.1 - 2026-04-04 20:15:12
+[START] G3.2 - 2026-04-04 20:15:12
+[END] G3.2 - 2026-04-04 20:16:12
+[START] G3.3 - 2026-04-04 20:16:12
+[END] G3.3 - 2026-04-04 20:16:12
+[START] G3.4 - 2026-04-04 20:16:12
+[END] G3.4 - 2026-04-04 20:16:12
+[START] G3.5 - 2026-04-04 20:16:12
+[END] G3.5 - 2026-04-04 20:16:12
+[START] G3.6 - 2026-04-04 20:16:12
+[END] G3.6 - 2026-04-04 20:16:12
+[START] G3.7 - 2026-04-04 20:16:12
+G3: materialized DuckDB table -> table_neural_explainability_grouped_permutation_importance
+G3: materialized DuckDB table -> table_neural_explainability_grouped_block_summary
+G3: materialized DuckDB table -> table_neural_explainability_grouped_top_features
+
+Top neural features by GROUPED permutation importance:
+    feature_name_original  ...                feature_block
+0                    week  ...          discrete_time_index
+1      cum_clicks_until_t  ...  dynamic_temporal_behavioral
+2                 recency  ...  dynamic_temporal_behavioral
+3        active_this_week  ...  dynamic_temporal_behavioral
+4         studied_credits  ...            static_structural
+5                  streak  ...  dynamic_temporal_behavioral
+6         n_vle_rows_week  ...  dynamic_temporal_behavioral
+7   n_distinct_sites_week  ...  dynamic_temporal_behavioral
+8                imd_band  ...            static_structural
+9                  region  ...            static_structural
+10                 gender  ...            static_structural
+11   num_of_prev_attempts  ...            static_structural
+12      highest_education  ...            static_structural
+13               age_band  ...            static_structural
+14             disability  ...            static_structural
+15      total_clicks_week  ...  dynamic_temporal_behavioral
+
+[16 rows x 19 columns]
+
+Neural grouped feature-block summary:
+                 feature_block  ...  mean_importance_score_auc
+0          discrete_time_index  ...                   0.279585
+1  dynamic_temporal_behavioral  ...                   0.053321
+2            static_structural  ...                   0.014974
+
+[3 rows x 6 columns]
+
+Saved:
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/tables/table_neural_explainability_grouped_permutation_importance.csv
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/tables/table_neural_explainability_grouped_block_summary.csv
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/tables/table_neural_explainability_grouped_top_features.csv
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/metadata/neural_explainability_grouped_summary.json
+[END] G3.7 - 2026-04-04 20:16:31
+[START] G4 - 2026-04-04 20:16:31
+
+======================================================================
+G4 — Explainability for Cox Tuned (Revised)
+======================================================================
+Methodological note: this step computes global explainability
+for the tuned Cox comparable benchmark.
+[END] G4 - 2026-04-04 20:16:32
+[START] G4.1 - 2026-04-04 20:16:32
+[END] G4.1 - 2026-04-04 20:16:32
+[START] G4.2 - 2026-04-04 20:16:32
+[END] G4.2 - 2026-04-04 20:16:32
+[START] G4.3 - 2026-04-04 20:16:32
+[END] G4.3 - 2026-04-04 20:16:32
+[START] G4.4 - 2026-04-04 20:16:32
+G4: materialized DuckDB table -> table_cox_explainability_feature_coefficients
+G4: materialized DuckDB table -> table_cox_explainability_signed_effects
+G4: materialized DuckDB table -> table_cox_explainability_block_summary
+G4: materialized DuckDB table -> table_cox_explainability_top_positive
+G4: materialized DuckDB table -> table_cox_explainability_top_negative
+G4: materialized DuckDB table -> table_cox_explainability_significant_effects
+
+Top Cox features by absolute coefficient:
+                             feature_name_out  ...  effect_direction
+0                          cat__imd_band_None  ...  decreases_hazard
+1      cat__highest_education_No Formal quals  ...  increases_hazard
+2   cat__highest_education_Lower Than A Level  ...  increases_hazard
+3                        cat__region_Scotland  ...  decreases_hazard
+4                       cat__imd_band_90-100%  ...  decreases_hazard
+5                           cat__region_Wales  ...  decreases_hazard
+6                        num__studied_credits  ...  increases_hazard
+7                        cat__imd_band_70-80%  ...  decreases_hazard
+8                        cat__imd_band_20-30%  ...  increases_hazard
+9                           cat__disability_N  ...  decreases_hazard
+10                          cat__disability_Y  ...  increases_hazard
+11                        cat__imd_band_0-10%  ...  increases_hazard
+12                       cat__imd_band_80-90%  ...  decreases_hazard
+13                        cat__region_Ireland  ...  decreases_hazard
+14                   cat__region_North Region  ...  increases_hazard
+15                              cat__gender_F  ...  decreases_hazard
+16                              cat__gender_M  ...  increases_hazard
+17                         cat__age_band_0-35  ...  increases_hazard
+18              cat__region_South East Region  ...  decreases_hazard
+19            cat__region_East Anglian Region  ...  decreases_hazard
+
+[20 rows x 13 columns]
+
+Top positive Cox effects:
+                             feature_name_out  ...  effect_direction
+0      cat__highest_education_No Formal quals  ...  increases_hazard
+1   cat__highest_education_Lower Than A Level  ...  increases_hazard
+2                        num__studied_credits  ...  increases_hazard
+3                        cat__imd_band_20-30%  ...  increases_hazard
+4                           cat__disability_Y  ...  increases_hazard
+5                         cat__imd_band_0-10%  ...  increases_hazard
+6                    cat__region_North Region  ...  increases_hazard
+7                               cat__gender_M  ...  increases_hazard
+8                          cat__age_band_0-35  ...  increases_hazard
+9                         cat__imd_band_10-20  ...  increases_hazard
+10           cat__region_East Midlands Region  ...  increases_hazard
+11                  cat__region_London Region  ...  increases_hazard
+12                       cat__imd_band_30-40%  ...  increases_hazard
+13           cat__region_West Midlands Region  ...  increases_hazard
+14                  num__num_of_prev_attempts  ...  increases_hazard
+
+[15 rows x 13 columns]
+
+Top negative Cox effects:
+                                feature_name_out  ...  effect_direction
+0                             cat__imd_band_None  ...  decreases_hazard
+1                           cat__region_Scotland  ...  decreases_hazard
+2                          cat__imd_band_90-100%  ...  decreases_hazard
+3                              cat__region_Wales  ...  decreases_hazard
+4                           cat__imd_band_70-80%  ...  decreases_hazard
+5                              cat__disability_N  ...  decreases_hazard
+6                           cat__imd_band_80-90%  ...  decreases_hazard
+7                            cat__region_Ireland  ...  decreases_hazard
+8                                  cat__gender_F  ...  decreases_hazard
+9                  cat__region_South East Region  ...  decreases_hazard
+10               cat__region_East Anglian Region  ...  decreases_hazard
+11                          cat__imd_band_50-60%  ...  decreases_hazard
+12  cat__highest_education_A Level or Equivalent  ...  decreases_hazard
+13                            cat__age_band_55<=  ...  decreases_hazard
+14                      cat__region_South Region  ...  decreases_hazard
+
+[15 rows x 13 columns]
+
+Significant Cox effects (p < 0.05):
+                             feature_name_out  ...  effect_direction
+0                          cat__imd_band_None  ...  decreases_hazard
+1      cat__highest_education_No Formal quals  ...  increases_hazard
+2   cat__highest_education_Lower Than A Level  ...  increases_hazard
+3                        cat__region_Scotland  ...  decreases_hazard
+4                       cat__imd_band_90-100%  ...  decreases_hazard
+5                           cat__region_Wales  ...  decreases_hazard
+6                        num__studied_credits  ...  increases_hazard
+7                        cat__imd_band_70-80%  ...  decreases_hazard
+8                        cat__imd_band_20-30%  ...  increases_hazard
+9                         cat__imd_band_0-10%  ...  increases_hazard
+10                       cat__imd_band_80-90%  ...  decreases_hazard
+11                         cat__age_band_0-35  ...  increases_hazard
+
+[12 rows x 13 columns]
+
+Cox feature-block summary:
+       feature_block  n_features  ...  mean_coefficient  mean_hazard_ratio
+0  static_structural          38  ...         -0.003729           1.008448
+
+[1 rows x 7 columns]
+
+Saved:
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/tables/table_cox_explainability_feature_coefficients.csv
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/tables/table_cox_explainability_signed_effects.csv
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/tables/table_cox_explainability_block_summary.csv
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/tables/table_cox_explainability_top_positive.csv
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/tables/table_cox_explainability_top_negative.csv
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/tables/table_cox_explainability_significant_effects.csv
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/metadata/cox_explainability_summary.json
+[END] G4.4 - 2026-04-04 20:16:32
+[START] G5 - 2026-04-04 20:16:32
+
+======================================================================
+G5 — Explainability for DeepSurv Tuned
+======================================================================
+Methodological note: this step computes global explainability
+for the tuned DeepSurv model using GROUPED permutation
+importance at the original-feature level.
+[END] G5 - 2026-04-04 20:16:32
+[START] G5.1 - 2026-04-04 20:16:32
+[END] G5.1 - 2026-04-04 20:16:32
+[START] G5.2 - 2026-04-04 20:16:32
+[END] G5.2 - 2026-04-04 20:16:35
+[START] G5.3 - 2026-04-04 20:16:35
+[END] G5.3 - 2026-04-04 20:16:35
+[START] G5.4 - 2026-04-04 20:16:35
+[END] G5.4 - 2026-04-04 20:16:35
+[START] G5.5 - 2026-04-04 20:16:35
+[END] G5.5 - 2026-04-04 20:16:35
+[START] G5.6 - 2026-04-04 20:16:35
+[END] G5.6 - 2026-04-04 20:16:35
+[START] G5.7 - 2026-04-04 20:16:35
+[END] G5.7 - 2026-04-04 20:16:35
+[START] G5.8 - 2026-04-04 20:16:35
+G5: materialized DuckDB table -> table_deepsurv_explainability_grouped_permutation_importance
+G5: materialized DuckDB table -> table_deepsurv_explainability_grouped_block_summary
+G5: materialized DuckDB table -> table_deepsurv_explainability_grouped_top_features
+
+Top DeepSurv features by GROUPED permutation importance:
+        feature_name_original  ...          feature_block
+0             studied_credits  ...      static_structural
+1           highest_education  ...      static_structural
+2                    imd_band  ...      static_structural
+3                      gender  ...      static_structural
+4        num_of_prev_attempts  ...      static_structural
+5                    age_band  ...      static_structural
+6                      region  ...      static_structural
+7                  disability  ...      static_structural
+8        clicks_first_4_weeks  ...  early_window_behavior
+9        active_weeks_first_4  ...  early_window_behavior
+10  mean_clicks_first_4_weeks  ...  early_window_behavior
+
+[11 rows x 19 columns]
+
+DeepSurv grouped feature-block summary:
+           feature_block  ...  mean_importance_score_auc
+0      static_structural  ...                    0.01328
+1  early_window_behavior  ...                    0.00000
+
+[2 rows x 6 columns]
+
+Saved:
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/tables/table_deepsurv_explainability_grouped_permutation_importance.csv
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/tables/table_deepsurv_explainability_grouped_block_summary.csv
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/tables/table_deepsurv_explainability_grouped_top_features.csv
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/metadata/deepsurv_explainability_grouped_summary.json
+[END] G5.8 - 2026-04-04 20:16:36
+[START] G6 - 2026-04-04 20:16:36
+
+======================================================================
+G6 — Consolidate Explainability Across All Tuned Families
+======================================================================
+Methodological note: this step consolidates explainability outputs only.
+No model is trained and no new explanation is computed here.
+G6: materialized DuckDB table -> table_explainability_all_features_normalized
+G6: materialized DuckDB table -> table_explainability_all_blocks_normalized
+G6: materialized DuckDB table -> table_explainability_top_drivers_by_model
+G6: materialized DuckDB table -> table_explainability_block_rank_within_model
+G6: materialized DuckDB table -> table_explainability_block_comparison_wide
+G6: materialized DuckDB table -> table_explainability_dominant_block_by_model
+G6: materialized DuckDB table -> table_explainability_recurring_top_drivers
+G6: materialized DuckDB table -> table_explainability_summary_by_model
+G6: materialized DuckDB table -> table_appendix_explainability_block_taxonomy
+
+Explainability summary by model:
+         model_id  ... dominant_feature_block_role
+0       cox_tuned  ...            baseline_context
+1  deepsurv_tuned  ...            baseline_context
+2    linear_tuned  ...                     unknown
+3    neural_tuned  ...                     unknown
+
+[4 rows x 7 columns]
+
+Dominant feature block by model:
+         model_id  ...                      dominant_feature_block_reason
+0       cox_tuned  ...  Captures background and enrollment structure t...
+1  deepsurv_tuned  ...  Captures background and enrollment structure t...
+2    linear_tuned  ...                                                NaN
+3    neural_tuned  ...                                                NaN
+
+[4 rows x 9 columns]
+
+Explainability block taxonomy:
+                block_id  ...                                  manuscript_reason
+0      static_structural  ...  Captures background and enrollment structure t...
+1  early_window_behavior  ...  Captures compressed early-course engagement pa...
+
+[2 rows x 5 columns]
+
+Top drivers by model:
+          model_id  ... driver_rank_within_model
+0        cox_tuned  ...                        1
+1        cox_tuned  ...                        2
+2        cox_tuned  ...                        3
+3        cox_tuned  ...                        4
+4        cox_tuned  ...                        5
+5   deepsurv_tuned  ...                        1
+6   deepsurv_tuned  ...                        2
+7   deepsurv_tuned  ...                        3
+8   deepsurv_tuned  ...                        4
+9   deepsurv_tuned  ...                        5
+10    linear_tuned  ...                        1
+11    linear_tuned  ...                        2
+12    linear_tuned  ...                        3
+13    linear_tuned  ...                        4
+14    linear_tuned  ...                        5
+15    neural_tuned  ...                        1
+16    neural_tuned  ...                        2
+17    neural_tuned  ...                        3
+18    neural_tuned  ...                        4
+19    neural_tuned  ...                        5
+
+[20 rows x 11 columns]
+
+Recurring top drivers across families:
+      feature_name  n_models_appearing                        models
+0  studied_credits                   2  deepsurv_tuned, neural_tuned
+
+Feature-block comparison (wide):
+feature_block        model_id  ...  static_structural
+0                   cox_tuned  ...           0.096837
+1              deepsurv_tuned  ...           0.000688
+2                linear_tuned  ...           0.450383
+3                neural_tuned  ...           0.000690
+
+[4 rows x 5 columns]
+
+Saved:
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/tables/table_explainability_all_features_normalized.csv
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/tables/table_explainability_all_blocks_normalized.csv
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/tables/table_explainability_top_drivers_by_model.csv
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/tables/table_explainability_block_rank_within_model.csv
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/tables/table_explainability_block_comparison_wide.csv
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/tables/table_explainability_dominant_block_by_model.csv
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/tables/table_explainability_recurring_top_drivers.csv
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/tables/table_explainability_summary_by_model.csv
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/tables/table_appendix_explainability_block_taxonomy.csv
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/metadata/explainability_consolidated_summary.json
+[END] G6 - 2026-04-04 20:16:36
+[START] G6.1 - 2026-04-04 20:16:36
+G6.1: materialized DuckDB table -> table_explainability_summary_by_model
+G6.1: materialized DuckDB table -> table_explainability_summary_by_model
+Explainability summary aliases materialized for G7:
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/tables/table_explainability_summary_by_model.csv
+G6.1: materialized DuckDB table -> table_explainability_all_blocks_normalized
+G6.1: materialized DuckDB table -> table_explainability_all_blocks_normalized
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/tables/table_explainability_all_blocks_normalized.csv
+[END] G6.1 - 2026-04-04 20:16:36
+[START] G7 - 2026-04-04 20:16:36
+======================================================================
+G7 — Freeze Curated Paper Artifacts
+======================================================================
+Methodological note: this step freezes TeX-facing assets using the manuscript as the source-of-truth contract.
+
+[END] G7 - 2026-04-04 20:16:37
+[START] G7.1 - 2026-04-04 20:16:37
+[END] G7.1 - 2026-04-04 20:16:37
+[START] G7.2 - 2026-04-04 20:16:37
+[END] G7.2 - 2026-04-04 20:16:37
+[START] G7.3 - 2026-04-04 20:16:37
+[END] G7.3 - 2026-04-04 20:16:37
+[START] G7.4 - 2026-04-04 20:16:37
+[END] G7.4 - 2026-04-04 20:16:37
+[START] G7.5 - 2026-04-04 20:16:37
+[END] G7.5 - 2026-04-04 20:16:37
+[START] G7.6 - 2026-04-04 20:16:37
+[END] G7.6 - 2026-04-04 20:16:37
+[START] G7.7 - 2026-04-04 20:16:37
+[END] G7.7 - 2026-04-04 20:16:37
+[START] G7.8 - 2026-04-04 20:16:37
+[END] G7.8 - 2026-04-04 20:16:37
+[START] G7.9 - 2026-04-04 20:16:37
+[END] G7.9 - 2026-04-04 20:16:37
+[START] G7.10 - 2026-04-04 20:16:37
+[END] G7.10 - 2026-04-04 20:16:37
+[START] G7.11 - 2026-04-04 20:16:37
+[END] G7.11 - 2026-04-04 20:16:37
+[START] G7.12 - 2026-04-04 20:16:37
+[END] G7.12 - 2026-04-04 20:16:37
+[START] G7.13 - 2026-04-04 20:16:37
+[END] G7.13 - 2026-04-04 20:16:37
+[START] G7.14 - 2026-04-04 20:16:37
+[END] G7.14 - 2026-04-04 20:16:37
+[START] G7.15 - 2026-04-04 20:16:37
+[END] G7.15 - 2026-04-04 20:16:37
+[START] G7.16 - 2026-04-04 20:16:37
+[END] G7.16 - 2026-04-04 20:16:37
+[START] G7.17 - 2026-04-04 20:16:37
+[END] G7.17 - 2026-04-04 20:16:37
+[START] G7.18 - 2026-04-04 20:16:37
+[END] G7.18 - 2026-04-04 20:16:37
+[START] G7.19 - 2026-04-04 20:16:37
+[END] G7.19 - 2026-04-04 20:16:37
+[START] G7.20 - 2026-04-04 20:16:37
+[END] G7.20 - 2026-04-04 20:16:37
+[START] G7.21 - 2026-04-04 20:16:37
+[END] G7.21 - 2026-04-04 20:16:37
+[START] G7.22 - 2026-04-04 20:16:37
+[END] G7.22 - 2026-04-04 20:16:37
+[START] G7.23 - 2026-04-04 20:16:37
+[END] G7.23 - 2026-04-04 20:16:37
+[START] G7.24 - 2026-04-04 20:16:37
+G6: materialized DuckDB table -> table_paper_main_benchmark_family_expanded
+G6: materialized DuckDB table -> table_figure1_benchmark_family_expanded_summary
+[END] G7.24 - 2026-04-04 20:16:37
+[START] G7.25 - 2026-04-04 20:16:37
+[END] G7.25 - 2026-04-04 20:16:37
+[START] G7.26 - 2026-04-04 20:16:37
+G6: materialized DuckDB table -> table_paper_ablation_summary
+G6: materialized DuckDB table -> table_figure2_ablation_delta_summary
+[END] G7.26 - 2026-04-04 20:16:37
+[START] G7.27 - 2026-04-04 20:16:37
+[END] G7.27 - 2026-04-04 20:16:37
+[START] G7.28 - 2026-04-04 20:16:37
+G6: materialized DuckDB table -> table_paper_explainability_summary
+G6: materialized DuckDB table -> table_figure3_explainability_block_summary_normalized
+[END] G7.28 - 2026-04-04 20:16:37
+[START] G7.29 - 2026-04-04 20:16:37
+[END] G7.29 - 2026-04-04 20:16:37
+[START] G7.30 - 2026-04-04 20:16:37
+G6: materialized DuckDB table -> table_paper_calibration_summary_tuned_models
+G6: materialized DuckDB table -> table_paper_appendix_evaluation_protocol_audit
+G6: materialized DuckDB table -> table_paper_appendix_preprocessing_and_tuning_audit
+G6: materialized DuckDB table -> table_appendix_bootstrap_uncertainty_compact
+G6: materialized DuckDB table -> table_paper_appendix_split_context_audit
+G6: materialized DuckDB table -> table_paper_appendix_cox_ph_global_summary
+G6: materialized DuckDB table -> table_paper_appendix_cox_ph_audit
+G6: materialized DuckDB table -> table_paper_appendix_window_sensitivity
+[END] G7.30 - 2026-04-04 20:16:38
+[START] G7.31 - 2026-04-04 20:16:38
+[END] G7.31 - 2026-04-04 20:16:38
+[START] G7.32 - 2026-04-04 20:16:38
+G6: materialized DuckDB table -> paper_tex_asset_registry
+G6: materialized DuckDB table -> paper_tex_supporting_asset_registry
+G6: materialized DuckDB table -> paper_curated_asset_manifest
+Curated TeX output directories:
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/paper_main
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/paper_appendix
+
+Direct TeX-linked assets:
+                             tex_label  ...                                              notes
+0      fig:appendix_cox_ph_diagnostics  ...  Generated under the manuscript contract; falls...
+1   tab:appendix_bootstrap_uncertainty  ...  Appendix bootstrap uncertainty table exported ...
+2          tab:appendix_cox_ph_summary  ...  Appendix Cox PH global summary exported under ...
+3    tab:appendix_preproc_tuning_audit  ...  Fallback reconstructed from the inline TeX app...
+4          tab:appendix_protocol_audit  ...  Appendix protocol audit exported under the man...
+5     tab:appendix_split_context_audit  ...  Fallback reconstructed from the inline TeX app...
+6      tab:appendix_window_sensitivity  ...  Comparable-arm window sensitivity (IBS and TD ...
+7                  fig:ablation_impact  ...  Generated from the ablation table frozen for t...
+8       fig:benchmark_tuned_comparison  ...  Generated from the benchmark table frozen for ...
+9   fig:explainability_block_dominance  ...  Generated from normalized explainability block...
+10                tab:ablation_summary  ...  Curated ablation table exported under the manu...
+11             tab:calibration_summary  ...  Curated calibration table exported under the m...
+12          tab:explainability_summary  ...  Curated explainability table exported under th...
+13                  tab:main_benchmark  ...  Curated expanded benchmark table exported unde...
+
+[14 rows x 9 columns]
+
+Supporting assets for TeX figures/tables:
+                    related_tex_label  ...                                              notes
+0     fig:appendix_cox_ph_diagnostics  ...  Supporting PH audit table exported under the m...
+1                 fig:ablation_impact  ...      Support table for the ablation impact figure.
+2      fig:benchmark_tuned_comparison  ...  Support table for the expanded benchmark compa...
+3  fig:explainability_block_dominance  ...  Support table derived from normalized explaina...
+
+[4 rows x 8 columns]
+
+All TeX-linked assets were materialized.
+
+Saved metadata files:
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/metadata/paper_tex_asset_registry.csv
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/metadata/paper_tex_supporting_asset_registry.csv
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/metadata/paper_curated_asset_manifest.csv
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/metadata/paper_freeze_summary.json
+[END] G7.32 - 2026-04-04 20:16:38
+[START] G8 - 2026-04-04 20:16:38
+
+======================================================================
+G8 — Display Curated Paper Figures
+======================================================================
+Methodological note: this step displays curated TeX-facing figures only.
+## fig:appendix_cox_ph_diagnostics
+Comparable Cox proportional-hazards diagnostic for the covariates showing the strongest evidence of possible non-proportionality. The overall pattern is consistent with the notebook's C\_broad\_departure classification; the comparable Cox anchor should therefore be treated as an approximate benchmark specification.
+Image(filename='/Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/paper_appendix/fig_appendix_cox_ph_diagnostics.png')
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/paper_appendix/fig_appendix_cox_ph_diagnostics.png
+## fig:ablation_impact
+Ablation impact across tuned model families, contrasting the loss associated with removing static versus temporal-behavioral signal. Across all families, removing temporal-behavioral signal is more damaging than removing static covariates.
+Image(filename='/Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/paper_main/fig_paper_02_ablation_impact.png')
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/paper_main/fig_paper_02_ablation_impact.png
+## fig:benchmark_tuned_comparison
+Benchmark comparison of all 14 tuned model families under the harmonized survival-oriented protocol, grouped by arm. Within the comparable arm, RSF leads on time-dependent concordance and Brier horizons; XGBoost AFT is a visible outlier. Within the dynamic arm, all five families cluster tightly on IBS.
+Image(filename='/Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/paper_main/fig_paper_01_benchmark_family_expanded_comparison.png')
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/paper_main/fig_paper_01_benchmark_family_expanded_comparison.png
+## fig:explainability_block_dominance
+Normalized explainability block dominance for the comparable-arm tuned families in the manuscript-facing export. Values are normalized within model to highlight relative block importance; the figure should be read as a within-model comparison of dominant signal blocks, not as an absolute cross-model magnitude comparison.
+Image(filename='/Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/paper_main/fig_paper_03_explainability_block_dominance_normalized.png')
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/paper_main/fig_paper_03_explainability_block_dominance_normalized.png
+[END] G8 - 2026-04-04 20:16:38
+[START] G9 - 2026-04-04 20:16:38
+
+======================================================================
+G9 — Preview Curated Paper Evidence
+======================================================================
+Methodological note: this step reads curated paper artifacts only.
+
+Direct TeX-linked assets:
+                             tex_label  ...                                              notes
+0      fig:appendix_cox_ph_diagnostics  ...  Generated under the manuscript contract; falls...
+1   tab:appendix_bootstrap_uncertainty  ...  Appendix bootstrap uncertainty table exported ...
+2          tab:appendix_cox_ph_summary  ...  Appendix Cox PH global summary exported under ...
+3    tab:appendix_preproc_tuning_audit  ...  Fallback reconstructed from the inline TeX app...
+4          tab:appendix_protocol_audit  ...  Appendix protocol audit exported under the man...
+5     tab:appendix_split_context_audit  ...  Fallback reconstructed from the inline TeX app...
+6      tab:appendix_window_sensitivity  ...  Comparable-arm window sensitivity (IBS and TD ...
+7                  fig:ablation_impact  ...  Generated from the ablation table frozen for t...
+8       fig:benchmark_tuned_comparison  ...  Generated from the benchmark table frozen for ...
+9   fig:explainability_block_dominance  ...  Generated from normalized explainability block...
+10                tab:ablation_summary  ...  Curated ablation table exported under the manu...
+11             tab:calibration_summary  ...  Curated calibration table exported under the m...
+12          tab:explainability_summary  ...  Curated explainability table exported under th...
+13                  tab:main_benchmark  ...  Curated expanded benchmark table exported unde...
+
+[14 rows x 9 columns]
+
+Supporting assets for TeX figures/tables:
+                    related_tex_label  ...                                              notes
+0     fig:appendix_cox_ph_diagnostics  ...  Supporting PH audit table exported under the m...
+1                 fig:ablation_impact  ...      Support table for the ablation impact figure.
+2      fig:benchmark_tuned_comparison  ...  Support table for the expanded benchmark compa...
+3  fig:explainability_block_dominance  ...  Support table derived from normalized explaina...
+
+[4 rows x 8 columns]
+
+Preview of exported main-paper tables:
+- tab:ablation_summary -> table_paper_ablation_summary.csv (4 rows)
+                                   Model  ... IBS ratio
+0                 Cox Comparable (Tuned)  ...    4.0930
+1                       DeepSurv (Tuned)  ...    3.0540
+2    Linear Discrete-Time Hazard (Tuned)  ...    3.7220
+3  Neural Discrete-Time Survival (Tuned)  ...    4.8539
+
+[4 rows x 7 columns]
+- tab:calibration_summary -> table_paper_calibration_summary_tuned_models.csv (14 rows)
+                                    Model  ...  Calib@30
+0     Linear Discrete-Time Hazard (Tuned)  ...  0.933568
+1   Poisson Piecewise-Exponential (Tuned)  ...  0.908640
+2          CatBoost Weekly Hazard (Tuned)  ...  0.933626
+3                  Cox Comparable (Tuned)  ...  0.008125
+4                        DeepSurv (Tuned)  ...  0.014935
+5          Random Survival Forest (Tuned)  ...  0.011463
+6            Gradient-Boosted Cox (Tuned)  ...  0.010704
+7                     Weibull AFT (Tuned)  ...  0.011762
+8                  Royston-Parmar (Tuned)  ...  0.013116
+9                     XGBoost AFT (Tuned)  ...  0.217734
+10                    Neural-MTLR (Tuned)  ...  0.011889
+11                        DeepHit (Tuned)  ...  0.012445
+12    GB Weekly Hazard Unweighted (Tuned)  ...  0.933868
+13    Neural Discrete-Time Hazard (Tuned)  ...  0.927156
+
+[14 rows x 5 columns]
+- tab:explainability_summary -> table_paper_explainability_summary.csv (2 rows)
+                    Model  ...     Dominant block
+0  Cox Comparable (Tuned)  ...  static_structural
+1        DeepSurv (Tuned)  ...  static_structural
+
+[2 rows x 4 columns]
+- tab:main_benchmark -> table_paper_main_benchmark_family_expanded.csv (14 rows)
+                                     Model  ... Brier@30
+0      Linear Discrete-Time Hazard (Tuned)  ...      NaN
+1    Neural Discrete-Time Survival (Tuned)  ...      NaN
+2    Poisson Piecewise-Exponential (Tuned)  ...      NaN
+3   Gradient-Boosted Weekly Hazard (Tuned)  ...      NaN
+4           CatBoost Weekly Hazard (Tuned)  ...      NaN
+5                   Cox Comparable (Tuned)  ...      NaN
+6                         DeepSurv (Tuned)  ...      NaN
+7           Random Survival Forest (Tuned)  ...      NaN
+8             Gradient-Boosted Cox (Tuned)  ...      NaN
+9                      Weibull AFT (Tuned)  ...      NaN
+10                  Royston-Parmar (Tuned)  ...      NaN
+11                     XGBoost AFT (Tuned)  ...      NaN
+12                     Neural-MTLR (Tuned)  ...      NaN
+13                         DeepHit (Tuned)  ...      NaN
+
+[14 rows x 7 columns]
+
+Preview of exported appendix tables:
+- tab:appendix_bootstrap_uncertainty -> table_appendix_bootstrap_uncertainty_compact.csv (20 rows)
+                             model  ... n_successful_bootstrap
+0           Cox Comparable (Tuned)  ...                    200
+1           Cox Comparable (Tuned)  ...                    200
+2           Cox Comparable (Tuned)  ...                    200
+3           Cox Comparable (Tuned)  ...                    200
+4           Cox Comparable (Tuned)  ...                    200
+5                 DeepSurv (Tuned)  ...                    200
+6                 DeepSurv (Tuned)  ...                    200
+7                 DeepSurv (Tuned)  ...                    200
+8                 DeepSurv (Tuned)  ...                    200
+9                 DeepSurv (Tuned)  ...                    200
+10  Random Survival Forest (Tuned)  ...                    200
+11  Random Survival Forest (Tuned)  ...                    200
+12  Random Survival Forest (Tuned)  ...                    200
+13  Random Survival Forest (Tuned)  ...                    200
+14  Random Survival Forest (Tuned)  ...                    200
+15             Neural-MTLR (Tuned)  ...                    200
+16             Neural-MTLR (Tuned)  ...                    200
+17             Neural-MTLR (Tuned)  ...                    200
+18             Neural-MTLR (Tuned)  ...                    200
+19             Neural-MTLR (Tuned)  ...                    200
+
+[20 rows x 5 columns]
+- tab:appendix_cox_ph_summary -> table_paper_appendix_cox_ph_global_summary.csv (1 rows)
+                    model  ...                                         audit_note
+0  Cox Comparable (Tuned)  ...  Formal proportional-hazards audit for the comp...
+
+[1 rows x 12 columns]
+- tab:appendix_preproc_tuning_audit -> table_paper_appendix_preprocessing_and_tuning_audit.csv (4 rows)
+         model_id  ...                                 complexity_control
+0       cox_tuned  ...                                                NaN
+1  deepsurv_tuned  ...  network architecture grid + dropout + weight d...
+2       rsf_tuned  ...  forest size + leaf size + depth + feature subs...
+3      mtlr_tuned  ...  discretization grid + network architecture + d...
+
+[4 rows x 25 columns]
+- tab:appendix_protocol_audit -> table_paper_appendix_evaluation_protocol_audit.csv (9 rows)
+                         Component  ...                                            Details
+0                  Evaluation unit  ...  All final benchmark comparisons are performed ...
+1                  Shared horizons  ...  Common benchmark horizons used for Brier and c...
+2            Brier / IBS censoring  ...  Brier score and IBS are computed with inverse-...
+3              Primary concordance  ...  The benchmark co-primary discrimination metric...
+4    Discrete-time prediction rule  ...  For prediction at week t, the discrete-time fa...
+5  Continuous-time prediction rule  ...  The continuous-time comparable families genera...
+6          Identity leakage result  ...  No enrollment identity leakage was detected be...
+7           Contextual split scope  ...  All modules, presentations, and module-present...
+8               Calibration metric  ...  At each horizon, predicted event risk is group...
+
+[9 rows x 3 columns]
+- tab:appendix_split_context_audit -> table_paper_appendix_split_context_audit.csv (1 rows)
+   Split unit  ... Shared module-presentations
+0  enrollment  ...                       22/22
+
+[1 rows x 11 columns]
+- tab:appendix_window_sensitivity -> table_paper_appendix_window_sensitivity.csv (45 rows)
+                      display_name  ... is_canonical_window
+0           Cox Comparable (Tuned)  ...               False
+1           Cox Comparable (Tuned)  ...                True
+2           Cox Comparable (Tuned)  ...               False
+3           Cox Comparable (Tuned)  ...               False
+4           Cox Comparable (Tuned)  ...               False
+5                  DeepHit (Tuned)  ...               False
+6                  DeepHit (Tuned)  ...                True
+7                  DeepHit (Tuned)  ...               False
+8                  DeepHit (Tuned)  ...               False
+9                  DeepHit (Tuned)  ...               False
+10                DeepSurv (Tuned)  ...               False
+11                DeepSurv (Tuned)  ...                True
+12                DeepSurv (Tuned)  ...               False
+13                DeepSurv (Tuned)  ...               False
+14                DeepSurv (Tuned)  ...               False
+15    Gradient-Boosted Cox (Tuned)  ...               False
+16    Gradient-Boosted Cox (Tuned)  ...                True
+17    Gradient-Boosted Cox (Tuned)  ...               False
+18    Gradient-Boosted Cox (Tuned)  ...               False
+19    Gradient-Boosted Cox (Tuned)  ...               False
+20             Neural-MTLR (Tuned)  ...               False
+21             Neural-MTLR (Tuned)  ...                True
+22             Neural-MTLR (Tuned)  ...               False
+23             Neural-MTLR (Tuned)  ...               False
+24             Neural-MTLR (Tuned)  ...               False
+25  Random Survival Forest (Tuned)  ...               False
+26  Random Survival Forest (Tuned)  ...                True
+27  Random Survival Forest (Tuned)  ...               False
+28  Random Survival Forest (Tuned)  ...               False
+29  Random Survival Forest (Tuned)  ...               False
+30          Royston-Parmar (Tuned)  ...               False
+31          Royston-Parmar (Tuned)  ...                True
+32          Royston-Parmar (Tuned)  ...               False
+33          Royston-Parmar (Tuned)  ...               False
+34          Royston-Parmar (Tuned)  ...               False
+35             Weibull AFT (Tuned)  ...               False
+36             Weibull AFT (Tuned)  ...                True
+37             Weibull AFT (Tuned)  ...               False
+38             Weibull AFT (Tuned)  ...               False
+39             Weibull AFT (Tuned)  ...               False
+40             XGBoost AFT (Tuned)  ...               False
+41             XGBoost AFT (Tuned)  ...                True
+42             XGBoost AFT (Tuned)  ...               False
+43             XGBoost AFT (Tuned)  ...               False
+44             XGBoost AFT (Tuned)  ...               False
+
+[45 rows x 7 columns]
+
+Assets still missing from the dedicated TeX export layer:
+- None. All TeX-linked assets are materialized.
+
+Exclusive TeX output directories:
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/paper_main
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/paper_appendix
+[END] G9 - 2026-04-04 20:16:38
+[START] G10 - 2026-04-04 20:16:38
+DuckDB connection closed.
+[END] G10 - 2026-04-04 20:16:38
+[START] G8.0 - 2026-04-04 20:16:38
+
+Expanded benchmark table frozen for the manuscript:
+                                     Model  ... Brier@30
+0      Linear Discrete-Time Hazard (Tuned)  ...      NaN
+1    Neural Discrete-Time Survival (Tuned)  ...      NaN
+2    Poisson Piecewise-Exponential (Tuned)  ...      NaN
+3   Gradient-Boosted Weekly Hazard (Tuned)  ...      NaN
+4           CatBoost Weekly Hazard (Tuned)  ...      NaN
+5                   Cox Comparable (Tuned)  ...      NaN
+6                         DeepSurv (Tuned)  ...      NaN
+7           Random Survival Forest (Tuned)  ...      NaN
+8             Gradient-Boosted Cox (Tuned)  ...      NaN
+9                      Weibull AFT (Tuned)  ...      NaN
+10                  Royston-Parmar (Tuned)  ...      NaN
+11                     XGBoost AFT (Tuned)  ...      NaN
+12                     Neural-MTLR (Tuned)  ...      NaN
+13                         DeepHit (Tuned)  ...      NaN
+
+[14 rows x 7 columns]
+
+Benchmark support table used by Figure 1:
+                                     Model  ... TD Concordance
+0      Linear Discrete-Time Hazard (Tuned)  ...            NaN
+1    Neural Discrete-Time Survival (Tuned)  ...            NaN
+2    Poisson Piecewise-Exponential (Tuned)  ...            NaN
+3   Gradient-Boosted Weekly Hazard (Tuned)  ...            NaN
+4           CatBoost Weekly Hazard (Tuned)  ...            NaN
+5                   Cox Comparable (Tuned)  ...            NaN
+6                         DeepSurv (Tuned)  ...            NaN
+7           Random Survival Forest (Tuned)  ...            NaN
+8             Gradient-Boosted Cox (Tuned)  ...            NaN
+9                      Weibull AFT (Tuned)  ...            NaN
+10                  Royston-Parmar (Tuned)  ...            NaN
+11                     XGBoost AFT (Tuned)  ...            NaN
+12                     Neural-MTLR (Tuned)  ...            NaN
+13                         DeepHit (Tuned)  ...            NaN
+
+[14 rows x 4 columns]
+
+Ablation summary frozen for the manuscript:
+                                   Model  ... IBS ratio
+0                 Cox Comparable (Tuned)  ...    4.0930
+1                       DeepSurv (Tuned)  ...    3.0540
+2    Linear Discrete-Time Hazard (Tuned)  ...    3.7220
+3  Neural Discrete-Time Survival (Tuned)  ...    4.8539
+
+[4 rows x 7 columns]
+
+Ablation support table used by Figure 2:
+                                   Model  ... IBS ratio
+0                 Cox Comparable (Tuned)  ...    4.0930
+1                       DeepSurv (Tuned)  ...    3.0540
+2    Linear Discrete-Time Hazard (Tuned)  ...    3.7220
+3  Neural Discrete-Time Survival (Tuned)  ...    4.8539
+
+[4 rows x 7 columns]
+
+Evidence summary:
+- IBS leader: Linear Discrete-Time Hazard (Tuned) (nan); runner-up: Neural Discrete-Time Survival (Tuned) (nan).
+- Best TD Concordance: Linear Discrete-Time Hazard (Tuned) (nan).
+- Linear vs Neural TD Concordance: nan vs nan.
+- Temporal-vs-static IBS ratios: min=3.054, max=4.854.
+[END] G8.0 - 2026-04-04 20:16:38
+[START] G7.24 - 2026-04-04 20:16:38
+G6: materialized DuckDB table -> table_paper_main_benchmark_family_expanded
+G6: materialized DuckDB table -> table_figure1_benchmark_family_expanded_summary
+G7.24: materialized DuckDB table -> table_paper_appendix_benchmark_family_membership_audit
+Exported benchmark family membership audit:
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/paper_appendix/table_paper_appendix_benchmark_family_membership_audit.csv
+[END] G7.24 - 2026-04-04 20:16:39
+[START] G7.26 - 2026-04-04 20:16:39
+G6: materialized DuckDB table -> table_paper_ablation_summary
+G6: materialized DuckDB table -> table_figure2_ablation_delta_summary
+[END] G7.26 - 2026-04-04 20:16:39
+[START] G8.0 - 2026-04-04 20:16:39
+
+Expanded benchmark leaderboard frozen for the manuscript:
+                                     Model  ...  Brier@30
+0      Linear Discrete-Time Hazard (Tuned)  ...       NaN
+1    Neural Discrete-Time Survival (Tuned)  ...       NaN
+2    Poisson Piecewise-Exponential (Tuned)  ...       NaN
+3   Gradient-Boosted Weekly Hazard (Tuned)  ...       NaN
+4           CatBoost Weekly Hazard (Tuned)  ...       NaN
+5                   Cox Comparable (Tuned)  ...  0.166888
+6                         DeepSurv (Tuned)  ...  0.167062
+7           Random Survival Forest (Tuned)  ...  0.166246
+8             Gradient-Boosted Cox (Tuned)  ...  0.167241
+9                      Weibull AFT (Tuned)  ...  0.167020
+10                  Royston-Parmar (Tuned)  ...  0.167150
+11                     XGBoost AFT (Tuned)  ...  0.217734
+12                     Neural-MTLR (Tuned)  ...  0.166877
+13                         DeepHit (Tuned)  ...  0.167122
+
+[14 rows x 7 columns]
+
+Expanded benchmark support table used by Figure 1:
+                                     Model  ... TD Concordance
+0      Linear Discrete-Time Hazard (Tuned)  ...       0.497227
+1    Neural Discrete-Time Survival (Tuned)  ...       0.504402
+2    Poisson Piecewise-Exponential (Tuned)  ...       0.496864
+3   Gradient-Boosted Weekly Hazard (Tuned)  ...       0.494649
+4           CatBoost Weekly Hazard (Tuned)  ...       0.497149
+5                   Cox Comparable (Tuned)  ...       0.590891
+6                         DeepSurv (Tuned)  ...       0.593497
+7           Random Survival Forest (Tuned)  ...       0.602257
+8             Gradient-Boosted Cox (Tuned)  ...       0.589774
+9                      Weibull AFT (Tuned)  ...       0.577961
+10                  Royston-Parmar (Tuned)  ...       0.590315
+11                     XGBoost AFT (Tuned)  ...       0.514511
+12                     Neural-MTLR (Tuned)  ...       0.571790
+13                         DeepHit (Tuned)  ...       0.562566
+
+[14 rows x 4 columns]
+
+Benchmark family membership audit:
+   stage_id  ...  execution_status
+0      D5.1  ...         available
+1      D5.2  ...         available
+2      D5.3  ...         available
+3      D5.4  ...         available
+4      D5.5  ...         available
+5      D5.6  ...         available
+6      D5.7  ...         available
+7      D5.8  ...         available
+8      D5.9  ...         available
+9     D5.10  ...         available
+10    D5.11  ...         available
+11    D5.12  ...         available
+12    D5.13  ...         available
+13    D5.14  ...         available
+14    D5.15  ...         available
+
+[15 rows x 11 columns]
+
+Ablation summary frozen for the manuscript:
+                                   Model  ... IBS ratio
+0                 Cox Comparable (Tuned)  ...    4.0930
+1                       DeepSurv (Tuned)  ...    3.0540
+2    Linear Discrete-Time Hazard (Tuned)  ...    3.7220
+3  Neural Discrete-Time Survival (Tuned)  ...    4.8539
+
+[4 rows x 7 columns]
+
+Ablation support table used by Figure 2:
+                                   Model  ... IBS ratio
+0                 Cox Comparable (Tuned)  ...    4.0930
+1                       DeepSurv (Tuned)  ...    3.0540
+2    Linear Discrete-Time Hazard (Tuned)  ...    3.7220
+3  Neural Discrete-Time Survival (Tuned)  ...    4.8539
+
+[4 rows x 7 columns]
+
+Evidence summary:
+- IBS leader: Linear Discrete-Time Hazard (Tuned) (0.0620); runner-up: Gradient-Boosted Weekly Hazard (Tuned) (0.0622).
+- Best TD Concordance: Random Survival Forest (Tuned) (0.6023).
+- Models frozen by family: {'continuous_time_comparable': 9, 'discrete_time_dynamic': 5}.
+- Temporal-vs-static IBS ratios: min=3.054, max=4.854.
+[END] G8.0 - 2026-04-04 20:16:39
+[START] G11.0.1 - 2026-04-04 20:16:39
+### Canonical manuscript checklist
+             scope  ...                                            purpose
+0       paper_main  ...  Expanded benchmark table displayed before narr...
+1       paper_main  ...  Analytical support table for the expanded Figu...
+2       paper_main  ...         Expanded main benchmark comparison figure.
+3       paper_main  ...                          Canonical ablation table.
+4       paper_main  ...             Analytical support table for Figure 2.
+5       paper_main  ...                                   Ablation figure.
+6       paper_main  ...                    Canonical explainability table.
+7       paper_main  ...             Analytical support table for Figure 3.
+8       paper_main  ...                             Explainability figure.
+9       paper_main  ...                       Canonical calibration table.
+10  paper_appendix  ...                 Benchmark family membership audit.
+11  paper_appendix  ...                         Evaluation protocol audit.
+12  paper_appendix  ...                    Preprocessing and tuning audit.
+13  paper_appendix  ...               Compact bootstrap uncertainty table.
+14  paper_appendix  ...                 Bootstrap inferential scope table.
+15  paper_appendix  ...                Split and contextual overlap audit.
+16  paper_appendix  ...                  Discrete-time diagnostic summary.
+17  paper_appendix  ...                    Discrete-time hypothesis audit.
+18  paper_appendix  ...                             Global Cox PH summary.
+19  paper_appendix  ...                              Cox PH audit details.
+20  paper_appendix  ...                           PH scope boundary table.
+21  paper_appendix  ...                     Appendix PH diagnostic figure.
+
+[22 rows x 5 columns]
+#### Checklist interpretation
+- The checklist currently finds 18 of 22 required manuscript-facing artifacts already frozen in paper_main or paper_appendix.
+- Passing the checklist still requires more than file existence: each table must be printed in notebook output, each figure must be accompanied by numerical support, and each narrative block must stay tied to the displayed values.
+- Missing artifacts that still block a fully closed manuscript-facing checklist: table_paper_appendix_bootstrap_inferential_scope_summary.csv, table_paper_appendix_discrete_time_diagnostic_summary.csv, table_paper_appendix_discrete_time_hypothesis_audit.csv, table_paper_appendix_ph_scope_boundary.csv.
+#### Narrative quality requirements
+- Do not write manuscript-facing text from generic templates.
+- State who leads, who is closest, what the gap magnitude is, and where the hierarchy becomes metric-dependent.
+- For every figure, show the support table or the equivalent analytical summary before the interpretation.
+- State what the displayed evidence does not justify whenever the output only supports a cautious claim.
+[END] G11.0.1 - 2026-04-04 20:16:39
+[START] G7.29b - 2026-04-04 20:16:39
+Explainability figure regenerated:
+/Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/paper_main/fig_paper_03_explainability_block_dominance_normalized.png
+[END] G7.29b - 2026-04-04 20:16:39
+[START] G11.0.1 - 2026-04-04 20:16:39
+### Canonical manuscript checklist
+             scope  ...                                            purpose
+0       paper_main  ...   Main benchmark table displayed before narrative.
+1       paper_main  ...             Analytical support table for Figure 1.
+2       paper_main  ...  Canonical numeric claim table for the main ben...
+3       paper_main  ...                  Main benchmark comparison figure.
+4       paper_main  ...                          Canonical ablation table.
+5       paper_main  ...             Analytical support table for Figure 2.
+6       paper_main  ...  Canonical numeric claim table for the ablation...
+7       paper_main  ...                                   Ablation figure.
+8       paper_main  ...                    Canonical explainability table.
+9       paper_main  ...             Analytical support table for Figure 3.
+10      paper_main  ...                             Explainability figure.
+11      paper_main  ...                       Canonical calibration table.
+12  paper_appendix  ...                         Evaluation protocol audit.
+13  paper_appendix  ...                    Preprocessing and tuning audit.
+14  paper_appendix  ...               Compact bootstrap uncertainty table.
+15  paper_appendix  ...                 Bootstrap inferential scope table.
+16  paper_appendix  ...                Split and contextual overlap audit.
+17  paper_appendix  ...  Canonical numeric claim table for the split/co...
+18  paper_appendix  ...  Dynamic-arm weighting sensitivity summary expo...
+19  paper_appendix  ...  Comparable-arm champions by early-window sensi...
+20  paper_appendix  ...  Comparable-arm leadership stability across sen...
+21  paper_appendix  ...  Canonical claim table for comparable-arm windo...
+22  paper_appendix  ...     Cross-arm parity protocol exported from D5.16.
+23  paper_appendix  ...     Cross-arm execution scope exported from D5.16.
+24  paper_appendix  ...    Cross-arm decision summary exported from D5.16.
+25  paper_appendix  ...         Cross-arm champions by sensitivity window.
+26  paper_appendix  ...     Cross-arm leadership stability across windows.
+27  paper_appendix  ...  Canonical claim table for cross-arm parity int...
+28  paper_appendix  ...                  Discrete-time diagnostic summary.
+29  paper_appendix  ...                    Discrete-time hypothesis audit.
+30  paper_appendix  ...  Canonical numeric claim table for the discrete...
+31  paper_appendix  ...                             Global Cox PH summary.
+32  paper_appendix  ...                              Cox PH audit details.
+33  paper_appendix  ...                           PH scope boundary table.
+34  paper_appendix  ...  Canonical numeric claim table for the PH narra...
+35  paper_appendix  ...                     Appendix PH diagnostic figure.
+
+[36 rows x 5 columns]
+#### Checklist interpretation
+- The checklist currently finds 17 of 36 required manuscript-facing artifacts already frozen in paper_main or paper_appendix.
+- Passing the checklist still requires more than file existence: each table must be printed in notebook output, each figure must be accompanied by numerical support, and each narrative block must stay tied to the displayed values.
+- Missing artifacts that still block a fully closed manuscript-facing checklist: table_text_claim_main_benchmark_summary.csv, table_text_claim_ablation_summary.csv, table_paper_appendix_bootstrap_inferential_scope_summary.csv, table_paper_appendix_split_context_claims.csv, table_paper_appendix_weighting_sensitivity_summary.csv, table_paper_appendix_comparable_window_champions.csv, table_paper_appendix_comparable_window_leadership_stability.csv, table_paper_appendix_comparable_window_claims.csv, table_paper_appendix_cross_arm_parity_protocol.csv, table_paper_appendix_cross_arm_execution_scope.csv, table_paper_appendix_cross_arm_decision_summary.csv, table_paper_appendix_cross_arm_window_champions.csv, table_paper_appendix_cross_arm_window_leadership_stability.csv, table_paper_appendix_cross_arm_claims.csv, table_paper_appendix_discrete_time_diagnostic_summary.csv, table_paper_appendix_discrete_time_hypothesis_audit.csv, table_paper_appendix_discrete_time_bridge_claims.csv, table_paper_appendix_ph_scope_boundary.csv, table_paper_appendix_cox_ph_claims.csv.
+#### Narrative quality requirements
+- Do not write manuscript-facing text from generic templates.
+- State who leads, who is closest, what the gap magnitude is, and where the hierarchy becomes metric-dependent.
+- For every figure, show the support table or the equivalent analytical summary before the interpretation.
+- State what the displayed evidence does not justify whenever the output only supports a cautious claim.
+[END] G11.0.1 - 2026-04-04 20:16:39
+[START] G11.1 - 2026-04-04 20:16:39
+### Main benchmark comparison
+                                     Model  ...  Brier@30
+0      Linear Discrete-Time Hazard (Tuned)  ...       NaN
+1    Neural Discrete-Time Survival (Tuned)  ...       NaN
+2    Poisson Piecewise-Exponential (Tuned)  ...       NaN
+3   Gradient-Boosted Weekly Hazard (Tuned)  ...       NaN
+4           CatBoost Weekly Hazard (Tuned)  ...       NaN
+5                   Cox Comparable (Tuned)  ...  0.166888
+6                         DeepSurv (Tuned)  ...  0.167062
+7           Random Survival Forest (Tuned)  ...  0.166246
+8             Gradient-Boosted Cox (Tuned)  ...  0.167241
+9                      Weibull AFT (Tuned)  ...  0.167020
+10                  Royston-Parmar (Tuned)  ...  0.167150
+11                     XGBoost AFT (Tuned)  ...  0.217734
+12                     Neural-MTLR (Tuned)  ...  0.166877
+13                         DeepHit (Tuned)  ...  0.167122
+
+[14 rows x 7 columns]
+#### Figure 1 support table
+                                     Model  ... TD Concordance
+0      Linear Discrete-Time Hazard (Tuned)  ...       0.497227
+1    Neural Discrete-Time Survival (Tuned)  ...       0.504402
+2    Poisson Piecewise-Exponential (Tuned)  ...       0.496864
+3   Gradient-Boosted Weekly Hazard (Tuned)  ...       0.494649
+4           CatBoost Weekly Hazard (Tuned)  ...       0.497149
+5                   Cox Comparable (Tuned)  ...       0.590891
+6                         DeepSurv (Tuned)  ...       0.593497
+7           Random Survival Forest (Tuned)  ...       0.602257
+8             Gradient-Boosted Cox (Tuned)  ...       0.589774
+9                      Weibull AFT (Tuned)  ...       0.577961
+10                  Royston-Parmar (Tuned)  ...       0.590315
+11                     XGBoost AFT (Tuned)  ...       0.514511
+12                     Neural-MTLR (Tuned)  ...       0.571790
+13                         DeepHit (Tuned)  ...       0.562566
+
+[14 rows x 4 columns]
+##### Figure 1 preview
+Image(filename='/Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/paper_main/fig_paper_01_benchmark_family_expanded_comparison.png')
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/paper_main/fig_paper_01_benchmark_family_expanded_comparison.png
+#### Benchmark family membership audit
+   stage_id  ...  execution_status
+0      D5.1  ...         available
+1      D5.2  ...         available
+2      D5.3  ...         available
+3      D5.4  ...         available
+4      D5.5  ...         available
+5      D5.6  ...         available
+6      D5.7  ...         available
+7      D5.8  ...         available
+8      D5.9  ...         available
+9     D5.10  ...         available
+10    D5.11  ...         available
+11    D5.12  ...         available
+12    D5.13  ...         available
+13    D5.14  ...         available
+14    D5.15  ...         available
+
+[15 rows x 11 columns]
+G11.1: materialized DuckDB table -> table_text_claim_main_benchmark_summary
+#### Benchmark interpretation
+- The current IBS leader is Linear Discrete-Time Hazard (Tuned) with IBS = 0.0620, followed by Gradient-Boosted Weekly Hazard (Tuned) at 0.0622; the IBS gap between them is 0.0002.
+- The best time-dependent concordance is Random Survival Forest (Tuned) with TD Concordance = 0.6023, followed by DeepSurv (Tuned) at 0.5935; the TD gap is 0.0088.
+- The frozen benchmark now carries the full fourteen-model predictive roster under two paper-facing families, with counts by family = {'continuous_time_comparable': 9, 'discrete_time_dynamic': 5}.
+- At Brier@10, the best value is Random Survival Forest (Tuned) = 0.1058, followed by Neural-MTLR (Tuned) = 0.1059, a gap of 0.0000.
+- At Brier@20, the best value is Random Survival Forest (Tuned) = 0.1425, followed by Neural-MTLR (Tuned) = 0.1429, a gap of 0.0004.
+- At Brier@30, the best value is Random Survival Forest (Tuned) = 0.1662, followed by Neural-MTLR (Tuned) = 0.1669, a gap of 0.0006.
+- The manuscript-facing takeaway is therefore a family-structured benchmark with enough within-family diversity to answer the limited-palette critique without opening a third representation contract.
+### Ablation results: static versus temporal-behavioral signal
+                                   Model  ... IBS ratio
+0                 Cox Comparable (Tuned)  ...    4.0930
+1                       DeepSurv (Tuned)  ...    3.0540
+2    Linear Discrete-Time Hazard (Tuned)  ...    3.7220
+3  Neural Discrete-Time Survival (Tuned)  ...    4.8539
+
+[4 rows x 7 columns]
+#### Figure 2 support table
+                                   Model  ... IBS ratio
+0                 Cox Comparable (Tuned)  ...    4.0930
+1                       DeepSurv (Tuned)  ...    3.0540
+2    Linear Discrete-Time Hazard (Tuned)  ...    3.7220
+3  Neural Discrete-Time Survival (Tuned)  ...    4.8539
+
+[4 rows x 7 columns]
+##### Figure 2 preview
+Image(filename='/Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/paper_main/fig_paper_02_ablation_impact.png')
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/paper_main/fig_paper_02_ablation_impact.png
+G11.1: materialized DuckDB table -> table_text_claim_ablation_summary
+#### Ablation interpretation
+- Across the exported ablation table, the largest temporal-versus-static IBS ratio is 4.8539 for Neural Discrete-Time Survival (Tuned), while the smallest ratio is 3.0540 for DeepSurv (Tuned).
+- On average, removing temporal signal changes IBS by 0.0235, compared with 0.0063 when removing static structure.
+- The manuscript-safe interpretation remains that temporal-behavioral information is the dominant predictive block, even after the benchmark roster is expanded.
+[END] G11.1 - 2026-04-04 20:16:39
+[START] G11.2 - 2026-04-04 20:16:39
+D6.4 manuscript-facing artifacts are not yet fully available in paper_appendix or DuckDB.
+Notebook G is therefore refusing to synthesize a final discrete-time bridge claim without the upstream diagnostic freeze.
+[END] G11.2 - 2026-04-04 20:16:39
+[START] G11.3 - 2026-04-04 20:16:39
+### Evaluation protocol audit
+                             component  ...                                              notes
+0                     unit_of_analysis  ...  All final benchmark comparisons are reported a...
+1                     event_definition  ...  Observed withdrawal event with a valid time st...
+2                    official_horizons  ...  Shared benchmark horizons used for Brier, IBS,...
+3        primary_discrimination_metric  ...  The canonical discrimination metric is time-de...
+4                  censoring_treatment  ...  Brier score and IBS use inverse-probability-of...
+5    dynamic_vs_static_prediction_rule  ...  The weekly discrete-time arms update predictio...
+6              leakage_prevention_rule  ...  The split is enforced at the enrollment level ...
+7                 split_scope_boundary  ...  The benchmark generalizes across enrollments u...
+8           primary_calibration_metric  ...  The main calibration criterion is the weighted...
+9   expanded_calibration_strengthening  ...  Intercept and slope are retained as strengthen...
+10          bootstrap_inferential_role  ...  Bootstrap is used to assess how stable the exp...
+11                   ph_scope_boundary  ...  Formal classical PH auditing is available for ...
+
+[12 rows x 4 columns]
+- official_horizons = 10,20,30.
+- primary_discrimination_metric = time_dependent_concordance.
+- censoring_treatment = ipcw_brier_ibs_with_kaplan_meier_censoring_estimator.
+- dynamic_vs_static_prediction_rule = dynamic_weekly_vs_early_window_comparable.
+- leakage_prevention_rule = no_enrollment_identity_leakage.
+- split_scope_boundary = shared_curricular_context_not_context_disjoint.
+- primary_calibration_metric = weighted_absolute_calibration_gap_by_horizon.
+- expanded_calibration_strengthening = intercept_and_slope_by_horizon.
+- bootstrap_inferential_role = ranking_support_not_formal_hypothesis_testing.
+- ph_scope_boundary = formal_classical_ph_audit_for_cox_anchor_only.
+- This table is the manuscript contract layer for IPCW/Kaplan-Meier Brier-IBS scoring, time-dependent concordance, dynamic-weekly versus early-window comparability, anti-leakage split discipline, shared-context scope, and horizon-wise calibration.
+### Preprocessing and tuning audit
+         model_id  ...                                 complexity_control
+0       cox_tuned  ...                                                NaN
+1  deepsurv_tuned  ...  network architecture grid + dropout + weight d...
+2       rsf_tuned  ...  forest size + leaf size + depth + feature subs...
+3      mtlr_tuned  ...  discretization grid + network architecture + d...
+
+[4 rows x 25 columns]
+**Audit interpretation**
+Traceback (most recent call last):
+  File "/Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/dropout_bench_v3_G_explainability_paper_refatorado_v7.py", line 5496, in <module>
+    "Tuning candidates by family: " + ", ".join(
+  File "/Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/dropout_bench_v3_G_explainability_paper_refatorado_v7.py", line 5497, in <genexpr>
+    f"{row[display_name_col]}={int(row[n_candidates_col])}"
+ValueError: cannot convert float NaN to integer
+[EXIT 0] 2026-04-04 20:16:40

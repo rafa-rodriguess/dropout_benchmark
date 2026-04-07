@@ -1,0 +1,5 @@
+block_id,block_label,applies_to,taxonomy_role,manuscript_reason
+static_structural,Static structural covariates,all_families,baseline_context,Captures background and enrollment structure that anchor interpretation across retained families.
+early_window_behavior,Early-window behavioral summaries,comparable_quartet,behavioral_signal,Captures compressed early-course engagement patterns expected to explain much of the retained comparable-arm performance.
+dynamic_temporal_behavioral,Weekly temporal-behavioral features,dynamic_arm,dynamic_behavioral_signal,Captures rich week-by-week engagement; primary driver for dynamic-arm models.
+discrete_time_index,Discrete time index (week),dynamic_arm,temporal_covariate,Week index encodes hazard shape; important for discrete-time hazard models.

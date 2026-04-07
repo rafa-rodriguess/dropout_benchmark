@@ -1,0 +1,122 @@
+digraph M2 {
+  graph [
+    rankdir=TB,
+    labelloc=t,
+    label="Harmonized benchmark evaluation flow",
+    fontname="Helvetica",
+    fontsize=18,
+    pad=0.35,
+    nodesep=0.28,
+    ranksep=0.55,
+    splines=polyline,
+    bgcolor="white",
+    compound=true
+  ];
+
+  node [
+    shape=box,
+    style="rounded,filled",
+    fontname="Helvetica",
+    fontsize=10,
+    color="#264653",
+    fillcolor="#F7FBFF",
+    margin="0.14,0.09"
+  ];
+
+  edge [
+    color="#5C677D",
+    penwidth=1.3,
+    arrowsize=0.8,
+    fontname="Helvetica",
+    fontsize=9
+  ];
+
+  ready_tables [
+    label="Benchmark-ready datasets\nWeekly person-period + enrollment vectors",
+    fillcolor="#E9F5F2"
+  ];
+
+  // ── Dynamic arm ───────────────────────────────────────────────────────
+  subgraph cluster_dynamic {
+    label="Dynamic arm — 5 tuned families";
+    color="#9AD1D4";
+    style="rounded";
+
+    d2 [label="Linear Discrete-Time Hazard"];
+    d3 [label="Neural Discrete-Time Survival"];
+    { rank=same; d2; d3; }
+
+    d6 [label="Poisson Piecewise-Exponential"];
+    d7 [label="GB Weekly Hazard"];
+    { rank=same; d6; d7; }
+
+    d8 [label="CatBoost Weekly Hazard"];
+
+    d2 -> d6 [style=invis, weight=10];
+    d3 -> d7 [style=invis, weight=10];
+    d6 -> d8 [style=invis, weight=10];
+    d7 -> d8 [style=invis, weight=10];
+  }
+
+  // ── Comparable arm ────────────────────────────────────────────────────
+  subgraph cluster_comparable {
+    label="Comparable arm — 9 tuned families";
+    color="#F4A261";
+    style="rounded";
+
+    d4  [label="Cox"];
+    d5  [label="DeepSurv"];
+    d9  [label="Random Survival Forest"];
+    { rank=same; d4; d5; d9; }
+
+    d10 [label="GB Cox"];
+    d11 [label="Weibull AFT"];
+    d12 [label="Royston-Parmar"];
+    { rank=same; d10; d11; d12; }
+
+    d13 [label="XGBoost AFT"];
+    d14 [label="Neural-MTLR"];
+    d15 [label="DeepHit"];
+    { rank=same; d13; d14; d15; }
+
+    d4  -> d10 [style=invis, weight=10];
+    d5  -> d11 [style=invis, weight=10];
+    d9  -> d12 [style=invis, weight=10];
+    d10 -> d13 [style=invis, weight=10];
+    d11 -> d14 [style=invis, weight=10];
+    d12 -> d15 [style=invis, weight=10];
+  }
+
+  // ── Shared downstream ────────────────────────────────────────────────
+  per_model [
+    label=<Per-model frozen outputs<BR/>Tuned artifact &#183; test predictions<BR/>IBS &#183; TD concordance &#183; Brier by horizon &#183; calibration<BR/><B><FONT COLOR="darkgreen">&#8594; Table 'Preprocessing and Tuning Audit'</FONT></B>>,
+    fillcolor="#F3F7FA"
+  ];
+
+  d16 [
+    label=<Consolidate benchmark results<BR/>Primary metric summary by arm<BR/>Window-sensitivity &#183; parity status<BR/><B><FONT COLOR="darkgreen">&#8594; Table 'Main Benchmark Comparison'</FONT></B><BR/><B><FONT COLOR="darkgreen">&#8594; Figure 'Benchmark Comparison — All 14 Families'</FONT></B><BR/><B><FONT COLOR="darkgreen">&#8594; Table 'Evaluation Protocol Audit'</FONT></B><BR/><B><FONT COLOR="darkgreen">&#8594; Table 'Discrete-Time Diagnostic Summary'</FONT></B><BR/><B><FONT COLOR="darkgreen">&#8594; Table 'Discrete-Time Hypothesis Audit'</FONT></B>>,
+    fillcolor="#EAF4EA"
+  ];
+
+  f_stage [
+    label="Stability and scope layer\nFeature-block ablation · bootstrap uncertainty\nInterpretive-boundary qualification",
+    fillcolor="#FCEFE8"
+  ];
+
+  decision [
+    shape=note,
+    label="Results reported within each arm separately;\nno single cross-arm ranking is claimed",
+    fillcolor="#FFFDEB",
+    color="#B08900"
+  ];
+
+  // Feed into clusters via compound edges (lhead targets the cluster border)
+  ready_tables -> d2 [lhead=cluster_dynamic];
+  ready_tables -> d4 [lhead=cluster_comparable];
+
+  // Collect via cluster boundary
+  d8  -> per_model [ltail=cluster_dynamic];
+  d15 -> per_model [ltail=cluster_comparable];
+
+  per_model -> d16 -> f_stage -> decision;
+}

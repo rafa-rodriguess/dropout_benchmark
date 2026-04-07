@@ -1,0 +1,19 @@
+{
+  "n_models": 4,
+  "model_ids": [
+    "cox_tuned",
+    "deepsurv_tuned",
+    "rsf_tuned",
+    "mtlr_tuned"
+  ],
+  "appendix_ready_table": "table_appendix_preprocessing_and_tuning_audit_compact",
+  "full_audit_table": "table_preprocessing_and_tuning_audit",
+  "benchmark_scope": "manuscript_audit_subset",
+  "canonical_predictive_roster_size": 14,
+  "notes": [
+    "All preprocessing transformations were fit on training data only.",
+    "Cox and RSF tuning do not use early stopping.",
+    "DeepSurv and Neural-MTLR use neural-network training controls and tuned stopping horizons.",
+    "This audit is intentionally restricted to the retained manuscript-facing comparable subset."
+  ]
+}

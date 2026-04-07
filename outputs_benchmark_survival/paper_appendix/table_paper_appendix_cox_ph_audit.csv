@@ -1,0 +1,39 @@
+covariate,test_statistic,p_value,ph_flag,ph_flag_binary
+cat__region_Scotland,57.95300137330534,2.6845563928206884e-14,possible_violation,yes
+num__studied_credits,43.15309674248999,5.0619714454949503e-11,possible_violation,yes
+cat__region_Wales,19.88010369923519,8.24540078777097e-06,possible_violation,yes
+cat__age_band_0-35,17.697024535363745,2.590314697059329e-05,possible_violation,yes
+cat__region_Ireland,14.58944922666362,0.00013366080848700214,possible_violation,yes
+cat__imd_band_None,12.689009649358514,0.0003678110243672129,possible_violation,yes
+num__num_of_prev_attempts,12.345357000229514,0.00044208459773613086,possible_violation,yes
+cat__imd_band_10-20,6.356819464535468,0.01169309668852846,possible_violation,yes
+cat__highest_education_No Formal quals,6.272043494078622,0.012265760304619617,possible_violation,yes
+cat__imd_band_80-90%,3.8861929749581314,0.04868466327124377,possible_violation,yes
+cat__highest_education_Lower Than A Level,3.4988499978915217,0.061411459586247566,no_material_evidence,no
+cat__imd_band_70-80%,3.497875210565486,0.06144761953024916,no_material_evidence,no
+cat__imd_band_90-100%,2.667290109509592,0.10243029554385312,no_material_evidence,no
+cat__region_Yorkshire Region,1.8232821933468817,0.17692308451254768,no_material_evidence,no
+cat__region_East Midlands Region,0.9497852759310741,0.32977395949532856,no_material_evidence,no
+cat__age_band_55<=,0.90787090131389,0.34067996304642667,no_material_evidence,no
+cat__imd_band_0-10%,0.7874190749199399,0.37488168324025184,no_material_evidence,no
+cat__region_South Region,0.4422198371231201,0.5060529759456329,no_material_evidence,no
+cat__region_London Region,0.33329359035200345,0.563726108600853,no_material_evidence,no
+cat__imd_band_30-40%,0.33211846346463525,0.5644143146922558,no_material_evidence,no
+cat__region_North Region,0.1977606312209712,0.6565345042208894,no_material_evidence,no
+cat__region_South East Region,0.1465721655549061,0.7018328811787149,no_material_evidence,no
+cat__imd_band_20-30%,0.13135220110232435,0.7170341299081291,no_material_evidence,no
+cat__region_East Anglian Region,0.08921827143132054,0.7651733237122942,no_material_evidence,no
+cat__imd_band_50-60%,0.030373896300461018,0.861644564386226,no_material_evidence,no
+cat__highest_education_A Level or Equivalent,0.017741721865902033,0.8940367489968591,no_material_evidence,no
+cat__disability_N,0.005974182969381811,0.9383905874720243,no_material_evidence,no
+cat__disability_Y,0.005974182968440896,0.9383905874768663,no_material_evidence,no
+cat__region_West Midlands Region,0.003231228847883888,0.9546695441446511,no_material_evidence,no
+cat__region_South West Region,0.0007276762935792204,0.9784792944040318,no_material_evidence,no
+cat__imd_band_60-70%,0.00025649696215397454,0.9872220080890384,no_material_evidence,no
+cat__imd_band_40-50%,0.0002481364598220636,0.9874319646959692,no_material_evidence,no
+cat__region_North Western Region,0.00021748696626623174,0.9882336723668025,no_material_evidence,no
+cat__gender_M,0.00010222427484026763,0.9919330441233877,no_material_evidence,no
+cat__gender_F,0.00010222427432943778,0.9919330441435429,no_material_evidence,no
+cat__highest_education_Post Graduate Qualification,5.888966303332721e-05,0.9938771258420293,no_material_evidence,no
+cat__highest_education_HE Qualification,2.2884220028883863e-06,0.9987929981013847,no_material_evidence,no
+cat__age_band_35-55,8.3697726969195e-08,0.9997691675360695,no_material_evidence,no

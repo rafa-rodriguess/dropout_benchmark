@@ -1,0 +1,11 @@
+{
+  "step": "B7",
+  "title": "Define Corrected Benchmark Architecture",
+  "output_tables": [
+    "table_p10_1_benchmark_architecture",
+    "table_p10_1_benchmark_arm_summary",
+    "table_p10_1_benchmark_overlay_summary"
+  ],
+  "n_rows_architecture": 8,
+  "n_rows_overlay_summary": 1
+}

@@ -1,0 +1,13 @@
+{
+  "n_models_in_subset": 8,
+  "n_temporal_dominant_ibs": 4,
+  "pct_temporal_dominant_ibs": 50.0,
+  "n_temporal_dominant_cindex": 8,
+  "unanimous_ibs": false,
+  "unanimous_cindex": true,
+  "paradigms_represented": [
+    "continuous_time",
+    "discrete_time",
+    "tree_survival"
+  ]
+}

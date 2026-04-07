@@ -1,0 +1,61 @@
+digraph M5 {
+  graph [
+    rankdir=TB,
+    labelloc=t,
+    label="Early-window sensitivity and cross-arm parity",
+    fontname="Helvetica",
+    fontsize=18,
+    pad=0.3,
+    nodesep=0.3,
+    ranksep=0.55,
+    splines=ortho,
+    bgcolor="white"
+  ];
+
+  node [
+    shape=box,
+    style="rounded,filled",
+    fontname="Helvetica",
+    fontsize=10,
+    color="#264653",
+    fillcolor="#F7FBFF",
+    margin="0.12,0.08"
+  ];
+
+  edge [
+    color="#5C677D",
+    penwidth=1.3,
+    arrowsize=0.8,
+    fontname="Helvetica",
+    fontsize=9
+  ];
+
+  contracts [label="Design inputs\nCanonical window: 4 weeks\nSensitivity grid: \{2, 4, 6, 8, 10\}", fillcolor="#E9F5F2"];
+
+  subgraph cluster_comparable {
+    label="Window sensitivity — comparable arm";
+    color="#F4A261";
+    style="rounded";
+
+    comp_grid [label="Re-evaluate all 9 comparable families\nacross each window in the sensitivity grid", fillcolor="#FFF8F1"];
+    comp_decision [label=<RSF champion stable across all tested windows<BR/>Lowest IBS &#183; highest TD concordance throughout<BR/><B><FONT COLOR="darkgreen">&#8594; Table 'Early-Window Sensitivity'</FONT></B>>, fillcolor="#FFFDEB", color="#B08900"];
+  }
+
+  subgraph cluster_parity {
+    label="Cross-arm parity protocol";
+    color="#9AD1D4";
+    style="rounded";
+
+    parity_protocol [label="Match comparable predictions at window w\nvs. dynamic predictions truncated up to w", fillcolor="#F2FBFB"];
+    parity_status [label="Protocol defined · pending dynamic truncated reruns\nNot yet admissible for official cross-arm claims", fillcolor="#FFFDEB", color="#B08900"];
+  }
+
+  consequence [label="Retain canonical window at 4 weeks\nReport arms separately in the main benchmark\nUse parity outputs as scope documentation", fillcolor="#EAF4EA"];
+
+  contracts -> comp_grid;
+  comp_grid -> comp_decision;
+  contracts -> parity_protocol;
+  parity_protocol -> parity_status;
+  comp_decision -> consequence;
+  parity_status -> consequence;
+}

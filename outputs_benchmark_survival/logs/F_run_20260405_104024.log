@@ -1,0 +1,1167 @@
+[START] 2026-04-05 10:40:24 F (ablation stability)
+[START] F0 - 2026-04-05 10:40:24
+Runtime context ready.
+- SCRIPT_NAME   : dropout_bench_v3_F_ablation_stability_refatorado_v30.py
+- STAGE_PREFIX  : F
+- LINEAGE LABEL : dropout_bench_v3_F_ablation_stability_refatorado_v30.ipynb
+- RUN_ID        : f3e86c2afbd246e2814123195c22d973
+- DUCKDB_PATH   : /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/benchmark_survival.duckdb
+[END] F0 - 2026-04-05 10:40:25
+Runtime contract validated.
+[END] F0.1 - 2026-04-05 10:40:25
+[START] F1 - 2026-04-05 10:40:25
+
+======================================================================
+F1 — Define Ablation Study Design and Protocol
+======================================================================
+Methodological note: this step defines the ablation study only.
+No model is trained here.
+F1: materialized DuckDB table -> table_ablation_model_registry
+F1: materialized DuckDB table -> table_ablation_feature_blocks
+F1: materialized DuckDB table -> table_ablation_scenarios
+
+Ablation model registry:
+stage_id           model_id          canonical_model_name                          display_name                   family   operational_family_group                paper_methodological_arm    input_representation                       training_contract base_data_level         selection_scope                                                                                                                 selection_rationale  uses_dynamic_temporal_features  uses_static_features  uses_early_window_features                                             ablation_positioning_note
+    D5.6 poisson_pexp_tuned poisson_piecewise_exponential Poisson Piecewise-Exponential (Tuned)    discrete_time_poisson             dynamic_weekly            dynamic_weekly_person_period    weekly_person_period            dynamic_weekly_person_period   person_period manuscript_audit_subset                                                    Best IBS in the dynamic arm; GLM parametric paradigm; coefficient-interpretable.                            True                  True                       False     Tuned representative of the Poisson piecewise-exponential family.
+    D5.2       linear_tuned   linear_discrete_time_hazard   Linear Discrete-Time Hazard (Tuned)     discrete_time_linear             dynamic_weekly            dynamic_weekly_person_period    weekly_person_period            dynamic_weekly_person_period   person_period manuscript_audit_subset                                                   Classical linear logistic baseline for the dynamic arm; maximum interpretability.                            True                  True                       False       Tuned representative of the linear discrete-time hazard family.
+    D5.7    gb_weekly_tuned              gb_weekly_hazard              GB Weekly Hazard (Tuned)         discrete_time_gb             dynamic_weekly            dynamic_weekly_person_period    weekly_person_period            dynamic_weekly_person_period   person_period manuscript_audit_subset                                                                  Gradient-boosted tree paradigm representative for the dynamic arm.                            True                  True                       False                  Tuned representative of the GB weekly hazard family.
+    D5.3       neural_tuned neural_discrete_time_survival Neural Discrete-Time Survival (Tuned)     discrete_time_neural             dynamic_neural            dynamic_weekly_person_period    weekly_person_period            dynamic_weekly_person_period   person_period manuscript_audit_subset                                                                                     Only neural representative for the dynamic arm.                            True                  True                       False     Tuned representative of the neural discrete-time survival family.
+    D5.4          cox_tuned                cox_comparable                Cox Comparable (Tuned)      continuous_time_cox comparable_continuous_time comparable_continuous_time_early_window early_window_enrollment comparable_continuous_time_early_window      enrollment manuscript_audit_subset                                     Interpretable comparable-arm baseline retained as the reference continuous-time representative.                           False                  True                        True                    Tuned representative of the Cox comparable family.
+    D5.5     deepsurv_tuned                      deepsurv                      DeepSurv (Tuned) continuous_time_deepsurv          comparable_neural comparable_continuous_time_early_window early_window_enrollment comparable_continuous_time_early_window      enrollment manuscript_audit_subset                          Flexible comparable-arm representative retained to contrast with Cox under the same early-window contract.                           False                  True                        True                          Tuned representative of the DeepSurv family.
+    D5.9          rsf_tuned        random_survival_forest        Random Survival Forest (Tuned)        tree_survival_rsf   comparable_tree_survival comparable_continuous_time_early_window early_window_enrollment comparable_continuous_time_early_window      enrollment manuscript_audit_subset                      Best-performing comparable-arm tree-survival representative retained as the principal nonparametric benchmark.                           False                  True                        True Tuned representative of the comparable random survival forest family.
+   D5.14         mtlr_tuned                   neural_mtlr                   Neural-MTLR (Tuned)     continuous_time_mtlr          comparable_neural comparable_continuous_time_early_window early_window_enrollment comparable_continuous_time_early_window      enrollment manuscript_audit_subset Competitive comparable-arm neural discrete-duration representative retained to contrast with DeepSurv and the tree-survival winner.                           False                  True                        True                       Tuned representative of the Neural-MTLR family.
+
+Ablation feature blocks:
+                   block_id                         block_label applies_to_data_level                                           conceptual_role                                                                                                         examples
+          static_structural        Static structural covariates            enrollment         student background and enrollment-level structure         gender, region, highest_education, imd_band, age_band, num_of_prev_attempts, studied_credits, disability
+      early_window_behavior     Early-window behavior summaries            enrollment                  compressed early-course activity profile                                            clicks_first_4_weeks, active_weeks_first_4, mean_clicks_first_4_weeks
+dynamic_temporal_behavioral Weekly temporal-behavioral features         person_period                  week-by-week real-time behavioral signal total_clicks_week, active_this_week, n_vle_rows_week, n_distinct_sites_week, cum_clicks_until_t, recency, streak
+        discrete_time_index          Discrete time index (week)         person_period explicit week index encoding time-varying hazard baseline                                                                                                             week
+
+Ablation scenarios:
+           scenario_id                    scenario_label       scenario_type                                                                      interpretation_goal
+         full_features            Full tuned feature set           reference                                               Reference tuned benchmark for each family.
+drop_static_structural Drop static structural covariates leave_one_block_out               Estimate how much performance depends on background/structural covariates.
+  drop_temporal_signal  Drop early-window behavior block leave_one_block_out Estimate how much performance depends on compressed early-window behavioral information.
+only_static_structural Only static structural covariates   single_block_only                                       Assess how far structural covariates alone can go.
+  only_temporal_signal  Only early-window behavior block   single_block_only                           Assess how far early-window behavioral summaries alone can go.
+
+Ablation protocol summary:
+         ablation_scope                                                                                                   included_models  canonical_predictive_roster_size  subset_model_count  reuse_existing_train_test_split reuse_existing_horizons                                                                                              main_question                                                                                                             secondary_question
+manuscript_audit_subset poisson_pexp_tuned, linear_tuned, gb_weekly_tuned, neural_tuned, cox_tuned, deepsurv_tuned, rsf_tuned, mtlr_tuned                                14                   8                             True              10, 20, 30 How much of model performance is driven by structural covariates versus early-window behavioral summaries? Does the relative importance of structural versus early-window information vary across the retained comparable model families?
+
+Saved:
+- DuckDB table: table_ablation_model_registry
+- DuckDB table: table_ablation_feature_blocks
+- DuckDB table: table_ablation_scenarios
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/metadata/ablation_config.json
+[END] F1 - 2026-04-05 10:40:25
+[START] F2 - 2026-04-05 10:40:25
+
+======================================================================
+F2 — Materialize Ablation Variants (Revised v2)
+======================================================================
+Methodological note: this step materializes ablation-ready
+feature subsets only. No model is trained here.
+Revised behavior: ready datasets are loaded from DuckDB.
+Current retained subset: comparable early-window models only.
+F2: materialized DuckDB table -> poisson_pexp_tuned__full_features__train
+F2: materialized DuckDB table -> poisson_pexp_tuned__full_features__test
+F2: materialized DuckDB table -> poisson_pexp_tuned__drop_static_structural__train
+F2: materialized DuckDB table -> poisson_pexp_tuned__drop_static_structural__test
+F2: materialized DuckDB table -> poisson_pexp_tuned__drop_temporal_signal__train
+F2: materialized DuckDB table -> poisson_pexp_tuned__drop_temporal_signal__test
+F2: materialized DuckDB table -> poisson_pexp_tuned__only_static_structural__train
+F2: materialized DuckDB table -> poisson_pexp_tuned__only_static_structural__test
+F2: materialized DuckDB table -> poisson_pexp_tuned__only_temporal_signal__train
+F2: materialized DuckDB table -> poisson_pexp_tuned__only_temporal_signal__test
+F2: materialized DuckDB table -> linear_tuned__full_features__train
+F2: materialized DuckDB table -> linear_tuned__full_features__test
+F2: materialized DuckDB table -> linear_tuned__drop_static_structural__train
+F2: materialized DuckDB table -> linear_tuned__drop_static_structural__test
+F2: materialized DuckDB table -> linear_tuned__drop_temporal_signal__train
+F2: materialized DuckDB table -> linear_tuned__drop_temporal_signal__test
+F2: materialized DuckDB table -> linear_tuned__only_static_structural__train
+F2: materialized DuckDB table -> linear_tuned__only_static_structural__test
+F2: materialized DuckDB table -> linear_tuned__only_temporal_signal__train
+F2: materialized DuckDB table -> linear_tuned__only_temporal_signal__test
+F2: materialized DuckDB table -> gb_weekly_tuned__full_features__train
+F2: materialized DuckDB table -> gb_weekly_tuned__full_features__test
+F2: materialized DuckDB table -> gb_weekly_tuned__drop_static_structural__train
+F2: materialized DuckDB table -> gb_weekly_tuned__drop_static_structural__test
+F2: materialized DuckDB table -> gb_weekly_tuned__drop_temporal_signal__train
+F2: materialized DuckDB table -> gb_weekly_tuned__drop_temporal_signal__test
+F2: materialized DuckDB table -> gb_weekly_tuned__only_static_structural__train
+F2: materialized DuckDB table -> gb_weekly_tuned__only_static_structural__test
+F2: materialized DuckDB table -> gb_weekly_tuned__only_temporal_signal__train
+F2: materialized DuckDB table -> gb_weekly_tuned__only_temporal_signal__test
+F2: materialized DuckDB table -> neural_tuned__full_features__train
+F2: materialized DuckDB table -> neural_tuned__full_features__test
+F2: materialized DuckDB table -> neural_tuned__drop_static_structural__train
+F2: materialized DuckDB table -> neural_tuned__drop_static_structural__test
+F2: materialized DuckDB table -> neural_tuned__drop_temporal_signal__train
+F2: materialized DuckDB table -> neural_tuned__drop_temporal_signal__test
+F2: materialized DuckDB table -> neural_tuned__only_static_structural__train
+F2: materialized DuckDB table -> neural_tuned__only_static_structural__test
+F2: materialized DuckDB table -> neural_tuned__only_temporal_signal__train
+F2: materialized DuckDB table -> neural_tuned__only_temporal_signal__test
+F2: materialized DuckDB table -> cox_tuned__full_features__train
+F2: materialized DuckDB table -> cox_tuned__full_features__test
+F2: materialized DuckDB table -> cox_tuned__drop_static_structural__train
+F2: materialized DuckDB table -> cox_tuned__drop_static_structural__test
+F2: materialized DuckDB table -> cox_tuned__drop_temporal_signal__train
+F2: materialized DuckDB table -> cox_tuned__drop_temporal_signal__test
+F2: materialized DuckDB table -> cox_tuned__only_static_structural__train
+F2: materialized DuckDB table -> cox_tuned__only_static_structural__test
+F2: materialized DuckDB table -> cox_tuned__only_temporal_signal__train
+F2: materialized DuckDB table -> cox_tuned__only_temporal_signal__test
+F2: materialized DuckDB table -> deepsurv_tuned__full_features__train
+F2: materialized DuckDB table -> deepsurv_tuned__full_features__test
+F2: materialized DuckDB table -> deepsurv_tuned__drop_static_structural__train
+F2: materialized DuckDB table -> deepsurv_tuned__drop_static_structural__test
+F2: materialized DuckDB table -> deepsurv_tuned__drop_temporal_signal__train
+F2: materialized DuckDB table -> deepsurv_tuned__drop_temporal_signal__test
+F2: materialized DuckDB table -> deepsurv_tuned__only_static_structural__train
+F2: materialized DuckDB table -> deepsurv_tuned__only_static_structural__test
+F2: materialized DuckDB table -> deepsurv_tuned__only_temporal_signal__train
+F2: materialized DuckDB table -> deepsurv_tuned__only_temporal_signal__test
+F2: materialized DuckDB table -> rsf_tuned__full_features__train
+F2: materialized DuckDB table -> rsf_tuned__full_features__test
+F2: materialized DuckDB table -> rsf_tuned__drop_static_structural__train
+F2: materialized DuckDB table -> rsf_tuned__drop_static_structural__test
+F2: materialized DuckDB table -> rsf_tuned__drop_temporal_signal__train
+F2: materialized DuckDB table -> rsf_tuned__drop_temporal_signal__test
+F2: materialized DuckDB table -> rsf_tuned__only_static_structural__train
+F2: materialized DuckDB table -> rsf_tuned__only_static_structural__test
+F2: materialized DuckDB table -> rsf_tuned__only_temporal_signal__train
+F2: materialized DuckDB table -> rsf_tuned__only_temporal_signal__test
+F2: materialized DuckDB table -> mtlr_tuned__full_features__train
+F2: materialized DuckDB table -> mtlr_tuned__full_features__test
+F2: materialized DuckDB table -> mtlr_tuned__drop_static_structural__train
+F2: materialized DuckDB table -> mtlr_tuned__drop_static_structural__test
+F2: materialized DuckDB table -> mtlr_tuned__drop_temporal_signal__train
+F2: materialized DuckDB table -> mtlr_tuned__drop_temporal_signal__test
+F2: materialized DuckDB table -> mtlr_tuned__only_static_structural__train
+F2: materialized DuckDB table -> mtlr_tuned__only_static_structural__test
+F2: materialized DuckDB table -> mtlr_tuned__only_temporal_signal__train
+F2: materialized DuckDB table -> mtlr_tuned__only_temporal_signal__test
+F2: materialized DuckDB table -> table_ablation_variant_registry
+F2: materialized DuckDB table -> table_ablation_variant_feature_manifest
+
+Ablation variant registry:
+          model_id                   family    data_level            scenario_id                    scenario_label                                  train_table_name                                  test_table_name storage_contract  n_train_rows  n_test_rows  n_columns_total  n_aux_columns  n_target_columns  n_feature_columns
+poisson_pexp_tuned    discrete_time_poisson person_period          full_features            Full tuned feature set          poisson_pexp_tuned__full_features__train          poisson_pexp_tuned__full_features__test      duckdb_only        719498       308393               26              9                 1                 16
+poisson_pexp_tuned    discrete_time_poisson person_period drop_static_structural Drop static structural covariates poisson_pexp_tuned__drop_static_structural__train poisson_pexp_tuned__drop_static_structural__test      duckdb_only        719498       308393               18              9                 1                  8
+poisson_pexp_tuned    discrete_time_poisson person_period   drop_temporal_signal        Drop temporal signal block   poisson_pexp_tuned__drop_temporal_signal__train   poisson_pexp_tuned__drop_temporal_signal__test      duckdb_only        719498       308393               19              9                 1                  9
+poisson_pexp_tuned    discrete_time_poisson person_period only_static_structural Only static structural covariates poisson_pexp_tuned__only_static_structural__train poisson_pexp_tuned__only_static_structural__test      duckdb_only        719498       308393               19              9                 1                  9
+poisson_pexp_tuned    discrete_time_poisson person_period   only_temporal_signal        Only temporal signal block   poisson_pexp_tuned__only_temporal_signal__train   poisson_pexp_tuned__only_temporal_signal__test      duckdb_only        719498       308393               18              9                 1                  8
+      linear_tuned     discrete_time_linear person_period          full_features            Full tuned feature set                linear_tuned__full_features__train                linear_tuned__full_features__test      duckdb_only        719498       308393               26              9                 1                 16
+      linear_tuned     discrete_time_linear person_period drop_static_structural Drop static structural covariates       linear_tuned__drop_static_structural__train       linear_tuned__drop_static_structural__test      duckdb_only        719498       308393               18              9                 1                  8
+      linear_tuned     discrete_time_linear person_period   drop_temporal_signal        Drop temporal signal block         linear_tuned__drop_temporal_signal__train         linear_tuned__drop_temporal_signal__test      duckdb_only        719498       308393               19              9                 1                  9
+      linear_tuned     discrete_time_linear person_period only_static_structural Only static structural covariates       linear_tuned__only_static_structural__train       linear_tuned__only_static_structural__test      duckdb_only        719498       308393               19              9                 1                  9
+      linear_tuned     discrete_time_linear person_period   only_temporal_signal        Only temporal signal block         linear_tuned__only_temporal_signal__train         linear_tuned__only_temporal_signal__test      duckdb_only        719498       308393               18              9                 1                  8
+   gb_weekly_tuned         discrete_time_gb person_period          full_features            Full tuned feature set             gb_weekly_tuned__full_features__train             gb_weekly_tuned__full_features__test      duckdb_only        719498       308393               26              9                 1                 16
+   gb_weekly_tuned         discrete_time_gb person_period drop_static_structural Drop static structural covariates    gb_weekly_tuned__drop_static_structural__train    gb_weekly_tuned__drop_static_structural__test      duckdb_only        719498       308393               18              9                 1                  8
+   gb_weekly_tuned         discrete_time_gb person_period   drop_temporal_signal        Drop temporal signal block      gb_weekly_tuned__drop_temporal_signal__train      gb_weekly_tuned__drop_temporal_signal__test      duckdb_only        719498       308393               19              9                 1                  9
+   gb_weekly_tuned         discrete_time_gb person_period only_static_structural Only static structural covariates    gb_weekly_tuned__only_static_structural__train    gb_weekly_tuned__only_static_structural__test      duckdb_only        719498       308393               19              9                 1                  9
+   gb_weekly_tuned         discrete_time_gb person_period   only_temporal_signal        Only temporal signal block      gb_weekly_tuned__only_temporal_signal__train      gb_weekly_tuned__only_temporal_signal__test      duckdb_only        719498       308393               18              9                 1                  8
+      neural_tuned     discrete_time_neural person_period          full_features            Full tuned feature set                neural_tuned__full_features__train                neural_tuned__full_features__test      duckdb_only        715824       312067               25              8                 1                 16
+      neural_tuned     discrete_time_neural person_period drop_static_structural Drop static structural covariates       neural_tuned__drop_static_structural__train       neural_tuned__drop_static_structural__test      duckdb_only        715824       312067               17              8                 1                  8
+      neural_tuned     discrete_time_neural person_period   drop_temporal_signal        Drop temporal signal block         neural_tuned__drop_temporal_signal__train         neural_tuned__drop_temporal_signal__test      duckdb_only        715824       312067               18              8                 1                  9
+      neural_tuned     discrete_time_neural person_period only_static_structural Only static structural covariates       neural_tuned__only_static_structural__train       neural_tuned__only_static_structural__test      duckdb_only        715824       312067               18              8                 1                  9
+      neural_tuned     discrete_time_neural person_period   only_temporal_signal        Only temporal signal block         neural_tuned__only_temporal_signal__train         neural_tuned__only_temporal_signal__test      duckdb_only        715824       312067               17              8                 1                  8
+         cox_tuned      continuous_time_cox    enrollment          full_features            Full tuned feature set                   cox_tuned__full_features__train                   cox_tuned__full_features__test      duckdb_only         22815         9778               20              8                 1                 11
+         cox_tuned      continuous_time_cox    enrollment drop_static_structural Drop static structural covariates          cox_tuned__drop_static_structural__train          cox_tuned__drop_static_structural__test      duckdb_only         22815         9778               12              8                 1                  3
+         cox_tuned      continuous_time_cox    enrollment   drop_temporal_signal        Drop temporal signal block            cox_tuned__drop_temporal_signal__train            cox_tuned__drop_temporal_signal__test      duckdb_only         22815         9778               17              8                 1                  8
+         cox_tuned      continuous_time_cox    enrollment only_static_structural Only static structural covariates          cox_tuned__only_static_structural__train          cox_tuned__only_static_structural__test      duckdb_only         22815         9778               17              8                 1                  8
+         cox_tuned      continuous_time_cox    enrollment   only_temporal_signal        Only temporal signal block            cox_tuned__only_temporal_signal__train            cox_tuned__only_temporal_signal__test      duckdb_only         22815         9778               12              8                 1                  3
+    deepsurv_tuned continuous_time_deepsurv    enrollment          full_features            Full tuned feature set              deepsurv_tuned__full_features__train              deepsurv_tuned__full_features__test      duckdb_only         22815         9778               20              8                 1                 11
+    deepsurv_tuned continuous_time_deepsurv    enrollment drop_static_structural Drop static structural covariates     deepsurv_tuned__drop_static_structural__train     deepsurv_tuned__drop_static_structural__test      duckdb_only         22815         9778               12              8                 1                  3
+    deepsurv_tuned continuous_time_deepsurv    enrollment   drop_temporal_signal        Drop temporal signal block       deepsurv_tuned__drop_temporal_signal__train       deepsurv_tuned__drop_temporal_signal__test      duckdb_only         22815         9778               17              8                 1                  8
+    deepsurv_tuned continuous_time_deepsurv    enrollment only_static_structural Only static structural covariates     deepsurv_tuned__only_static_structural__train     deepsurv_tuned__only_static_structural__test      duckdb_only         22815         9778               17              8                 1                  8
+    deepsurv_tuned continuous_time_deepsurv    enrollment   only_temporal_signal        Only temporal signal block       deepsurv_tuned__only_temporal_signal__train       deepsurv_tuned__only_temporal_signal__test      duckdb_only         22815         9778               12              8                 1                  3
+         rsf_tuned        tree_survival_rsf    enrollment          full_features            Full tuned feature set                   rsf_tuned__full_features__train                   rsf_tuned__full_features__test      duckdb_only         22815         9778               20              8                 1                 11
+         rsf_tuned        tree_survival_rsf    enrollment drop_static_structural Drop static structural covariates          rsf_tuned__drop_static_structural__train          rsf_tuned__drop_static_structural__test      duckdb_only         22815         9778               12              8                 1                  3
+         rsf_tuned        tree_survival_rsf    enrollment   drop_temporal_signal        Drop temporal signal block            rsf_tuned__drop_temporal_signal__train            rsf_tuned__drop_temporal_signal__test      duckdb_only         22815         9778               17              8                 1                  8
+         rsf_tuned        tree_survival_rsf    enrollment only_static_structural Only static structural covariates          rsf_tuned__only_static_structural__train          rsf_tuned__only_static_structural__test      duckdb_only         22815         9778               17              8                 1                  8
+         rsf_tuned        tree_survival_rsf    enrollment   only_temporal_signal        Only temporal signal block            rsf_tuned__only_temporal_signal__train            rsf_tuned__only_temporal_signal__test      duckdb_only         22815         9778               12              8                 1                  3
+        mtlr_tuned     continuous_time_mtlr    enrollment          full_features            Full tuned feature set                  mtlr_tuned__full_features__train                  mtlr_tuned__full_features__test      duckdb_only         22815         9778               20              8                 1                 11
+        mtlr_tuned     continuous_time_mtlr    enrollment drop_static_structural Drop static structural covariates         mtlr_tuned__drop_static_structural__train         mtlr_tuned__drop_static_structural__test      duckdb_only         22815         9778               12              8                 1                  3
+        mtlr_tuned     continuous_time_mtlr    enrollment   drop_temporal_signal        Drop temporal signal block           mtlr_tuned__drop_temporal_signal__train           mtlr_tuned__drop_temporal_signal__test      duckdb_only         22815         9778               17              8                 1                  8
+        mtlr_tuned     continuous_time_mtlr    enrollment only_static_structural Only static structural covariates         mtlr_tuned__only_static_structural__train         mtlr_tuned__only_static_structural__test      duckdb_only         22815         9778               17              8                 1                  8
+        mtlr_tuned     continuous_time_mtlr    enrollment   only_temporal_signal        Only temporal signal block           mtlr_tuned__only_temporal_signal__train           mtlr_tuned__only_temporal_signal__test      duckdb_only         22815         9778               12              8                 1                  3
+
+Ablation variant feature manifest (first rows):
+          model_id                family    data_level            scenario_id                    scenario_label                           column_name      role               feature_block
+poisson_pexp_tuned discrete_time_poisson person_period          full_features            Full tuned feature set                         enrollment_id auxiliary               aux_or_target
+poisson_pexp_tuned discrete_time_poisson person_period          full_features            Full tuned feature set                            id_student auxiliary               aux_or_target
+poisson_pexp_tuned discrete_time_poisson person_period          full_features            Full tuned feature set                           code_module auxiliary               aux_or_target
+poisson_pexp_tuned discrete_time_poisson person_period          full_features            Full tuned feature set                     code_presentation auxiliary               aux_or_target
+poisson_pexp_tuned discrete_time_poisson person_period          full_features            Full tuned feature set                        event_observed auxiliary               aux_or_target
+poisson_pexp_tuned discrete_time_poisson person_period          full_features            Full tuned feature set                          t_event_week auxiliary               aux_or_target
+poisson_pexp_tuned discrete_time_poisson person_period          full_features            Full tuned feature set                          t_final_week auxiliary               aux_or_target
+poisson_pexp_tuned discrete_time_poisson person_period          full_features            Full tuned feature set used_zero_week_fallback_for_censoring auxiliary               aux_or_target
+poisson_pexp_tuned discrete_time_poisson person_period          full_features            Full tuned feature set                                 split auxiliary               aux_or_target
+poisson_pexp_tuned discrete_time_poisson person_period          full_features            Full tuned feature set                               event_t    target               aux_or_target
+poisson_pexp_tuned discrete_time_poisson person_period          full_features            Full tuned feature set                                gender   feature           static_structural
+poisson_pexp_tuned discrete_time_poisson person_period          full_features            Full tuned feature set                                region   feature           static_structural
+poisson_pexp_tuned discrete_time_poisson person_period          full_features            Full tuned feature set                     highest_education   feature           static_structural
+poisson_pexp_tuned discrete_time_poisson person_period          full_features            Full tuned feature set                              imd_band   feature           static_structural
+poisson_pexp_tuned discrete_time_poisson person_period          full_features            Full tuned feature set                              age_band   feature           static_structural
+poisson_pexp_tuned discrete_time_poisson person_period          full_features            Full tuned feature set                  num_of_prev_attempts   feature           static_structural
+poisson_pexp_tuned discrete_time_poisson person_period          full_features            Full tuned feature set                       studied_credits   feature           static_structural
+poisson_pexp_tuned discrete_time_poisson person_period          full_features            Full tuned feature set                            disability   feature           static_structural
+poisson_pexp_tuned discrete_time_poisson person_period          full_features            Full tuned feature set                     total_clicks_week   feature dynamic_temporal_behavioral
+poisson_pexp_tuned discrete_time_poisson person_period          full_features            Full tuned feature set                      active_this_week   feature dynamic_temporal_behavioral
+poisson_pexp_tuned discrete_time_poisson person_period          full_features            Full tuned feature set                       n_vle_rows_week   feature dynamic_temporal_behavioral
+poisson_pexp_tuned discrete_time_poisson person_period          full_features            Full tuned feature set                 n_distinct_sites_week   feature dynamic_temporal_behavioral
+poisson_pexp_tuned discrete_time_poisson person_period          full_features            Full tuned feature set                    cum_clicks_until_t   feature dynamic_temporal_behavioral
+poisson_pexp_tuned discrete_time_poisson person_period          full_features            Full tuned feature set                               recency   feature dynamic_temporal_behavioral
+poisson_pexp_tuned discrete_time_poisson person_period          full_features            Full tuned feature set                                streak   feature dynamic_temporal_behavioral
+poisson_pexp_tuned discrete_time_poisson person_period          full_features            Full tuned feature set                                  week   feature         discrete_time_index
+poisson_pexp_tuned discrete_time_poisson person_period drop_static_structural Drop static structural covariates                         enrollment_id auxiliary               aux_or_target
+poisson_pexp_tuned discrete_time_poisson person_period drop_static_structural Drop static structural covariates                            id_student auxiliary               aux_or_target
+poisson_pexp_tuned discrete_time_poisson person_period drop_static_structural Drop static structural covariates                           code_module auxiliary               aux_or_target
+poisson_pexp_tuned discrete_time_poisson person_period drop_static_structural Drop static structural covariates                     code_presentation auxiliary               aux_or_target
+poisson_pexp_tuned discrete_time_poisson person_period drop_static_structural Drop static structural covariates                        event_observed auxiliary               aux_or_target
+poisson_pexp_tuned discrete_time_poisson person_period drop_static_structural Drop static structural covariates                          t_event_week auxiliary               aux_or_target
+poisson_pexp_tuned discrete_time_poisson person_period drop_static_structural Drop static structural covariates                          t_final_week auxiliary               aux_or_target
+poisson_pexp_tuned discrete_time_poisson person_period drop_static_structural Drop static structural covariates used_zero_week_fallback_for_censoring auxiliary               aux_or_target
+poisson_pexp_tuned discrete_time_poisson person_period drop_static_structural Drop static structural covariates                                 split auxiliary               aux_or_target
+poisson_pexp_tuned discrete_time_poisson person_period drop_static_structural Drop static structural covariates                               event_t    target               aux_or_target
+poisson_pexp_tuned discrete_time_poisson person_period drop_static_structural Drop static structural covariates                     total_clicks_week   feature dynamic_temporal_behavioral
+poisson_pexp_tuned discrete_time_poisson person_period drop_static_structural Drop static structural covariates                      active_this_week   feature dynamic_temporal_behavioral
+poisson_pexp_tuned discrete_time_poisson person_period drop_static_structural Drop static structural covariates                       n_vle_rows_week   feature dynamic_temporal_behavioral
+poisson_pexp_tuned discrete_time_poisson person_period drop_static_structural Drop static structural covariates                 n_distinct_sites_week   feature dynamic_temporal_behavioral
+poisson_pexp_tuned discrete_time_poisson person_period drop_static_structural Drop static structural covariates                    cum_clicks_until_t   feature dynamic_temporal_behavioral
+poisson_pexp_tuned discrete_time_poisson person_period drop_static_structural Drop static structural covariates                               recency   feature dynamic_temporal_behavioral
+poisson_pexp_tuned discrete_time_poisson person_period drop_static_structural Drop static structural covariates                                streak   feature dynamic_temporal_behavioral
+poisson_pexp_tuned discrete_time_poisson person_period drop_static_structural Drop static structural covariates                                  week   feature         discrete_time_index
+poisson_pexp_tuned discrete_time_poisson person_period   drop_temporal_signal        Drop temporal signal block                         enrollment_id auxiliary               aux_or_target
+poisson_pexp_tuned discrete_time_poisson person_period   drop_temporal_signal        Drop temporal signal block                            id_student auxiliary               aux_or_target
+poisson_pexp_tuned discrete_time_poisson person_period   drop_temporal_signal        Drop temporal signal block                           code_module auxiliary               aux_or_target
+poisson_pexp_tuned discrete_time_poisson person_period   drop_temporal_signal        Drop temporal signal block                     code_presentation auxiliary               aux_or_target
+poisson_pexp_tuned discrete_time_poisson person_period   drop_temporal_signal        Drop temporal signal block                        event_observed auxiliary               aux_or_target
+poisson_pexp_tuned discrete_time_poisson person_period   drop_temporal_signal        Drop temporal signal block                          t_event_week auxiliary               aux_or_target
+poisson_pexp_tuned discrete_time_poisson person_period   drop_temporal_signal        Drop temporal signal block                          t_final_week auxiliary               aux_or_target
+poisson_pexp_tuned discrete_time_poisson person_period   drop_temporal_signal        Drop temporal signal block used_zero_week_fallback_for_censoring auxiliary               aux_or_target
+poisson_pexp_tuned discrete_time_poisson person_period   drop_temporal_signal        Drop temporal signal block                                 split auxiliary               aux_or_target
+poisson_pexp_tuned discrete_time_poisson person_period   drop_temporal_signal        Drop temporal signal block                               event_t    target               aux_or_target
+poisson_pexp_tuned discrete_time_poisson person_period   drop_temporal_signal        Drop temporal signal block                                gender   feature           static_structural
+poisson_pexp_tuned discrete_time_poisson person_period   drop_temporal_signal        Drop temporal signal block                                region   feature           static_structural
+poisson_pexp_tuned discrete_time_poisson person_period   drop_temporal_signal        Drop temporal signal block                     highest_education   feature           static_structural
+poisson_pexp_tuned discrete_time_poisson person_period   drop_temporal_signal        Drop temporal signal block                              imd_band   feature           static_structural
+poisson_pexp_tuned discrete_time_poisson person_period   drop_temporal_signal        Drop temporal signal block                              age_band   feature           static_structural
+poisson_pexp_tuned discrete_time_poisson person_period   drop_temporal_signal        Drop temporal signal block                  num_of_prev_attempts   feature           static_structural
+
+Saved:
+- DuckDB table: table_ablation_variant_registry
+- DuckDB table: table_ablation_variant_feature_manifest
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/metadata/ablation_variant_registry.json
+[END] F2 - 2026-04-05 10:41:43
+[START] F3 - 2026-04-05 10:41:43
+
+======================================================================
+F3 — Dynamic Arm Ablation (Poisson / Linear / GB / Neural)
+======================================================================
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_linear_loss.py:165: RuntimeWarning: divide by zero encountered in matmul
+  raw_prediction = X @ weights + intercept
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_linear_loss.py:165: RuntimeWarning: overflow encountered in matmul
+  raw_prediction = X @ weights + intercept
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_linear_loss.py:165: RuntimeWarning: invalid value encountered in matmul
+  raw_prediction = X @ weights + intercept
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_linear_loss.py:295: RuntimeWarning: divide by zero encountered in matmul
+  grad[:n_features] = X.T @ grad_pointwise + l2_reg_strength * weights
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_linear_loss.py:295: RuntimeWarning: overflow encountered in matmul
+  grad[:n_features] = X.T @ grad_pointwise + l2_reg_strength * weights
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_linear_loss.py:295: RuntimeWarning: invalid value encountered in matmul
+  grad[:n_features] = X.T @ grad_pointwise + l2_reg_strength * weights
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_glm/glm.py:345: RuntimeWarning: divide by zero encountered in matmul
+  return X @ self.coef_ + self.intercept_
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_glm/glm.py:345: RuntimeWarning: overflow encountered in matmul
+  return X @ self.coef_ + self.intercept_
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_glm/glm.py:345: RuntimeWarning: invalid value encountered in matmul
+  return X @ self.coef_ + self.intercept_
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_linear_loss.py:165: RuntimeWarning: divide by zero encountered in matmul
+  raw_prediction = X @ weights + intercept
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_linear_loss.py:165: RuntimeWarning: overflow encountered in matmul
+  raw_prediction = X @ weights + intercept
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_linear_loss.py:165: RuntimeWarning: invalid value encountered in matmul
+  raw_prediction = X @ weights + intercept
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_linear_loss.py:295: RuntimeWarning: divide by zero encountered in matmul
+  grad[:n_features] = X.T @ grad_pointwise + l2_reg_strength * weights
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_linear_loss.py:295: RuntimeWarning: overflow encountered in matmul
+  grad[:n_features] = X.T @ grad_pointwise + l2_reg_strength * weights
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_linear_loss.py:295: RuntimeWarning: invalid value encountered in matmul
+  grad[:n_features] = X.T @ grad_pointwise + l2_reg_strength * weights
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_glm/glm.py:345: RuntimeWarning: divide by zero encountered in matmul
+  return X @ self.coef_ + self.intercept_
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_glm/glm.py:345: RuntimeWarning: overflow encountered in matmul
+  return X @ self.coef_ + self.intercept_
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_glm/glm.py:345: RuntimeWarning: invalid value encountered in matmul
+  return X @ self.coef_ + self.intercept_
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_linear_loss.py:165: RuntimeWarning: divide by zero encountered in matmul
+  raw_prediction = X @ weights + intercept
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_linear_loss.py:165: RuntimeWarning: overflow encountered in matmul
+  raw_prediction = X @ weights + intercept
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_linear_loss.py:165: RuntimeWarning: invalid value encountered in matmul
+  raw_prediction = X @ weights + intercept
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_linear_loss.py:295: RuntimeWarning: divide by zero encountered in matmul
+  grad[:n_features] = X.T @ grad_pointwise + l2_reg_strength * weights
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_linear_loss.py:295: RuntimeWarning: overflow encountered in matmul
+  grad[:n_features] = X.T @ grad_pointwise + l2_reg_strength * weights
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_linear_loss.py:295: RuntimeWarning: invalid value encountered in matmul
+  grad[:n_features] = X.T @ grad_pointwise + l2_reg_strength * weights
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_glm/glm.py:345: RuntimeWarning: divide by zero encountered in matmul
+  return X @ self.coef_ + self.intercept_
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_glm/glm.py:345: RuntimeWarning: overflow encountered in matmul
+  return X @ self.coef_ + self.intercept_
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_glm/glm.py:345: RuntimeWarning: invalid value encountered in matmul
+  return X @ self.coef_ + self.intercept_
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_linear_loss.py:165: RuntimeWarning: divide by zero encountered in matmul
+  raw_prediction = X @ weights + intercept
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_linear_loss.py:165: RuntimeWarning: overflow encountered in matmul
+  raw_prediction = X @ weights + intercept
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_linear_loss.py:165: RuntimeWarning: invalid value encountered in matmul
+  raw_prediction = X @ weights + intercept
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_linear_loss.py:295: RuntimeWarning: divide by zero encountered in matmul
+  grad[:n_features] = X.T @ grad_pointwise + l2_reg_strength * weights
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_linear_loss.py:295: RuntimeWarning: overflow encountered in matmul
+  grad[:n_features] = X.T @ grad_pointwise + l2_reg_strength * weights
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_linear_loss.py:295: RuntimeWarning: invalid value encountered in matmul
+  grad[:n_features] = X.T @ grad_pointwise + l2_reg_strength * weights
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_glm/glm.py:345: RuntimeWarning: divide by zero encountered in matmul
+  return X @ self.coef_ + self.intercept_
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_glm/glm.py:345: RuntimeWarning: overflow encountered in matmul
+  return X @ self.coef_ + self.intercept_
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_glm/glm.py:345: RuntimeWarning: invalid value encountered in matmul
+  return X @ self.coef_ + self.intercept_
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_linear_loss.py:165: RuntimeWarning: divide by zero encountered in matmul
+  raw_prediction = X @ weights + intercept
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_linear_loss.py:165: RuntimeWarning: overflow encountered in matmul
+  raw_prediction = X @ weights + intercept
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_linear_loss.py:165: RuntimeWarning: invalid value encountered in matmul
+  raw_prediction = X @ weights + intercept
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_linear_loss.py:295: RuntimeWarning: divide by zero encountered in matmul
+  grad[:n_features] = X.T @ grad_pointwise + l2_reg_strength * weights
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_linear_loss.py:295: RuntimeWarning: overflow encountered in matmul
+  grad[:n_features] = X.T @ grad_pointwise + l2_reg_strength * weights
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_linear_loss.py:295: RuntimeWarning: invalid value encountered in matmul
+  grad[:n_features] = X.T @ grad_pointwise + l2_reg_strength * weights
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_glm/glm.py:345: RuntimeWarning: divide by zero encountered in matmul
+  return X @ self.coef_ + self.intercept_
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_glm/glm.py:345: RuntimeWarning: overflow encountered in matmul
+  return X @ self.coef_ + self.intercept_
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_glm/glm.py:345: RuntimeWarning: invalid value encountered in matmul
+  return X @ self.coef_ + self.intercept_
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_linear_loss.py:165: RuntimeWarning: divide by zero encountered in matmul
+  raw_prediction = X @ weights + intercept
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_linear_loss.py:165: RuntimeWarning: overflow encountered in matmul
+  raw_prediction = X @ weights + intercept
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_linear_loss.py:165: RuntimeWarning: invalid value encountered in matmul
+  raw_prediction = X @ weights + intercept
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_linear_loss.py:295: RuntimeWarning: divide by zero encountered in matmul
+  grad[:n_features] = X.T @ grad_pointwise + l2_reg_strength * weights
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_linear_loss.py:295: RuntimeWarning: overflow encountered in matmul
+  grad[:n_features] = X.T @ grad_pointwise + l2_reg_strength * weights
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_linear_loss.py:295: RuntimeWarning: invalid value encountered in matmul
+  grad[:n_features] = X.T @ grad_pointwise + l2_reg_strength * weights
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/utils/extmath.py:205: RuntimeWarning: divide by zero encountered in matmul
+  ret = a @ b
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/utils/extmath.py:205: RuntimeWarning: overflow encountered in matmul
+  ret = a @ b
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/utils/extmath.py:205: RuntimeWarning: invalid value encountered in matmul
+  ret = a @ b
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_linear_loss.py:165: RuntimeWarning: divide by zero encountered in matmul
+  raw_prediction = X @ weights + intercept
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_linear_loss.py:165: RuntimeWarning: overflow encountered in matmul
+  raw_prediction = X @ weights + intercept
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_linear_loss.py:165: RuntimeWarning: invalid value encountered in matmul
+  raw_prediction = X @ weights + intercept
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_linear_loss.py:295: RuntimeWarning: divide by zero encountered in matmul
+  grad[:n_features] = X.T @ grad_pointwise + l2_reg_strength * weights
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_linear_loss.py:295: RuntimeWarning: overflow encountered in matmul
+  grad[:n_features] = X.T @ grad_pointwise + l2_reg_strength * weights
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_linear_loss.py:295: RuntimeWarning: invalid value encountered in matmul
+  grad[:n_features] = X.T @ grad_pointwise + l2_reg_strength * weights
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/utils/extmath.py:205: RuntimeWarning: divide by zero encountered in matmul
+  ret = a @ b
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/utils/extmath.py:205: RuntimeWarning: overflow encountered in matmul
+  ret = a @ b
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/utils/extmath.py:205: RuntimeWarning: invalid value encountered in matmul
+  ret = a @ b
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_linear_loss.py:165: RuntimeWarning: divide by zero encountered in matmul
+  raw_prediction = X @ weights + intercept
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_linear_loss.py:165: RuntimeWarning: overflow encountered in matmul
+  raw_prediction = X @ weights + intercept
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_linear_loss.py:165: RuntimeWarning: invalid value encountered in matmul
+  raw_prediction = X @ weights + intercept
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_linear_loss.py:295: RuntimeWarning: divide by zero encountered in matmul
+  grad[:n_features] = X.T @ grad_pointwise + l2_reg_strength * weights
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_linear_loss.py:295: RuntimeWarning: overflow encountered in matmul
+  grad[:n_features] = X.T @ grad_pointwise + l2_reg_strength * weights
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_linear_loss.py:295: RuntimeWarning: invalid value encountered in matmul
+  grad[:n_features] = X.T @ grad_pointwise + l2_reg_strength * weights
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/utils/extmath.py:205: RuntimeWarning: divide by zero encountered in matmul
+  ret = a @ b
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/utils/extmath.py:205: RuntimeWarning: overflow encountered in matmul
+  ret = a @ b
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/utils/extmath.py:205: RuntimeWarning: invalid value encountered in matmul
+  ret = a @ b
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_linear_loss.py:165: RuntimeWarning: divide by zero encountered in matmul
+  raw_prediction = X @ weights + intercept
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_linear_loss.py:165: RuntimeWarning: overflow encountered in matmul
+  raw_prediction = X @ weights + intercept
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_linear_loss.py:165: RuntimeWarning: invalid value encountered in matmul
+  raw_prediction = X @ weights + intercept
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_linear_loss.py:295: RuntimeWarning: divide by zero encountered in matmul
+  grad[:n_features] = X.T @ grad_pointwise + l2_reg_strength * weights
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_linear_loss.py:295: RuntimeWarning: overflow encountered in matmul
+  grad[:n_features] = X.T @ grad_pointwise + l2_reg_strength * weights
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_linear_loss.py:295: RuntimeWarning: invalid value encountered in matmul
+  grad[:n_features] = X.T @ grad_pointwise + l2_reg_strength * weights
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/utils/extmath.py:205: RuntimeWarning: divide by zero encountered in matmul
+  ret = a @ b
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/utils/extmath.py:205: RuntimeWarning: overflow encountered in matmul
+  ret = a @ b
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/utils/extmath.py:205: RuntimeWarning: invalid value encountered in matmul
+  ret = a @ b
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_linear_loss.py:165: RuntimeWarning: divide by zero encountered in matmul
+  raw_prediction = X @ weights + intercept
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_linear_loss.py:165: RuntimeWarning: overflow encountered in matmul
+  raw_prediction = X @ weights + intercept
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_linear_loss.py:165: RuntimeWarning: invalid value encountered in matmul
+  raw_prediction = X @ weights + intercept
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_linear_loss.py:295: RuntimeWarning: divide by zero encountered in matmul
+  grad[:n_features] = X.T @ grad_pointwise + l2_reg_strength * weights
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_linear_loss.py:295: RuntimeWarning: overflow encountered in matmul
+  grad[:n_features] = X.T @ grad_pointwise + l2_reg_strength * weights
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_linear_loss.py:295: RuntimeWarning: invalid value encountered in matmul
+  grad[:n_features] = X.T @ grad_pointwise + l2_reg_strength * weights
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/utils/extmath.py:205: RuntimeWarning: divide by zero encountered in matmul
+  ret = a @ b
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/utils/extmath.py:205: RuntimeWarning: overflow encountered in matmul
+  ret = a @ b
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/utils/extmath.py:205: RuntimeWarning: invalid value encountered in matmul
+  ret = a @ b
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/utils/extmath.py:205: RuntimeWarning: divide by zero encountered in matmul
+  ret = a @ b
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/utils/extmath.py:205: RuntimeWarning: overflow encountered in matmul
+  ret = a @ b
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/utils/extmath.py:205: RuntimeWarning: invalid value encountered in matmul
+  ret = a @ b
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/neural_network/_multilayer_perceptron.py:690: ConvergenceWarning: Stochastic Optimizer: Maximum iterations (110) reached and the optimization hasn't converged yet.
+  warnings.warn(
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/utils/extmath.py:205: RuntimeWarning: divide by zero encountered in matmul
+  ret = a @ b
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/utils/extmath.py:205: RuntimeWarning: overflow encountered in matmul
+  ret = a @ b
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/utils/extmath.py:205: RuntimeWarning: invalid value encountered in matmul
+  ret = a @ b
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/utils/extmath.py:205: RuntimeWarning: divide by zero encountered in matmul
+  ret = a @ b
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/utils/extmath.py:205: RuntimeWarning: overflow encountered in matmul
+  ret = a @ b
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/utils/extmath.py:205: RuntimeWarning: invalid value encountered in matmul
+  ret = a @ b
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/utils/extmath.py:205: RuntimeWarning: divide by zero encountered in matmul
+  ret = a @ b
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/utils/extmath.py:205: RuntimeWarning: overflow encountered in matmul
+  ret = a @ b
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/utils/extmath.py:205: RuntimeWarning: invalid value encountered in matmul
+  ret = a @ b
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/utils/extmath.py:205: RuntimeWarning: divide by zero encountered in matmul
+  ret = a @ b
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/utils/extmath.py:205: RuntimeWarning: overflow encountered in matmul
+  ret = a @ b
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/utils/extmath.py:205: RuntimeWarning: invalid value encountered in matmul
+  ret = a @ b
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/utils/extmath.py:205: RuntimeWarning: divide by zero encountered in matmul
+  ret = a @ b
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/utils/extmath.py:205: RuntimeWarning: overflow encountered in matmul
+  ret = a @ b
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/utils/extmath.py:205: RuntimeWarning: invalid value encountered in matmul
+  ret = a @ b
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/utils/extmath.py:205: RuntimeWarning: divide by zero encountered in matmul
+  ret = a @ b
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/utils/extmath.py:205: RuntimeWarning: overflow encountered in matmul
+  ret = a @ b
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/utils/extmath.py:205: RuntimeWarning: invalid value encountered in matmul
+  ret = a @ b
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/utils/extmath.py:205: RuntimeWarning: divide by zero encountered in matmul
+  ret = a @ b
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/utils/extmath.py:205: RuntimeWarning: overflow encountered in matmul
+  ret = a @ b
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/utils/extmath.py:205: RuntimeWarning: invalid value encountered in matmul
+  ret = a @ b
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/utils/extmath.py:205: RuntimeWarning: divide by zero encountered in matmul
+  ret = a @ b
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/utils/extmath.py:205: RuntimeWarning: overflow encountered in matmul
+  ret = a @ b
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/utils/extmath.py:205: RuntimeWarning: invalid value encountered in matmul
+  ret = a @ b
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/utils/extmath.py:205: RuntimeWarning: divide by zero encountered in matmul
+  ret = a @ b
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/utils/extmath.py:205: RuntimeWarning: overflow encountered in matmul
+  ret = a @ b
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/utils/extmath.py:205: RuntimeWarning: invalid value encountered in matmul
+  ret = a @ b
+F3: materialized DuckDB table -> table_ablation_discrete_primary_metrics
+F3: materialized DuckDB table -> table_ablation_discrete_brier_by_horizon
+F3: materialized DuckDB table -> table_ablation_discrete_calibration_by_horizon
+F3: materialized DuckDB table -> table_ablation_discrete_secondary_metrics
+F3: materialized DuckDB table -> table_ablation_discrete_support_by_horizon
+F3: materialized DuckDB table -> table_ablation_discrete_predicted_vs_observed_survival
+F3: materialized DuckDB table -> table_ablation_discrete_training_audit
+F3: materialized DuckDB table -> table_ablation_discrete_leaderboard
+F3: materialized DuckDB table -> table_ablation_discrete_delta_vs_full
+
+F3 dynamic arm ablation complete.
+Models: ['gb_weekly_tuned', 'linear_tuned', 'neural_tuned', 'poisson_pexp_tuned']
+Scenarios: ['drop_static_structural', 'drop_temporal_signal', 'full_features', 'only_static_structural', 'only_temporal_signal']
+          model_id            scenario_id                    scenario_label  ibs  c_index  brier_h10  calibration_h10  risk_auc_h10  brier_h20  calibration_h20  risk_auc_h20  brier_h30  calibration_h30  risk_auc_h30
+   gb_weekly_tuned          full_features            Full tuned feature set  NaN 0.610855        NaN         0.044483      0.574479        NaN         0.100568      0.456202        NaN         0.132343      0.416684
+   gb_weekly_tuned drop_static_structural Drop static structural covariates  NaN 0.574407        NaN         0.079714      0.450185        NaN         0.143982      0.358347        NaN         0.166032      0.338459
+   gb_weekly_tuned   only_temporal_signal        Only temporal signal block  NaN 0.574407        NaN         0.079714      0.450185        NaN         0.143982      0.358347        NaN         0.166032      0.338459
+   gb_weekly_tuned   drop_temporal_signal        Drop temporal signal block  NaN 0.532873        NaN         0.066218      0.395737        NaN         0.139761      0.265754        NaN         0.189877      0.217958
+   gb_weekly_tuned only_static_structural Only static structural covariates  NaN 0.532873        NaN         0.066218      0.395737        NaN         0.139761      0.265754        NaN         0.189877      0.217958
+      linear_tuned          full_features            Full tuned feature set  NaN 0.577096        NaN         0.096907      0.384321        NaN         0.147194      0.335851        NaN         0.164847      0.339024
+      linear_tuned drop_static_structural Drop static structural covariates  NaN 0.543485        NaN         0.105077      0.313591        NaN         0.164794      0.276399        NaN         0.187020      0.280494
+      linear_tuned   only_temporal_signal        Only temporal signal block  NaN 0.543485        NaN         0.105077      0.313591        NaN         0.164794      0.276399        NaN         0.187020      0.280494
+      linear_tuned   drop_temporal_signal        Drop temporal signal block  NaN 0.521445        NaN         0.126039      0.189344        NaN         0.177747      0.187998        NaN         0.195186      0.191734
+      linear_tuned only_static_structural Only static structural covariates  NaN 0.521445        NaN         0.126039      0.189344        NaN         0.177747      0.187998        NaN         0.195186      0.191734
+      neural_tuned drop_static_structural Drop static structural covariates  NaN 0.521047        NaN         0.071185      0.434422        NaN         0.124162      0.374881        NaN         0.152868      0.368143
+      neural_tuned   only_temporal_signal        Only temporal signal block  NaN 0.521047        NaN         0.071185      0.434422        NaN         0.124162      0.374881        NaN         0.152868      0.368143
+      neural_tuned          full_features            Full tuned feature set  NaN 0.512669        NaN         0.103317      0.532139        NaN         0.147831      0.482635        NaN         0.175021      0.469887
+      neural_tuned   drop_temporal_signal        Drop temporal signal block  NaN 0.459091        NaN         0.083569      0.447395        NaN         0.140201      0.375120        NaN         0.171845      0.354242
+      neural_tuned only_static_structural Only static structural covariates  NaN 0.459091        NaN         0.083569      0.447395        NaN         0.140201      0.375120        NaN         0.171845      0.354242
+poisson_pexp_tuned          full_features            Full tuned feature set  NaN 0.574393        NaN         0.095683      0.311230        NaN         0.154351      0.266781        NaN         0.178198      0.271806
+poisson_pexp_tuned drop_static_structural Drop static structural covariates  NaN 0.538795        NaN         0.102637      0.260409        NaN         0.167347      0.225917        NaN         0.189970      0.231212
+poisson_pexp_tuned   only_temporal_signal        Only temporal signal block  NaN 0.538795        NaN         0.102637      0.260409        NaN         0.167347      0.225917        NaN         0.189970      0.231212
+poisson_pexp_tuned   drop_temporal_signal        Drop temporal signal block  NaN 0.520273        NaN         0.137055      0.147066        NaN         0.198873      0.139770        NaN         0.228190      0.139177
+poisson_pexp_tuned only_static_structural Only static structural covariates  NaN 0.520273        NaN         0.137055      0.147066        NaN         0.198873      0.139770        NaN         0.228190      0.139177
+          model_id            scenario_id                    scenario_label  delta_ibs_vs_full  delta_c_index_vs_full  delta_brier_h10_vs_full  delta_calibration_h10_vs_full  delta_risk_auc_h10_vs_full  delta_brier_h20_vs_full  delta_calibration_h20_vs_full  delta_risk_auc_h20_vs_full  delta_brier_h30_vs_full  delta_calibration_h30_vs_full  delta_risk_auc_h30_vs_full
+   gb_weekly_tuned drop_static_structural Drop static structural covariates                NaN              -0.036448                      NaN                       0.035231                   -0.124295                      NaN                       0.043414                   -0.097854                      NaN                       0.033690                   -0.078225
+   gb_weekly_tuned   drop_temporal_signal        Drop temporal signal block                NaN              -0.077983                      NaN                       0.021735                   -0.178743                      NaN                       0.039193                   -0.190448                      NaN                       0.057534                   -0.198726
+   gb_weekly_tuned          full_features            Full tuned feature set                NaN               0.000000                      NaN                       0.000000                    0.000000                      NaN                       0.000000                    0.000000                      NaN                       0.000000                    0.000000
+   gb_weekly_tuned only_static_structural Only static structural covariates                NaN              -0.077983                      NaN                       0.021735                   -0.178743                      NaN                       0.039193                   -0.190448                      NaN                       0.057534                   -0.198726
+   gb_weekly_tuned   only_temporal_signal        Only temporal signal block                NaN              -0.036448                      NaN                       0.035231                   -0.124295                      NaN                       0.043414                   -0.097854                      NaN                       0.033690                   -0.078225
+      linear_tuned drop_static_structural Drop static structural covariates                NaN              -0.033611                      NaN                       0.008170                   -0.070730                      NaN                       0.017599                   -0.059452                      NaN                       0.022173                   -0.058530
+      linear_tuned   drop_temporal_signal        Drop temporal signal block                NaN              -0.055651                      NaN                       0.029133                   -0.194977                      NaN                       0.030553                   -0.147853                      NaN                       0.030339                   -0.147291
+      linear_tuned          full_features            Full tuned feature set                NaN               0.000000                      NaN                       0.000000                    0.000000                      NaN                       0.000000                    0.000000                      NaN                       0.000000                    0.000000
+      linear_tuned only_static_structural Only static structural covariates                NaN              -0.055651                      NaN                       0.029133                   -0.194977                      NaN                       0.030553                   -0.147853                      NaN                       0.030339                   -0.147291
+      linear_tuned   only_temporal_signal        Only temporal signal block                NaN              -0.033611                      NaN                       0.008170                   -0.070730                      NaN                       0.017599                   -0.059452                      NaN                       0.022173                   -0.058530
+      neural_tuned drop_static_structural Drop static structural covariates                NaN               0.008378                      NaN                      -0.032132                   -0.097717                      NaN                      -0.023668                   -0.107754                      NaN                      -0.022154                   -0.101744
+      neural_tuned   drop_temporal_signal        Drop temporal signal block                NaN              -0.053578                      NaN                      -0.019748                   -0.084744                      NaN                      -0.007630                   -0.107516                      NaN                      -0.003176                   -0.115645
+      neural_tuned          full_features            Full tuned feature set                NaN               0.000000                      NaN                       0.000000                    0.000000                      NaN                       0.000000                    0.000000                      NaN                       0.000000                    0.000000
+      neural_tuned only_static_structural Only static structural covariates                NaN              -0.053578                      NaN                      -0.019748                   -0.084744                      NaN                      -0.007630                   -0.107516                      NaN                      -0.003176                   -0.115645
+      neural_tuned   only_temporal_signal        Only temporal signal block                NaN               0.008378                      NaN                      -0.032132                   -0.097717                      NaN                      -0.023668                   -0.107754                      NaN                      -0.022154                   -0.101744
+poisson_pexp_tuned drop_static_structural Drop static structural covariates                NaN              -0.035598                      NaN                       0.006954                   -0.050821                      NaN                       0.012995                   -0.040863                      NaN                       0.011772                   -0.040595
+poisson_pexp_tuned   drop_temporal_signal        Drop temporal signal block                NaN              -0.054120                      NaN                       0.041372                   -0.164165                      NaN                       0.044522                   -0.127011                      NaN                       0.049992                   -0.132629
+poisson_pexp_tuned          full_features            Full tuned feature set                NaN               0.000000                      NaN                       0.000000                    0.000000                      NaN                       0.000000                    0.000000                      NaN                       0.000000                    0.000000
+poisson_pexp_tuned only_static_structural Only static structural covariates                NaN              -0.054120                      NaN                       0.041372                   -0.164165                      NaN                       0.044522                   -0.127011                      NaN                       0.049992                   -0.132629
+poisson_pexp_tuned   only_temporal_signal        Only temporal signal block                NaN              -0.035598                      NaN                       0.006954                   -0.050821                      NaN                       0.012995                   -0.040863                      NaN                       0.011772                   -0.040595
+[END] F3.7 - 2026-04-05 10:56:04
+[START] F4 - 2026-04-05 10:56:04
+
+======================================================================
+F4 — Train and Evaluate Ablation Variants for Retained Comparable Models
+======================================================================
+Methodological note: this step trains and evaluates ablation
+variants for the retained comparable-model subset only.
+[END] F4 - 2026-04-05 10:56:04
+[START] F4.1 - 2026-04-05 10:56:04
+[END] F4.1 - 2026-04-05 10:56:04
+[START] F4.2 - 2026-04-05 10:56:04
+[END] F4.2 - 2026-04-05 10:56:04
+[START] F4.3 - 2026-04-05 10:56:04
+[END] F4.3 - 2026-04-05 10:56:04
+[START] F4.4 - 2026-04-05 10:56:04
+[END] F4.4 - 2026-04-05 10:56:04
+[START] F4.5 - 2026-04-05 10:56:04
+[END] F4.5 - 2026-04-05 10:56:04
+[START] F4.6 - 2026-04-05 10:56:04
+[END] F4.6 - 2026-04-05 10:56:04
+[START] F4.7 - 2026-04-05 10:56:04
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/torchtuples/callbacks.py:607: UserWarning: This overload of add is deprecated:
+	add(Number alpha, Tensor other)
+Consider using one of the following signatures instead:
+	add(Tensor other, *, Number alpha = 1) (Triggered internally at /Users/runner/work/pytorch/pytorch/pytorch/torch/csrc/utils/python_arg_parser.cpp:1691.)
+  p.data = p.data.add(-weight_decay * eta, p.data)
+F4: materialized DuckDB table -> table_ablation_continuous_primary_metrics
+F4: materialized DuckDB table -> table_ablation_continuous_brier_by_horizon
+F4: materialized DuckDB table -> table_ablation_continuous_calibration_by_horizon
+F4: materialized DuckDB table -> table_ablation_continuous_secondary_metrics
+F4: materialized DuckDB table -> table_ablation_continuous_support_by_horizon
+F4: materialized DuckDB table -> table_ablation_continuous_predicted_vs_observed_survival
+F4: materialized DuckDB table -> table_ablation_continuous_training_audit
+F4: materialized DuckDB table -> table_ablation_continuous_leaderboard
+F4: materialized DuckDB table -> table_ablation_continuous_delta_vs_full
+
+Ablation continuous training audit:
+      model_id            scenario_id                    scenario_label  n_train_rows  n_test_rows  n_feature_columns_raw  n_numeric_features_raw  n_categorical_features_raw  n_features_after_transform
+     cox_tuned          full_features            Full tuned feature set         22815         9778                     11                       5                           6                          41
+     cox_tuned drop_static_structural Drop static structural covariates         22815         9778                      3                       3                           0                           3
+     cox_tuned   drop_temporal_signal        Drop temporal signal block         22815         9778                      8                       2                           6                          38
+     cox_tuned only_static_structural Only static structural covariates         22815         9778                      8                       2                           6                          38
+     cox_tuned   only_temporal_signal        Only temporal signal block         22815         9778                      3                       3                           0                           3
+deepsurv_tuned          full_features            Full tuned feature set         22815         9778                     11                       5                           6                          41
+deepsurv_tuned drop_static_structural Drop static structural covariates         22815         9778                      3                       3                           0                           3
+deepsurv_tuned   drop_temporal_signal        Drop temporal signal block         22815         9778                      8                       2                           6                          38
+deepsurv_tuned only_static_structural Only static structural covariates         22815         9778                      8                       2                           6                          38
+deepsurv_tuned   only_temporal_signal        Only temporal signal block         22815         9778                      3                       3                           0                           3
+     rsf_tuned          full_features            Full tuned feature set         22815         9778                     11                       5                           6                          41
+     rsf_tuned drop_static_structural Drop static structural covariates         22815         9778                      3                       3                           0                           3
+     rsf_tuned   drop_temporal_signal        Drop temporal signal block         22815         9778                      8                       2                           6                          38
+     rsf_tuned only_static_structural Only static structural covariates         22815         9778                      8                       2                           6                          38
+     rsf_tuned   only_temporal_signal        Only temporal signal block         22815         9778                      3                       3                           0                           3
+    mtlr_tuned          full_features            Full tuned feature set         22815         9778                     11                       5                           6                          41
+    mtlr_tuned drop_static_structural Drop static structural covariates         22815         9778                      3                       3                           0                           3
+    mtlr_tuned   drop_temporal_signal        Drop temporal signal block         22815         9778                      8                       2                           6                          38
+    mtlr_tuned only_static_structural Only static structural covariates         22815         9778                      8                       2                           6                          38
+    mtlr_tuned   only_temporal_signal        Only temporal signal block         22815         9778                      3                       3                           0                           3
+
+Ablation continuous leaderboard:
+      model_id            scenario_id                    scenario_label      ibs  c_index  brier_h10  calibration_h10  risk_auc_h10  brier_h20  calibration_h20  risk_auc_h20  brier_h30  calibration_h30  risk_auc_h30
+     cox_tuned   drop_temporal_signal        Drop temporal signal block 0.122535 0.590868   0.106583         0.011891      0.622995   0.143047         0.011258      0.606312   0.166909         0.010446      0.596572
+     cox_tuned          full_features            Full tuned feature set 0.122535 0.590868   0.106583         0.011891      0.622995   0.143047         0.011258      0.606312   0.166909         0.010446      0.596572
+     cox_tuned only_static_structural Only static structural covariates 0.122535 0.590868   0.106583         0.011891      0.622995   0.143047         0.011258      0.606312   0.166909         0.010446      0.596572
+     cox_tuned drop_static_structural Drop static structural covariates 0.125033 0.506389   0.108822         0.017769      0.500000   0.146024         0.010567      0.500000   0.170327         0.007466      0.500000
+     cox_tuned   only_temporal_signal        Only temporal signal block 0.125033 0.506389   0.108822         0.017769      0.500000   0.146024         0.010567      0.500000   0.170327         0.007466      0.500000
+deepsurv_tuned   drop_temporal_signal        Drop temporal signal block 0.122407 0.594214   0.106174         0.006899      0.631410   0.142987         0.012696      0.608925   0.167139         0.014497      0.599147
+deepsurv_tuned only_static_structural Only static structural covariates 0.122407 0.594214   0.106174         0.006899      0.631410   0.142987         0.012696      0.608925   0.167139         0.014497      0.599147
+deepsurv_tuned          full_features            Full tuned feature set 0.122416 0.593833   0.106210         0.009611      0.632432   0.143012         0.014785      0.607439   0.167040         0.017736      0.598556
+deepsurv_tuned drop_static_structural Drop static structural covariates 0.125033 0.506389   0.108822         0.017769      0.500000   0.146024         0.010567      0.500000   0.170327         0.007466      0.500000
+deepsurv_tuned   only_temporal_signal        Only temporal signal block 0.125033 0.506389   0.108822         0.017769      0.500000   0.146024         0.010567      0.500000   0.170327         0.007466      0.500000
+    mtlr_tuned          full_features            Full tuned feature set 0.122492 0.563743   0.106023         0.011609      0.638971   0.143242         0.019610      0.609840   0.167539         0.022096      0.597756
+    mtlr_tuned   drop_temporal_signal        Drop temporal signal block 0.122558 0.575253   0.105953         0.014949      0.640825   0.143338         0.020995      0.609627   0.167540         0.021465      0.597918
+    mtlr_tuned only_static_structural Only static structural covariates 0.122558 0.575253   0.105953         0.014949      0.640825   0.143338         0.020995      0.609627   0.167540         0.021465      0.597918
+    mtlr_tuned drop_static_structural Drop static structural covariates 0.125522 0.506389   0.108967         0.027864      0.500000   0.146727         0.030127      0.500000   0.171654         0.036444      0.500000
+    mtlr_tuned   only_temporal_signal        Only temporal signal block 0.125522 0.506389   0.108967         0.027864      0.500000   0.146727         0.030127      0.500000   0.171654         0.036444      0.500000
+     rsf_tuned   drop_temporal_signal        Drop temporal signal block 0.121923 0.602067   0.105821         0.013873      0.638753   0.142480         0.009671      0.615106   0.166212         0.010318      0.605400
+     rsf_tuned only_static_structural Only static structural covariates 0.121923 0.602067   0.105821         0.013873      0.638753   0.142480         0.009671      0.615106   0.166212         0.010318      0.605400
+     rsf_tuned          full_features            Full tuned feature set 0.121927 0.602292   0.105824         0.015456      0.638389   0.142482         0.010575      0.614971   0.166223         0.011124      0.605401
+     rsf_tuned drop_static_structural Drop static structural covariates 0.125031 0.506389   0.108819         0.018282      0.500000   0.146021         0.011350      0.500000   0.170326         0.007466      0.500000
+     rsf_tuned   only_temporal_signal        Only temporal signal block 0.125031 0.506389   0.108819         0.018282      0.500000   0.146021         0.011350      0.500000   0.170326         0.007466      0.500000
+
+Ablation continuous delta vs full:
+      model_id            scenario_id                    scenario_label  delta_ibs_vs_full  delta_c_index_vs_full  delta_brier_h10_vs_full  delta_calibration_h10_vs_full  delta_risk_auc_h10_vs_full  delta_brier_h20_vs_full  delta_calibration_h20_vs_full  delta_risk_auc_h20_vs_full  delta_brier_h30_vs_full  delta_calibration_h30_vs_full  delta_risk_auc_h30_vs_full
+     cox_tuned drop_static_structural Drop static structural covariates           0.002498              -0.084480                 0.002239                       0.005878                   -0.122995                 0.002977                      -0.000691                   -0.106312             3.418307e-03                      -0.002981               -9.657215e-02
+     cox_tuned   drop_temporal_signal        Drop temporal signal block           0.000000               0.000000                 0.000000                       0.000000                    0.000000                 0.000000                       0.000000                    0.000000             0.000000e+00                       0.000000                0.000000e+00
+     cox_tuned          full_features            Full tuned feature set           0.000000               0.000000                 0.000000                       0.000000                    0.000000                 0.000000                       0.000000                    0.000000             0.000000e+00                       0.000000                0.000000e+00
+     cox_tuned only_static_structural Only static structural covariates           0.000000               0.000000                 0.000000                       0.000000                    0.000000                 0.000000                       0.000000                    0.000000             0.000000e+00                       0.000000                0.000000e+00
+     cox_tuned   only_temporal_signal        Only temporal signal block           0.002498              -0.084480                 0.002239                       0.005878                   -0.122995                 0.002977                      -0.000691                   -0.106312             3.418307e-03                      -0.002981               -9.657215e-02
+deepsurv_tuned drop_static_structural Drop static structural covariates           0.002617              -0.087444                 0.002612                       0.008159                   -0.132432                 0.003012                      -0.004218                   -0.107439             3.287592e-03                      -0.010270               -9.855560e-02
+deepsurv_tuned   drop_temporal_signal        Drop temporal signal block          -0.000008               0.000381                -0.000036                      -0.002712                   -0.001023                -0.000025                      -0.002089                    0.001487             9.914801e-05                      -0.003239                5.914747e-04
+deepsurv_tuned          full_features            Full tuned feature set           0.000000               0.000000                 0.000000                       0.000000                    0.000000                 0.000000                       0.000000                    0.000000             0.000000e+00                       0.000000                0.000000e+00
+deepsurv_tuned only_static_structural Only static structural covariates          -0.000008               0.000381                -0.000036                      -0.002712                   -0.001023                -0.000025                      -0.002089                    0.001487             9.914801e-05                      -0.003239                5.914747e-04
+deepsurv_tuned   only_temporal_signal        Only temporal signal block           0.002617              -0.087444                 0.002612                       0.008159                   -0.132432                 0.003012                      -0.004218                   -0.107439             3.287592e-03                      -0.010270               -9.855560e-02
+    mtlr_tuned drop_static_structural Drop static structural covariates           0.003029              -0.057354                 0.002944                       0.016256                   -0.138971                 0.003485                       0.010518                   -0.109840             4.114583e-03                       0.014348               -9.775614e-02
+    mtlr_tuned   drop_temporal_signal        Drop temporal signal block           0.000066               0.011510                -0.000070                       0.003340                    0.001854                 0.000096                       0.001386                   -0.000214             2.232242e-07                      -0.000632                1.614704e-04
+    mtlr_tuned          full_features            Full tuned feature set           0.000000               0.000000                 0.000000                       0.000000                    0.000000                 0.000000                       0.000000                    0.000000             0.000000e+00                       0.000000                0.000000e+00
+    mtlr_tuned only_static_structural Only static structural covariates           0.000066               0.011510                -0.000070                       0.003340                    0.001854                 0.000096                       0.001386                   -0.000214             2.232242e-07                      -0.000632                1.614704e-04
+    mtlr_tuned   only_temporal_signal        Only temporal signal block           0.003029              -0.057354                 0.002944                       0.016256                   -0.138971                 0.003485                       0.010518                   -0.109840             4.114583e-03                       0.014348               -9.775614e-02
+     rsf_tuned drop_static_structural Drop static structural covariates           0.003104              -0.095903                 0.002994                       0.002826                   -0.138389                 0.003538                       0.000775                   -0.114971             4.103153e-03                      -0.003659               -1.054009e-01
+     rsf_tuned   drop_temporal_signal        Drop temporal signal block          -0.000004              -0.000225                -0.000004                      -0.001583                    0.000364                -0.000003                      -0.000904                    0.000135            -1.038104e-05                      -0.000806               -7.982943e-07
+     rsf_tuned          full_features            Full tuned feature set           0.000000               0.000000                 0.000000                       0.000000                    0.000000                 0.000000                       0.000000                    0.000000             0.000000e+00                       0.000000                0.000000e+00
+     rsf_tuned only_static_structural Only static structural covariates          -0.000004              -0.000225                -0.000004                      -0.001583                    0.000364                -0.000003                      -0.000904                    0.000135            -1.038104e-05                      -0.000806               -7.982943e-07
+     rsf_tuned   only_temporal_signal        Only temporal signal block           0.003104              -0.095903                 0.002994                       0.002826                   -0.138389                 0.003538                       0.000775                   -0.114971             4.103153e-03                      -0.003659               -1.054009e-01
+
+Saved:
+- DuckDB table: table_ablation_continuous_primary_metrics
+- DuckDB table: table_ablation_continuous_brier_by_horizon
+- DuckDB table: table_ablation_continuous_calibration_by_horizon
+- DuckDB table: table_ablation_continuous_secondary_metrics
+- DuckDB table: table_ablation_continuous_support_by_horizon
+- DuckDB table: table_ablation_continuous_predicted_vs_observed_survival
+- DuckDB table: table_ablation_continuous_training_audit
+- DuckDB table: table_ablation_continuous_leaderboard
+- DuckDB table: table_ablation_continuous_delta_vs_full
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/metadata/ablation_continuous_run_summary.json
+[END] F4.7 - 2026-04-05 10:56:27
+[START] F5 - 2026-04-05 10:56:27
+
+======================================================================
+F5 — Consolidate Ablation Results Across the Manuscript Audit Subset
+======================================================================
+Methodological note: this step consolidates ablation outputs only.
+No model is trained here.
+F5: materialized DuckDB table -> table_ablation_leaderboard_manuscript_subset
+F5: materialized DuckDB table -> table_ablation_delta_manuscript_subset
+F5: materialized DuckDB table -> table_ablation_summary_by_model
+F5: materialized DuckDB table -> table_ablation_scenario_comparison
+
+Ablation leaderboard — manuscript audit subset:
+          model_id                          display_name                   family                paper_methodological_arm            scenario_id                    scenario_label      ibs  c_index  brier_h10  calibration_h10  risk_auc_h10  brier_h20  calibration_h20  risk_auc_h20  brier_h30  calibration_h30  risk_auc_h30
+         cox_tuned                Cox Comparable (Tuned)      continuous_time_cox comparable_continuous_time_early_window   drop_temporal_signal        Drop temporal signal block 0.122535 0.590868   0.106583         0.011891      0.622995   0.143047         0.011258      0.606312   0.166909         0.010446      0.596572
+         cox_tuned                Cox Comparable (Tuned)      continuous_time_cox comparable_continuous_time_early_window          full_features            Full tuned feature set 0.122535 0.590868   0.106583         0.011891      0.622995   0.143047         0.011258      0.606312   0.166909         0.010446      0.596572
+         cox_tuned                Cox Comparable (Tuned)      continuous_time_cox comparable_continuous_time_early_window only_static_structural Only static structural covariates 0.122535 0.590868   0.106583         0.011891      0.622995   0.143047         0.011258      0.606312   0.166909         0.010446      0.596572
+         cox_tuned                Cox Comparable (Tuned)      continuous_time_cox comparable_continuous_time_early_window drop_static_structural Drop static structural covariates 0.125033 0.506389   0.108822         0.017769      0.500000   0.146024         0.010567      0.500000   0.170327         0.007466      0.500000
+         cox_tuned                Cox Comparable (Tuned)      continuous_time_cox comparable_continuous_time_early_window   only_temporal_signal        Only temporal signal block 0.125033 0.506389   0.108822         0.017769      0.500000   0.146024         0.010567      0.500000   0.170327         0.007466      0.500000
+    deepsurv_tuned                      DeepSurv (Tuned) continuous_time_deepsurv comparable_continuous_time_early_window   drop_temporal_signal        Drop temporal signal block 0.122407 0.594214   0.106174         0.006899      0.631410   0.142987         0.012696      0.608925   0.167139         0.014497      0.599147
+    deepsurv_tuned                      DeepSurv (Tuned) continuous_time_deepsurv comparable_continuous_time_early_window only_static_structural Only static structural covariates 0.122407 0.594214   0.106174         0.006899      0.631410   0.142987         0.012696      0.608925   0.167139         0.014497      0.599147
+    deepsurv_tuned                      DeepSurv (Tuned) continuous_time_deepsurv comparable_continuous_time_early_window          full_features            Full tuned feature set 0.122416 0.593833   0.106210         0.009611      0.632432   0.143012         0.014785      0.607439   0.167040         0.017736      0.598556
+    deepsurv_tuned                      DeepSurv (Tuned) continuous_time_deepsurv comparable_continuous_time_early_window drop_static_structural Drop static structural covariates 0.125033 0.506389   0.108822         0.017769      0.500000   0.146024         0.010567      0.500000   0.170327         0.007466      0.500000
+    deepsurv_tuned                      DeepSurv (Tuned) continuous_time_deepsurv comparable_continuous_time_early_window   only_temporal_signal        Only temporal signal block 0.125033 0.506389   0.108822         0.017769      0.500000   0.146024         0.010567      0.500000   0.170327         0.007466      0.500000
+   gb_weekly_tuned              GB Weekly Hazard (Tuned)         discrete_time_gb            dynamic_weekly_person_period          full_features            Full tuned feature set      NaN 0.610855        NaN         0.044483      0.574479        NaN         0.100568      0.456202        NaN         0.132343      0.416684
+   gb_weekly_tuned              GB Weekly Hazard (Tuned)         discrete_time_gb            dynamic_weekly_person_period drop_static_structural Drop static structural covariates      NaN 0.574407        NaN         0.079714      0.450185        NaN         0.143982      0.358347        NaN         0.166032      0.338459
+   gb_weekly_tuned              GB Weekly Hazard (Tuned)         discrete_time_gb            dynamic_weekly_person_period   only_temporal_signal        Only temporal signal block      NaN 0.574407        NaN         0.079714      0.450185        NaN         0.143982      0.358347        NaN         0.166032      0.338459
+   gb_weekly_tuned              GB Weekly Hazard (Tuned)         discrete_time_gb            dynamic_weekly_person_period   drop_temporal_signal        Drop temporal signal block      NaN 0.532873        NaN         0.066218      0.395737        NaN         0.139761      0.265754        NaN         0.189877      0.217958
+   gb_weekly_tuned              GB Weekly Hazard (Tuned)         discrete_time_gb            dynamic_weekly_person_period only_static_structural Only static structural covariates      NaN 0.532873        NaN         0.066218      0.395737        NaN         0.139761      0.265754        NaN         0.189877      0.217958
+      linear_tuned   Linear Discrete-Time Hazard (Tuned)     discrete_time_linear            dynamic_weekly_person_period          full_features            Full tuned feature set      NaN 0.577096        NaN         0.096907      0.384321        NaN         0.147194      0.335851        NaN         0.164847      0.339024
+      linear_tuned   Linear Discrete-Time Hazard (Tuned)     discrete_time_linear            dynamic_weekly_person_period drop_static_structural Drop static structural covariates      NaN 0.543485        NaN         0.105077      0.313591        NaN         0.164794      0.276399        NaN         0.187020      0.280494
+      linear_tuned   Linear Discrete-Time Hazard (Tuned)     discrete_time_linear            dynamic_weekly_person_period   only_temporal_signal        Only temporal signal block      NaN 0.543485        NaN         0.105077      0.313591        NaN         0.164794      0.276399        NaN         0.187020      0.280494
+      linear_tuned   Linear Discrete-Time Hazard (Tuned)     discrete_time_linear            dynamic_weekly_person_period   drop_temporal_signal        Drop temporal signal block      NaN 0.521445        NaN         0.126039      0.189344        NaN         0.177747      0.187998        NaN         0.195186      0.191734
+      linear_tuned   Linear Discrete-Time Hazard (Tuned)     discrete_time_linear            dynamic_weekly_person_period only_static_structural Only static structural covariates      NaN 0.521445        NaN         0.126039      0.189344        NaN         0.177747      0.187998        NaN         0.195186      0.191734
+        mtlr_tuned                   Neural-MTLR (Tuned)     continuous_time_mtlr comparable_continuous_time_early_window          full_features            Full tuned feature set 0.122492 0.563743   0.106023         0.011609      0.638971   0.143242         0.019610      0.609840   0.167539         0.022096      0.597756
+        mtlr_tuned                   Neural-MTLR (Tuned)     continuous_time_mtlr comparable_continuous_time_early_window   drop_temporal_signal        Drop temporal signal block 0.122558 0.575253   0.105953         0.014949      0.640825   0.143338         0.020995      0.609627   0.167540         0.021465      0.597918
+        mtlr_tuned                   Neural-MTLR (Tuned)     continuous_time_mtlr comparable_continuous_time_early_window only_static_structural Only static structural covariates 0.122558 0.575253   0.105953         0.014949      0.640825   0.143338         0.020995      0.609627   0.167540         0.021465      0.597918
+        mtlr_tuned                   Neural-MTLR (Tuned)     continuous_time_mtlr comparable_continuous_time_early_window drop_static_structural Drop static structural covariates 0.125522 0.506389   0.108967         0.027864      0.500000   0.146727         0.030127      0.500000   0.171654         0.036444      0.500000
+        mtlr_tuned                   Neural-MTLR (Tuned)     continuous_time_mtlr comparable_continuous_time_early_window   only_temporal_signal        Only temporal signal block 0.125522 0.506389   0.108967         0.027864      0.500000   0.146727         0.030127      0.500000   0.171654         0.036444      0.500000
+      neural_tuned Neural Discrete-Time Survival (Tuned)     discrete_time_neural            dynamic_weekly_person_period drop_static_structural Drop static structural covariates      NaN 0.521047        NaN         0.071185      0.434422        NaN         0.124162      0.374881        NaN         0.152868      0.368143
+      neural_tuned Neural Discrete-Time Survival (Tuned)     discrete_time_neural            dynamic_weekly_person_period   only_temporal_signal        Only temporal signal block      NaN 0.521047        NaN         0.071185      0.434422        NaN         0.124162      0.374881        NaN         0.152868      0.368143
+      neural_tuned Neural Discrete-Time Survival (Tuned)     discrete_time_neural            dynamic_weekly_person_period          full_features            Full tuned feature set      NaN 0.512669        NaN         0.103317      0.532139        NaN         0.147831      0.482635        NaN         0.175021      0.469887
+      neural_tuned Neural Discrete-Time Survival (Tuned)     discrete_time_neural            dynamic_weekly_person_period   drop_temporal_signal        Drop temporal signal block      NaN 0.459091        NaN         0.083569      0.447395        NaN         0.140201      0.375120        NaN         0.171845      0.354242
+      neural_tuned Neural Discrete-Time Survival (Tuned)     discrete_time_neural            dynamic_weekly_person_period only_static_structural Only static structural covariates      NaN 0.459091        NaN         0.083569      0.447395        NaN         0.140201      0.375120        NaN         0.171845      0.354242
+poisson_pexp_tuned Poisson Piecewise-Exponential (Tuned)    discrete_time_poisson            dynamic_weekly_person_period          full_features            Full tuned feature set      NaN 0.574393        NaN         0.095683      0.311230        NaN         0.154351      0.266781        NaN         0.178198      0.271806
+poisson_pexp_tuned Poisson Piecewise-Exponential (Tuned)    discrete_time_poisson            dynamic_weekly_person_period drop_static_structural Drop static structural covariates      NaN 0.538795        NaN         0.102637      0.260409        NaN         0.167347      0.225917        NaN         0.189970      0.231212
+poisson_pexp_tuned Poisson Piecewise-Exponential (Tuned)    discrete_time_poisson            dynamic_weekly_person_period   only_temporal_signal        Only temporal signal block      NaN 0.538795        NaN         0.102637      0.260409        NaN         0.167347      0.225917        NaN         0.189970      0.231212
+poisson_pexp_tuned Poisson Piecewise-Exponential (Tuned)    discrete_time_poisson            dynamic_weekly_person_period   drop_temporal_signal        Drop temporal signal block      NaN 0.520273        NaN         0.137055      0.147066        NaN         0.198873      0.139770        NaN         0.228190      0.139177
+poisson_pexp_tuned Poisson Piecewise-Exponential (Tuned)    discrete_time_poisson            dynamic_weekly_person_period only_static_structural Only static structural covariates      NaN 0.520273        NaN         0.137055      0.147066        NaN         0.198873      0.139770        NaN         0.228190      0.139177
+         rsf_tuned        Random Survival Forest (Tuned)        tree_survival_rsf comparable_continuous_time_early_window   drop_temporal_signal        Drop temporal signal block 0.121923 0.602067   0.105821         0.013873      0.638753   0.142480         0.009671      0.615106   0.166212         0.010318      0.605400
+         rsf_tuned        Random Survival Forest (Tuned)        tree_survival_rsf comparable_continuous_time_early_window only_static_structural Only static structural covariates 0.121923 0.602067   0.105821         0.013873      0.638753   0.142480         0.009671      0.615106   0.166212         0.010318      0.605400
+         rsf_tuned        Random Survival Forest (Tuned)        tree_survival_rsf comparable_continuous_time_early_window          full_features            Full tuned feature set 0.121927 0.602292   0.105824         0.015456      0.638389   0.142482         0.010575      0.614971   0.166223         0.011124      0.605401
+         rsf_tuned        Random Survival Forest (Tuned)        tree_survival_rsf comparable_continuous_time_early_window drop_static_structural Drop static structural covariates 0.125031 0.506389   0.108819         0.018282      0.500000   0.146021         0.011350      0.500000   0.170326         0.007466      0.500000
+         rsf_tuned        Random Survival Forest (Tuned)        tree_survival_rsf comparable_continuous_time_early_window   only_temporal_signal        Only temporal signal block 0.125031 0.506389   0.108819         0.018282      0.500000   0.146021         0.011350      0.500000   0.170326         0.007466      0.500000
+
+Ablation delta — manuscript audit subset:
+          model_id                          display_name                   family                paper_methodological_arm            scenario_id                    scenario_label  delta_ibs_vs_full  delta_c_index_vs_full  delta_brier_h10_vs_full  delta_calibration_h10_vs_full  delta_risk_auc_h10_vs_full  delta_brier_h20_vs_full  delta_calibration_h20_vs_full  delta_risk_auc_h20_vs_full  delta_brier_h30_vs_full  delta_calibration_h30_vs_full  delta_risk_auc_h30_vs_full
+         cox_tuned                Cox Comparable (Tuned)      continuous_time_cox comparable_continuous_time_early_window drop_static_structural Drop static structural covariates           0.002498              -0.084480                 0.002239                       0.005878                   -0.122995                 0.002977                      -0.000691                   -0.106312             3.418307e-03                      -0.002981               -9.657215e-02
+         cox_tuned                Cox Comparable (Tuned)      continuous_time_cox comparable_continuous_time_early_window   drop_temporal_signal        Drop temporal signal block           0.000000               0.000000                 0.000000                       0.000000                    0.000000                 0.000000                       0.000000                    0.000000             0.000000e+00                       0.000000                0.000000e+00
+         cox_tuned                Cox Comparable (Tuned)      continuous_time_cox comparable_continuous_time_early_window          full_features            Full tuned feature set           0.000000               0.000000                 0.000000                       0.000000                    0.000000                 0.000000                       0.000000                    0.000000             0.000000e+00                       0.000000                0.000000e+00
+         cox_tuned                Cox Comparable (Tuned)      continuous_time_cox comparable_continuous_time_early_window only_static_structural Only static structural covariates           0.000000               0.000000                 0.000000                       0.000000                    0.000000                 0.000000                       0.000000                    0.000000             0.000000e+00                       0.000000                0.000000e+00
+         cox_tuned                Cox Comparable (Tuned)      continuous_time_cox comparable_continuous_time_early_window   only_temporal_signal        Only temporal signal block           0.002498              -0.084480                 0.002239                       0.005878                   -0.122995                 0.002977                      -0.000691                   -0.106312             3.418307e-03                      -0.002981               -9.657215e-02
+    deepsurv_tuned                      DeepSurv (Tuned) continuous_time_deepsurv comparable_continuous_time_early_window drop_static_structural Drop static structural covariates           0.002617              -0.087444                 0.002612                       0.008159                   -0.132432                 0.003012                      -0.004218                   -0.107439             3.287592e-03                      -0.010270               -9.855560e-02
+    deepsurv_tuned                      DeepSurv (Tuned) continuous_time_deepsurv comparable_continuous_time_early_window   drop_temporal_signal        Drop temporal signal block          -0.000008               0.000381                -0.000036                      -0.002712                   -0.001023                -0.000025                      -0.002089                    0.001487             9.914801e-05                      -0.003239                5.914747e-04
+    deepsurv_tuned                      DeepSurv (Tuned) continuous_time_deepsurv comparable_continuous_time_early_window          full_features            Full tuned feature set           0.000000               0.000000                 0.000000                       0.000000                    0.000000                 0.000000                       0.000000                    0.000000             0.000000e+00                       0.000000                0.000000e+00
+    deepsurv_tuned                      DeepSurv (Tuned) continuous_time_deepsurv comparable_continuous_time_early_window only_static_structural Only static structural covariates          -0.000008               0.000381                -0.000036                      -0.002712                   -0.001023                -0.000025                      -0.002089                    0.001487             9.914801e-05                      -0.003239                5.914747e-04
+    deepsurv_tuned                      DeepSurv (Tuned) continuous_time_deepsurv comparable_continuous_time_early_window   only_temporal_signal        Only temporal signal block           0.002617              -0.087444                 0.002612                       0.008159                   -0.132432                 0.003012                      -0.004218                   -0.107439             3.287592e-03                      -0.010270               -9.855560e-02
+   gb_weekly_tuned              GB Weekly Hazard (Tuned)         discrete_time_gb            dynamic_weekly_person_period drop_static_structural Drop static structural covariates                NaN              -0.036448                      NaN                       0.035231                   -0.124295                      NaN                       0.043414                   -0.097854                      NaN                       0.033690               -7.822458e-02
+   gb_weekly_tuned              GB Weekly Hazard (Tuned)         discrete_time_gb            dynamic_weekly_person_period   drop_temporal_signal        Drop temporal signal block                NaN              -0.077983                      NaN                       0.021735                   -0.178743                      NaN                       0.039193                   -0.190448                      NaN                       0.057534               -1.987264e-01
+   gb_weekly_tuned              GB Weekly Hazard (Tuned)         discrete_time_gb            dynamic_weekly_person_period          full_features            Full tuned feature set                NaN               0.000000                      NaN                       0.000000                    0.000000                      NaN                       0.000000                    0.000000                      NaN                       0.000000                0.000000e+00
+   gb_weekly_tuned              GB Weekly Hazard (Tuned)         discrete_time_gb            dynamic_weekly_person_period only_static_structural Only static structural covariates                NaN              -0.077983                      NaN                       0.021735                   -0.178743                      NaN                       0.039193                   -0.190448                      NaN                       0.057534               -1.987264e-01
+   gb_weekly_tuned              GB Weekly Hazard (Tuned)         discrete_time_gb            dynamic_weekly_person_period   only_temporal_signal        Only temporal signal block                NaN              -0.036448                      NaN                       0.035231                   -0.124295                      NaN                       0.043414                   -0.097854                      NaN                       0.033690               -7.822458e-02
+      linear_tuned   Linear Discrete-Time Hazard (Tuned)     discrete_time_linear            dynamic_weekly_person_period drop_static_structural Drop static structural covariates                NaN              -0.033611                      NaN                       0.008170                   -0.070730                      NaN                       0.017599                   -0.059452                      NaN                       0.022173               -5.853040e-02
+      linear_tuned   Linear Discrete-Time Hazard (Tuned)     discrete_time_linear            dynamic_weekly_person_period   drop_temporal_signal        Drop temporal signal block                NaN              -0.055651                      NaN                       0.029133                   -0.194977                      NaN                       0.030553                   -0.147853                      NaN                       0.030339               -1.472906e-01
+      linear_tuned   Linear Discrete-Time Hazard (Tuned)     discrete_time_linear            dynamic_weekly_person_period          full_features            Full tuned feature set                NaN               0.000000                      NaN                       0.000000                    0.000000                      NaN                       0.000000                    0.000000                      NaN                       0.000000                0.000000e+00
+      linear_tuned   Linear Discrete-Time Hazard (Tuned)     discrete_time_linear            dynamic_weekly_person_period only_static_structural Only static structural covariates                NaN              -0.055651                      NaN                       0.029133                   -0.194977                      NaN                       0.030553                   -0.147853                      NaN                       0.030339               -1.472906e-01
+      linear_tuned   Linear Discrete-Time Hazard (Tuned)     discrete_time_linear            dynamic_weekly_person_period   only_temporal_signal        Only temporal signal block                NaN              -0.033611                      NaN                       0.008170                   -0.070730                      NaN                       0.017599                   -0.059452                      NaN                       0.022173               -5.853040e-02
+        mtlr_tuned                   Neural-MTLR (Tuned)     continuous_time_mtlr comparable_continuous_time_early_window drop_static_structural Drop static structural covariates           0.003029              -0.057354                 0.002944                       0.016256                   -0.138971                 0.003485                       0.010518                   -0.109840             4.114583e-03                       0.014348               -9.775614e-02
+        mtlr_tuned                   Neural-MTLR (Tuned)     continuous_time_mtlr comparable_continuous_time_early_window   drop_temporal_signal        Drop temporal signal block           0.000066               0.011510                -0.000070                       0.003340                    0.001854                 0.000096                       0.001386                   -0.000214             2.232242e-07                      -0.000632                1.614704e-04
+        mtlr_tuned                   Neural-MTLR (Tuned)     continuous_time_mtlr comparable_continuous_time_early_window          full_features            Full tuned feature set           0.000000               0.000000                 0.000000                       0.000000                    0.000000                 0.000000                       0.000000                    0.000000             0.000000e+00                       0.000000                0.000000e+00
+        mtlr_tuned                   Neural-MTLR (Tuned)     continuous_time_mtlr comparable_continuous_time_early_window only_static_structural Only static structural covariates           0.000066               0.011510                -0.000070                       0.003340                    0.001854                 0.000096                       0.001386                   -0.000214             2.232242e-07                      -0.000632                1.614704e-04
+        mtlr_tuned                   Neural-MTLR (Tuned)     continuous_time_mtlr comparable_continuous_time_early_window   only_temporal_signal        Only temporal signal block           0.003029              -0.057354                 0.002944                       0.016256                   -0.138971                 0.003485                       0.010518                   -0.109840             4.114583e-03                       0.014348               -9.775614e-02
+      neural_tuned Neural Discrete-Time Survival (Tuned)     discrete_time_neural            dynamic_weekly_person_period drop_static_structural Drop static structural covariates                NaN               0.008378                      NaN                      -0.032132                   -0.097717                      NaN                      -0.023668                   -0.107754                      NaN                      -0.022154               -1.017437e-01
+      neural_tuned Neural Discrete-Time Survival (Tuned)     discrete_time_neural            dynamic_weekly_person_period   drop_temporal_signal        Drop temporal signal block                NaN              -0.053578                      NaN                      -0.019748                   -0.084744                      NaN                      -0.007630                   -0.107516                      NaN                      -0.003176               -1.156449e-01
+      neural_tuned Neural Discrete-Time Survival (Tuned)     discrete_time_neural            dynamic_weekly_person_period          full_features            Full tuned feature set                NaN               0.000000                      NaN                       0.000000                    0.000000                      NaN                       0.000000                    0.000000                      NaN                       0.000000                0.000000e+00
+      neural_tuned Neural Discrete-Time Survival (Tuned)     discrete_time_neural            dynamic_weekly_person_period only_static_structural Only static structural covariates                NaN              -0.053578                      NaN                      -0.019748                   -0.084744                      NaN                      -0.007630                   -0.107516                      NaN                      -0.003176               -1.156449e-01
+      neural_tuned Neural Discrete-Time Survival (Tuned)     discrete_time_neural            dynamic_weekly_person_period   only_temporal_signal        Only temporal signal block                NaN               0.008378                      NaN                      -0.032132                   -0.097717                      NaN                      -0.023668                   -0.107754                      NaN                      -0.022154               -1.017437e-01
+poisson_pexp_tuned Poisson Piecewise-Exponential (Tuned)    discrete_time_poisson            dynamic_weekly_person_period drop_static_structural Drop static structural covariates                NaN              -0.035598                      NaN                       0.006954                   -0.050821                      NaN                       0.012995                   -0.040863                      NaN                       0.011772               -4.059450e-02
+poisson_pexp_tuned Poisson Piecewise-Exponential (Tuned)    discrete_time_poisson            dynamic_weekly_person_period   drop_temporal_signal        Drop temporal signal block                NaN              -0.054120                      NaN                       0.041372                   -0.164165                      NaN                       0.044522                   -0.127011                      NaN                       0.049992               -1.326291e-01
+poisson_pexp_tuned Poisson Piecewise-Exponential (Tuned)    discrete_time_poisson            dynamic_weekly_person_period          full_features            Full tuned feature set                NaN               0.000000                      NaN                       0.000000                    0.000000                      NaN                       0.000000                    0.000000                      NaN                       0.000000                0.000000e+00
+poisson_pexp_tuned Poisson Piecewise-Exponential (Tuned)    discrete_time_poisson            dynamic_weekly_person_period only_static_structural Only static structural covariates                NaN              -0.054120                      NaN                       0.041372                   -0.164165                      NaN                       0.044522                   -0.127011                      NaN                       0.049992               -1.326291e-01
+poisson_pexp_tuned Poisson Piecewise-Exponential (Tuned)    discrete_time_poisson            dynamic_weekly_person_period   only_temporal_signal        Only temporal signal block                NaN              -0.035598                      NaN                       0.006954                   -0.050821                      NaN                       0.012995                   -0.040863                      NaN                       0.011772               -4.059450e-02
+         rsf_tuned        Random Survival Forest (Tuned)        tree_survival_rsf comparable_continuous_time_early_window drop_static_structural Drop static structural covariates           0.003104              -0.095903                 0.002994                       0.002826                   -0.138389                 0.003538                       0.000775                   -0.114971             4.103153e-03                      -0.003659               -1.054009e-01
+         rsf_tuned        Random Survival Forest (Tuned)        tree_survival_rsf comparable_continuous_time_early_window   drop_temporal_signal        Drop temporal signal block          -0.000004              -0.000225                -0.000004                      -0.001583                    0.000364                -0.000003                      -0.000904                    0.000135            -1.038104e-05                      -0.000806               -7.982943e-07
+         rsf_tuned        Random Survival Forest (Tuned)        tree_survival_rsf comparable_continuous_time_early_window          full_features            Full tuned feature set           0.000000               0.000000                 0.000000                       0.000000                    0.000000                 0.000000                       0.000000                    0.000000             0.000000e+00                       0.000000                0.000000e+00
+         rsf_tuned        Random Survival Forest (Tuned)        tree_survival_rsf comparable_continuous_time_early_window only_static_structural Only static structural covariates          -0.000004              -0.000225                -0.000004                      -0.001583                    0.000364                -0.000003                      -0.000904                    0.000135            -1.038104e-05                      -0.000806               -7.982943e-07
+         rsf_tuned        Random Survival Forest (Tuned)        tree_survival_rsf comparable_continuous_time_early_window   only_temporal_signal        Only temporal signal block           0.003104              -0.095903                 0.002994                       0.002826                   -0.138389                 0.003538                       0.000775                   -0.114971             4.103153e-03                      -0.003659               -1.054009e-01
+
+Ablation summary by model:
+          model_id                          display_name                   family                paper_methodological_arm  delta_ibs_drop_static  delta_ibs_drop_temporal  delta_c_index_drop_static  delta_c_index_drop_temporal  delta_risk_auc_h10_drop_static  delta_risk_auc_h10_drop_temporal  delta_risk_auc_h20_drop_static  delta_risk_auc_h20_drop_temporal  delta_risk_auc_h30_drop_static  delta_risk_auc_h30_drop_temporal  ibs_temporal_vs_static_ratio  abs_cindex_temporal_vs_static_ratio
+         cox_tuned                Cox Comparable (Tuned)      continuous_time_cox comparable_continuous_time_early_window               0.002498                 0.000000                  -0.084480                     0.000000                       -0.122995                          0.000000                       -0.106312                          0.000000                       -0.096572                      0.000000e+00                      0.000000                             0.000000
+    deepsurv_tuned                      DeepSurv (Tuned) continuous_time_deepsurv comparable_continuous_time_early_window               0.002617                -0.000008                  -0.087444                     0.000381                       -0.132432                         -0.001023                       -0.107439                          0.001487                       -0.098556                      5.914747e-04                     -0.003153                             0.004361
+   gb_weekly_tuned              GB Weekly Hazard (Tuned)         discrete_time_gb            dynamic_weekly_person_period                    NaN                      NaN                  -0.036448                    -0.077983                       -0.124295                         -0.178743                       -0.097854                         -0.190448                       -0.078225                     -1.987264e-01                           NaN                             2.139546
+      linear_tuned   Linear Discrete-Time Hazard (Tuned)     discrete_time_linear            dynamic_weekly_person_period                    NaN                      NaN                  -0.033611                    -0.055651                       -0.070730                         -0.194977                       -0.059452                         -0.147853                       -0.058530                     -1.472906e-01                           NaN                             1.655725
+        mtlr_tuned                   Neural-MTLR (Tuned)     continuous_time_mtlr comparable_continuous_time_early_window               0.003029                 0.000066                  -0.057354                     0.011510                       -0.138971                          0.001854                       -0.109840                         -0.000214                       -0.097756                      1.614704e-04                      0.021690                             0.200683
+      neural_tuned Neural Discrete-Time Survival (Tuned)     discrete_time_neural            dynamic_weekly_person_period                    NaN                      NaN                   0.008378                    -0.053578                       -0.097717                         -0.084744                       -0.107754                         -0.107516                       -0.101744                     -1.156449e-01                           NaN                             6.395026
+poisson_pexp_tuned Poisson Piecewise-Exponential (Tuned)    discrete_time_poisson            dynamic_weekly_person_period                    NaN                      NaN                  -0.035598                    -0.054120                       -0.050821                         -0.164165                       -0.040863                         -0.127011                       -0.040595                     -1.326291e-01                           NaN                             1.520303
+         rsf_tuned        Random Survival Forest (Tuned)        tree_survival_rsf comparable_continuous_time_early_window               0.003104                -0.000004                  -0.095903                    -0.000225                       -0.138389                          0.000364                       -0.114971                          0.000135                       -0.105401                     -7.982943e-07                     -0.001174                             0.002348
+
+Ablation scenario comparison:
+          model_id                          display_name                   family                paper_methodological_arm            scenario_id                    scenario_label      ibs  c_index  brier_h10  calibration_h10  risk_auc_h10  brier_h20  calibration_h20  risk_auc_h20  brier_h30  calibration_h30  risk_auc_h30  rank_ibs  rank_c_index
+         rsf_tuned        Random Survival Forest (Tuned)        tree_survival_rsf comparable_continuous_time_early_window          full_features            Full tuned feature set 0.121927 0.602292   0.105824         0.015456      0.638389   0.142482         0.010575      0.614971   0.166223         0.011124      0.605401       1.0           2.0
+    deepsurv_tuned                      DeepSurv (Tuned) continuous_time_deepsurv comparable_continuous_time_early_window          full_features            Full tuned feature set 0.122416 0.593833   0.106210         0.009611      0.632432   0.143012         0.014785      0.607439   0.167040         0.017736      0.598556       2.0           3.0
+        mtlr_tuned                   Neural-MTLR (Tuned)     continuous_time_mtlr comparable_continuous_time_early_window          full_features            Full tuned feature set 0.122492 0.563743   0.106023         0.011609      0.638971   0.143242         0.019610      0.609840   0.167539         0.022096      0.597756       3.0           7.0
+         cox_tuned                Cox Comparable (Tuned)      continuous_time_cox comparable_continuous_time_early_window          full_features            Full tuned feature set 0.122535 0.590868   0.106583         0.011891      0.622995   0.143047         0.011258      0.606312   0.166909         0.010446      0.596572       4.0           4.0
+   gb_weekly_tuned              GB Weekly Hazard (Tuned)         discrete_time_gb            dynamic_weekly_person_period          full_features            Full tuned feature set      NaN 0.610855        NaN         0.044483      0.574479        NaN         0.100568      0.456202        NaN         0.132343      0.416684       NaN           1.0
+      linear_tuned   Linear Discrete-Time Hazard (Tuned)     discrete_time_linear            dynamic_weekly_person_period          full_features            Full tuned feature set      NaN 0.577096        NaN         0.096907      0.384321        NaN         0.147194      0.335851        NaN         0.164847      0.339024       NaN           5.0
+poisson_pexp_tuned Poisson Piecewise-Exponential (Tuned)    discrete_time_poisson            dynamic_weekly_person_period          full_features            Full tuned feature set      NaN 0.574393        NaN         0.095683      0.311230        NaN         0.154351      0.266781        NaN         0.178198      0.271806       NaN           6.0
+      neural_tuned Neural Discrete-Time Survival (Tuned)     discrete_time_neural            dynamic_weekly_person_period          full_features            Full tuned feature set      NaN 0.512669        NaN         0.103317      0.532139        NaN         0.147831      0.482635        NaN         0.175021      0.469887       NaN           8.0
+         rsf_tuned        Random Survival Forest (Tuned)        tree_survival_rsf comparable_continuous_time_early_window drop_static_structural Drop static structural covariates 0.125031 0.506389   0.108819         0.018282      0.500000   0.146021         0.011350      0.500000   0.170326         0.007466      0.500000       1.0           5.0
+         cox_tuned                Cox Comparable (Tuned)      continuous_time_cox comparable_continuous_time_early_window drop_static_structural Drop static structural covariates 0.125033 0.506389   0.108822         0.017769      0.500000   0.146024         0.010567      0.500000   0.170327         0.007466      0.500000       2.0           5.0
+    deepsurv_tuned                      DeepSurv (Tuned) continuous_time_deepsurv comparable_continuous_time_early_window drop_static_structural Drop static structural covariates 0.125033 0.506389   0.108822         0.017769      0.500000   0.146024         0.010567      0.500000   0.170327         0.007466      0.500000       3.0           5.0
+        mtlr_tuned                   Neural-MTLR (Tuned)     continuous_time_mtlr comparable_continuous_time_early_window drop_static_structural Drop static structural covariates 0.125522 0.506389   0.108967         0.027864      0.500000   0.146727         0.030127      0.500000   0.171654         0.036444      0.500000       4.0           5.0
+   gb_weekly_tuned              GB Weekly Hazard (Tuned)         discrete_time_gb            dynamic_weekly_person_period drop_static_structural Drop static structural covariates      NaN 0.574407        NaN         0.079714      0.450185        NaN         0.143982      0.358347        NaN         0.166032      0.338459       NaN           1.0
+      linear_tuned   Linear Discrete-Time Hazard (Tuned)     discrete_time_linear            dynamic_weekly_person_period drop_static_structural Drop static structural covariates      NaN 0.543485        NaN         0.105077      0.313591        NaN         0.164794      0.276399        NaN         0.187020      0.280494       NaN           2.0
+poisson_pexp_tuned Poisson Piecewise-Exponential (Tuned)    discrete_time_poisson            dynamic_weekly_person_period drop_static_structural Drop static structural covariates      NaN 0.538795        NaN         0.102637      0.260409        NaN         0.167347      0.225917        NaN         0.189970      0.231212       NaN           3.0
+      neural_tuned Neural Discrete-Time Survival (Tuned)     discrete_time_neural            dynamic_weekly_person_period drop_static_structural Drop static structural covariates      NaN 0.521047        NaN         0.071185      0.434422        NaN         0.124162      0.374881        NaN         0.152868      0.368143       NaN           4.0
+         rsf_tuned        Random Survival Forest (Tuned)        tree_survival_rsf comparable_continuous_time_early_window   drop_temporal_signal        Drop temporal signal block 0.121923 0.602067   0.105821         0.013873      0.638753   0.142480         0.009671      0.615106   0.166212         0.010318      0.605400       1.0           1.0
+    deepsurv_tuned                      DeepSurv (Tuned) continuous_time_deepsurv comparable_continuous_time_early_window   drop_temporal_signal        Drop temporal signal block 0.122407 0.594214   0.106174         0.006899      0.631410   0.142987         0.012696      0.608925   0.167139         0.014497      0.599147       2.0           2.0
+         cox_tuned                Cox Comparable (Tuned)      continuous_time_cox comparable_continuous_time_early_window   drop_temporal_signal        Drop temporal signal block 0.122535 0.590868   0.106583         0.011891      0.622995   0.143047         0.011258      0.606312   0.166909         0.010446      0.596572       3.0           3.0
+        mtlr_tuned                   Neural-MTLR (Tuned)     continuous_time_mtlr comparable_continuous_time_early_window   drop_temporal_signal        Drop temporal signal block 0.122558 0.575253   0.105953         0.014949      0.640825   0.143338         0.020995      0.609627   0.167540         0.021465      0.597918       4.0           4.0
+   gb_weekly_tuned              GB Weekly Hazard (Tuned)         discrete_time_gb            dynamic_weekly_person_period   drop_temporal_signal        Drop temporal signal block      NaN 0.532873        NaN         0.066218      0.395737        NaN         0.139761      0.265754        NaN         0.189877      0.217958       NaN           5.0
+      linear_tuned   Linear Discrete-Time Hazard (Tuned)     discrete_time_linear            dynamic_weekly_person_period   drop_temporal_signal        Drop temporal signal block      NaN 0.521445        NaN         0.126039      0.189344        NaN         0.177747      0.187998        NaN         0.195186      0.191734       NaN           6.0
+poisson_pexp_tuned Poisson Piecewise-Exponential (Tuned)    discrete_time_poisson            dynamic_weekly_person_period   drop_temporal_signal        Drop temporal signal block      NaN 0.520273        NaN         0.137055      0.147066        NaN         0.198873      0.139770        NaN         0.228190      0.139177       NaN           7.0
+      neural_tuned Neural Discrete-Time Survival (Tuned)     discrete_time_neural            dynamic_weekly_person_period   drop_temporal_signal        Drop temporal signal block      NaN 0.459091        NaN         0.083569      0.447395        NaN         0.140201      0.375120        NaN         0.171845      0.354242       NaN           8.0
+
+Saved:
+- DuckDB table: table_ablation_leaderboard_manuscript_subset
+- DuckDB table: table_ablation_delta_manuscript_subset
+- DuckDB table: table_ablation_summary_by_model
+- DuckDB table: table_ablation_scenario_comparison
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/metadata/ablation_consolidated_summary.json
+[END] F5 - 2026-04-05 10:56:27
+F5.CONV: materialized DuckDB table -> table_ablation_convergence_paradigm
+
+F5.CONV — Cross-paradigm ablation convergence:
+  Models in subset       : 8
+  Temporal dominant (IBS): 0/8 (0.0%)
+  Unanimous (IBS)        : False
+          model_id                paper_methodological_arm  delta_ibs_drop_temporal  delta_ibs_drop_static  ibs_temporal_vs_static_ratio      convergence_verdict
+         cox_tuned comparable_continuous_time_early_window                 0.000000               0.002498                      0.000000 MIXED_OR_STATIC_DOMINANT
+    deepsurv_tuned comparable_continuous_time_early_window                -0.000008               0.002617                     -0.003153 MIXED_OR_STATIC_DOMINANT
+   gb_weekly_tuned            dynamic_weekly_person_period                      NaN                    NaN                           NaN MIXED_OR_STATIC_DOMINANT
+      linear_tuned            dynamic_weekly_person_period                      NaN                    NaN                           NaN MIXED_OR_STATIC_DOMINANT
+        mtlr_tuned comparable_continuous_time_early_window                 0.000066               0.003029                      0.021690 MIXED_OR_STATIC_DOMINANT
+      neural_tuned            dynamic_weekly_person_period                      NaN                    NaN                           NaN MIXED_OR_STATIC_DOMINANT
+poisson_pexp_tuned            dynamic_weekly_person_period                      NaN                    NaN                           NaN MIXED_OR_STATIC_DOMINANT
+         rsf_tuned comparable_continuous_time_early_window                -0.000004               0.003104                     -0.001174 MIXED_OR_STATIC_DOMINANT
+Saved: table_ablation_convergence_paradigm → /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/tables/table_ablation_convergence_paradigm.csv
+[START] F6 - 2026-04-05 10:56:27
+
+======================================================================
+F6 — Consolidated Preprocessing and Tuning Audit
+======================================================================
+Methodological note: this step consolidates preprocessing and
+tuning documentation across the selected manuscript-facing audit subset.
+No model is retrained and no benchmark metric is recomputed here.
+[END] F6 - 2026-04-05 10:56:27
+[START] F6.1 - 2026-04-05 10:56:27
+[END] F6.1 - 2026-04-05 10:56:27
+[START] F6.2 - 2026-04-05 10:56:27
+[END] F6.2 - 2026-04-05 10:56:27
+[START] F6.3 - 2026-04-05 10:56:27
+[END] F6.3 - 2026-04-05 10:56:27
+[START] F6.4 - 2026-04-05 10:56:27
+[END] F6.4 - 2026-04-05 10:56:27
+[START] F6.5 - 2026-04-05 10:56:27
+[END] F6.5 - 2026-04-05 10:56:27
+[START] F6.6 - 2026-04-05 10:56:27
+F6: materialized DuckDB table -> table_preprocessing_and_tuning_audit
+F6: materialized DuckDB table -> table_appendix_preprocessing_and_tuning_audit_compact
+
+Full preprocessing and tuning audit:
+      model_id                   display_name                        family              data_level                                     raw_input_design  numeric_imputation categorical_imputation          categorical_encoding                   numeric_scaling fit_on_train_only class_imbalance_handling  n_input_features_raw  n_features_after_transform         validation_unit                                                                     validation_strategy  validation_fraction           selection_metric                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             search_space                                                                                                                                                                                                                                                                            best_candidate_summary                                           preprocessing_note  tuning_note  n_tuning_candidates early_stopping_used early_stopping_patience                                                                     complexity_control
+     cox_tuned         Cox Comparable (Tuned)           continuous_time_cox enrollment_early_window static covariates + early-window summaries (4 weeks)                 NaN       constant_missing one_hot_handle_unknown_ignore standard_scaler_fit_on_train_only               yes                     none                    11                         NaN              enrollment         train/validation split on enrollment_id with event stratification when possible                  0.2 highest_validation_c_index                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  penalizer_grid=None; l1_ratio_grid=None                                                                                                                                                                                                                       candidate_id=4; penalizer=0.001; l1_ratio=0.75; val_cindex=0.58553341714605                        early-window comparable Cox benchmark not_reported                  NaN                 NaN                     NaN                                                                                    NaN
+deepsurv_tuned               DeepSurv (Tuned)      continuous_time_deepsurv enrollment_early_window static covariates + early-window summaries (4 weeks)                 NaN       constant_missing one_hot_handle_unknown_ignore standard_scaler_fit_on_train_only               yes                     none                    11                        41.0 row_within_training_set                                    random internal validation fraction on training rows                  0.2     lowest_validation_loss                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   hidden_dims_grid=None; dropout_grid=None; learning_rate_grid=None; weight_decay_grid=None; batch_norm=True; epochs=100                                                                                                                                                      candidate_id=16; hidden_dims=[64, 32]; dropout=0.3; learning_rate=0.001; weight_decay=0.0001; best_val_loss=8.243051528930664; best_epoch=32 same conceptual input design as the comparable Cox benchmark not_reported                 24.0                 yes                      10 network architecture grid + dropout + weight decay + early stopping + best epoch refit
+     rsf_tuned Random Survival Forest (Tuned) continuous_time_tree_ensemble enrollment_early_window static covariates + early-window summaries (4 weeks)                 NaN       constant_missing one_hot_handle_unknown_ignore standard_scaler_fit_on_train_only               yes                     none                    11                         NaN              enrollment         train/validation split on enrollment_id with event stratification when possible                  0.2      lowest_validation_ibs                                                                                                                                                                                    [{'candidate_id': 1, 'n_estimators': 200, 'min_samples_leaf': 3, 'max_depth': None, 'max_features': 'sqrt'}, {'candidate_id': 2, 'n_estimators': 300, 'min_samples_leaf': 5, 'max_depth': None, 'max_features': 'sqrt'}, {'candidate_id': 3, 'n_estimators': 200, 'min_samples_leaf': 3, 'max_depth': 8, 'max_features': 0.8}, {'candidate_id': 4, 'n_estimators': 300, 'min_samples_leaf': 10, 'max_depth': 8, 'max_features': 0.7}]                                                                                                                              candidate_id=4; params={'n_estimators': 300, 'min_samples_leaf': 10, 'max_depth': 8, 'max_features': 0.7}; val_ibs=0.11994274417622301; val_c_index=0.59072069598393                                                 not_reported not_reported                  4.0                  no          not_applicable                                  forest size + leaf size + depth + feature subsampling
+    mtlr_tuned            Neural-MTLR (Tuned)   continuous_time_neural_mtlr enrollment_early_window static covariates + early-window summaries (4 weeks)                 NaN       constant_missing one_hot_handle_unknown_ignore standard_scaler_fit_on_train_only               yes                     none                    11                         NaN              enrollment train/validation split on enrollment_id with deterministic survival-time discretization                  0.1      lowest_validation_ibs [{'candidate_id': 1, 'num_durations': 20, 'hidden_dims': [64, 32], 'dropout': 0.1, 'learning_rate': 0.01, 'weight_decay': 1e-05, 'batch_size': 512}, {'candidate_id': 2, 'num_durations': 20, 'hidden_dims': [128, 64], 'dropout': 0.1, 'learning_rate': 0.005, 'weight_decay': 1e-05, 'batch_size': 512}, {'candidate_id': 3, 'num_durations': 40, 'hidden_dims': [64, 32], 'dropout': 0.2, 'learning_rate': 0.005, 'weight_decay': 0.0001, 'batch_size': 512}, {'candidate_id': 4, 'num_durations': 30, 'hidden_dims': [128, 64], 'dropout': 0.2, 'learning_rate': 0.001, 'weight_decay': 0.0001, 'batch_size': 1024}] candidate_id=3; params={'num_durations': 40, 'hidden_dims': [64, 32], 'dropout': 0.2, 'learning_rate': 0.005, 'weight_decay': 0.0001, 'batch_size': 512}; best_epoch=12; best_val_loss=1.1385399103164673; val_ibs=0.11990471472350755; val_c_index=0.5633302985196853; implementation=pycox_mtlr                                                 not_reported not_reported                  4.0                 yes                       8   discretization grid + network architecture + dropout + weight decay + early stopping
+
+Appendix-oriented compact audit:
+                         model                        family             input_level  num_impute       cat_impute                  cat_encoding                       num_scaling fit_train_only imbalance                val_unit                                                                            val_strategy  val_frac              select_metric  n_candidates early_stop       patience                                                                     complexity_control
+        Cox Comparable (Tuned)           continuous_time_cox enrollment_early_window         NaN constant_missing one_hot_handle_unknown_ignore standard_scaler_fit_on_train_only            yes      none              enrollment         train/validation split on enrollment_id with event stratification when possible       0.2 highest_validation_c_index           NaN        NaN            NaN                                                                                    NaN
+              DeepSurv (Tuned)      continuous_time_deepsurv enrollment_early_window         NaN constant_missing one_hot_handle_unknown_ignore standard_scaler_fit_on_train_only            yes      none row_within_training_set                                    random internal validation fraction on training rows       0.2     lowest_validation_loss          24.0        yes             10 network architecture grid + dropout + weight decay + early stopping + best epoch refit
+Random Survival Forest (Tuned) continuous_time_tree_ensemble enrollment_early_window         NaN constant_missing one_hot_handle_unknown_ignore standard_scaler_fit_on_train_only            yes      none              enrollment         train/validation split on enrollment_id with event stratification when possible       0.2      lowest_validation_ibs           4.0         no not_applicable                                  forest size + leaf size + depth + feature subsampling
+           Neural-MTLR (Tuned)   continuous_time_neural_mtlr enrollment_early_window         NaN constant_missing one_hot_handle_unknown_ignore standard_scaler_fit_on_train_only            yes      none              enrollment train/validation split on enrollment_id with deterministic survival-time discretization       0.1      lowest_validation_ibs           4.0        yes              8   discretization grid + network architecture + dropout + weight decay + early stopping
+
+Saved:
+- DuckDB table: table_preprocessing_and_tuning_audit
+- DuckDB table: table_appendix_preprocessing_and_tuning_audit_compact
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/metadata/preprocessing_and_tuning_audit_summary.json
+[END] F6.6 - 2026-04-05 10:56:27
+[START] F7 - 2026-04-05 10:56:27
+
+======================================================================
+F7 — Bootstrap Uncertainty Audit for Tuned Benchmark Models (Revised v4)
+======================================================================
+Methodological note: this step rebuilds tuned-model survival predictions
+on the held-out test set and performs enrollment-level bootstrap
+resampling to quantify uncertainty in the selected manuscript audit subset.
+No model is retrained inside bootstrap iterations.
+[END] F7 - 2026-04-05 10:56:27
+[START] F7.1 - 2026-04-05 10:56:27
+[END] F7.1 - 2026-04-05 10:56:27
+[START] F7.2 - 2026-04-05 10:56:27
+[END] F7.2 - 2026-04-05 10:56:27
+[START] F7.3 - 2026-04-05 10:56:27
+[END] F7.3 - 2026-04-05 10:56:27
+[START] F7.4 - 2026-04-05 10:56:27
+[END] F7.4 - 2026-04-05 10:56:27
+[START] F7.5 - 2026-04-05 10:56:27
+[END] F7.5 - 2026-04-05 10:56:27
+[START] F7.6 - 2026-04-05 10:56:27
+[END] F7.6 - 2026-04-05 10:56:27
+[START] F7.7 - 2026-04-05 10:56:27
+[END] F7.7 - 2026-04-05 10:56:27
+[START] F7.8 - 2026-04-05 10:56:27
+[END] F7.8 - 2026-04-05 10:56:27
+[START] F7.9 - 2026-04-05 10:56:27
+[END] F7.9 - 2026-04-05 10:56:27
+[START] F7.10 - 2026-04-05 10:56:27
+[END] F7.10 - 2026-04-05 10:56:27
+[START] F7.11 - 2026-04-05 10:56:27
+[END] F7.11 - 2026-04-05 10:56:27
+[START] F7.12 - 2026-04-05 10:56:27
+[END] F7.12 - 2026-04-05 10:56:27
+[START] F7.13 - 2026-04-05 10:56:27
+[END] F7.13 - 2026-04-05 10:56:27
+[START] F7.14 - 2026-04-05 10:56:27
+[END] F7.14 - 2026-04-05 10:56:27
+[START] F7.15 - 2026-04-05 10:56:27
+[END] F7.15 - 2026-04-05 10:56:27
+[START] F7.16 - 2026-04-05 10:56:27
+[END] F7.16 - 2026-04-05 10:56:27
+[START] F7.17 - 2026-04-05 10:56:27
+[END] F7.17 - 2026-04-05 10:56:27
+[START] F7.18 - 2026-04-05 10:56:27
+[END] F7.18 - 2026-04-05 10:56:27
+[START] F7.19 - 2026-04-05 10:56:27
+
+Rebuilding tuned-model survival objects on the held-out test set...
+Done.
+
+Point estimates recomputed from rebuilt survival objects:
+                         model  c_index_td  brier_h10  brier_h20  brier_h30      ibs
+        Cox Comparable (Tuned)    0.590891   0.106607   0.143049   0.166888 0.122533
+              DeepSurv (Tuned)    0.593497   0.106239   0.143059   0.167062 0.122439
+Random Survival Forest (Tuned)    0.602257   0.105841   0.142515   0.166246 0.121932
+           Neural-MTLR (Tuned)    0.571790   0.105871   0.142874   0.166877 0.122210
+
+Sanity audit against frozen tuned-model metrics:
+                         model     metric  rebuilt_value  frozen_value     abs_diff  within_tolerance
+        Cox Comparable (Tuned)        ibs       0.122533      0.122533 1.620122e-11              True
+        Cox Comparable (Tuned) c_index_td       0.590891      0.590891 7.749316e-08              True
+        Cox Comparable (Tuned)  brier_h10       0.106607      0.106607 1.533468e-11              True
+        Cox Comparable (Tuned)  brier_h20       0.143049      0.143049 2.096920e-11              True
+        Cox Comparable (Tuned)  brier_h30       0.166888      0.166888 1.770392e-11              True
+              DeepSurv (Tuned)        ibs       0.122439      0.122439 0.000000e+00              True
+              DeepSurv (Tuned) c_index_td       0.593497      0.593497 0.000000e+00              True
+              DeepSurv (Tuned)  brier_h10       0.106239      0.106239 0.000000e+00              True
+              DeepSurv (Tuned)  brier_h20       0.143059      0.143059 0.000000e+00              True
+              DeepSurv (Tuned)  brier_h30       0.167062      0.167062 2.775558e-17              True
+Random Survival Forest (Tuned)        ibs       0.121932      0.121932 0.000000e+00              True
+Random Survival Forest (Tuned) c_index_td       0.602257      0.602257 0.000000e+00              True
+Random Survival Forest (Tuned)  brier_h10       0.105841      0.105841 0.000000e+00              True
+Random Survival Forest (Tuned)  brier_h20       0.142515      0.142515 0.000000e+00              True
+Random Survival Forest (Tuned)  brier_h30       0.166246      0.166246 2.775558e-17              True
+           Neural-MTLR (Tuned)        ibs       0.122210      0.122210 0.000000e+00              True
+           Neural-MTLR (Tuned) c_index_td       0.571790      0.571790 0.000000e+00              True
+           Neural-MTLR (Tuned)  brier_h10       0.105871      0.105871 2.775558e-17              True
+           Neural-MTLR (Tuned)  brier_h20       0.142874      0.142874 2.775558e-17              True
+           Neural-MTLR (Tuned)  brier_h30       0.166877      0.166877 2.775558e-17              True
+Bootstrapping: Cox Comparable (Tuned)
+Bootstrapping: DeepSurv (Tuned)
+Bootstrapping: Random Survival Forest (Tuned)
+Bootstrapping: Neural-MTLR (Tuned)
+F7: materialized DuckDB table -> table_bootstrap_point_estimates_tuned_models
+F7: materialized DuckDB table -> table_bootstrap_metrics_long_tuned_models
+F7: materialized DuckDB table -> table_bootstrap_uncertainty_summary_tuned_models
+F7: materialized DuckDB table -> table_appendix_bootstrap_uncertainty_compact
+F7: materialized DuckDB table -> table_bootstrap_rank_stability_tuned_models
+F7: materialized DuckDB table -> table_bootstrap_pairwise_stability_tuned_models
+F7: materialized DuckDB table -> table_bootstrap_rebuild_sanity_audit
+                         model     metric  point_estimate  bootstrap_mean  ci_lower  ci_upper  n_successful_bootstrap
+        Cox Comparable (Tuned)        ibs        0.122533        0.122307  0.118076  0.126265                     200
+        Cox Comparable (Tuned) c_index_td        0.590891        0.591321  0.578188  0.602338                     200
+        Cox Comparable (Tuned)  brier_h10        0.106607        0.106326  0.101477  0.110771                     200
+        Cox Comparable (Tuned)  brier_h20        0.143049        0.142884  0.138040  0.147888                     200
+        Cox Comparable (Tuned)  brier_h30        0.166888        0.166699  0.162120  0.170934                     200
+              DeepSurv (Tuned)        ibs        0.122439        0.122560  0.118589  0.126328                     200
+              DeepSurv (Tuned) c_index_td        0.593497        0.593008  0.583414  0.604480                     200
+              DeepSurv (Tuned)  brier_h10        0.106239        0.106363  0.101394  0.111452                     200
+              DeepSurv (Tuned)  brier_h20        0.143059        0.143198  0.138901  0.147471                     200
+              DeepSurv (Tuned)  brier_h30        0.167062        0.167053  0.163007  0.171681                     200
+Random Survival Forest (Tuned)        ibs        0.121932        0.122100  0.117899  0.125783                     200
+Random Survival Forest (Tuned) c_index_td        0.602257        0.601710  0.589914  0.614246                     200
+Random Survival Forest (Tuned)  brier_h10        0.105841        0.105997  0.101622  0.110478                     200
+Random Survival Forest (Tuned)  brier_h20        0.142515        0.142702  0.137647  0.147514                     200
+Random Survival Forest (Tuned)  brier_h30        0.166246        0.166467  0.161304  0.170819                     200
+           Neural-MTLR (Tuned)        ibs        0.122210        0.122477  0.118579  0.126337                     200
+           Neural-MTLR (Tuned) c_index_td        0.571790        0.571153  0.560786  0.582432                     200
+           Neural-MTLR (Tuned)  brier_h10        0.105871        0.106186  0.101605  0.110781                     200
+           Neural-MTLR (Tuned)  brier_h20        0.142874        0.143158  0.138774  0.147623                     200
+           Neural-MTLR (Tuned)  brier_h30        0.166877        0.167170  0.162922  0.171408                     200
+
+Appendix-oriented compact bootstrap summary:
+                         model     metric  point_estimate          ci_95  n_successful_bootstrap
+        Cox Comparable (Tuned)        ibs        0.122533 [0.118, 0.126]                     200
+        Cox Comparable (Tuned) c_index_td        0.590891 [0.578, 0.602]                     200
+        Cox Comparable (Tuned)  brier_h10        0.106607 [0.101, 0.111]                     200
+        Cox Comparable (Tuned)  brier_h20        0.143049 [0.138, 0.148]                     200
+        Cox Comparable (Tuned)  brier_h30        0.166888 [0.162, 0.171]                     200
+              DeepSurv (Tuned)        ibs        0.122439 [0.119, 0.126]                     200
+              DeepSurv (Tuned) c_index_td        0.593497 [0.583, 0.604]                     200
+              DeepSurv (Tuned)  brier_h10        0.106239 [0.101, 0.111]                     200
+              DeepSurv (Tuned)  brier_h20        0.143059 [0.139, 0.147]                     200
+              DeepSurv (Tuned)  brier_h30        0.167062 [0.163, 0.172]                     200
+Random Survival Forest (Tuned)        ibs        0.121932 [0.118, 0.126]                     200
+Random Survival Forest (Tuned) c_index_td        0.602257 [0.590, 0.614]                     200
+Random Survival Forest (Tuned)  brier_h10        0.105841 [0.102, 0.110]                     200
+Random Survival Forest (Tuned)  brier_h20        0.142515 [0.138, 0.148]                     200
+Random Survival Forest (Tuned)  brier_h30        0.166246 [0.161, 0.171]                     200
+           Neural-MTLR (Tuned)        ibs        0.122210 [0.119, 0.126]                     200
+           Neural-MTLR (Tuned) c_index_td        0.571790 [0.561, 0.582]                     200
+           Neural-MTLR (Tuned)  brier_h10        0.105871 [0.102, 0.111]                     200
+           Neural-MTLR (Tuned)  brier_h20        0.142874 [0.139, 0.148]                     200
+           Neural-MTLR (Tuned)  brier_h30        0.166877 [0.163, 0.171]                     200
+
+Rank stability:
+                         model     metric  rank  frequency  proportion
+        Cox Comparable (Tuned)        ibs     1         48       0.240
+              DeepSurv (Tuned)        ibs     1         54       0.270
+           Neural-MTLR (Tuned)        ibs     1         40       0.200
+Random Survival Forest (Tuned)        ibs     1         58       0.290
+        Cox Comparable (Tuned)        ibs     2         51       0.255
+              DeepSurv (Tuned)        ibs     2         44       0.220
+           Neural-MTLR (Tuned)        ibs     2         57       0.285
+Random Survival Forest (Tuned)        ibs     2         48       0.240
+        Cox Comparable (Tuned)        ibs     3         52       0.260
+              DeepSurv (Tuned)        ibs     3         40       0.200
+           Neural-MTLR (Tuned)        ibs     3         52       0.260
+Random Survival Forest (Tuned)        ibs     3         56       0.280
+        Cox Comparable (Tuned)        ibs     4         49       0.245
+              DeepSurv (Tuned)        ibs     4         62       0.310
+           Neural-MTLR (Tuned)        ibs     4         51       0.255
+Random Survival Forest (Tuned)        ibs     4         38       0.190
+        Cox Comparable (Tuned) c_index_td     1         18       0.090
+              DeepSurv (Tuned) c_index_td     1         23       0.115
+Random Survival Forest (Tuned) c_index_td     1        159       0.795
+        Cox Comparable (Tuned) c_index_td     2         82       0.410
+              DeepSurv (Tuned) c_index_td     2         85       0.425
+Random Survival Forest (Tuned) c_index_td     2         33       0.165
+        Cox Comparable (Tuned) c_index_td     3         98       0.490
+              DeepSurv (Tuned) c_index_td     3         91       0.455
+           Neural-MTLR (Tuned) c_index_td     3          3       0.015
+Random Survival Forest (Tuned) c_index_td     3          8       0.040
+        Cox Comparable (Tuned) c_index_td     4          2       0.010
+              DeepSurv (Tuned) c_index_td     4          1       0.005
+           Neural-MTLR (Tuned) c_index_td     4        197       0.985
+
+Pairwise stability:
+    metric                model_a                        model_b  prob_a_better_than_b  prob_b_better_than_a  n_bootstrap_pairs
+       ibs Cox Comparable (Tuned)               DeepSurv (Tuned)                 0.520                 0.480                200
+       ibs Cox Comparable (Tuned)            Neural-MTLR (Tuned)                 0.510                 0.490                200
+       ibs Cox Comparable (Tuned) Random Survival Forest (Tuned)                 0.460                 0.540                200
+       ibs       DeepSurv (Tuned)            Neural-MTLR (Tuned)                 0.500                 0.500                200
+       ibs       DeepSurv (Tuned) Random Survival Forest (Tuned)                 0.470                 0.530                200
+       ibs    Neural-MTLR (Tuned) Random Survival Forest (Tuned)                 0.440                 0.560                200
+c_index_td Cox Comparable (Tuned)               DeepSurv (Tuned)                 0.475                 0.525                200
+c_index_td Cox Comparable (Tuned)            Neural-MTLR (Tuned)                 0.990                 0.010                200
+c_index_td Cox Comparable (Tuned) Random Survival Forest (Tuned)                 0.115                 0.885                200
+c_index_td       DeepSurv (Tuned)            Neural-MTLR (Tuned)                 0.995                 0.005                200
+c_index_td       DeepSurv (Tuned) Random Survival Forest (Tuned)                 0.130                 0.870                200
+c_index_td    Neural-MTLR (Tuned) Random Survival Forest (Tuned)                 0.000                 1.000                200
+
+Saved:
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/tables/table_bootstrap_point_estimates_tuned_models.csv
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/tables/table_bootstrap_metrics_long_tuned_models.csv
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/tables/table_bootstrap_uncertainty_summary_tuned_models.csv
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/tables/table_appendix_bootstrap_uncertainty_compact.csv
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/tables/table_bootstrap_rank_stability_tuned_models.csv
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/tables/table_bootstrap_pairwise_stability_tuned_models.csv
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/tables/table_bootstrap_rebuild_sanity_audit.csv
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/metadata/bootstrap_uncertainty_audit_config.json
+[END] F7.19 - 2026-04-05 10:57:28
+[START] F8 - 2026-04-05 10:57:28
+
+======================================================================
+F8 — Proportional Hazards Audit for the Comparable Cox Model (Revised v2)
+======================================================================
+Resolved Cox base dataframe from SQL query: SELECT * FROM enrollment_cox_ready_train
+Resolved Cox preprocessor from file: /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/models/cox_preprocessor.joblib
+Rebuilt transformed Cox matrix using the resolved Cox preprocessor.
+Recovered transformed feature names from preprocessor.get_feature_names_out().
+Rows before cleaning: 22,815
+Rows after cleaning:  22,815
+Covariates tested:    38
+Audit Cox refit with penalizer=0.001, l1_ratio=0.75
+F8: materialized DuckDB table -> table_appendix_cox_ph_audit
+F8: materialized DuckDB table -> table_appendix_cox_ph_global_summary
+
+Global PH audit summary:
+                 model duration_col event_col  n_rows_used  n_covariates_tested  alpha  n_covariates_flagged  share_covariates_flagged                                                                                 top_flagged_covariates global_classification                                                                                                                                                                                                   global_interpretation                                                                                                                                                                     audit_note
+Cox Comparable (Tuned)     duration     event        22815                   38   0.05                    10                  0.263158 cat__region_Scotland; num__studied_credits; cat__region_Wales; cat__age_band_0-35; cat__region_Ireland     C_broad_departure The comparable Cox benchmark showed broad evidence of proportional-hazards departure and should therefore be interpreted as an approximate comparable benchmark rather than a fully assumption-clean Cox specification. Formal proportional-hazards audit for the comparable Cox branch. DeepSurv shares the Cox-type ranking structure but was not subjected to an identical classical PH diagnostic.
+
+PH audit by covariate:
+                                         covariate  test_statistic      p_value              ph_flag ph_flag_binary
+                              cat__region_Scotland    5.795300e+01 2.684556e-14   possible_violation            yes
+                              num__studied_credits    4.315310e+01 5.061971e-11   possible_violation            yes
+                                 cat__region_Wales    1.988010e+01 8.245401e-06   possible_violation            yes
+                                cat__age_band_0-35    1.769702e+01 2.590315e-05   possible_violation            yes
+                               cat__region_Ireland    1.458945e+01 1.336608e-04   possible_violation            yes
+                                cat__imd_band_None    1.268901e+01 3.678110e-04   possible_violation            yes
+                         num__num_of_prev_attempts    1.234536e+01 4.420846e-04   possible_violation            yes
+                               cat__imd_band_10-20    6.356819e+00 1.169310e-02   possible_violation            yes
+            cat__highest_education_No Formal quals    6.272043e+00 1.226576e-02   possible_violation            yes
+                              cat__imd_band_80-90%    3.886193e+00 4.868466e-02   possible_violation            yes
+         cat__highest_education_Lower Than A Level    3.498850e+00 6.141146e-02 no_material_evidence             no
+                              cat__imd_band_70-80%    3.497875e+00 6.144762e-02 no_material_evidence             no
+                             cat__imd_band_90-100%    2.667290e+00 1.024303e-01 no_material_evidence             no
+                      cat__region_Yorkshire Region    1.823282e+00 1.769231e-01 no_material_evidence             no
+                  cat__region_East Midlands Region    9.497853e-01 3.297740e-01 no_material_evidence             no
+                                cat__age_band_55<=    9.078709e-01 3.406800e-01 no_material_evidence             no
+                               cat__imd_band_0-10%    7.874191e-01 3.748817e-01 no_material_evidence             no
+                          cat__region_South Region    4.422198e-01 5.060530e-01 no_material_evidence             no
+                         cat__region_London Region    3.332936e-01 5.637261e-01 no_material_evidence             no
+                              cat__imd_band_30-40%    3.321185e-01 5.644143e-01 no_material_evidence             no
+                          cat__region_North Region    1.977606e-01 6.565345e-01 no_material_evidence             no
+                     cat__region_South East Region    1.465722e-01 7.018329e-01 no_material_evidence             no
+                              cat__imd_band_20-30%    1.313522e-01 7.170341e-01 no_material_evidence             no
+                   cat__region_East Anglian Region    8.921827e-02 7.651733e-01 no_material_evidence             no
+                              cat__imd_band_50-60%    3.037390e-02 8.616446e-01 no_material_evidence             no
+      cat__highest_education_A Level or Equivalent    1.774172e-02 8.940367e-01 no_material_evidence             no
+                                 cat__disability_N    5.974183e-03 9.383906e-01 no_material_evidence             no
+                                 cat__disability_Y    5.974183e-03 9.383906e-01 no_material_evidence             no
+                  cat__region_West Midlands Region    3.231229e-03 9.546695e-01 no_material_evidence             no
+                     cat__region_South West Region    7.276763e-04 9.784793e-01 no_material_evidence             no
+                              cat__imd_band_60-70%    2.564970e-04 9.872220e-01 no_material_evidence             no
+                              cat__imd_band_40-50%    2.481365e-04 9.874320e-01 no_material_evidence             no
+                  cat__region_North Western Region    2.174870e-04 9.882337e-01 no_material_evidence             no
+                                     cat__gender_M    1.022243e-04 9.919330e-01 no_material_evidence             no
+                                     cat__gender_F    1.022243e-04 9.919330e-01 no_material_evidence             no
+cat__highest_education_Post Graduate Qualification    5.888966e-05 9.938771e-01 no_material_evidence             no
+           cat__highest_education_HE Qualification    2.288422e-06 9.987930e-01 no_material_evidence             no
+                               cat__age_band_35-55    8.369773e-08 9.997692e-01 no_material_evidence             no
+
+PH diagnostic figure created:
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/figures/diagnostics/fig_cox_ph_diagnostics.png
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/figures/diagnostics/fig_cox_ph_diagnostics.pdf
+
+Saved artifacts:
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/tables/table_appendix_cox_ph_audit.csv
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/tables/table_appendix_cox_ph_global_summary.csv
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/metadata/cox_ph_audit_summary.json
+[END] F8 - 2026-04-05 10:57:31
+[START] F9 - 2026-04-05 10:57:31
+F9: materialized DuckDB table -> table_appendix_bootstrap_inferential_scope_summary
+F9: materialized DuckDB table -> table_appendix_ph_scope_boundary
+
+Bootstrap inferential-scope summary:
+    metric               metric_label        direction         benchmark_scope                                      bootstrap_design                                                                                                   inferential_scope              model_retraining_policy                           alternative_refit_status                  leading_model  leading_model_point_estimate  leading_model_ci_lower  leading_model_ci_upper  leading_model_rank1_share  runner_up_model  runner_up_rank1_share  weakest_pairwise_win_probability_among_challengers  n_successful_bootstrap                        claim_status                                                                                                                                what_is_supported                                                                                                                                                                               what_is_not_supported                                                                                                  recommended_manuscript_use                                                                                        recommended_manuscript_non_use
+       ibs     Integrated Brier Score  lower_is_better manuscript_audit_subset enrollment_level_resampling_on_fixed_test_predictions Quantifies held-out test-set sampling variability conditional on fixed tuned models and fixed survival predictions. no_refit_within_bootstrap_iterations not_materialized_in_current_stage_due_compute_cost Random Survival Forest (Tuned)                      0.121932                0.117899                0.125783                      0.290 DeepSurv (Tuned)                  0.270                                                0.53                     200             directional_signal_only            Bootstrap preserves directional signal for Integrated Brier Score, but the ranking is not stable enough for a strong hierarchy claim. These artifacts do not constitute a formal null-hypothesis test, do not prove a universally fixed hierarchy across samples, and should not be narrated as strict superiority without qualification. Use for uncertainty intervals and cautious directional rank-stability language inside the selected manuscript audit subset. Do not use as a retraining-based generalization claim, null-hypothesis test, or proof of universally fixed hierarchy.
+c_index_td Time-dependent concordance higher_is_better manuscript_audit_subset enrollment_level_resampling_on_fixed_test_predictions Quantifies held-out test-set sampling variability conditional on fixed tuned models and fixed survival predictions. no_refit_within_bootstrap_iterations not_materialized_in_current_stage_due_compute_cost Random Survival Forest (Tuned)                      0.602257                0.589914                0.614246                      0.795 DeepSurv (Tuned)                  0.115                                                0.87                     200 largely_stable_bootstrap_leadership Bootstrap supports a largely stable, but not absolute, leadership pattern for Time-dependent concordance, led by Random Survival Forest (Tuned). These artifacts do not constitute a formal null-hypothesis test, do not prove a universally fixed hierarchy across samples, and should not be narrated as strict superiority without qualification. Use for uncertainty intervals and cautious directional rank-stability language inside the selected manuscript audit subset. Do not use as a retraining-based generalization claim, null-hypothesis test, or proof of universally fixed hierarchy.
+
+PH scope-boundary summary:
+                 model                     model_family_role formal_ph_diagnostic_executed                                            formal_test_basis               coverage_status                                                                                                                                                                                                        summary_evidence                                                                                                                                                          manuscript_claim_boundary
+Cox Comparable (Tuned)                continuous_time_anchor                           yes  lifelines proportional_hazard_test with rank time transform             C_broad_departure The comparable Cox benchmark showed broad evidence of proportional-hazards departure and should therefore be interpreted as an approximate comparable benchmark rather than a fully assumption-clean Cox specification. This stage supports a formal PH audit only for the comparable Cox anchor; any departures should be narrated with the audit classification rather than as assumption-free validity.
+      DeepSurv (Tuned) continuous_time_neural_cox_type_model                            no no identical classical PH diagnostic was executed in stage F incomplete_formal_ph_coverage                                                     DeepSurv is covered here by predictive metrics, calibration, and bootstrap uncertainty artifacts, but not by a classical PH diagnostic equivalent to the Cox audit.                                     DeepSurv can be benchmarked on predictive performance, but this stage does not claim a formal PH pass equivalent to the comparable Cox branch.
+
+Saved artifacts:
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/tables/table_appendix_bootstrap_inferential_scope_summary.csv
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/tables/table_appendix_ph_scope_boundary.csv
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/metadata/metadata_bootstrap_inferential_scope_summary.json
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/metadata/metadata_ph_scope_boundary.json
+DuckDB connection closed.
+[END] F9 - 2026-04-05 10:57:31
+[DONE] 2026-04-05 10:57:32 F

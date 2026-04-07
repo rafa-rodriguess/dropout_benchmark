@@ -1,0 +1,13 @@
+component,status,protocol_value,notes
+unit_of_analysis,defined,enrollment,All final benchmark comparisons are reported at the enrollment level.
+event_definition,defined,withdrawn_with_valid_date_unregistration,Observed withdrawal event with a valid time stamp.
+official_horizons,defined,"10,20,30","Shared benchmark horizons used for Brier, IBS, and calibration reporting."
+primary_discrimination_metric,defined,time_dependent_concordance,The canonical discrimination metric is time-dependent concordance rather than a static concordance proxy.
+censoring_treatment,defined,ipcw_brier_ibs_with_kaplan_meier_censoring_estimator,Brier score and IBS use inverse-probability-of-censoring weighting with the Kaplan-Meier estimator for the censoring distribution.
+dynamic_vs_static_prediction_rule,defined,dynamic_weekly_vs_early_window_comparable,"The weekly discrete-time arms update predictions over person-period rows, whereas the comparable continuous-time arms use early-window enrollment representations; cross-family comparison happens only after shared enrollment-level horizon reporting."
+leakage_prevention_rule,defined,no_enrollment_identity_leakage,The split is enforced at the enrollment level with no identity leakage between train and test.
+split_scope_boundary,defined,shared_curricular_context_not_context_disjoint,The benchmark generalizes across enrollments under shared curricular context rather than under context-disjoint transportability conditions.
+primary_calibration_metric,defined,weighted_absolute_calibration_gap_by_horizon,The main calibration criterion is the weighted absolute calibration gap at each manuscript horizon.
+expanded_calibration_strengthening,defined,intercept_and_slope_by_horizon,Intercept and slope are retained as strengthening diagnostics rather than as the primary benchmark ranking criterion.
+bootstrap_inferential_role,defined,ranking_support_not_formal_hypothesis_testing,"Bootstrap is used to assess how stable the exported ranking appears, not to claim a formal hypothesis-testing result."
+ph_scope_boundary,defined,formal_classical_ph_audit_for_cox_anchor_only,"Formal classical PH auditing is available for the comparable Cox anchor, but not in an equivalent form for DeepSurv."

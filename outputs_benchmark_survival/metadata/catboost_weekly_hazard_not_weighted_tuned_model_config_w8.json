@@ -1,0 +1,110 @@
+{
+  "model_name": "catboost_weekly_hazard_not_weighted_tuned",
+  "family_name": "discrete_time_dynamic",
+  "model_type": "catboost_weekly_hazard",
+  "selection_metric": "val_log_loss",
+  "candidate_grid": [
+    {
+      "depth": 4,
+      "learning_rate": 0.05,
+      "iterations": 250,
+      "l2_leaf_reg": 3.0
+    },
+    {
+      "depth": 6,
+      "learning_rate": 0.06,
+      "iterations": 350,
+      "l2_leaf_reg": 3.0
+    },
+    {
+      "depth": 4,
+      "learning_rate": 0.1,
+      "iterations": 250,
+      "l2_leaf_reg": 10.0
+    },
+    {
+      "depth": 6,
+      "learning_rate": 0.05,
+      "iterations": 450,
+      "l2_leaf_reg": 10.0
+    }
+  ],
+  "validation_split": {
+    "method": "GroupShuffleSplit",
+    "test_size": 0.2,
+    "group_column": "enrollment_id",
+    "random_seed": 42
+  },
+  "benchmark_horizons": [
+    10,
+    20,
+    30
+  ],
+  "calibration_bins": 10,
+  "calibration_contract_version": "v2_ipcw_km_observed_risk",
+  "calibration_observed_risk_method": "ipcw_km_pseudo_event_rate",
+  "active_window_weeks": 8,
+  "categorical_features": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability"
+  ],
+  "numeric_features": [
+    "num_of_prev_attempts",
+    "studied_credits",
+    "week",
+    "total_clicks_week",
+    "active_this_week",
+    "n_vle_rows_week",
+    "n_distinct_sites_week",
+    "cum_clicks_until_t",
+    "recency",
+    "streak"
+  ],
+  "guardrails": {
+    "active_window_weeks": 8,
+    "validation_test_size": 0.2,
+    "search_row_cap": 120000,
+    "final_row_cap": 180000,
+    "search_rows_selected": 120000,
+    "final_rows_selected": 180000,
+    "subtrain_rows": 153632,
+    "validation_rows": 38479,
+    "full_train_rows": 192111,
+    "subtrain_enrollments": 18252,
+    "validation_enrollments": 4563,
+    "full_train_enrollments": 22815,
+    "n_features": 16,
+    "n_categorical_features": 6,
+    "n_numeric_features": 10,
+    "subtrain_event_rate": 0.01314179337637992,
+    "sampled_subtrain_event_rate": 0.016825,
+    "validation_event_rate": 0.013176018087788144,
+    "full_train_event_rate": 0.013148648437622,
+    "sampled_full_train_event_rate": 0.014033333333333333,
+    "sample_weight_strategy": "none",
+    "random_seed": 42
+  },
+  "best_candidate": {
+    "depth": 6,
+    "learning_rate": 0.06,
+    "iterations": 350,
+    "l2_leaf_reg": 3.0,
+    "val_log_loss": 0.06233303804737473,
+    "val_brier": 0.01274081990407238,
+    "val_roc_auc": 0.7960275566902718
+  },
+  "implementation": {
+    "library": "catboost",
+    "class_name": "CatBoostClassifier",
+    "loss_function": "Logloss",
+    "eval_metric": "Logloss",
+    "thread_count": 1,
+    "allow_writing_files": false
+  },
+  "weighting_strategy": "none; this official D5.8 variant preserves native categorical handling and the same dynamic feature contract without class weights.",
+  "design_note": "The not-weighted CatBoost benchmark preserves native categorical columns, grouped validation, and the shared evaluation stack so the weighted script remains a pure Item 6 sensitivity counterpart."
+}

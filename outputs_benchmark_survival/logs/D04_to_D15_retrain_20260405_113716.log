@@ -1,0 +1,4098 @@
+[START] 2026-04-05 11:37:16 D04->D15 retrain (early_window fix)
+[RUN] 2026-04-05 11:37:16 dropout_bench_v3_D_04_comparable_continuous_time_cox_early_window.py
+[RUN_PLAN] comparable_window_weeks=2 script=dropout_bench_v3_D_04_comparable_continuous_time_cox_early_window.py
+[START] 5.4 - 2026-04-05 11:37:19
+# ==============================================================
+# 5.4.1 - Lightweight runtime bootstrap
+# ==============================================================
+ARTIFACT | benchmark_shared_config | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/benchmark_shared_config.toml
+ARTIFACT | benchmark_modeling_contract | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/benchmark_modeling_contract.toml
+ARTIFACT | run_metadata | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/metadata/run_metadata.json
+ARTIFACT | duckdb_path | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/benchmark_survival.duckdb
+{
+  "run_id": "f3e86c2afbd246e2814123195c22d973",
+  "random_seed": 42,
+  "test_size": 0.3,
+  "cpu_cores": 8,
+  "tuning_parallel_backend": "processes",
+  "early_window_weeks": 4,
+  "main_enrollment_window_weeks": 4,
+  "effective_window_weeks": 2,
+  "input_train_table": "enrollment_cox_ready_train_w2",
+  "input_test_table": "enrollment_cox_ready_test_w2"
+}
+[END] 5.4.1 - 2026-04-05 11:37:20
+[START] 5.4 - 2026-04-05 11:37:20
+# ==============================================================
+# 5.4.2 - Build comparable-window Cox treatment
+# ==============================================================
+[Stage 5.4.2 table_cox_preprocessing_summary — Cox preprocessing summary]
+table_name=table_cox_preprocessing_summary
+rows=1, cols=21
+model_family  train_rows  test_rows  n_input_features_raw  n_numeric_features  n_categorical_features  n_features_after_encoding_before_filter  n_features_after_variance_filter  n_features_dropped_by_variance_filter  n_events_train  n_events_test  mean_duration_train  mean_duration_test                              numeric_prefill_policy categorical_imputation          categorical_encoding                   numeric_scaling  variance_filter_threshold output_dtype                  cox_positioning_note  window_weeks
+         cox       22815       9778                    11                   5                       6                                       41                                41                                      0            5171           2216            30.536182           30.539476 deterministic_train_median_or_zero_when_all_missing       constant_missing one_hot_handle_unknown_ignore standard_scaler_fit_on_train_only               1.000000e-12      float32 early-window comparable Cox benchmark             2
+ARTIFACT | Stage 5.4.2 table_cox_preprocessing_summary — Cox preprocessing summary | duckdb://table_cox_preprocessing_summary
+[Stage 5.4.2 table_cox_raw_feature_manifest — Cox raw feature manifest]
+table_name=table_cox_raw_feature_manifest
+rows=11, cols=6
+ feature_name_operational feature_role  present_in_train  present_in_test  covered_by_canonical_config  numeric_prefill_value
+                   gender  categorical              True             True                        False                    NaN
+                   region  categorical              True             True                        False                    NaN
+        highest_education  categorical              True             True                        False                    NaN
+                 imd_band  categorical              True             True                        False                    NaN
+                 age_band  categorical              True             True                        False                    NaN
+               disability  categorical              True             True                        False                    NaN
+     num_of_prev_attempts      numeric              True             True                         True                    0.0
+          studied_credits      numeric              True             True                         True                   60.0
+     clicks_first_2_weeks      numeric              True             True                         True                   56.0
+     active_weeks_first_2      numeric              True             True                         True                    2.0
+mean_clicks_first_2_weeks      numeric              True             True                         True                   33.0
+ARTIFACT | Stage 5.4.2 table_cox_raw_feature_manifest — Cox raw feature manifest | duckdb://table_cox_raw_feature_manifest
+[Stage 5.4.2 table_cox_feature_names_out — Cox output feature manifest]
+table_name=table_cox_feature_names_out
+rows=41, cols=2
+                feature_name_out  transformed_variance_train
+       num__num_of_prev_attempts                    1.000000
+            num__studied_credits                    1.000000
+       num__clicks_first_2_weeks                    1.000000
+       num__active_weeks_first_2                    1.000000
+  num__mean_clicks_first_2_weeks                    1.000000
+                   cat__gender_F                    0.247988
+                   cat__gender_M                    0.247988
+ cat__region_East Anglian Region                    0.092080
+cat__region_East Midlands Region                    0.067091
+             cat__region_Ireland                    0.034283
+       cat__region_London Region                    0.088295
+        cat__region_North Region                    0.052060
+cat__region_North Western Region                    0.082139
+            cat__region_Scotland                    0.094370
+   cat__region_South East Region                    0.059974
+        cat__region_South Region                    0.087554
+   cat__region_South West Region                    0.068848
+               cat__region_Wales                    0.059707
+cat__region_West Midlands Region                    0.073261
+    cat__region_Yorkshire Region                    0.058136
+ARTIFACT | Stage 5.4.2 table_cox_feature_names_out — Cox output feature manifest | duckdb://table_cox_feature_names_out
+ARTIFACT | cox_preprocessing_config | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/metadata/cox_preprocessing_config_w2.json
+{
+  "model_family": "cox",
+  "duration_column": "duration",
+  "event_column": "event",
+  "categorical_features": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability"
+  ],
+  "numeric_features": [
+    "num_of_prev_attempts",
+    "studied_credits",
+    "clicks_first_2_weeks",
+    "active_weeks_first_2",
+    "mean_clicks_first_2_weeks"
+  ],
+  "raw_feature_columns": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability",
+    "num_of_prev_attempts",
+    "studied_credits",
+    "clicks_first_2_weeks",
+    "active_weeks_first_2",
+    "mean_clicks_first_2_weeks"
+  ],
+  "expected_features_raw": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "studied_credits",
+    "num_of_prev_attempts",
+    "clicks_first_2_weeks",
+    "active_weeks_first_2",
+    "mean_clicks_first_2_weeks"
+  ],
+  "expected_features_resolved": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "clicks_first_2_weeks",
+    "active_weeks_first_2",
+    "mean_clicks_first_2_weeks"
+  ],
+  "numeric_prefill_policy": "deterministic_train_median_or_zero_when_all_missing",
+  "numeric_fill_values": {
+    "num_of_prev_attempts": 0.0,
+    "studied_credits": 60.0,
+    "clicks_first_2_weeks": 56.0,
+    "active_weeks_first_2": 2.0,
+    "mean_clicks_first_2_weeks": 33.0
+  },
+  "categorical_imputation": "constant_missing",
+  "categorical_encoding": "one_hot_handle_unknown_ignore",
+  "numeric_scaling": "standard_scaler_fit_on_train_only",
+  "variance_filter_threshold": 1e-12,
+  "feature_names_before_filter": [
+    "num__num_of_prev_attempts",
+    "num__studied_credits",
+    "num__clicks_first_2_weeks",
+    "num__active_weeks_first_2",
+    "num__mean_clicks_first_2_weeks",
+    "cat__gender_F",
+    "cat__gender_M",
+    "cat__region_East Anglian Region",
+    "cat__region_East Midlands Region",
+    "cat__region_Ireland",
+    "cat__region_London Region",
+    "cat__region_North Region",
+    "cat__region_North Western Region",
+    "cat__region_Scotland",
+    "cat__region_South East Region",
+    "cat__region_South Region",
+    "cat__region_South West Region",
+    "cat__region_Wales",
+    "cat__region_West Midlands Region",
+    "cat__region_Yorkshire Region",
+    "cat__highest_education_A Level or Equivalent",
+    "cat__highest_education_HE Qualification",
+    "cat__highest_education_Lower Than A Level",
+    "cat__highest_education_No Formal quals",
+    "cat__highest_education_Post Graduate Qualification",
+    "cat__imd_band_0-10%",
+    "cat__imd_band_10-20",
+    "cat__imd_band_20-30%",
+    "cat__imd_band_30-40%",
+    "cat__imd_band_40-50%",
+    "cat__imd_band_50-60%",
+    "cat__imd_band_60-70%",
+    "cat__imd_band_70-80%",
+    "cat__imd_band_80-90%",
+    "cat__imd_band_90-100%",
+    "cat__imd_band_None",
+    "cat__age_band_0-35",
+    "cat__age_band_35-55",
+    "cat__age_band_55<=",
+    "cat__disability_N",
+    "cat__disability_Y"
+  ],
+  "feature_names_out": [
+    "num__num_of_prev_attempts",
+    "num__studied_credits",
+    "num__clicks_first_2_weeks",
+    "num__active_weeks_first_2",
+    "num__mean_clicks_first_2_weeks",
+    "cat__gender_F",
+    "cat__gender_M",
+    "cat__region_East Anglian Region",
+    "cat__region_East Midlands Region",
+    "cat__region_Ireland",
+    "cat__region_London Region",
+    "cat__region_North Region",
+    "cat__region_North Western Region",
+    "cat__region_Scotland",
+    "cat__region_South East Region",
+    "cat__region_South Region",
+    "cat__region_South West Region",
+    "cat__region_Wales",
+    "cat__region_West Midlands Region",
+    "cat__region_Yorkshire Region",
+    "cat__highest_education_A Level or Equivalent",
+    "cat__highest_education_HE Qualification",
+    "cat__highest_education_Lower Than A Level",
+    "cat__highest_education_No Formal quals",
+    "cat__highest_education_Post Graduate Qualification",
+    "cat__imd_band_0-10%",
+    "cat__imd_band_10-20",
+    "cat__imd_band_20-30%",
+    "cat__imd_band_30-40%",
+    "cat__imd_band_40-50%",
+    "cat__imd_band_50-60%",
+    "cat__imd_band_60-70%",
+    "cat__imd_band_70-80%",
+    "cat__imd_band_80-90%",
+    "cat__imd_band_90-100%",
+    "cat__imd_band_None",
+    "cat__age_band_0-35",
+    "cat__age_band_35-55",
+    "cat__age_band_55<=",
+    "cat__disability_N",
+    "cat__disability_Y"
+  ],
+  "dropped_low_variance_features": [],
+  "cox_positioning_note": "early-window comparable Cox benchmark",
+  "window_weeks": 2
+}
+
+[END] 5.4.2 - 2026-04-05 11:37:20
+[START] 5.4 - 2026-04-05 11:37:20
+# ==============================================================
+# 5.4.3 - Tune and evaluate the comparable-window Cox model
+# ==============================================================
+- TUNING_WORKERS: 8
+- TUNING_BACKEND: processes
+[Stage 5.4.3 table_cox_tuning_results — Cox tuning results]
+table_name=table_cox_tuning_results_w2
+rows=23, cols=4
+ candidate_id  penalizer  l1_ratio  val_cindex
+            7      0.010      0.50    0.614211
+            6      0.010      0.25    0.613342
+            1      0.001      0.00    0.613303
+            2      0.001      0.25    0.613263
+            8      0.010      0.75    0.613215
+            3      0.001      0.50    0.612855
+            4      0.001      0.75    0.612291
+            5      0.010      0.00    0.611604
+            9      0.050      0.00    0.611261
+           14      0.100      0.00    0.611136
+           19      0.200      0.00    0.610591
+           10      0.050      0.25    0.609980
+           20      0.200      0.25    0.607568
+           13      0.050      1.00    0.607555
+           16      0.100      0.50    0.607539
+           17      0.100      0.75    0.606068
+           18      0.100      1.00    0.605837
+           21      0.200      0.50    0.605837
+           22      0.200      0.75    0.605638
+           23      0.200      1.00    0.605601
+ARTIFACT | Stage 5.4.3 table_cox_tuning_results — Cox tuning results | duckdb://table_cox_tuning_results_w2
+[Stage 5.4.3 table_cox_tuned_test_predictions — Cox test predictions]
+table_name=table_cox_tuned_test_predictions_w2
+rows=29334, cols=7
+      enrollment_id  event  duration  partial_hazard  horizon_week  pred_survival_h  pred_risk_h
+ 100561||DDD||2014J      0        37        1.252100            10         0.854450     0.145550
+ 100621||CCC||2014B      1         6        1.065142            10         0.874756     0.125244
+ 101187||DDD||2014J      0        37        1.178185            10         0.862421     0.137579
+ 101279||DDD||2014J      0        37        0.829388            10         0.901051     0.098949
+ 101414||EEE||2013J      0        38        1.564566            10         0.821560     0.178440
+ 101700||CCC||2014J      0        38        1.512973            10         0.826902     0.173098
+ 101781||AAA||2013J      0        38        0.559945            10         0.932073     0.067927
+ 102209||CCC||2014J      1        15        0.725150            10         0.912928     0.087072
+ 102343||FFF||2013J      0        38        0.891884            10         0.894005     0.105995
+1023623||CCC||2014J      0        38        1.067125            10         0.874538     0.125462
+1033968||DDD||2014B      1        13        1.307698            10         0.848503     0.151497
+ 103891||DDD||2014B      0        34        1.093170            10         0.871682     0.128318
+ 104316||FFF||2014B      0        34        0.861798            10         0.897390     0.102610
+1045203||AAA||2014J      0        38        0.443178            10         0.945847     0.054153
+1047645||CCC||2014B      0        34        1.450124            10         0.833456     0.166544
+1053702||EEE||2013J      0        38        0.833247            10         0.900615     0.099385
+ 105629||FFF||2013J      0        38        0.915433            10         0.891364     0.108636
+1057883||CCC||2014B      0        34        1.047039            10         0.876748     0.123252
+ 106383||BBB||2014J      1        21        0.850498            10         0.898665     0.101335
+ 106553||DDD||2014J      0        37        1.104913            10         0.870397     0.129603
+ARTIFACT | Stage 5.4.3 table_cox_tuned_test_predictions — Cox test predictions | duckdb://table_cox_tuned_test_predictions_w2
+[Stage 5.4.3 table_cox_tuned_primary_metrics — Cox primary metrics]
+table_name=table_cox_tuned_primary_metrics_w2
+rows=2, cols=4
+metric_name metric_category  metric_value                         notes
+        ibs         primary      0.121208 sksurv_integrated_brier_score
+    c_index      co_primary      0.621439          pycox_concordance_td
+ARTIFACT | Stage 5.4.3 table_cox_tuned_primary_metrics — Cox primary metrics | duckdb://table_cox_tuned_primary_metrics_w2
+[Stage 5.4.3 table_cox_tuned_brier_by_horizon — Cox Brier scores by horizon]
+table_name=table_cox_tuned_brier_by_horizon_w2
+rows=3, cols=5
+ horizon_week      metric_name metric_category  metric_value              notes
+           10 brier_at_horizon         primary      0.105286 sksurv_brier_score
+           20 brier_at_horizon         primary      0.141573 sksurv_brier_score
+           30 brier_at_horizon         primary      0.165389 sksurv_brier_score
+ARTIFACT | Stage 5.4.3 table_cox_tuned_brier_by_horizon — Cox Brier scores by horizon | duckdb://table_cox_tuned_brier_by_horizon_w2
+[Stage 5.4.3 table_cox_tuned_secondary_metrics — Cox secondary metrics]
+table_name=table_cox_tuned_secondary_metrics_w2
+rows=6, cols=5
+ horizon_week         metric_name metric_category  metric_value                                                                                  notes
+           10 risk_auc_at_horizon       secondary      0.680069                                                            roc_auc_on_evaluable_subset
+           10  time_dependent_auc       secondary      0.668515 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.668515; local_ipcw_auc
+           20 risk_auc_at_horizon       secondary      0.643201                                                            roc_auc_on_evaluable_subset
+           20  time_dependent_auc       secondary      0.631050 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.631050; local_ipcw_auc
+           30 risk_auc_at_horizon       secondary      0.626534                                                            roc_auc_on_evaluable_subset
+           30  time_dependent_auc       secondary      0.613949 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.613949; local_ipcw_auc
+ARTIFACT | Stage 5.4.3 table_cox_tuned_secondary_metrics — Cox secondary metrics | duckdb://table_cox_tuned_secondary_metrics_w2
+[Stage 5.4.3 table_cox_tuned_td_auc_support_audit — Cox IPCW support audit]
+table_name=table_cox_tuned_td_auc_support_audit_w2
+rows=3, cols=6
+ horizon_week  max_ipcw_time  n_total_test_enrollments  n_supported_test_enrollments  mean_auc                                                 notes
+           10           38.0                      9778                          6742  0.668515 IPCW-supported subset used for Cox time-dependent AUC
+           20           38.0                      9778                          6742  0.631050 IPCW-supported subset used for Cox time-dependent AUC
+           30           38.0                      9778                          6742  0.613949 IPCW-supported subset used for Cox time-dependent AUC
+ARTIFACT | Stage 5.4.3 table_cox_tuned_td_auc_support_audit — Cox IPCW support audit | duckdb://table_cox_tuned_td_auc_support_audit_w2
+[Stage 5.4.3 table_cox_tuned_support_by_horizon — Cox support by horizon]
+table_name=table_cox_tuned_support_by_horizon_w2
+rows=3, cols=4
+ horizon_week  n_evaluable_enrollments  n_events_by_horizon  event_rate_by_horizon
+           10                     9778                 1215               0.124259
+           20                     9778                 1736               0.177541
+           30                     9778                 2129               0.217734
+ARTIFACT | Stage 5.4.3 table_cox_tuned_support_by_horizon — Cox support by horizon | duckdb://table_cox_tuned_support_by_horizon_w2
+[Stage 5.4.3 table_cox_tuned_calibration_summary — Cox calibration summary]
+table_name=table_cox_tuned_calibration_summary_w2
+rows=3, cols=5
+ horizon_week            metric_name metric_category  metric_value                                         notes
+           10 calibration_at_horizon         primary      0.030034 Weighted absolute calibration gap across bins
+           20 calibration_at_horizon         primary      0.025024 Weighted absolute calibration gap across bins
+           30 calibration_at_horizon         primary      0.018936 Weighted absolute calibration gap across bins
+ARTIFACT | Stage 5.4.3 table_cox_tuned_calibration_summary — Cox calibration summary | duckdb://table_cox_tuned_calibration_summary_w2
+[Stage 5.4.3 table_cox_tuned_calibration_bins_by_horizon — Cox calibration bins]
+table_name=table_cox_tuned_calibration_bins_by_horizon_w2
+rows=30, cols=6
+ calibration_bin   n  mean_predicted_risk  observed_event_rate  horizon_week  abs_calibration_gap
+               0 978             0.069346             0.042945            10             0.026401
+               1 978             0.089098             0.047035            10             0.042063
+               2 978             0.098408             0.067485            10             0.030923
+               3 977             0.106527             0.071648            10             0.034879
+               4 978             0.114280             0.105317            10             0.008963
+               5 978             0.122257             0.122699            10             0.000443
+               6 977             0.131153             0.131013            10             0.000140
+               7 978             0.142331             0.180982            10             0.038651
+               8 978             0.158098             0.216769            10             0.058671
+               9 978             0.197471             0.256646            10             0.059175
+               0 978             0.101268             0.089980            20             0.011288
+               1 978             0.129541             0.100204            20             0.029336
+               2 978             0.142735             0.109407            20             0.033328
+               3 977             0.154188             0.119754            20             0.034434
+               4 978             0.165076             0.154397            20             0.010680
+               5 978             0.176230             0.174847            20             0.001383
+               6 977             0.188612             0.192426            20             0.003814
+               7 978             0.204079             0.253579            20             0.049499
+               8 978             0.225726             0.274029            20             0.048302
+               9 978             0.278589             0.306748            20             0.028160
+ARTIFACT | Stage 5.4.3 table_cox_tuned_calibration_bins_by_horizon — Cox calibration bins | duckdb://table_cox_tuned_calibration_bins_by_horizon_w2
+[Stage 5.4.3 table_cox_tuned_predicted_vs_observed_survival — Cox predicted versus observed survival]
+table_name=table_cox_tuned_predicted_vs_observed_survival_w2
+rows=3, cols=5
+ horizon_week  n_evaluable_enrollments  mean_predicted_survival  mean_observed_survival  abs_gap
+           10                     9778                 0.877102                0.875741 0.001361
+           20                     9778                 0.823394                0.822459 0.000936
+           30                     9778                 0.782466                0.782266 0.000200
+ARTIFACT | Stage 5.4.3 table_cox_tuned_predicted_vs_observed_survival — Cox predicted versus observed survival | duckdb://table_cox_tuned_predicted_vs_observed_survival_w2
+[Stage 5.4.3 table_cox_tuned_coefficients — Cox coefficients]
+table_name=table_cox_tuned_coefficients_w2
+rows=41, cols=12
+                    feature_name          coef  exp(coef)  se(coef)  coef lower 95%  coef upper 95%  exp(coef) lower 95%  exp(coef) upper 95%  cmp to         z            p   -log2(p)
+       num__num_of_prev_attempts -2.445426e-08   1.000000  0.000035       -0.000068        0.000068             0.999932             1.000068     0.0 -0.000705 9.994373e-01   0.000812
+            num__studied_credits  1.390861e-01   1.149223  0.011542        0.116464        0.161708             1.123517             1.175517     0.0 12.050272 1.933104e-33 108.672708
+       num__clicks_first_2_weeks -1.896956e-01   0.827211  0.020531       -0.229935       -0.149456             0.794585             0.861177     0.0 -9.239521 2.476025e-20  65.130536
+       num__active_weeks_first_2 -6.037262e-02   0.941414  0.015105       -0.089977       -0.030768             0.913952             0.969701     0.0 -3.996946 6.416504e-05  13.927853
+  num__mean_clicks_first_2_weeks -2.204646e-07   1.000000  0.000093       -0.000183        0.000182             0.999817             1.000182     0.0 -0.002368 9.981108e-01   0.002728
+                   cat__gender_F -8.942783e-02   0.914454  0.133697       -0.351468        0.172613             0.703654             1.188406     0.0 -0.668886 5.035681e-01   0.989741
+                   cat__gender_M  8.942783e-02   1.093548  0.133697       -0.172613        0.351468             0.841463             1.421153     0.0  0.668886 5.035681e-01   0.989741
+ cat__region_East Anglian Region -1.139798e-06   0.999999  0.000767       -0.001504        0.001501             0.998498             1.001502     0.0 -0.001487 9.988136e-01   0.001713
+cat__region_East Midlands Region  7.535255e-07   1.000001  0.000302       -0.000591        0.000592             0.999409             1.000593     0.0  0.002496 9.980083e-01   0.002876
+             cat__region_Ireland -1.226927e-02   0.987806  0.077102       -0.163386        0.138847             0.849263             1.148949     0.0 -0.159131 8.735659e-01   0.195012
+       cat__region_London Region  9.921054e-07   1.000001  0.000536       -0.001050        0.001052             0.998951             1.001052     0.0  0.001851 9.985231e-01   0.002132
+        cat__region_North Region  9.915297e-07   1.000001  0.000425       -0.000832        0.000834             0.999168             1.000834     0.0  0.002333 9.981385e-01   0.002688
+cat__region_North Western Region  5.024055e-07   1.000001  0.000196       -0.000384        0.000385             0.999616             1.000385     0.0  0.002560 9.979574e-01   0.002950
+            cat__region_Scotland -1.255924e-01   0.881974  0.047477       -0.218645       -0.032540             0.803607             0.967984     0.0 -2.645356 8.160500e-03   6.937127
+   cat__region_South East Region -9.491400e-07   0.999999  0.000414       -0.000812        0.000810             0.999188             1.000810     0.0 -0.002294 9.981697e-01   0.002643
+        cat__region_South Region -1.869306e-07   1.000000  0.000125       -0.000246        0.000246             0.999754             1.000246     0.0 -0.001491 9.988106e-01   0.001717
+   cat__region_South West Region  4.364534e-07   1.000000  0.000181       -0.000355        0.000356             0.999645             1.000356     0.0  0.002405 9.980811e-01   0.002771
+               cat__region_Wales -6.510404e-02   0.936970  0.057112       -0.177042        0.046834             0.837745             1.047948     0.0 -1.139932 2.543146e-01   1.975314
+cat__region_West Midlands Region  6.046445e-07   1.000001  0.000235       -0.000459        0.000461             0.999541             1.000461     0.0  0.002576 9.979444e-01   0.002969
+    cat__region_Yorkshire Region  5.837016e-07   1.000001  0.000229       -0.000448        0.000449             0.999552             1.000449     0.0  0.002551 9.979645e-01   0.002940
+ARTIFACT | Stage 5.4.3 table_cox_tuned_coefficients — Cox coefficients | duckdb://table_cox_tuned_coefficients_w2
+[Stage 5.4.3 table_cox_tuned_stability_notes — Cox stability notes]
+table_name=table_cox_tuned_stability_notes_w2
+rows=1, cols=10
+ n_input_features_before_filter  n_input_features_after_filter  n_zero_or_low_variance_features_dropped dropped_zero_or_low_variance_features  best_penalizer  best_l1_ratio  validation_test_size  variance_filter_threshold excluded_candidates_under_strict_warnings  window_weeks
+                             41                             41                                        0                                                  0.01            0.5                   0.1               1.000000e-12               [[0.001, 1.0], [0.01, 1.0]]             2
+ARTIFACT | Stage 5.4.3 table_cox_tuned_stability_notes — Cox stability notes | duckdb://table_cox_tuned_stability_notes_w2
+ARTIFACT | cox_model | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/models/cox_early_window_tuned_w2.joblib
+ARTIFACT | cox_preprocessor | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/models/cox_preprocessor_w2.joblib
+ARTIFACT | cox_tuned_model_config | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/metadata/cox_tuned_model_config_w2.json
+{
+  "model_name": "cox_early_window_tuned_w2",
+  "selection_metric": "highest_validation_c_index",
+  "validation_split": {
+    "method": "GroupShuffleSplit",
+    "test_size": 0.1,
+    "group_column": "enrollment_id",
+    "random_seed": 42
+  },
+  "full_candidate_grid": [
+    {
+      "penalizer": 0.001,
+      "l1_ratio": 0.0
+    },
+    {
+      "penalizer": 0.001,
+      "l1_ratio": 0.25
+    },
+    {
+      "penalizer": 0.001,
+      "l1_ratio": 0.5
+    },
+    {
+      "penalizer": 0.001,
+      "l1_ratio": 0.75
+    },
+    {
+      "penalizer": 0.001,
+      "l1_ratio": 1.0
+    },
+    {
+      "penalizer": 0.01,
+      "l1_ratio": 0.0
+    },
+    {
+      "penalizer": 0.01,
+      "l1_ratio": 0.25
+    },
+    {
+      "penalizer": 0.01,
+      "l1_ratio": 0.5
+    },
+    {
+      "penalizer": 0.01,
+      "l1_ratio": 0.75
+    },
+    {
+      "penalizer": 0.01,
+      "l1_ratio": 1.0
+    },
+    {
+      "penalizer": 0.05,
+      "l1_ratio": 0.0
+    },
+    {
+      "penalizer": 0.05,
+      "l1_ratio": 0.25
+    },
+    {
+      "penalizer": 0.05,
+      "l1_ratio": 0.5
+    },
+    {
+      "penalizer": 0.05,
+      "l1_ratio": 0.75
+    },
+    {
+      "penalizer": 0.05,
+      "l1_ratio": 1.0
+    },
+    {
+      "penalizer": 0.1,
+      "l1_ratio": 0.0
+    },
+    {
+      "penalizer": 0.1,
+      "l1_ratio": 0.25
+    },
+    {
+      "penalizer": 0.1,
+      "l1_ratio": 0.5
+    },
+    {
+      "penalizer": 0.1,
+      "l1_ratio": 0.75
+    },
+    {
+      "penalizer": 0.1,
+      "l1_ratio": 1.0
+    },
+    {
+      "penalizer": 0.2,
+      "l1_ratio": 0.0
+    },
+    {
+      "penalizer": 0.2,
+      "l1_ratio": 0.25
+    },
+    {
+      "penalizer": 0.2,
+      "l1_ratio": 0.5
+    },
+    {
+      "penalizer": 0.2,
+      "l1_ratio": 0.75
+    },
+    {
+      "penalizer": 0.2,
+      "l1_ratio": 1.0
+    }
+  ],
+  "excluded_candidates_under_strict_warnings": [
+    {
+      "penalizer": 0.001,
+      "l1_ratio": 1.0
+    },
+    {
+      "penalizer": 0.01,
+      "l1_ratio": 1.0
+    }
+  ],
+  "search_space": [
+    {
+      "candidate_id": 1,
+      "penalizer": 0.001,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 2,
+      "penalizer": 0.001,
+      "l1_ratio": 0.25
+    },
+    {
+      "candidate_id": 3,
+      "penalizer": 0.001,
+      "l1_ratio": 0.5
+    },
+    {
+      "candidate_id": 4,
+      "penalizer": 0.001,
+      "l1_ratio": 0.75
+    },
+    {
+      "candidate_id": 5,
+      "penalizer": 0.01,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 6,
+      "penalizer": 0.01,
+      "l1_ratio": 0.25
+    },
+    {
+      "candidate_id": 7,
+      "penalizer": 0.01,
+      "l1_ratio": 0.5
+    },
+    {
+      "candidate_id": 8,
+      "penalizer": 0.01,
+      "l1_ratio": 0.75
+    },
+    {
+      "candidate_id": 9,
+      "penalizer": 0.05,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 10,
+      "penalizer": 0.05,
+      "l1_ratio": 0.25
+    },
+    {
+      "candidate_id": 11,
+      "penalizer": 0.05,
+      "l1_ratio": 0.5
+    },
+    {
+      "candidate_id": 12,
+      "penalizer": 0.05,
+      "l1_ratio": 0.75
+    },
+    {
+      "candidate_id": 13,
+      "penalizer": 0.05,
+      "l1_ratio": 1.0
+    },
+    {
+      "candidate_id": 14,
+      "penalizer": 0.1,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 15,
+      "penalizer": 0.1,
+      "l1_ratio": 0.25
+    },
+    {
+      "candidate_id": 16,
+      "penalizer": 0.1,
+      "l1_ratio": 0.5
+    },
+    {
+      "candidate_id": 17,
+      "penalizer": 0.1,
+      "l1_ratio": 0.75
+    },
+    {
+      "candidate_id": 18,
+      "penalizer": 0.1,
+      "l1_ratio": 1.0
+    },
+    {
+      "candidate_id": 19,
+      "penalizer": 0.2,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 20,
+      "penalizer": 0.2,
+      "l1_ratio": 0.25
+    },
+    {
+      "candidate_id": 21,
+      "penalizer": 0.2,
+      "l1_ratio": 0.5
+    },
+    {
+      "candidate_id": 22,
+      "penalizer": 0.2,
+      "l1_ratio": 0.75
+    },
+    {
+      "candidate_id": 23,
+      "penalizer": 0.2,
+      "l1_ratio": 1.0
+    }
+  ],
+  "benchmark_horizons": [
+    10,
+    20,
+    30
+  ],
+  "calibration_bins": 10,
+  "calibration_contract_version": "v2_ipcw_km_observed_risk",
+  "calibration_observed_risk_method": "ipcw_km_pseudo_event_rate",
+  "variance_filter_threshold": 1e-12,
+  "best_candidate": {
+    "candidate_id": 7,
+    "penalizer": 0.01,
+    "l1_ratio": 0.5,
+    "val_cindex": 0.6142114327188044
+  },
+  "effective_window_weeks": 2,
+  "input_train_table": "enrollment_cox_ready_train_w2",
+  "input_test_table": "enrollment_cox_ready_test_w2",
+  "preprocessing": {
+    "categorical_features": [
+      "gender",
+      "region",
+      "highest_education",
+      "imd_band",
+      "age_band",
+      "disability"
+    ],
+    "numeric_features": [
+      "num_of_prev_attempts",
+      "studied_credits",
+      "clicks_first_2_weeks",
+      "active_weeks_first_2",
+      "mean_clicks_first_2_weeks"
+    ],
+    "numeric_prefill_values": {
+      "num_of_prev_attempts": 0.0,
+      "studied_credits": 60.0,
+      "clicks_first_2_weeks": 56.0,
+      "active_weeks_first_2": 2.0,
+      "mean_clicks_first_2_weeks": 33.0
+    },
+    "feature_names_before_filter": [
+      "num__num_of_prev_attempts",
+      "num__studied_credits",
+      "num__clicks_first_2_weeks",
+      "num__active_weeks_first_2",
+      "num__mean_clicks_first_2_weeks",
+      "cat__gender_F",
+      "cat__gender_M",
+      "cat__region_East Anglian Region",
+      "cat__region_East Midlands Region",
+      "cat__region_Ireland",
+      "cat__region_London Region",
+      "cat__region_North Region",
+      "cat__region_North Western Region",
+      "cat__region_Scotland",
+      "cat__region_South East Region",
+      "cat__region_South Region",
+      "cat__region_South West Region",
+      "cat__region_Wales",
+      "cat__region_West Midlands Region",
+      "cat__region_Yorkshire Region",
+      "cat__highest_education_A Level or Equivalent",
+      "cat__highest_education_HE Qualification",
+      "cat__highest_education_Lower Than A Level",
+      "cat__highest_education_No Formal quals",
+      "cat__highest_education_Post Graduate Qualification",
+      "cat__imd_band_0-10%",
+      "cat__imd_band_10-20",
+      "cat__imd_band_20-30%",
+      "cat__imd_band_30-40%",
+      "cat__imd_band_40-50%",
+      "cat__imd_band_50-60%",
+      "cat__imd_band_60-70%",
+      "cat__imd_band_70-80%",
+      "cat__imd_band_80-90%",
+      "cat__imd_band_90-100%",
+      "cat__imd_band_None",
+      "cat__age_band_0-35",
+      "cat__age_band_35-55",
+      "cat__age_band_55<=",
+      "cat__disability_N",
+      "cat__disability_Y"
+    ],
+    "feature_names_out": [
+      "num__num_of_prev_attempts",
+      "num__studied_credits",
+      "num__clicks_first_2_weeks",
+      "num__active_weeks_first_2",
+      "num__mean_clicks_first_2_weeks",
+      "cat__gender_F",
+      "cat__gender_M",
+      "cat__region_East Anglian Region",
+      "cat__region_East Midlands Region",
+      "cat__region_Ireland",
+      "cat__region_London Region",
+      "cat__region_North Region",
+      "cat__region_North Western Region",
+      "cat__region_Scotland",
+      "cat__region_South East Region",
+      "cat__region_South Region",
+      "cat__region_South West Region",
+      "cat__region_Wales",
+      "cat__region_West Midlands Region",
+      "cat__region_Yorkshire Region",
+      "cat__highest_education_A Level or Equivalent",
+      "cat__highest_education_HE Qualification",
+      "cat__highest_education_Lower Than A Level",
+      "cat__highest_education_No Formal quals",
+      "cat__highest_education_Post Graduate Qualification",
+      "cat__imd_band_0-10%",
+      "cat__imd_band_10-20",
+      "cat__imd_band_20-30%",
+      "cat__imd_band_30-40%",
+      "cat__imd_band_40-50%",
+      "cat__imd_band_50-60%",
+      "cat__imd_band_60-70%",
+      "cat__imd_band_70-80%",
+      "cat__imd_band_80-90%",
+      "cat__imd_band_90-100%",
+      "cat__imd_band_None",
+      "cat__age_band_0-35",
+      "cat__age_band_35-55",
+      "cat__age_band_55<=",
+      "cat__disability_N",
+      "cat__disability_Y"
+    ],
+    "dropped_low_variance_features": []
+  },
+  "design_note": "The comparable Cox arm integrates deterministic numeric prefill, low-variance feature filtering, and a local IPCW-supported time-dependent AUC path directly into D5.4 so no downstream repair stage is required."
+}
+
+ candidate_id  penalizer  l1_ratio  val_cindex
+            7       0.01       0.5    0.614211
+[END] 5.4.3 - 2026-04-05 11:37:25
+[START] 5.4 - 2026-04-05 11:37:25
+# ==============================================================
+# 5.4.4 - Close runtime resources
+# ==============================================================
+DuckDB connection closed.
+ARTIFACT | duckdb_connection | closed::/Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/benchmark_survival.duckdb
+[END] 5.4.4 - 2026-04-05 11:37:26
+[RUN_PLAN] comparable_window_weeks=4 script=dropout_bench_v3_D_04_comparable_continuous_time_cox_early_window.py
+[START] 5.4 - 2026-04-05 11:37:26
+# ==============================================================
+# 5.4.1 - Lightweight runtime bootstrap
+# ==============================================================
+ARTIFACT | benchmark_shared_config | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/benchmark_shared_config.toml
+ARTIFACT | benchmark_modeling_contract | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/benchmark_modeling_contract.toml
+ARTIFACT | run_metadata | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/metadata/run_metadata.json
+ARTIFACT | duckdb_path | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/benchmark_survival.duckdb
+{
+  "run_id": "f3e86c2afbd246e2814123195c22d973",
+  "random_seed": 42,
+  "test_size": 0.3,
+  "cpu_cores": 8,
+  "tuning_parallel_backend": "processes",
+  "early_window_weeks": 4,
+  "main_enrollment_window_weeks": 4,
+  "effective_window_weeks": 4,
+  "input_train_table": "enrollment_cox_ready_train",
+  "input_test_table": "enrollment_cox_ready_test"
+}
+[END] 5.4.1 - 2026-04-05 11:37:26
+[START] 5.4 - 2026-04-05 11:37:26
+# ==============================================================
+# 5.4.2 - Build comparable-window Cox treatment
+# ==============================================================
+[Stage 5.4.2 table_cox_preprocessing_summary — Cox preprocessing summary]
+table_name=table_cox_preprocessing_summary
+rows=1, cols=21
+model_family  train_rows  test_rows  n_input_features_raw  n_numeric_features  n_categorical_features  n_features_after_encoding_before_filter  n_features_after_variance_filter  n_features_dropped_by_variance_filter  n_events_train  n_events_test  mean_duration_train  mean_duration_test                              numeric_prefill_policy categorical_imputation          categorical_encoding                   numeric_scaling  variance_filter_threshold output_dtype                  cox_positioning_note  window_weeks
+         cox       22815       9778                    11                   5                       6                                       41                                41                                      0            5171           2216            30.536182           30.539476 deterministic_train_median_or_zero_when_all_missing       constant_missing one_hot_handle_unknown_ignore standard_scaler_fit_on_train_only               1.000000e-12      float32 early-window comparable Cox benchmark             4
+ARTIFACT | Stage 5.4.2 table_cox_preprocessing_summary — Cox preprocessing summary | duckdb://table_cox_preprocessing_summary
+[Stage 5.4.2 table_cox_raw_feature_manifest — Cox raw feature manifest]
+table_name=table_cox_raw_feature_manifest
+rows=11, cols=6
+ feature_name_operational feature_role  present_in_train  present_in_test  covered_by_canonical_config  numeric_prefill_value
+                   gender  categorical              True             True                        False                    NaN
+                   region  categorical              True             True                        False                    NaN
+        highest_education  categorical              True             True                        False                    NaN
+                 imd_band  categorical              True             True                        False                    NaN
+                 age_band  categorical              True             True                        False                    NaN
+               disability  categorical              True             True                        False                    NaN
+     num_of_prev_attempts      numeric              True             True                         True                   0.00
+          studied_credits      numeric              True             True                         True                  60.00
+     clicks_first_4_weeks      numeric              True             True                         True                 136.00
+     active_weeks_first_4      numeric              True             True                         True                   4.00
+mean_clicks_first_4_weeks      numeric              True             True                         True                  41.25
+ARTIFACT | Stage 5.4.2 table_cox_raw_feature_manifest — Cox raw feature manifest | duckdb://table_cox_raw_feature_manifest
+[Stage 5.4.2 table_cox_feature_names_out — Cox output feature manifest]
+table_name=table_cox_feature_names_out
+rows=41, cols=2
+                feature_name_out  transformed_variance_train
+       num__num_of_prev_attempts                    1.000000
+            num__studied_credits                    1.000000
+       num__clicks_first_4_weeks                    1.000000
+       num__active_weeks_first_4                    1.000000
+  num__mean_clicks_first_4_weeks                    1.000000
+                   cat__gender_F                    0.247988
+                   cat__gender_M                    0.247988
+ cat__region_East Anglian Region                    0.092080
+cat__region_East Midlands Region                    0.067091
+             cat__region_Ireland                    0.034283
+       cat__region_London Region                    0.088295
+        cat__region_North Region                    0.052060
+cat__region_North Western Region                    0.082139
+            cat__region_Scotland                    0.094370
+   cat__region_South East Region                    0.059974
+        cat__region_South Region                    0.087554
+   cat__region_South West Region                    0.068848
+               cat__region_Wales                    0.059707
+cat__region_West Midlands Region                    0.073261
+    cat__region_Yorkshire Region                    0.058136
+ARTIFACT | Stage 5.4.2 table_cox_feature_names_out — Cox output feature manifest | duckdb://table_cox_feature_names_out
+ARTIFACT | cox_preprocessing_config | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/metadata/cox_preprocessing_config.json
+{
+  "model_family": "cox",
+  "duration_column": "duration",
+  "event_column": "event",
+  "categorical_features": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability"
+  ],
+  "numeric_features": [
+    "num_of_prev_attempts",
+    "studied_credits",
+    "clicks_first_4_weeks",
+    "active_weeks_first_4",
+    "mean_clicks_first_4_weeks"
+  ],
+  "raw_feature_columns": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability",
+    "num_of_prev_attempts",
+    "studied_credits",
+    "clicks_first_4_weeks",
+    "active_weeks_first_4",
+    "mean_clicks_first_4_weeks"
+  ],
+  "expected_features_raw": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "studied_credits",
+    "num_of_prev_attempts",
+    "clicks_first_4_weeks",
+    "active_weeks_first_4",
+    "mean_clicks_first_4_weeks"
+  ],
+  "expected_features_resolved": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "clicks_first_4_weeks",
+    "active_weeks_first_4",
+    "mean_clicks_first_4_weeks"
+  ],
+  "numeric_prefill_policy": "deterministic_train_median_or_zero_when_all_missing",
+  "numeric_fill_values": {
+    "num_of_prev_attempts": 0.0,
+    "studied_credits": 60.0,
+    "clicks_first_4_weeks": 136.0,
+    "active_weeks_first_4": 4.0,
+    "mean_clicks_first_4_weeks": 41.25
+  },
+  "categorical_imputation": "constant_missing",
+  "categorical_encoding": "one_hot_handle_unknown_ignore",
+  "numeric_scaling": "standard_scaler_fit_on_train_only",
+  "variance_filter_threshold": 1e-12,
+  "feature_names_before_filter": [
+    "num__num_of_prev_attempts",
+    "num__studied_credits",
+    "num__clicks_first_4_weeks",
+    "num__active_weeks_first_4",
+    "num__mean_clicks_first_4_weeks",
+    "cat__gender_F",
+    "cat__gender_M",
+    "cat__region_East Anglian Region",
+    "cat__region_East Midlands Region",
+    "cat__region_Ireland",
+    "cat__region_London Region",
+    "cat__region_North Region",
+    "cat__region_North Western Region",
+    "cat__region_Scotland",
+    "cat__region_South East Region",
+    "cat__region_South Region",
+    "cat__region_South West Region",
+    "cat__region_Wales",
+    "cat__region_West Midlands Region",
+    "cat__region_Yorkshire Region",
+    "cat__highest_education_A Level or Equivalent",
+    "cat__highest_education_HE Qualification",
+    "cat__highest_education_Lower Than A Level",
+    "cat__highest_education_No Formal quals",
+    "cat__highest_education_Post Graduate Qualification",
+    "cat__imd_band_0-10%",
+    "cat__imd_band_10-20",
+    "cat__imd_band_20-30%",
+    "cat__imd_band_30-40%",
+    "cat__imd_band_40-50%",
+    "cat__imd_band_50-60%",
+    "cat__imd_band_60-70%",
+    "cat__imd_band_70-80%",
+    "cat__imd_band_80-90%",
+    "cat__imd_band_90-100%",
+    "cat__imd_band_None",
+    "cat__age_band_0-35",
+    "cat__age_band_35-55",
+    "cat__age_band_55<=",
+    "cat__disability_N",
+    "cat__disability_Y"
+  ],
+  "feature_names_out": [
+    "num__num_of_prev_attempts",
+    "num__studied_credits",
+    "num__clicks_first_4_weeks",
+    "num__active_weeks_first_4",
+    "num__mean_clicks_first_4_weeks",
+    "cat__gender_F",
+    "cat__gender_M",
+    "cat__region_East Anglian Region",
+    "cat__region_East Midlands Region",
+    "cat__region_Ireland",
+    "cat__region_London Region",
+    "cat__region_North Region",
+    "cat__region_North Western Region",
+    "cat__region_Scotland",
+    "cat__region_South East Region",
+    "cat__region_South Region",
+    "cat__region_South West Region",
+    "cat__region_Wales",
+    "cat__region_West Midlands Region",
+    "cat__region_Yorkshire Region",
+    "cat__highest_education_A Level or Equivalent",
+    "cat__highest_education_HE Qualification",
+    "cat__highest_education_Lower Than A Level",
+    "cat__highest_education_No Formal quals",
+    "cat__highest_education_Post Graduate Qualification",
+    "cat__imd_band_0-10%",
+    "cat__imd_band_10-20",
+    "cat__imd_band_20-30%",
+    "cat__imd_band_30-40%",
+    "cat__imd_band_40-50%",
+    "cat__imd_band_50-60%",
+    "cat__imd_band_60-70%",
+    "cat__imd_band_70-80%",
+    "cat__imd_band_80-90%",
+    "cat__imd_band_90-100%",
+    "cat__imd_band_None",
+    "cat__age_band_0-35",
+    "cat__age_band_35-55",
+    "cat__age_band_55<=",
+    "cat__disability_N",
+    "cat__disability_Y"
+  ],
+  "dropped_low_variance_features": [],
+  "cox_positioning_note": "early-window comparable Cox benchmark",
+  "window_weeks": 4
+}
+
+[END] 5.4.2 - 2026-04-05 11:37:26
+[START] 5.4 - 2026-04-05 11:37:26
+# ==============================================================
+# 5.4.3 - Tune and evaluate the comparable-window Cox model
+# ==============================================================
+- TUNING_WORKERS: 8
+- TUNING_BACKEND: processes
+[Stage 5.4.3 table_cox_tuning_results — Cox tuning results]
+table_name=table_cox_tuning_results
+rows=23, cols=4
+ candidate_id  penalizer  l1_ratio  val_cindex
+            4      0.001      0.75    0.635157
+            3      0.001      0.50    0.635020
+            2      0.001      0.25    0.634970
+            1      0.001      0.00    0.634823
+            6      0.010      0.25    0.633295
+            5      0.010      0.00    0.632646
+            7      0.010      0.50    0.631923
+            8      0.010      0.75    0.631323
+            9      0.050      0.00    0.629862
+           10      0.050      0.25    0.629117
+           14      0.100      0.00    0.628902
+           19      0.200      0.00    0.628291
+           18      0.100      1.00    0.623399
+           21      0.200      0.50    0.623399
+           22      0.200      0.75    0.622798
+           23      0.200      1.00    0.622569
+           11      0.050      0.50    0.616619
+           15      0.100      0.25    0.616536
+           13      0.050      1.00    0.616054
+           16      0.100      0.50    0.616004
+ARTIFACT | Stage 5.4.3 table_cox_tuning_results — Cox tuning results | duckdb://table_cox_tuning_results
+[Stage 5.4.3 table_cox_tuned_test_predictions — Cox test predictions]
+table_name=table_cox_tuned_test_predictions
+rows=29334, cols=7
+      enrollment_id  event  duration  partial_hazard  horizon_week  pred_survival_h  pred_risk_h
+ 100561||DDD||2014J      0        37        1.130402            10         0.873327     0.126673
+ 100621||CCC||2014B      1         6        0.977515            10         0.889473     0.110527
+ 101187||DDD||2014J      0        37        1.432473            10         0.842283     0.157717
+ 101279||DDD||2014J      0        37        0.898904            10         0.897890     0.102110
+ 101414||EEE||2013J      0        38        1.932686            10         0.793283     0.206717
+ 101700||CCC||2014J      0        38        2.048072            10         0.782391     0.217609
+ 101781||AAA||2013J      0        38        0.500077            10         0.941840     0.058160
+ 102209||CCC||2014J      1        15        0.674644            10         0.922345     0.077655
+ 102343||FFF||2013J      0        38        0.677365            10         0.922044     0.077956
+1023623||CCC||2014J      0        38        0.797352            10         0.908883     0.091117
+1033968||DDD||2014B      1        13        1.500272            10         0.835468     0.164532
+ 103891||DDD||2014B      0        34        1.350088            10         0.850638     0.149362
+ 104316||FFF||2014B      0        34        0.747105            10         0.914371     0.085629
+1045203||AAA||2014J      0        38        0.409193            10         0.952153     0.047847
+1047645||CCC||2014B      0        34        1.622317            10         0.823339     0.176661
+1053702||EEE||2013J      0        38        0.714653            10         0.917934     0.082066
+ 105629||FFF||2013J      0        38        0.681178            10         0.921623     0.078377
+1057883||CCC||2014B      0        34        1.178822            10         0.868275     0.131725
+ 106383||BBB||2014J      1        21        0.873126            10         0.900668     0.099332
+ 106553||DDD||2014J      0        37        1.100211            10         0.876492     0.123508
+ARTIFACT | Stage 5.4.3 table_cox_tuned_test_predictions — Cox test predictions | duckdb://table_cox_tuned_test_predictions
+[Stage 5.4.3 table_cox_tuned_primary_metrics — Cox primary metrics]
+table_name=table_cox_tuned_primary_metrics
+rows=2, cols=4
+metric_name metric_category  metric_value                         notes
+        ibs         primary      0.117621 sksurv_integrated_brier_score
+    c_index      co_primary      0.651160          pycox_concordance_td
+ARTIFACT | Stage 5.4.3 table_cox_tuned_primary_metrics — Cox primary metrics | duckdb://table_cox_tuned_primary_metrics
+[Stage 5.4.3 table_cox_tuned_brier_by_horizon — Cox Brier scores by horizon]
+table_name=table_cox_tuned_brier_by_horizon
+rows=3, cols=5
+ horizon_week      metric_name metric_category  metric_value              notes
+           10 brier_at_horizon         primary      0.101157 sksurv_brier_score
+           20 brier_at_horizon         primary      0.137813 sksurv_brier_score
+           30 brier_at_horizon         primary      0.162328 sksurv_brier_score
+ARTIFACT | Stage 5.4.3 table_cox_tuned_brier_by_horizon — Cox Brier scores by horizon | duckdb://table_cox_tuned_brier_by_horizon
+[Stage 5.4.3 table_cox_tuned_secondary_metrics — Cox secondary metrics]
+table_name=table_cox_tuned_secondary_metrics
+rows=6, cols=5
+ horizon_week         metric_name metric_category  metric_value                                                                                  notes
+           10 risk_auc_at_horizon       secondary      0.743039                                                            roc_auc_on_evaluable_subset
+           10  time_dependent_auc       secondary      0.737009 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.737009; local_ipcw_auc
+           20 risk_auc_at_horizon       secondary      0.678852                                                            roc_auc_on_evaluable_subset
+           20  time_dependent_auc       secondary      0.670069 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.670069; local_ipcw_auc
+           30 risk_auc_at_horizon       secondary      0.653012                                                            roc_auc_on_evaluable_subset
+           30  time_dependent_auc       secondary      0.643040 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.643040; local_ipcw_auc
+ARTIFACT | Stage 5.4.3 table_cox_tuned_secondary_metrics — Cox secondary metrics | duckdb://table_cox_tuned_secondary_metrics
+[Stage 5.4.3 table_cox_tuned_td_auc_support_audit — Cox IPCW support audit]
+table_name=table_cox_tuned_td_auc_support_audit
+rows=3, cols=6
+ horizon_week  max_ipcw_time  n_total_test_enrollments  n_supported_test_enrollments  mean_auc                                                 notes
+           10           38.0                      9778                          6742  0.737009 IPCW-supported subset used for Cox time-dependent AUC
+           20           38.0                      9778                          6742  0.670069 IPCW-supported subset used for Cox time-dependent AUC
+           30           38.0                      9778                          6742  0.643040 IPCW-supported subset used for Cox time-dependent AUC
+ARTIFACT | Stage 5.4.3 table_cox_tuned_td_auc_support_audit — Cox IPCW support audit | duckdb://table_cox_tuned_td_auc_support_audit
+[Stage 5.4.3 table_cox_tuned_support_by_horizon — Cox support by horizon]
+table_name=table_cox_tuned_support_by_horizon
+rows=3, cols=4
+ horizon_week  n_evaluable_enrollments  n_events_by_horizon  event_rate_by_horizon
+           10                     9778                 1215               0.124259
+           20                     9778                 1736               0.177541
+           30                     9778                 2129               0.217734
+ARTIFACT | Stage 5.4.3 table_cox_tuned_support_by_horizon — Cox support by horizon | duckdb://table_cox_tuned_support_by_horizon
+[Stage 5.4.3 table_cox_tuned_calibration_summary — Cox calibration summary]
+table_name=table_cox_tuned_calibration_summary
+rows=3, cols=5
+ horizon_week            metric_name metric_category  metric_value                                         notes
+           10 calibration_at_horizon         primary      0.038584 Weighted absolute calibration gap across bins
+           20 calibration_at_horizon         primary      0.018290 Weighted absolute calibration gap across bins
+           30 calibration_at_horizon         primary      0.010563 Weighted absolute calibration gap across bins
+ARTIFACT | Stage 5.4.3 table_cox_tuned_calibration_summary — Cox calibration summary | duckdb://table_cox_tuned_calibration_summary
+[Stage 5.4.3 table_cox_tuned_calibration_bins_by_horizon — Cox calibration bins]
+table_name=table_cox_tuned_calibration_bins_by_horizon
+rows=30, cols=6
+ calibration_bin   n  mean_predicted_risk  observed_event_rate  horizon_week  abs_calibration_gap
+               0 978             0.052676             0.029652            10             0.023023
+               1 978             0.071944             0.028630            10             0.043315
+               2 978             0.083388             0.046012            10             0.037376
+               3 977             0.094190             0.063460            10             0.030731
+               4 978             0.105333             0.075665            10             0.029668
+               5 978             0.117479             0.098160            10             0.019319
+               6 977             0.132557             0.124872            10             0.007685
+               7 978             0.151893             0.188139            10             0.036246
+               8 978             0.178850             0.252556            10             0.073706
+               9 978             0.250647             0.335378            10             0.084732
+               0 978             0.077638             0.077710            20             0.000071
+               1 978             0.105578             0.072597            20             0.032981
+               2 978             0.122011             0.103272            20             0.018739
+               3 977             0.137429             0.118731            20             0.018698
+               4 978             0.153237             0.137014            20             0.016223
+               5 978             0.170357             0.163599            20             0.006758
+               6 977             0.191448             0.196520            20             0.005072
+               7 978             0.218228             0.234151            20             0.015923
+               8 978             0.255048             0.306748            20             0.051700
+               9 978             0.348308             0.365031            20             0.016723
+ARTIFACT | Stage 5.4.3 table_cox_tuned_calibration_bins_by_horizon — Cox calibration bins | duckdb://table_cox_tuned_calibration_bins_by_horizon
+[Stage 5.4.3 table_cox_tuned_predicted_vs_observed_survival — Cox predicted versus observed survival]
+table_name=table_cox_tuned_predicted_vs_observed_survival
+rows=3, cols=5
+ horizon_week  n_evaluable_enrollments  mean_predicted_survival  mean_observed_survival  abs_gap
+           10                     9778                 0.876102                0.875741 0.000361
+           20                     9778                 0.822069                0.822459 0.000390
+           30                     9778                 0.781294                0.782266 0.000973
+ARTIFACT | Stage 5.4.3 table_cox_tuned_predicted_vs_observed_survival — Cox predicted versus observed survival | duckdb://table_cox_tuned_predicted_vs_observed_survival
+[Stage 5.4.3 table_cox_tuned_coefficients — Cox coefficients]
+table_name=table_cox_tuned_coefficients
+rows=41, cols=12
+                    feature_name      coef  exp(coef)  se(coef)  coef lower 95%  coef upper 95%  exp(coef) lower 95%  exp(coef) upper 95%  cmp to          z            p   -log2(p)
+       num__num_of_prev_attempts -0.010060   0.989991  0.013321       -0.036168        0.016048             0.964479             1.016178     0.0  -0.755208 4.501243e-01   1.151605
+            num__studied_credits  0.143364   1.154149  0.011489        0.120846        0.165881             1.128452             1.180433     0.0  12.478767 9.748420e-36 116.304243
+       num__clicks_first_4_weeks -1.010588   0.364005  0.060332       -1.128837       -0.892339             0.323409             0.409696     0.0 -16.750423 5.622515e-63 206.790254
+       num__active_weeks_first_4 -0.171272   0.842593  0.016343       -0.203303       -0.139241             0.816031             0.870019     0.0 -10.480018 1.067231e-25  82.954330
+  num__mean_clicks_first_4_weeks  0.802132   2.230290  0.052709        0.698825        0.905439             2.011387             2.473017     0.0  15.218207 2.677696e-52 171.319269
+                   cat__gender_F -0.126031   0.881587  0.594715       -1.291651        1.039588             0.274817             2.828053     0.0  -0.211919 8.321705e-01   0.265049
+                   cat__gender_M  0.126031   1.134318  0.594715       -1.039588        1.291651             0.353600             3.638788     0.0   0.211919 8.321705e-01   0.265049
+ cat__region_East Anglian Region -0.056342   0.945216  0.055011       -0.164162        0.051479             0.848604             1.052827     0.0  -1.024182 3.057491e-01   1.709580
+cat__region_East Midlands Region  0.034743   1.035354  0.059391       -0.081661        0.151148             0.921584             1.163168     0.0   0.584988 5.585556e-01   0.840227
+             cat__region_Ireland -0.075305   0.927460  0.087160       -0.246135        0.095524             0.781817             1.100236     0.0  -0.863992 3.875925e-01   1.367387
+       cat__region_London Region  0.006097   1.006115  0.054077       -0.099893        0.112086             0.904934             1.118609     0.0   0.112739 9.102374e-01   0.135685
+        cat__region_North Region  0.123489   1.131437  0.074701       -0.022923        0.269901             0.977337             1.309834     0.0   1.653096 9.831126e-02   3.346500
+cat__region_North Western Region  0.000001   1.000001  0.001493       -0.002924        0.002927             0.997080             1.002931     0.0   0.000856 9.993170e-01   0.000986
+            cat__region_Scotland -0.201883   0.817191  0.057590       -0.314757       -0.089009             0.729966             0.914838     0.0  -3.505524 4.557097e-04  11.099597
+   cat__region_South East Region -0.059921   0.941839  0.064944       -0.187209        0.067367             0.829270             1.069687     0.0  -0.922663 3.561830e-01   1.489310
+        cat__region_South Region -0.000029   0.999971  0.011944       -0.023440        0.023381             0.976833             1.023656     0.0  -0.002470 9.980295e-01   0.002846
+   cat__region_South West Region  0.028693   1.029108  0.059939       -0.088786        0.146172             0.915041             1.157395     0.0   0.478695 6.321559e-01   0.661648
+               cat__region_Wales -0.157807   0.854014  0.066242       -0.287638       -0.027976             0.750033             0.972412     0.0  -2.382297 1.720501e-02   5.861028
+cat__region_West Midlands Region  0.022653   1.022912  0.057563       -0.090169        0.135476             0.913777             1.145081     0.0   0.393537 6.939226e-01   0.527153
+    cat__region_Yorkshire Region  0.025282   1.025604  0.063560       -0.099293        0.149857             0.905478             1.161668     0.0   0.397768 6.908014e-01   0.533657
+ARTIFACT | Stage 5.4.3 table_cox_tuned_coefficients — Cox coefficients | duckdb://table_cox_tuned_coefficients
+[Stage 5.4.3 table_cox_tuned_stability_notes — Cox stability notes]
+table_name=table_cox_tuned_stability_notes
+rows=1, cols=10
+ n_input_features_before_filter  n_input_features_after_filter  n_zero_or_low_variance_features_dropped dropped_zero_or_low_variance_features  best_penalizer  best_l1_ratio  validation_test_size  variance_filter_threshold excluded_candidates_under_strict_warnings  window_weeks
+                             41                             41                                        0                                                 0.001           0.75                   0.1               1.000000e-12               [[0.001, 1.0], [0.01, 1.0]]             4
+ARTIFACT | Stage 5.4.3 table_cox_tuned_stability_notes — Cox stability notes | duckdb://table_cox_tuned_stability_notes
+ARTIFACT | cox_model | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/models/cox_early_window_tuned.joblib
+ARTIFACT | cox_preprocessor | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/models/cox_preprocessor.joblib
+ARTIFACT | cox_tuned_model_config | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/metadata/cox_tuned_model_config.json
+{
+  "model_name": "cox_early_window_tuned",
+  "selection_metric": "highest_validation_c_index",
+  "validation_split": {
+    "method": "GroupShuffleSplit",
+    "test_size": 0.1,
+    "group_column": "enrollment_id",
+    "random_seed": 42
+  },
+  "full_candidate_grid": [
+    {
+      "penalizer": 0.001,
+      "l1_ratio": 0.0
+    },
+    {
+      "penalizer": 0.001,
+      "l1_ratio": 0.25
+    },
+    {
+      "penalizer": 0.001,
+      "l1_ratio": 0.5
+    },
+    {
+      "penalizer": 0.001,
+      "l1_ratio": 0.75
+    },
+    {
+      "penalizer": 0.001,
+      "l1_ratio": 1.0
+    },
+    {
+      "penalizer": 0.01,
+      "l1_ratio": 0.0
+    },
+    {
+      "penalizer": 0.01,
+      "l1_ratio": 0.25
+    },
+    {
+      "penalizer": 0.01,
+      "l1_ratio": 0.5
+    },
+    {
+      "penalizer": 0.01,
+      "l1_ratio": 0.75
+    },
+    {
+      "penalizer": 0.01,
+      "l1_ratio": 1.0
+    },
+    {
+      "penalizer": 0.05,
+      "l1_ratio": 0.0
+    },
+    {
+      "penalizer": 0.05,
+      "l1_ratio": 0.25
+    },
+    {
+      "penalizer": 0.05,
+      "l1_ratio": 0.5
+    },
+    {
+      "penalizer": 0.05,
+      "l1_ratio": 0.75
+    },
+    {
+      "penalizer": 0.05,
+      "l1_ratio": 1.0
+    },
+    {
+      "penalizer": 0.1,
+      "l1_ratio": 0.0
+    },
+    {
+      "penalizer": 0.1,
+      "l1_ratio": 0.25
+    },
+    {
+      "penalizer": 0.1,
+      "l1_ratio": 0.5
+    },
+    {
+      "penalizer": 0.1,
+      "l1_ratio": 0.75
+    },
+    {
+      "penalizer": 0.1,
+      "l1_ratio": 1.0
+    },
+    {
+      "penalizer": 0.2,
+      "l1_ratio": 0.0
+    },
+    {
+      "penalizer": 0.2,
+      "l1_ratio": 0.25
+    },
+    {
+      "penalizer": 0.2,
+      "l1_ratio": 0.5
+    },
+    {
+      "penalizer": 0.2,
+      "l1_ratio": 0.75
+    },
+    {
+      "penalizer": 0.2,
+      "l1_ratio": 1.0
+    }
+  ],
+  "excluded_candidates_under_strict_warnings": [
+    {
+      "penalizer": 0.001,
+      "l1_ratio": 1.0
+    },
+    {
+      "penalizer": 0.01,
+      "l1_ratio": 1.0
+    }
+  ],
+  "search_space": [
+    {
+      "candidate_id": 1,
+      "penalizer": 0.001,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 2,
+      "penalizer": 0.001,
+      "l1_ratio": 0.25
+    },
+    {
+      "candidate_id": 3,
+      "penalizer": 0.001,
+      "l1_ratio": 0.5
+    },
+    {
+      "candidate_id": 4,
+      "penalizer": 0.001,
+      "l1_ratio": 0.75
+    },
+    {
+      "candidate_id": 5,
+      "penalizer": 0.01,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 6,
+      "penalizer": 0.01,
+      "l1_ratio": 0.25
+    },
+    {
+      "candidate_id": 7,
+      "penalizer": 0.01,
+      "l1_ratio": 0.5
+    },
+    {
+      "candidate_id": 8,
+      "penalizer": 0.01,
+      "l1_ratio": 0.75
+    },
+    {
+      "candidate_id": 9,
+      "penalizer": 0.05,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 10,
+      "penalizer": 0.05,
+      "l1_ratio": 0.25
+    },
+    {
+      "candidate_id": 11,
+      "penalizer": 0.05,
+      "l1_ratio": 0.5
+    },
+    {
+      "candidate_id": 12,
+      "penalizer": 0.05,
+      "l1_ratio": 0.75
+    },
+    {
+      "candidate_id": 13,
+      "penalizer": 0.05,
+      "l1_ratio": 1.0
+    },
+    {
+      "candidate_id": 14,
+      "penalizer": 0.1,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 15,
+      "penalizer": 0.1,
+      "l1_ratio": 0.25
+    },
+    {
+      "candidate_id": 16,
+      "penalizer": 0.1,
+      "l1_ratio": 0.5
+    },
+    {
+      "candidate_id": 17,
+      "penalizer": 0.1,
+      "l1_ratio": 0.75
+    },
+    {
+      "candidate_id": 18,
+      "penalizer": 0.1,
+      "l1_ratio": 1.0
+    },
+    {
+      "candidate_id": 19,
+      "penalizer": 0.2,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 20,
+      "penalizer": 0.2,
+      "l1_ratio": 0.25
+    },
+    {
+      "candidate_id": 21,
+      "penalizer": 0.2,
+      "l1_ratio": 0.5
+    },
+    {
+      "candidate_id": 22,
+      "penalizer": 0.2,
+      "l1_ratio": 0.75
+    },
+    {
+      "candidate_id": 23,
+      "penalizer": 0.2,
+      "l1_ratio": 1.0
+    }
+  ],
+  "benchmark_horizons": [
+    10,
+    20,
+    30
+  ],
+  "calibration_bins": 10,
+  "calibration_contract_version": "v2_ipcw_km_observed_risk",
+  "calibration_observed_risk_method": "ipcw_km_pseudo_event_rate",
+  "variance_filter_threshold": 1e-12,
+  "best_candidate": {
+    "candidate_id": 4,
+    "penalizer": 0.001,
+    "l1_ratio": 0.75,
+    "val_cindex": 0.6351572856011121
+  },
+  "effective_window_weeks": 4,
+  "input_train_table": "enrollment_cox_ready_train",
+  "input_test_table": "enrollment_cox_ready_test",
+  "preprocessing": {
+    "categorical_features": [
+      "gender",
+      "region",
+      "highest_education",
+      "imd_band",
+      "age_band",
+      "disability"
+    ],
+    "numeric_features": [
+      "num_of_prev_attempts",
+      "studied_credits",
+      "clicks_first_4_weeks",
+      "active_weeks_first_4",
+      "mean_clicks_first_4_weeks"
+    ],
+    "numeric_prefill_values": {
+      "num_of_prev_attempts": 0.0,
+      "studied_credits": 60.0,
+      "clicks_first_4_weeks": 136.0,
+      "active_weeks_first_4": 4.0,
+      "mean_clicks_first_4_weeks": 41.25
+    },
+    "feature_names_before_filter": [
+      "num__num_of_prev_attempts",
+      "num__studied_credits",
+      "num__clicks_first_4_weeks",
+      "num__active_weeks_first_4",
+      "num__mean_clicks_first_4_weeks",
+      "cat__gender_F",
+      "cat__gender_M",
+      "cat__region_East Anglian Region",
+      "cat__region_East Midlands Region",
+      "cat__region_Ireland",
+      "cat__region_London Region",
+      "cat__region_North Region",
+      "cat__region_North Western Region",
+      "cat__region_Scotland",
+      "cat__region_South East Region",
+      "cat__region_South Region",
+      "cat__region_South West Region",
+      "cat__region_Wales",
+      "cat__region_West Midlands Region",
+      "cat__region_Yorkshire Region",
+      "cat__highest_education_A Level or Equivalent",
+      "cat__highest_education_HE Qualification",
+      "cat__highest_education_Lower Than A Level",
+      "cat__highest_education_No Formal quals",
+      "cat__highest_education_Post Graduate Qualification",
+      "cat__imd_band_0-10%",
+      "cat__imd_band_10-20",
+      "cat__imd_band_20-30%",
+      "cat__imd_band_30-40%",
+      "cat__imd_band_40-50%",
+      "cat__imd_band_50-60%",
+      "cat__imd_band_60-70%",
+      "cat__imd_band_70-80%",
+      "cat__imd_band_80-90%",
+      "cat__imd_band_90-100%",
+      "cat__imd_band_None",
+      "cat__age_band_0-35",
+      "cat__age_band_35-55",
+      "cat__age_band_55<=",
+      "cat__disability_N",
+      "cat__disability_Y"
+    ],
+    "feature_names_out": [
+      "num__num_of_prev_attempts",
+      "num__studied_credits",
+      "num__clicks_first_4_weeks",
+      "num__active_weeks_first_4",
+      "num__mean_clicks_first_4_weeks",
+      "cat__gender_F",
+      "cat__gender_M",
+      "cat__region_East Anglian Region",
+      "cat__region_East Midlands Region",
+      "cat__region_Ireland",
+      "cat__region_London Region",
+      "cat__region_North Region",
+      "cat__region_North Western Region",
+      "cat__region_Scotland",
+      "cat__region_South East Region",
+      "cat__region_South Region",
+      "cat__region_South West Region",
+      "cat__region_Wales",
+      "cat__region_West Midlands Region",
+      "cat__region_Yorkshire Region",
+      "cat__highest_education_A Level or Equivalent",
+      "cat__highest_education_HE Qualification",
+      "cat__highest_education_Lower Than A Level",
+      "cat__highest_education_No Formal quals",
+      "cat__highest_education_Post Graduate Qualification",
+      "cat__imd_band_0-10%",
+      "cat__imd_band_10-20",
+      "cat__imd_band_20-30%",
+      "cat__imd_band_30-40%",
+      "cat__imd_band_40-50%",
+      "cat__imd_band_50-60%",
+      "cat__imd_band_60-70%",
+      "cat__imd_band_70-80%",
+      "cat__imd_band_80-90%",
+      "cat__imd_band_90-100%",
+      "cat__imd_band_None",
+      "cat__age_band_0-35",
+      "cat__age_band_35-55",
+      "cat__age_band_55<=",
+      "cat__disability_N",
+      "cat__disability_Y"
+    ],
+    "dropped_low_variance_features": []
+  },
+  "design_note": "The comparable Cox arm integrates deterministic numeric prefill, low-variance feature filtering, and a local IPCW-supported time-dependent AUC path directly into D5.4 so no downstream repair stage is required."
+}
+
+ candidate_id  penalizer  l1_ratio  val_cindex
+            4      0.001      0.75    0.635157
+[END] 5.4.3 - 2026-04-05 11:37:29
+[START] 5.4 - 2026-04-05 11:37:29
+# ==============================================================
+# 5.4.4 - Close runtime resources
+# ==============================================================
+DuckDB connection closed.
+ARTIFACT | duckdb_connection | closed::/Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/benchmark_survival.duckdb
+[END] 5.4.4 - 2026-04-05 11:37:30
+[RUN_PLAN] comparable_window_weeks=6 script=dropout_bench_v3_D_04_comparable_continuous_time_cox_early_window.py
+[START] 5.4 - 2026-04-05 11:37:30
+# ==============================================================
+# 5.4.1 - Lightweight runtime bootstrap
+# ==============================================================
+ARTIFACT | benchmark_shared_config | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/benchmark_shared_config.toml
+ARTIFACT | benchmark_modeling_contract | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/benchmark_modeling_contract.toml
+ARTIFACT | run_metadata | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/metadata/run_metadata.json
+ARTIFACT | duckdb_path | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/benchmark_survival.duckdb
+{
+  "run_id": "f3e86c2afbd246e2814123195c22d973",
+  "random_seed": 42,
+  "test_size": 0.3,
+  "cpu_cores": 8,
+  "tuning_parallel_backend": "processes",
+  "early_window_weeks": 4,
+  "main_enrollment_window_weeks": 4,
+  "effective_window_weeks": 6,
+  "input_train_table": "enrollment_cox_ready_train_w6",
+  "input_test_table": "enrollment_cox_ready_test_w6"
+}
+[END] 5.4.1 - 2026-04-05 11:37:30
+[START] 5.4 - 2026-04-05 11:37:30
+# ==============================================================
+# 5.4.2 - Build comparable-window Cox treatment
+# ==============================================================
+[Stage 5.4.2 table_cox_preprocessing_summary — Cox preprocessing summary]
+table_name=table_cox_preprocessing_summary
+rows=1, cols=21
+model_family  train_rows  test_rows  n_input_features_raw  n_numeric_features  n_categorical_features  n_features_after_encoding_before_filter  n_features_after_variance_filter  n_features_dropped_by_variance_filter  n_events_train  n_events_test  mean_duration_train  mean_duration_test                              numeric_prefill_policy categorical_imputation          categorical_encoding                   numeric_scaling  variance_filter_threshold output_dtype                  cox_positioning_note  window_weeks
+         cox       22815       9778                    11                   5                       6                                       41                                41                                      0            5171           2216            30.536182           30.539476 deterministic_train_median_or_zero_when_all_missing       constant_missing one_hot_handle_unknown_ignore standard_scaler_fit_on_train_only               1.000000e-12      float32 early-window comparable Cox benchmark             6
+ARTIFACT | Stage 5.4.2 table_cox_preprocessing_summary — Cox preprocessing summary | duckdb://table_cox_preprocessing_summary
+[Stage 5.4.2 table_cox_raw_feature_manifest — Cox raw feature manifest]
+table_name=table_cox_raw_feature_manifest
+rows=11, cols=6
+ feature_name_operational feature_role  present_in_train  present_in_test  covered_by_canonical_config  numeric_prefill_value
+                   gender  categorical              True             True                        False                    NaN
+                   region  categorical              True             True                        False                    NaN
+        highest_education  categorical              True             True                        False                    NaN
+                 imd_band  categorical              True             True                        False                    NaN
+                 age_band  categorical              True             True                        False                    NaN
+               disability  categorical              True             True                        False                    NaN
+     num_of_prev_attempts      numeric              True             True                         True                    0.0
+          studied_credits      numeric              True             True                         True                   60.0
+     clicks_first_6_weeks      numeric              True             True                         True                  182.0
+     active_weeks_first_6      numeric              True             True                         True                    5.0
+mean_clicks_first_6_weeks      numeric              True             True                         True                   39.0
+ARTIFACT | Stage 5.4.2 table_cox_raw_feature_manifest — Cox raw feature manifest | duckdb://table_cox_raw_feature_manifest
+[Stage 5.4.2 table_cox_feature_names_out — Cox output feature manifest]
+table_name=table_cox_feature_names_out
+rows=41, cols=2
+                feature_name_out  transformed_variance_train
+       num__num_of_prev_attempts                    1.000000
+            num__studied_credits                    1.000000
+       num__clicks_first_6_weeks                    1.000000
+       num__active_weeks_first_6                    1.000000
+  num__mean_clicks_first_6_weeks                    1.000000
+                   cat__gender_F                    0.247988
+                   cat__gender_M                    0.247988
+ cat__region_East Anglian Region                    0.092080
+cat__region_East Midlands Region                    0.067091
+             cat__region_Ireland                    0.034283
+       cat__region_London Region                    0.088295
+        cat__region_North Region                    0.052060
+cat__region_North Western Region                    0.082139
+            cat__region_Scotland                    0.094370
+   cat__region_South East Region                    0.059974
+        cat__region_South Region                    0.087554
+   cat__region_South West Region                    0.068848
+               cat__region_Wales                    0.059707
+cat__region_West Midlands Region                    0.073261
+    cat__region_Yorkshire Region                    0.058136
+ARTIFACT | Stage 5.4.2 table_cox_feature_names_out — Cox output feature manifest | duckdb://table_cox_feature_names_out
+ARTIFACT | cox_preprocessing_config | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/metadata/cox_preprocessing_config_w6.json
+{
+  "model_family": "cox",
+  "duration_column": "duration",
+  "event_column": "event",
+  "categorical_features": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability"
+  ],
+  "numeric_features": [
+    "num_of_prev_attempts",
+    "studied_credits",
+    "clicks_first_6_weeks",
+    "active_weeks_first_6",
+    "mean_clicks_first_6_weeks"
+  ],
+  "raw_feature_columns": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability",
+    "num_of_prev_attempts",
+    "studied_credits",
+    "clicks_first_6_weeks",
+    "active_weeks_first_6",
+    "mean_clicks_first_6_weeks"
+  ],
+  "expected_features_raw": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "studied_credits",
+    "num_of_prev_attempts",
+    "clicks_first_6_weeks",
+    "active_weeks_first_6",
+    "mean_clicks_first_6_weeks"
+  ],
+  "expected_features_resolved": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "clicks_first_6_weeks",
+    "active_weeks_first_6",
+    "mean_clicks_first_6_weeks"
+  ],
+  "numeric_prefill_policy": "deterministic_train_median_or_zero_when_all_missing",
+  "numeric_fill_values": {
+    "num_of_prev_attempts": 0.0,
+    "studied_credits": 60.0,
+    "clicks_first_6_weeks": 182.0,
+    "active_weeks_first_6": 5.0,
+    "mean_clicks_first_6_weeks": 39.0
+  },
+  "categorical_imputation": "constant_missing",
+  "categorical_encoding": "one_hot_handle_unknown_ignore",
+  "numeric_scaling": "standard_scaler_fit_on_train_only",
+  "variance_filter_threshold": 1e-12,
+  "feature_names_before_filter": [
+    "num__num_of_prev_attempts",
+    "num__studied_credits",
+    "num__clicks_first_6_weeks",
+    "num__active_weeks_first_6",
+    "num__mean_clicks_first_6_weeks",
+    "cat__gender_F",
+    "cat__gender_M",
+    "cat__region_East Anglian Region",
+    "cat__region_East Midlands Region",
+    "cat__region_Ireland",
+    "cat__region_London Region",
+    "cat__region_North Region",
+    "cat__region_North Western Region",
+    "cat__region_Scotland",
+    "cat__region_South East Region",
+    "cat__region_South Region",
+    "cat__region_South West Region",
+    "cat__region_Wales",
+    "cat__region_West Midlands Region",
+    "cat__region_Yorkshire Region",
+    "cat__highest_education_A Level or Equivalent",
+    "cat__highest_education_HE Qualification",
+    "cat__highest_education_Lower Than A Level",
+    "cat__highest_education_No Formal quals",
+    "cat__highest_education_Post Graduate Qualification",
+    "cat__imd_band_0-10%",
+    "cat__imd_band_10-20",
+    "cat__imd_band_20-30%",
+    "cat__imd_band_30-40%",
+    "cat__imd_band_40-50%",
+    "cat__imd_band_50-60%",
+    "cat__imd_band_60-70%",
+    "cat__imd_band_70-80%",
+    "cat__imd_band_80-90%",
+    "cat__imd_band_90-100%",
+    "cat__imd_band_None",
+    "cat__age_band_0-35",
+    "cat__age_band_35-55",
+    "cat__age_band_55<=",
+    "cat__disability_N",
+    "cat__disability_Y"
+  ],
+  "feature_names_out": [
+    "num__num_of_prev_attempts",
+    "num__studied_credits",
+    "num__clicks_first_6_weeks",
+    "num__active_weeks_first_6",
+    "num__mean_clicks_first_6_weeks",
+    "cat__gender_F",
+    "cat__gender_M",
+    "cat__region_East Anglian Region",
+    "cat__region_East Midlands Region",
+    "cat__region_Ireland",
+    "cat__region_London Region",
+    "cat__region_North Region",
+    "cat__region_North Western Region",
+    "cat__region_Scotland",
+    "cat__region_South East Region",
+    "cat__region_South Region",
+    "cat__region_South West Region",
+    "cat__region_Wales",
+    "cat__region_West Midlands Region",
+    "cat__region_Yorkshire Region",
+    "cat__highest_education_A Level or Equivalent",
+    "cat__highest_education_HE Qualification",
+    "cat__highest_education_Lower Than A Level",
+    "cat__highest_education_No Formal quals",
+    "cat__highest_education_Post Graduate Qualification",
+    "cat__imd_band_0-10%",
+    "cat__imd_band_10-20",
+    "cat__imd_band_20-30%",
+    "cat__imd_band_30-40%",
+    "cat__imd_band_40-50%",
+    "cat__imd_band_50-60%",
+    "cat__imd_band_60-70%",
+    "cat__imd_band_70-80%",
+    "cat__imd_band_80-90%",
+    "cat__imd_band_90-100%",
+    "cat__imd_band_None",
+    "cat__age_band_0-35",
+    "cat__age_band_35-55",
+    "cat__age_band_55<=",
+    "cat__disability_N",
+    "cat__disability_Y"
+  ],
+  "dropped_low_variance_features": [],
+  "cox_positioning_note": "early-window comparable Cox benchmark",
+  "window_weeks": 6
+}
+
+[END] 5.4.2 - 2026-04-05 11:37:30
+[START] 5.4 - 2026-04-05 11:37:30
+# ==============================================================
+# 5.4.3 - Tune and evaluate the comparable-window Cox model
+# ==============================================================
+- TUNING_WORKERS: 8
+- TUNING_BACKEND: processes
+[Stage 5.4.3 table_cox_tuning_results — Cox tuning results]
+table_name=table_cox_tuning_results_w6
+rows=23, cols=4
+ candidate_id  penalizer  l1_ratio  val_cindex
+            4      0.001      0.75    0.660005
+            3      0.001      0.50    0.659896
+            2      0.001      0.25    0.659726
+            1      0.001      0.00    0.659504
+            6      0.010      0.25    0.657983
+            7      0.010      0.50    0.657246
+            5      0.010      0.00    0.656943
+            8      0.010      0.75    0.653659
+            9      0.050      0.00    0.652324
+           14      0.100      0.00    0.650674
+           10      0.050      0.25    0.649390
+           19      0.200      0.00    0.649251
+           18      0.100      1.00    0.645276
+           21      0.200      0.50    0.644779
+           22      0.200      0.75    0.641714
+           23      0.200      1.00    0.641007
+           17      0.100      0.75    0.640850
+           16      0.100      0.50    0.640788
+           13      0.050      1.00    0.640773
+           20      0.200      0.25    0.640521
+ARTIFACT | Stage 5.4.3 table_cox_tuning_results — Cox tuning results | duckdb://table_cox_tuning_results_w6
+[Stage 5.4.3 table_cox_tuned_test_predictions — Cox test predictions]
+table_name=table_cox_tuned_test_predictions_w6
+rows=29334, cols=7
+      enrollment_id  event  duration  partial_hazard  horizon_week  pred_survival_h  pred_risk_h
+ 100561||DDD||2014J      0        37        0.988769            10         0.891169     0.108831
+ 100621||CCC||2014B      1         6        1.170934            10         0.872451     0.127549
+ 101187||DDD||2014J      0        37        1.589892            10         0.830880     0.169120
+ 101279||DDD||2014J      0        37        0.790938            10         0.911952     0.088048
+ 101414||EEE||2013J      0        38        2.137389            10         0.779526     0.220474
+ 101700||CCC||2014J      0        38        2.200971            10         0.773771     0.226229
+ 101781||AAA||2013J      0        38        0.484869            10         0.945065     0.054935
+ 102209||CCC||2014J      1        15        0.565853            10         0.936188     0.063812
+ 102343||FFF||2013J      0        38        0.613103            10         0.931048     0.068952
+1023623||CCC||2014J      0        38        1.018711            10         0.888065     0.111935
+1033968||DDD||2014B      1        13        1.659205            10         0.824196     0.175804
+ 103891||DDD||2014B      0        34        1.596079            10         0.830281     0.169719
+ 104316||FFF||2014B      0        34        0.689416            10         0.922805     0.077195
+1045203||AAA||2014J      0        38        0.433740            10         0.950712     0.049288
+1047645||CCC||2014B      0        34        1.788575            10         0.811864     0.188136
+1053702||EEE||2013J      0        38        0.668928            10         0.925011     0.074989
+ 105629||FFF||2013J      0        38        0.495095            10         0.943939     0.056061
+1057883||CCC||2014B      0        34        0.959217            10         0.894243     0.105757
+ 106383||BBB||2014J      1        21        1.025564            10         0.887356     0.112644
+ 106553||DDD||2014J      0        37        0.943432            10         0.895890     0.104110
+ARTIFACT | Stage 5.4.3 table_cox_tuned_test_predictions — Cox test predictions | duckdb://table_cox_tuned_test_predictions_w6
+[Stage 5.4.3 table_cox_tuned_primary_metrics — Cox primary metrics]
+table_name=table_cox_tuned_primary_metrics_w6
+rows=2, cols=4
+metric_name metric_category  metric_value                         notes
+        ibs         primary      0.114184 sksurv_integrated_brier_score
+    c_index      co_primary      0.673564          pycox_concordance_td
+ARTIFACT | Stage 5.4.3 table_cox_tuned_primary_metrics — Cox primary metrics | duckdb://table_cox_tuned_primary_metrics_w6
+[Stage 5.4.3 table_cox_tuned_brier_by_horizon — Cox Brier scores by horizon]
+table_name=table_cox_tuned_brier_by_horizon_w6
+rows=3, cols=5
+ horizon_week      metric_name metric_category  metric_value              notes
+           10 brier_at_horizon         primary      0.097438 sksurv_brier_score
+           20 brier_at_horizon         primary      0.134040 sksurv_brier_score
+           30 brier_at_horizon         primary      0.158974 sksurv_brier_score
+ARTIFACT | Stage 5.4.3 table_cox_tuned_brier_by_horizon — Cox Brier scores by horizon | duckdb://table_cox_tuned_brier_by_horizon_w6
+[Stage 5.4.3 table_cox_tuned_secondary_metrics — Cox secondary metrics]
+table_name=table_cox_tuned_secondary_metrics_w6
+rows=6, cols=5
+ horizon_week         metric_name metric_category  metric_value                                                                                  notes
+           10 risk_auc_at_horizon       secondary      0.787527                                                            roc_auc_on_evaluable_subset
+           10  time_dependent_auc       secondary      0.783103 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.783103; local_ipcw_auc
+           20 risk_auc_at_horizon       secondary      0.709099                                                            roc_auc_on_evaluable_subset
+           20  time_dependent_auc       secondary      0.701209 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.701209; local_ipcw_auc
+           30 risk_auc_at_horizon       secondary      0.675123                                                            roc_auc_on_evaluable_subset
+           30  time_dependent_auc       secondary      0.665303 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.665303; local_ipcw_auc
+ARTIFACT | Stage 5.4.3 table_cox_tuned_secondary_metrics — Cox secondary metrics | duckdb://table_cox_tuned_secondary_metrics_w6
+[Stage 5.4.3 table_cox_tuned_td_auc_support_audit — Cox IPCW support audit]
+table_name=table_cox_tuned_td_auc_support_audit_w6
+rows=3, cols=6
+ horizon_week  max_ipcw_time  n_total_test_enrollments  n_supported_test_enrollments  mean_auc                                                 notes
+           10           38.0                      9778                          6742  0.783103 IPCW-supported subset used for Cox time-dependent AUC
+           20           38.0                      9778                          6742  0.701209 IPCW-supported subset used for Cox time-dependent AUC
+           30           38.0                      9778                          6742  0.665303 IPCW-supported subset used for Cox time-dependent AUC
+ARTIFACT | Stage 5.4.3 table_cox_tuned_td_auc_support_audit — Cox IPCW support audit | duckdb://table_cox_tuned_td_auc_support_audit_w6
+[Stage 5.4.3 table_cox_tuned_support_by_horizon — Cox support by horizon]
+table_name=table_cox_tuned_support_by_horizon_w6
+rows=3, cols=4
+ horizon_week  n_evaluable_enrollments  n_events_by_horizon  event_rate_by_horizon
+           10                     9778                 1215               0.124259
+           20                     9778                 1736               0.177541
+           30                     9778                 2129               0.217734
+ARTIFACT | Stage 5.4.3 table_cox_tuned_support_by_horizon — Cox support by horizon | duckdb://table_cox_tuned_support_by_horizon_w6
+[Stage 5.4.3 table_cox_tuned_calibration_summary — Cox calibration summary]
+table_name=table_cox_tuned_calibration_summary_w6
+rows=3, cols=5
+ horizon_week            metric_name metric_category  metric_value                                         notes
+           10 calibration_at_horizon         primary      0.047813 Weighted absolute calibration gap across bins
+           20 calibration_at_horizon         primary      0.022442 Weighted absolute calibration gap across bins
+           30 calibration_at_horizon         primary      0.009585 Weighted absolute calibration gap across bins
+ARTIFACT | Stage 5.4.3 table_cox_tuned_calibration_summary — Cox calibration summary | duckdb://table_cox_tuned_calibration_summary_w6
+[Stage 5.4.3 table_cox_tuned_calibration_bins_by_horizon — Cox calibration bins]
+table_name=table_cox_tuned_calibration_bins_by_horizon_w6
+rows=30, cols=6
+ calibration_bin   n  mean_predicted_risk  observed_event_rate  horizon_week  abs_calibration_gap
+               0 978             0.048042             0.018405            10             0.029637
+               1 978             0.065715             0.027607            10             0.038108
+               2 978             0.076380             0.027607            10             0.048772
+               3 977             0.087116             0.040942            10             0.046175
+               4 978             0.098608             0.060327            10             0.038281
+               5 978             0.113230             0.082822            10             0.030408
+               6 977             0.132563             0.122825            10             0.009738
+               7 978             0.157857             0.200409            10             0.042552
+               8 978             0.190955             0.276074            10             0.085119
+               9 978             0.276182             0.385481            10             0.109298
+               0 978             0.071301             0.059305            20             0.011997
+               1 978             0.097135             0.075665            20             0.021470
+               2 978             0.112583             0.084867            20             0.027716
+               3 977             0.128045             0.093142            20             0.034903
+               4 978             0.144493             0.133947            20             0.010546
+               5 978             0.165267             0.151329            20             0.013937
+               6 977             0.192467             0.193449            20             0.000983
+               7 978             0.227591             0.254601            20             0.027010
+               8 978             0.272747             0.316973            20             0.044226
+               9 978             0.380443             0.412065            20             0.031622
+ARTIFACT | Stage 5.4.3 table_cox_tuned_calibration_bins_by_horizon — Cox calibration bins | duckdb://table_cox_tuned_calibration_bins_by_horizon_w6
+[Stage 5.4.3 table_cox_tuned_predicted_vs_observed_survival — Cox predicted versus observed survival]
+table_name=table_cox_tuned_predicted_vs_observed_survival_w6
+rows=3, cols=5
+ horizon_week  n_evaluable_enrollments  mean_predicted_survival  mean_observed_survival  abs_gap
+           10                     9778                 0.875332                0.875741 0.000409
+           20                     9778                 0.820789                0.822459 0.001670
+           30                     9778                 0.779890                0.782266 0.002376
+ARTIFACT | Stage 5.4.3 table_cox_tuned_predicted_vs_observed_survival — Cox predicted versus observed survival | duckdb://table_cox_tuned_predicted_vs_observed_survival_w6
+[Stage 5.4.3 table_cox_tuned_coefficients — Cox coefficients]
+table_name=table_cox_tuned_coefficients_w6
+rows=41, cols=12
+                    feature_name          coef  exp(coef)  se(coef)  coef lower 95%  coef upper 95%  exp(coef) lower 95%  exp(coef) upper 95%  cmp to          z             p   -log2(p)
+       num__num_of_prev_attempts -1.197152e-02   0.988100  0.013303       -0.038045        0.014102             0.962670             1.014202     0.0  -0.899911  3.681677e-01   1.441565
+            num__studied_credits  1.298155e-01   1.138618  0.011587        0.107105        0.152526             1.113052             1.164772     0.0  11.203580  3.915846e-29  94.366591
+       num__clicks_first_6_weeks -1.107933e+00   0.330241  0.045810       -1.197719       -1.018147             0.301882             0.361264     0.0 -24.185275 3.178689e-129 426.860292
+       num__active_weeks_first_6 -2.563459e-01   0.773874  0.016971       -0.289608       -0.223084             0.748557             0.800048     0.0 -15.105261  1.495125e-51 168.838067
+  num__mean_clicks_first_6_weeks  9.045672e-01   2.470862  0.034896        0.836171        0.972963             2.307516             2.645772     0.0  25.921477 3.814307e-148 489.713937
+                   cat__gender_F -1.351503e-01   0.873585  0.594714       -1.300768        1.030467             0.272323             2.802375     0.0  -0.227253  8.202273e-01   0.285904
+                   cat__gender_M  1.351503e-01   1.144709  0.594714       -1.030467        1.300768             0.356840             3.672115     0.0   0.227253  8.202273e-01   0.285904
+ cat__region_East Anglian Region -4.671505e-02   0.954359  0.054295       -0.153131        0.059701             0.858017             1.061519     0.0  -0.860393  3.895725e-01   1.360036
+cat__region_East Midlands Region  4.331848e-02   1.044270  0.058886       -0.072096        0.158733             0.930442             1.172025     0.0   0.735635  4.619531e-01   1.114182
+             cat__region_Ireland -6.549417e-02   0.936605  0.087126       -0.236258        0.105269             0.789577             1.111010     0.0  -0.751720  4.522196e-01   1.144905
+       cat__region_London Region -7.063607e-07   0.999999  0.001259       -0.002468        0.002467             0.997535             1.002470     0.0  -0.000561  9.995523e-01   0.000646
+        cat__region_North Region  1.093264e-01   1.115526  0.074077       -0.035862        0.254515             0.964774             1.289835     0.0   1.475849  1.399844e-01   2.836662
+cat__region_North Western Region  1.602789e-03   1.001604  0.054903       -0.106005        0.109210             0.899420             1.115397     0.0   0.029193  9.767105e-01   0.033997
+            cat__region_Scotland -1.937657e-01   0.823851  0.056946       -0.305377       -0.082154             0.736846             0.921130     0.0  -3.402649  6.673598e-04  10.549248
+   cat__region_South East Region -4.911860e-02   0.952068  0.064329       -0.175201        0.076963             0.839289             1.080003     0.0  -0.763556  4.451321e-01   1.167694
+        cat__region_South Region -1.077458e-05   0.999989  0.002571       -0.005050        0.005028             0.994963             1.005041     0.0  -0.004191  9.966563e-01   0.004832
+   cat__region_South West Region  4.705573e-02   1.048180  0.059323       -0.069215        0.163327             0.933126             1.177421     0.0   0.793212  4.276541e-01   1.225484
+               cat__region_Wales -1.461154e-01   0.864058  0.065729       -0.274942       -0.017288             0.759616             0.982860     0.0  -2.222986  2.621676e-02   5.253367
+cat__region_West Midlands Region  3.632205e-02   1.036990  0.057329       -0.076040        0.148684             0.926779             1.160307     0.0   0.633575  5.263585e-01   0.925882
+    cat__region_Yorkshire Region  3.165078e-02   1.032157  0.063305       -0.092425        0.155726             0.911718             1.168506     0.0   0.499974  6.170935e-01   0.696439
+ARTIFACT | Stage 5.4.3 table_cox_tuned_coefficients — Cox coefficients | duckdb://table_cox_tuned_coefficients_w6
+[Stage 5.4.3 table_cox_tuned_stability_notes — Cox stability notes]
+table_name=table_cox_tuned_stability_notes_w6
+rows=1, cols=10
+ n_input_features_before_filter  n_input_features_after_filter  n_zero_or_low_variance_features_dropped dropped_zero_or_low_variance_features  best_penalizer  best_l1_ratio  validation_test_size  variance_filter_threshold excluded_candidates_under_strict_warnings  window_weeks
+                             41                             41                                        0                                                 0.001           0.75                   0.1               1.000000e-12               [[0.001, 1.0], [0.01, 1.0]]             6
+ARTIFACT | Stage 5.4.3 table_cox_tuned_stability_notes — Cox stability notes | duckdb://table_cox_tuned_stability_notes_w6
+ARTIFACT | cox_model | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/models/cox_early_window_tuned_w6.joblib
+ARTIFACT | cox_preprocessor | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/models/cox_preprocessor_w6.joblib
+ARTIFACT | cox_tuned_model_config | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/metadata/cox_tuned_model_config_w6.json
+{
+  "model_name": "cox_early_window_tuned_w6",
+  "selection_metric": "highest_validation_c_index",
+  "validation_split": {
+    "method": "GroupShuffleSplit",
+    "test_size": 0.1,
+    "group_column": "enrollment_id",
+    "random_seed": 42
+  },
+  "full_candidate_grid": [
+    {
+      "penalizer": 0.001,
+      "l1_ratio": 0.0
+    },
+    {
+      "penalizer": 0.001,
+      "l1_ratio": 0.25
+    },
+    {
+      "penalizer": 0.001,
+      "l1_ratio": 0.5
+    },
+    {
+      "penalizer": 0.001,
+      "l1_ratio": 0.75
+    },
+    {
+      "penalizer": 0.001,
+      "l1_ratio": 1.0
+    },
+    {
+      "penalizer": 0.01,
+      "l1_ratio": 0.0
+    },
+    {
+      "penalizer": 0.01,
+      "l1_ratio": 0.25
+    },
+    {
+      "penalizer": 0.01,
+      "l1_ratio": 0.5
+    },
+    {
+      "penalizer": 0.01,
+      "l1_ratio": 0.75
+    },
+    {
+      "penalizer": 0.01,
+      "l1_ratio": 1.0
+    },
+    {
+      "penalizer": 0.05,
+      "l1_ratio": 0.0
+    },
+    {
+      "penalizer": 0.05,
+      "l1_ratio": 0.25
+    },
+    {
+      "penalizer": 0.05,
+      "l1_ratio": 0.5
+    },
+    {
+      "penalizer": 0.05,
+      "l1_ratio": 0.75
+    },
+    {
+      "penalizer": 0.05,
+      "l1_ratio": 1.0
+    },
+    {
+      "penalizer": 0.1,
+      "l1_ratio": 0.0
+    },
+    {
+      "penalizer": 0.1,
+      "l1_ratio": 0.25
+    },
+    {
+      "penalizer": 0.1,
+      "l1_ratio": 0.5
+    },
+    {
+      "penalizer": 0.1,
+      "l1_ratio": 0.75
+    },
+    {
+      "penalizer": 0.1,
+      "l1_ratio": 1.0
+    },
+    {
+      "penalizer": 0.2,
+      "l1_ratio": 0.0
+    },
+    {
+      "penalizer": 0.2,
+      "l1_ratio": 0.25
+    },
+    {
+      "penalizer": 0.2,
+      "l1_ratio": 0.5
+    },
+    {
+      "penalizer": 0.2,
+      "l1_ratio": 0.75
+    },
+    {
+      "penalizer": 0.2,
+      "l1_ratio": 1.0
+    }
+  ],
+  "excluded_candidates_under_strict_warnings": [
+    {
+      "penalizer": 0.001,
+      "l1_ratio": 1.0
+    },
+    {
+      "penalizer": 0.01,
+      "l1_ratio": 1.0
+    }
+  ],
+  "search_space": [
+    {
+      "candidate_id": 1,
+      "penalizer": 0.001,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 2,
+      "penalizer": 0.001,
+      "l1_ratio": 0.25
+    },
+    {
+      "candidate_id": 3,
+      "penalizer": 0.001,
+      "l1_ratio": 0.5
+    },
+    {
+      "candidate_id": 4,
+      "penalizer": 0.001,
+      "l1_ratio": 0.75
+    },
+    {
+      "candidate_id": 5,
+      "penalizer": 0.01,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 6,
+      "penalizer": 0.01,
+      "l1_ratio": 0.25
+    },
+    {
+      "candidate_id": 7,
+      "penalizer": 0.01,
+      "l1_ratio": 0.5
+    },
+    {
+      "candidate_id": 8,
+      "penalizer": 0.01,
+      "l1_ratio": 0.75
+    },
+    {
+      "candidate_id": 9,
+      "penalizer": 0.05,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 10,
+      "penalizer": 0.05,
+      "l1_ratio": 0.25
+    },
+    {
+      "candidate_id": 11,
+      "penalizer": 0.05,
+      "l1_ratio": 0.5
+    },
+    {
+      "candidate_id": 12,
+      "penalizer": 0.05,
+      "l1_ratio": 0.75
+    },
+    {
+      "candidate_id": 13,
+      "penalizer": 0.05,
+      "l1_ratio": 1.0
+    },
+    {
+      "candidate_id": 14,
+      "penalizer": 0.1,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 15,
+      "penalizer": 0.1,
+      "l1_ratio": 0.25
+    },
+    {
+      "candidate_id": 16,
+      "penalizer": 0.1,
+      "l1_ratio": 0.5
+    },
+    {
+      "candidate_id": 17,
+      "penalizer": 0.1,
+      "l1_ratio": 0.75
+    },
+    {
+      "candidate_id": 18,
+      "penalizer": 0.1,
+      "l1_ratio": 1.0
+    },
+    {
+      "candidate_id": 19,
+      "penalizer": 0.2,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 20,
+      "penalizer": 0.2,
+      "l1_ratio": 0.25
+    },
+    {
+      "candidate_id": 21,
+      "penalizer": 0.2,
+      "l1_ratio": 0.5
+    },
+    {
+      "candidate_id": 22,
+      "penalizer": 0.2,
+      "l1_ratio": 0.75
+    },
+    {
+      "candidate_id": 23,
+      "penalizer": 0.2,
+      "l1_ratio": 1.0
+    }
+  ],
+  "benchmark_horizons": [
+    10,
+    20,
+    30
+  ],
+  "calibration_bins": 10,
+  "calibration_contract_version": "v2_ipcw_km_observed_risk",
+  "calibration_observed_risk_method": "ipcw_km_pseudo_event_rate",
+  "variance_filter_threshold": 1e-12,
+  "best_candidate": {
+    "candidate_id": 4,
+    "penalizer": 0.001,
+    "l1_ratio": 0.75,
+    "val_cindex": 0.660005118632114
+  },
+  "effective_window_weeks": 6,
+  "input_train_table": "enrollment_cox_ready_train_w6",
+  "input_test_table": "enrollment_cox_ready_test_w6",
+  "preprocessing": {
+    "categorical_features": [
+      "gender",
+      "region",
+      "highest_education",
+      "imd_band",
+      "age_band",
+      "disability"
+    ],
+    "numeric_features": [
+      "num_of_prev_attempts",
+      "studied_credits",
+      "clicks_first_6_weeks",
+      "active_weeks_first_6",
+      "mean_clicks_first_6_weeks"
+    ],
+    "numeric_prefill_values": {
+      "num_of_prev_attempts": 0.0,
+      "studied_credits": 60.0,
+      "clicks_first_6_weeks": 182.0,
+      "active_weeks_first_6": 5.0,
+      "mean_clicks_first_6_weeks": 39.0
+    },
+    "feature_names_before_filter": [
+      "num__num_of_prev_attempts",
+      "num__studied_credits",
+      "num__clicks_first_6_weeks",
+      "num__active_weeks_first_6",
+      "num__mean_clicks_first_6_weeks",
+      "cat__gender_F",
+      "cat__gender_M",
+      "cat__region_East Anglian Region",
+      "cat__region_East Midlands Region",
+      "cat__region_Ireland",
+      "cat__region_London Region",
+      "cat__region_North Region",
+      "cat__region_North Western Region",
+      "cat__region_Scotland",
+      "cat__region_South East Region",
+      "cat__region_South Region",
+      "cat__region_South West Region",
+      "cat__region_Wales",
+      "cat__region_West Midlands Region",
+      "cat__region_Yorkshire Region",
+      "cat__highest_education_A Level or Equivalent",
+      "cat__highest_education_HE Qualification",
+      "cat__highest_education_Lower Than A Level",
+      "cat__highest_education_No Formal quals",
+      "cat__highest_education_Post Graduate Qualification",
+      "cat__imd_band_0-10%",
+      "cat__imd_band_10-20",
+      "cat__imd_band_20-30%",
+      "cat__imd_band_30-40%",
+      "cat__imd_band_40-50%",
+      "cat__imd_band_50-60%",
+      "cat__imd_band_60-70%",
+      "cat__imd_band_70-80%",
+      "cat__imd_band_80-90%",
+      "cat__imd_band_90-100%",
+      "cat__imd_band_None",
+      "cat__age_band_0-35",
+      "cat__age_band_35-55",
+      "cat__age_band_55<=",
+      "cat__disability_N",
+      "cat__disability_Y"
+    ],
+    "feature_names_out": [
+      "num__num_of_prev_attempts",
+      "num__studied_credits",
+      "num__clicks_first_6_weeks",
+      "num__active_weeks_first_6",
+      "num__mean_clicks_first_6_weeks",
+      "cat__gender_F",
+      "cat__gender_M",
+      "cat__region_East Anglian Region",
+      "cat__region_East Midlands Region",
+      "cat__region_Ireland",
+      "cat__region_London Region",
+      "cat__region_North Region",
+      "cat__region_North Western Region",
+      "cat__region_Scotland",
+      "cat__region_South East Region",
+      "cat__region_South Region",
+      "cat__region_South West Region",
+      "cat__region_Wales",
+      "cat__region_West Midlands Region",
+      "cat__region_Yorkshire Region",
+      "cat__highest_education_A Level or Equivalent",
+      "cat__highest_education_HE Qualification",
+      "cat__highest_education_Lower Than A Level",
+      "cat__highest_education_No Formal quals",
+      "cat__highest_education_Post Graduate Qualification",
+      "cat__imd_band_0-10%",
+      "cat__imd_band_10-20",
+      "cat__imd_band_20-30%",
+      "cat__imd_band_30-40%",
+      "cat__imd_band_40-50%",
+      "cat__imd_band_50-60%",
+      "cat__imd_band_60-70%",
+      "cat__imd_band_70-80%",
+      "cat__imd_band_80-90%",
+      "cat__imd_band_90-100%",
+      "cat__imd_band_None",
+      "cat__age_band_0-35",
+      "cat__age_band_35-55",
+      "cat__age_band_55<=",
+      "cat__disability_N",
+      "cat__disability_Y"
+    ],
+    "dropped_low_variance_features": []
+  },
+  "design_note": "The comparable Cox arm integrates deterministic numeric prefill, low-variance feature filtering, and a local IPCW-supported time-dependent AUC path directly into D5.4 so no downstream repair stage is required."
+}
+
+ candidate_id  penalizer  l1_ratio  val_cindex
+            4      0.001      0.75    0.660005
+[END] 5.4.3 - 2026-04-05 11:37:33
+[START] 5.4 - 2026-04-05 11:37:33
+# ==============================================================
+# 5.4.4 - Close runtime resources
+# ==============================================================
+DuckDB connection closed.
+ARTIFACT | duckdb_connection | closed::/Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/benchmark_survival.duckdb
+[END] 5.4.4 - 2026-04-05 11:37:33
+[RUN_PLAN] comparable_window_weeks=8 script=dropout_bench_v3_D_04_comparable_continuous_time_cox_early_window.py
+[START] 5.4 - 2026-04-05 11:37:33
+# ==============================================================
+# 5.4.1 - Lightweight runtime bootstrap
+# ==============================================================
+ARTIFACT | benchmark_shared_config | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/benchmark_shared_config.toml
+ARTIFACT | benchmark_modeling_contract | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/benchmark_modeling_contract.toml
+ARTIFACT | run_metadata | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/metadata/run_metadata.json
+ARTIFACT | duckdb_path | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/benchmark_survival.duckdb
+{
+  "run_id": "f3e86c2afbd246e2814123195c22d973",
+  "random_seed": 42,
+  "test_size": 0.3,
+  "cpu_cores": 8,
+  "tuning_parallel_backend": "processes",
+  "early_window_weeks": 4,
+  "main_enrollment_window_weeks": 4,
+  "effective_window_weeks": 8,
+  "input_train_table": "enrollment_cox_ready_train_w8",
+  "input_test_table": "enrollment_cox_ready_test_w8"
+}
+[END] 5.4.1 - 2026-04-05 11:37:34
+[START] 5.4 - 2026-04-05 11:37:34
+# ==============================================================
+# 5.4.2 - Build comparable-window Cox treatment
+# ==============================================================
+[Stage 5.4.2 table_cox_preprocessing_summary — Cox preprocessing summary]
+table_name=table_cox_preprocessing_summary
+rows=1, cols=21
+model_family  train_rows  test_rows  n_input_features_raw  n_numeric_features  n_categorical_features  n_features_after_encoding_before_filter  n_features_after_variance_filter  n_features_dropped_by_variance_filter  n_events_train  n_events_test  mean_duration_train  mean_duration_test                              numeric_prefill_policy categorical_imputation          categorical_encoding                   numeric_scaling  variance_filter_threshold output_dtype                  cox_positioning_note  window_weeks
+         cox       22815       9778                    11                   5                       6                                       41                                41                                      0            5171           2216            30.536182           30.539476 deterministic_train_median_or_zero_when_all_missing       constant_missing one_hot_handle_unknown_ignore standard_scaler_fit_on_train_only               1.000000e-12      float32 early-window comparable Cox benchmark             8
+ARTIFACT | Stage 5.4.2 table_cox_preprocessing_summary — Cox preprocessing summary | duckdb://table_cox_preprocessing_summary
+[Stage 5.4.2 table_cox_raw_feature_manifest — Cox raw feature manifest]
+table_name=table_cox_raw_feature_manifest
+rows=11, cols=6
+ feature_name_operational feature_role  present_in_train  present_in_test  covered_by_canonical_config  numeric_prefill_value
+                   gender  categorical              True             True                        False                    NaN
+                   region  categorical              True             True                        False                    NaN
+        highest_education  categorical              True             True                        False                    NaN
+                 imd_band  categorical              True             True                        False                    NaN
+                 age_band  categorical              True             True                        False                    NaN
+               disability  categorical              True             True                        False                    NaN
+     num_of_prev_attempts      numeric              True             True                         True               0.000000
+          studied_credits      numeric              True             True                         True              60.000000
+     clicks_first_8_weeks      numeric              True             True                         True             229.000000
+     active_weeks_first_8      numeric              True             True                         True               7.000000
+mean_clicks_first_8_weeks      numeric              True             True                         True              37.857143
+ARTIFACT | Stage 5.4.2 table_cox_raw_feature_manifest — Cox raw feature manifest | duckdb://table_cox_raw_feature_manifest
+[Stage 5.4.2 table_cox_feature_names_out — Cox output feature manifest]
+table_name=table_cox_feature_names_out
+rows=41, cols=2
+                feature_name_out  transformed_variance_train
+       num__num_of_prev_attempts                    1.000000
+            num__studied_credits                    1.000000
+       num__clicks_first_8_weeks                    1.000000
+       num__active_weeks_first_8                    1.000000
+  num__mean_clicks_first_8_weeks                    1.000000
+                   cat__gender_F                    0.247988
+                   cat__gender_M                    0.247988
+ cat__region_East Anglian Region                    0.092080
+cat__region_East Midlands Region                    0.067091
+             cat__region_Ireland                    0.034283
+       cat__region_London Region                    0.088295
+        cat__region_North Region                    0.052060
+cat__region_North Western Region                    0.082139
+            cat__region_Scotland                    0.094370
+   cat__region_South East Region                    0.059974
+        cat__region_South Region                    0.087554
+   cat__region_South West Region                    0.068848
+               cat__region_Wales                    0.059707
+cat__region_West Midlands Region                    0.073261
+    cat__region_Yorkshire Region                    0.058136
+ARTIFACT | Stage 5.4.2 table_cox_feature_names_out — Cox output feature manifest | duckdb://table_cox_feature_names_out
+ARTIFACT | cox_preprocessing_config | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/metadata/cox_preprocessing_config_w8.json
+{
+  "model_family": "cox",
+  "duration_column": "duration",
+  "event_column": "event",
+  "categorical_features": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability"
+  ],
+  "numeric_features": [
+    "num_of_prev_attempts",
+    "studied_credits",
+    "clicks_first_8_weeks",
+    "active_weeks_first_8",
+    "mean_clicks_first_8_weeks"
+  ],
+  "raw_feature_columns": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability",
+    "num_of_prev_attempts",
+    "studied_credits",
+    "clicks_first_8_weeks",
+    "active_weeks_first_8",
+    "mean_clicks_first_8_weeks"
+  ],
+  "expected_features_raw": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "studied_credits",
+    "num_of_prev_attempts",
+    "clicks_first_8_weeks",
+    "active_weeks_first_8",
+    "mean_clicks_first_8_weeks"
+  ],
+  "expected_features_resolved": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "clicks_first_8_weeks",
+    "active_weeks_first_8",
+    "mean_clicks_first_8_weeks"
+  ],
+  "numeric_prefill_policy": "deterministic_train_median_or_zero_when_all_missing",
+  "numeric_fill_values": {
+    "num_of_prev_attempts": 0.0,
+    "studied_credits": 60.0,
+    "clicks_first_8_weeks": 229.0,
+    "active_weeks_first_8": 7.0,
+    "mean_clicks_first_8_weeks": 37.857142857142854
+  },
+  "categorical_imputation": "constant_missing",
+  "categorical_encoding": "one_hot_handle_unknown_ignore",
+  "numeric_scaling": "standard_scaler_fit_on_train_only",
+  "variance_filter_threshold": 1e-12,
+  "feature_names_before_filter": [
+    "num__num_of_prev_attempts",
+    "num__studied_credits",
+    "num__clicks_first_8_weeks",
+    "num__active_weeks_first_8",
+    "num__mean_clicks_first_8_weeks",
+    "cat__gender_F",
+    "cat__gender_M",
+    "cat__region_East Anglian Region",
+    "cat__region_East Midlands Region",
+    "cat__region_Ireland",
+    "cat__region_London Region",
+    "cat__region_North Region",
+    "cat__region_North Western Region",
+    "cat__region_Scotland",
+    "cat__region_South East Region",
+    "cat__region_South Region",
+    "cat__region_South West Region",
+    "cat__region_Wales",
+    "cat__region_West Midlands Region",
+    "cat__region_Yorkshire Region",
+    "cat__highest_education_A Level or Equivalent",
+    "cat__highest_education_HE Qualification",
+    "cat__highest_education_Lower Than A Level",
+    "cat__highest_education_No Formal quals",
+    "cat__highest_education_Post Graduate Qualification",
+    "cat__imd_band_0-10%",
+    "cat__imd_band_10-20",
+    "cat__imd_band_20-30%",
+    "cat__imd_band_30-40%",
+    "cat__imd_band_40-50%",
+    "cat__imd_band_50-60%",
+    "cat__imd_band_60-70%",
+    "cat__imd_band_70-80%",
+    "cat__imd_band_80-90%",
+    "cat__imd_band_90-100%",
+    "cat__imd_band_None",
+    "cat__age_band_0-35",
+    "cat__age_band_35-55",
+    "cat__age_band_55<=",
+    "cat__disability_N",
+    "cat__disability_Y"
+  ],
+  "feature_names_out": [
+    "num__num_of_prev_attempts",
+    "num__studied_credits",
+    "num__clicks_first_8_weeks",
+    "num__active_weeks_first_8",
+    "num__mean_clicks_first_8_weeks",
+    "cat__gender_F",
+    "cat__gender_M",
+    "cat__region_East Anglian Region",
+    "cat__region_East Midlands Region",
+    "cat__region_Ireland",
+    "cat__region_London Region",
+    "cat__region_North Region",
+    "cat__region_North Western Region",
+    "cat__region_Scotland",
+    "cat__region_South East Region",
+    "cat__region_South Region",
+    "cat__region_South West Region",
+    "cat__region_Wales",
+    "cat__region_West Midlands Region",
+    "cat__region_Yorkshire Region",
+    "cat__highest_education_A Level or Equivalent",
+    "cat__highest_education_HE Qualification",
+    "cat__highest_education_Lower Than A Level",
+    "cat__highest_education_No Formal quals",
+    "cat__highest_education_Post Graduate Qualification",
+    "cat__imd_band_0-10%",
+    "cat__imd_band_10-20",
+    "cat__imd_band_20-30%",
+    "cat__imd_band_30-40%",
+    "cat__imd_band_40-50%",
+    "cat__imd_band_50-60%",
+    "cat__imd_band_60-70%",
+    "cat__imd_band_70-80%",
+    "cat__imd_band_80-90%",
+    "cat__imd_band_90-100%",
+    "cat__imd_band_None",
+    "cat__age_band_0-35",
+    "cat__age_band_35-55",
+    "cat__age_band_55<=",
+    "cat__disability_N",
+    "cat__disability_Y"
+  ],
+  "dropped_low_variance_features": [],
+  "cox_positioning_note": "early-window comparable Cox benchmark",
+  "window_weeks": 8
+}
+
+[END] 5.4.2 - 2026-04-05 11:37:34
+[START] 5.4 - 2026-04-05 11:37:34
+# ==============================================================
+# 5.4.3 - Tune and evaluate the comparable-window Cox model
+# ==============================================================
+- TUNING_WORKERS: 8
+- TUNING_BACKEND: processes
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/lifelines/fitters/coxph_fitter.py:1614: ConvergenceWarning: Newton-Raphson failed to converge sufficiently. Please see the following tips in the lifelines documentation: https://lifelines.readthedocs.io/en/latest/Examples.html#problems-with-convergence-in-the-cox-proportional-hazard-model
+  warnings.warn(
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/lifelines/fitters/coxph_fitter.py:1614: ConvergenceWarning: Newton-Raphson failed to converge sufficiently. Please see the following tips in the lifelines documentation: https://lifelines.readthedocs.io/en/latest/Examples.html#problems-with-convergence-in-the-cox-proportional-hazard-model
+  warnings.warn(
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/lifelines/fitters/coxph_fitter.py:1614: ConvergenceWarning: Newton-Raphson failed to converge sufficiently. Please see the following tips in the lifelines documentation: https://lifelines.readthedocs.io/en/latest/Examples.html#problems-with-convergence-in-the-cox-proportional-hazard-model
+  warnings.warn(
+[Stage 5.4.3 table_cox_tuning_results — Cox tuning results]
+table_name=table_cox_tuning_results_w8
+rows=23, cols=4
+ candidate_id  penalizer  l1_ratio  val_cindex
+            2      0.001      0.25    0.686012
+            1      0.001      0.00    0.685760
+            6      0.010      0.25    0.685540
+            7      0.010      0.50    0.685502
+            5      0.010      0.00    0.684134
+            8      0.010      0.75    0.683913
+            9      0.050      0.00    0.678719
+           14      0.100      0.00    0.675886
+           10      0.050      0.25    0.674081
+           19      0.200      0.00    0.672888
+           13      0.050      1.00    0.669340
+           12      0.050      0.75    0.669229
+           16      0.100      0.50    0.669149
+           17      0.100      0.75    0.669045
+           18      0.100      1.00    0.668832
+           21      0.200      0.50    0.668776
+           15      0.100      0.25    0.667067
+           11      0.050      0.50    0.667024
+           22      0.200      0.75    0.663377
+           23      0.200      1.00    0.661362
+ARTIFACT | Stage 5.4.3 table_cox_tuning_results — Cox tuning results | duckdb://table_cox_tuning_results_w8
+[Stage 5.4.3 table_cox_tuned_test_predictions — Cox test predictions]
+table_name=table_cox_tuned_test_predictions_w8
+rows=29334, cols=7
+      enrollment_id  event  duration  partial_hazard  horizon_week  pred_survival_h  pred_risk_h
+ 100561||DDD||2014J      0        37        7.899231            10         0.975936     0.024064
+ 100621||CCC||2014B      1         6       18.292795            10         0.945153     0.054847
+ 101187||DDD||2014J      0        37       29.201535            10         0.913888     0.086112
+ 101279||DDD||2014J      0        37        7.914510            10         0.975890     0.024110
+ 101414||EEE||2013J      0        38       19.805597            10         0.940754     0.059246
+ 101700||CCC||2014J      0        38       39.677075            10         0.884838     0.115162
+ 101781||AAA||2013J      0        38        3.973572            10         0.987822     0.012178
+ 102209||CCC||2014J      1        15        5.217031            10         0.984041     0.015959
+ 102343||FFF||2013J      0        38        5.448526            10         0.983339     0.016661
+1023623||CCC||2014J      0        38       11.257601            10         0.965881     0.034119
+1033968||DDD||2014B      1        13       13.595460            10         0.958943     0.041057
+ 103891||DDD||2014B      0        34       15.940981            10         0.952032     0.047968
+ 104316||FFF||2014B      0        34        9.584054            10         0.970878     0.029122
+1045203||AAA||2014J      0        38        3.985548            10         0.987785     0.012215
+1047645||CCC||2014B      0        34       16.255746            10         0.951108     0.048892
+1053702||EEE||2013J      0        38        5.019672            10         0.984640     0.015360
+ 105629||FFF||2013J      0        38        3.609420            10         0.988931     0.011069
+1057883||CCC||2014B      0        34       18.123840            10         0.945645     0.054355
+ 106383||BBB||2014J      1        21       10.449869            10         0.968290     0.031710
+ 106553||DDD||2014J      0        37        7.035824            10         0.978538     0.021462
+ARTIFACT | Stage 5.4.3 table_cox_tuned_test_predictions — Cox test predictions | duckdb://table_cox_tuned_test_predictions_w8
+[Stage 5.4.3 table_cox_tuned_primary_metrics — Cox primary metrics]
+table_name=table_cox_tuned_primary_metrics_w8
+rows=2, cols=4
+metric_name metric_category  metric_value                         notes
+        ibs         primary      0.149349 sksurv_integrated_brier_score
+    c_index      co_primary      0.639176          pycox_concordance_td
+ARTIFACT | Stage 5.4.3 table_cox_tuned_primary_metrics — Cox primary metrics | duckdb://table_cox_tuned_primary_metrics_w8
+[Stage 5.4.3 table_cox_tuned_brier_by_horizon — Cox Brier scores by horizon]
+table_name=table_cox_tuned_brier_by_horizon_w8
+rows=3, cols=5
+ horizon_week      metric_name metric_category  metric_value              notes
+           10 brier_at_horizon         primary      0.130043 sksurv_brier_score
+           20 brier_at_horizon         primary      0.174155 sksurv_brier_score
+           30 brier_at_horizon         primary      0.204000 sksurv_brier_score
+ARTIFACT | Stage 5.4.3 table_cox_tuned_brier_by_horizon — Cox Brier scores by horizon | duckdb://table_cox_tuned_brier_by_horizon_w8
+[Stage 5.4.3 table_cox_tuned_secondary_metrics — Cox secondary metrics]
+table_name=table_cox_tuned_secondary_metrics_w8
+rows=6, cols=5
+ horizon_week         metric_name metric_category  metric_value                                                                                  notes
+           10 risk_auc_at_horizon       secondary      0.746249                                                            roc_auc_on_evaluable_subset
+           10  time_dependent_auc       secondary      0.742257 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.742257; local_ipcw_auc
+           20 risk_auc_at_horizon       secondary      0.672208                                                            roc_auc_on_evaluable_subset
+           20  time_dependent_auc       secondary      0.664969 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.664969; local_ipcw_auc
+           30 risk_auc_at_horizon       secondary      0.640205                                                            roc_auc_on_evaluable_subset
+           30  time_dependent_auc       secondary      0.630764 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.630764; local_ipcw_auc
+ARTIFACT | Stage 5.4.3 table_cox_tuned_secondary_metrics — Cox secondary metrics | duckdb://table_cox_tuned_secondary_metrics_w8
+[Stage 5.4.3 table_cox_tuned_td_auc_support_audit — Cox IPCW support audit]
+table_name=table_cox_tuned_td_auc_support_audit_w8
+rows=3, cols=6
+ horizon_week  max_ipcw_time  n_total_test_enrollments  n_supported_test_enrollments  mean_auc                                                 notes
+           10           38.0                      9778                          6742  0.742257 IPCW-supported subset used for Cox time-dependent AUC
+           20           38.0                      9778                          6742  0.664969 IPCW-supported subset used for Cox time-dependent AUC
+           30           38.0                      9778                          6742  0.630764 IPCW-supported subset used for Cox time-dependent AUC
+ARTIFACT | Stage 5.4.3 table_cox_tuned_td_auc_support_audit — Cox IPCW support audit | duckdb://table_cox_tuned_td_auc_support_audit_w8
+[Stage 5.4.3 table_cox_tuned_support_by_horizon — Cox support by horizon]
+table_name=table_cox_tuned_support_by_horizon_w8
+rows=3, cols=4
+ horizon_week  n_evaluable_enrollments  n_events_by_horizon  event_rate_by_horizon
+           10                     9778                 1215               0.124259
+           20                     9778                 1736               0.177541
+           30                     9778                 2129               0.217734
+ARTIFACT | Stage 5.4.3 table_cox_tuned_support_by_horizon — Cox support by horizon | duckdb://table_cox_tuned_support_by_horizon_w8
+[Stage 5.4.3 table_cox_tuned_calibration_summary — Cox calibration summary]
+table_name=table_cox_tuned_calibration_summary_w8
+rows=3, cols=5
+ horizon_week            metric_name metric_category  metric_value                                         notes
+           10 calibration_at_horizon         primary      0.074578 Weighted absolute calibration gap across bins
+           20 calibration_at_horizon         primary      0.113009 Weighted absolute calibration gap across bins
+           30 calibration_at_horizon         primary      0.140218 Weighted absolute calibration gap across bins
+ARTIFACT | Stage 5.4.3 table_cox_tuned_calibration_summary — Cox calibration summary | duckdb://table_cox_tuned_calibration_summary_w8
+[Stage 5.4.3 table_cox_tuned_calibration_bins_by_horizon — Cox calibration bins]
+table_name=table_cox_tuned_calibration_bins_by_horizon_w8
+rows=30, cols=6
+ calibration_bin   n  mean_predicted_risk  observed_event_rate  horizon_week  abs_calibration_gap
+               0 978             0.004112             0.077710            10             0.073598
+               1 978             0.014703             0.015337            10             0.000634
+               2 978             0.019266             0.024540            10             0.005274
+               3 977             0.023958             0.039918            10             0.015960
+               4 978             0.029284             0.042945            10             0.013661
+               5 978             0.035484             0.079755            10             0.044270
+               6 977             0.043596             0.128966            10             0.085370
+               7 978             0.056547             0.205521            10             0.148974
+               8 978             0.078323             0.330266            10             0.251943
+               9 978             0.403592             0.297546            10             0.106046
+               0 978             0.006154             0.133947            20             0.127793
+               1 978             0.021981             0.069530            20             0.047548
+               2 978             0.028770             0.074642            20             0.045872
+               3 977             0.035734             0.110542            20             0.074808
+               4 978             0.043618             0.101227            20             0.057609
+               5 978             0.052770             0.143149            20             0.090380
+               6 977             0.064697             0.194473            20             0.129776
+               7 978             0.083633             0.245399            20             0.161766
+               8 978             0.115166             0.370143            20             0.254977
+               9 978             0.471849             0.332311            20             0.139538
+ARTIFACT | Stage 5.4.3 table_cox_tuned_calibration_bins_by_horizon — Cox calibration bins | duckdb://table_cox_tuned_calibration_bins_by_horizon_w8
+[Stage 5.4.3 table_cox_tuned_predicted_vs_observed_survival — Cox predicted versus observed survival]
+table_name=table_cox_tuned_predicted_vs_observed_survival_w8
+rows=3, cols=5
+ horizon_week  n_evaluable_enrollments  mean_predicted_survival  mean_observed_survival  abs_gap
+           10                     9778                 0.929106                0.875741 0.053364
+           20                     9778                 0.907554                0.822459 0.085096
+           30                     9778                 0.891170                0.782266 0.108904
+ARTIFACT | Stage 5.4.3 table_cox_tuned_predicted_vs_observed_survival — Cox predicted versus observed survival | duckdb://table_cox_tuned_predicted_vs_observed_survival_w8
+[Stage 5.4.3 table_cox_tuned_coefficients — Cox coefficients]
+table_name=table_cox_tuned_coefficients_w8
+rows=41, cols=12
+                    feature_name       coef    exp(coef)  se(coef)  coef lower 95%  coef upper 95%  exp(coef) lower 95%  exp(coef) upper 95%  cmp to          z             p   -log2(p)
+       num__num_of_prev_attempts  -0.019529 9.806600e-01  0.013029       -0.045065        0.006006         9.559351e-01         1.006024e+00     0.0  -1.498953  1.338859e-01   2.900924
+            num__studied_credits   0.126329 1.134656e+00  0.012902        0.101042        0.151616         1.106323e+00         1.163714e+00     0.0   9.791549  1.224066e-22  72.790737
+       num__clicks_first_8_weeks  -1.086786 3.372988e-01  0.034804       -1.155002       -1.018570         3.150571e-01         3.611108e-01     0.0 -31.225468 4.807747e-214 708.627251
+       num__active_weeks_first_8  -0.343758 7.091003e-01  0.019201       -0.381392       -0.306125         6.829101e-01         7.362949e-01     0.0 -17.902902  1.119334e-71 235.694254
+  num__mean_clicks_first_8_weeks   0.907961 2.479262e+00  0.022194        0.864462        0.951460         2.373730e+00         2.589487e+00     0.0  40.910899  0.000000e+00        inf
+                   cat__gender_F  -0.132244 8.761274e-01  0.194056       -0.512587        0.248099         5.989443e-01         1.281587e+00     0.0  -0.681472  4.955728e-01   1.012831
+                   cat__gender_M   0.132244 1.141387e+00  0.194056       -0.248099        0.512587         7.802826e-01         1.669604e+00     0.0   0.681472  4.955728e-01   1.012831
+ cat__region_East Anglian Region   1.545056 4.688234e+00  0.270819        1.014260        2.075852         2.757321e+00         7.971337e+00     0.0   5.705115  1.162648e-08  26.358011
+cat__region_East Midlands Region   1.899547 6.682864e+00  0.271602        1.367216        2.431877         3.924411e+00         1.138022e+01     0.0   6.993857  2.674310e-12  38.443971
+             cat__region_Ireland   5.841811 3.444026e+02  0.260978        5.330303        6.353319         2.065006e+02         5.743962e+02     0.0  22.384281 5.600126e-111 366.248559
+       cat__region_London Region   2.111591 8.261376e+00  0.266573        1.589119        2.634064         4.899428e+00         1.393026e+01     0.0   7.921262  2.351111e-15  48.595579
+        cat__region_North Region -44.896180 3.175680e-20  1.059493      -46.972749      -42.819611         3.981021e-21         2.533256e-19     0.0 -42.375143  0.000000e+00        inf
+cat__region_North Western Region   2.080171 8.005834e+00  0.267215        1.556439        2.603903         4.741903e+00         1.351638e+01     0.0   7.784629  6.991827e-15  47.023252
+            cat__region_Scotland   1.260722 3.527966e+00  0.273728        0.724224        1.797219         2.063130e+00         6.032847e+00     0.0   4.605742  4.109974e-06  17.892439
+   cat__region_South East Region   1.389416 4.012508e+00  0.281892        0.836919        1.941914         2.309242e+00         6.972080e+00     0.0   4.928904  8.269207e-07  20.205748
+        cat__region_South Region   1.520791 4.575841e+00  0.272028        0.987625        2.053956         2.684851e+00         7.798693e+00     0.0   5.590562  2.263359e-08  25.396959
+   cat__region_South West Region   1.878443 6.543307e+00  0.272055        1.345225        2.411661         3.839049e+00         1.115247e+01     0.0   6.904644  5.032948e-12  37.531733
+               cat__region_Wales   1.382772 3.985937e+00  0.281244        0.831544        1.934001         2.296863e+00         6.917127e+00     0.0   4.916630  8.804678e-07  20.115226
+cat__region_West Midlands Region   1.937381 6.940550e+00  0.269976        1.408238        2.466524         4.088744e+00         1.178143e+01     0.0   7.176124  7.171577e-13  40.342775
+    cat__region_Yorkshire Region   1.503890 4.499159e+00  0.280408        0.954301        2.053480         2.596854e+00         7.794982e+00     0.0   5.363220  8.175117e-08  23.544185
+ARTIFACT | Stage 5.4.3 table_cox_tuned_coefficients — Cox coefficients | duckdb://table_cox_tuned_coefficients_w8
+[Stage 5.4.3 table_cox_tuned_stability_notes — Cox stability notes]
+table_name=table_cox_tuned_stability_notes_w8
+rows=1, cols=10
+ n_input_features_before_filter  n_input_features_after_filter  n_zero_or_low_variance_features_dropped dropped_zero_or_low_variance_features  best_penalizer  best_l1_ratio  validation_test_size  variance_filter_threshold excluded_candidates_under_strict_warnings  window_weeks
+                             41                             41                                        0                                                 0.001           0.25                   0.1               1.000000e-12               [[0.001, 1.0], [0.01, 1.0]]             8
+ARTIFACT | Stage 5.4.3 table_cox_tuned_stability_notes — Cox stability notes | duckdb://table_cox_tuned_stability_notes_w8
+ARTIFACT | cox_model | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/models/cox_early_window_tuned_w8.joblib
+ARTIFACT | cox_preprocessor | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/models/cox_preprocessor_w8.joblib
+ARTIFACT | cox_tuned_model_config | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/metadata/cox_tuned_model_config_w8.json
+{
+  "model_name": "cox_early_window_tuned_w8",
+  "selection_metric": "highest_validation_c_index",
+  "validation_split": {
+    "method": "GroupShuffleSplit",
+    "test_size": 0.1,
+    "group_column": "enrollment_id",
+    "random_seed": 42
+  },
+  "full_candidate_grid": [
+    {
+      "penalizer": 0.001,
+      "l1_ratio": 0.0
+    },
+    {
+      "penalizer": 0.001,
+      "l1_ratio": 0.25
+    },
+    {
+      "penalizer": 0.001,
+      "l1_ratio": 0.5
+    },
+    {
+      "penalizer": 0.001,
+      "l1_ratio": 0.75
+    },
+    {
+      "penalizer": 0.001,
+      "l1_ratio": 1.0
+    },
+    {
+      "penalizer": 0.01,
+      "l1_ratio": 0.0
+    },
+    {
+      "penalizer": 0.01,
+      "l1_ratio": 0.25
+    },
+    {
+      "penalizer": 0.01,
+      "l1_ratio": 0.5
+    },
+    {
+      "penalizer": 0.01,
+      "l1_ratio": 0.75
+    },
+    {
+      "penalizer": 0.01,
+      "l1_ratio": 1.0
+    },
+    {
+      "penalizer": 0.05,
+      "l1_ratio": 0.0
+    },
+    {
+      "penalizer": 0.05,
+      "l1_ratio": 0.25
+    },
+    {
+      "penalizer": 0.05,
+      "l1_ratio": 0.5
+    },
+    {
+      "penalizer": 0.05,
+      "l1_ratio": 0.75
+    },
+    {
+      "penalizer": 0.05,
+      "l1_ratio": 1.0
+    },
+    {
+      "penalizer": 0.1,
+      "l1_ratio": 0.0
+    },
+    {
+      "penalizer": 0.1,
+      "l1_ratio": 0.25
+    },
+    {
+      "penalizer": 0.1,
+      "l1_ratio": 0.5
+    },
+    {
+      "penalizer": 0.1,
+      "l1_ratio": 0.75
+    },
+    {
+      "penalizer": 0.1,
+      "l1_ratio": 1.0
+    },
+    {
+      "penalizer": 0.2,
+      "l1_ratio": 0.0
+    },
+    {
+      "penalizer": 0.2,
+      "l1_ratio": 0.25
+    },
+    {
+      "penalizer": 0.2,
+      "l1_ratio": 0.5
+    },
+    {
+      "penalizer": 0.2,
+      "l1_ratio": 0.75
+    },
+    {
+      "penalizer": 0.2,
+      "l1_ratio": 1.0
+    }
+  ],
+  "excluded_candidates_under_strict_warnings": [
+    {
+      "penalizer": 0.001,
+      "l1_ratio": 1.0
+    },
+    {
+      "penalizer": 0.01,
+      "l1_ratio": 1.0
+    }
+  ],
+  "search_space": [
+    {
+      "candidate_id": 1,
+      "penalizer": 0.001,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 2,
+      "penalizer": 0.001,
+      "l1_ratio": 0.25
+    },
+    {
+      "candidate_id": 3,
+      "penalizer": 0.001,
+      "l1_ratio": 0.5
+    },
+    {
+      "candidate_id": 4,
+      "penalizer": 0.001,
+      "l1_ratio": 0.75
+    },
+    {
+      "candidate_id": 5,
+      "penalizer": 0.01,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 6,
+      "penalizer": 0.01,
+      "l1_ratio": 0.25
+    },
+    {
+      "candidate_id": 7,
+      "penalizer": 0.01,
+      "l1_ratio": 0.5
+    },
+    {
+      "candidate_id": 8,
+      "penalizer": 0.01,
+      "l1_ratio": 0.75
+    },
+    {
+      "candidate_id": 9,
+      "penalizer": 0.05,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 10,
+      "penalizer": 0.05,
+      "l1_ratio": 0.25
+    },
+    {
+      "candidate_id": 11,
+      "penalizer": 0.05,
+      "l1_ratio": 0.5
+    },
+    {
+      "candidate_id": 12,
+      "penalizer": 0.05,
+      "l1_ratio": 0.75
+    },
+    {
+      "candidate_id": 13,
+      "penalizer": 0.05,
+      "l1_ratio": 1.0
+    },
+    {
+      "candidate_id": 14,
+      "penalizer": 0.1,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 15,
+      "penalizer": 0.1,
+      "l1_ratio": 0.25
+    },
+    {
+      "candidate_id": 16,
+      "penalizer": 0.1,
+      "l1_ratio": 0.5
+    },
+    {
+      "candidate_id": 17,
+      "penalizer": 0.1,
+      "l1_ratio": 0.75
+    },
+    {
+      "candidate_id": 18,
+      "penalizer": 0.1,
+      "l1_ratio": 1.0
+    },
+    {
+      "candidate_id": 19,
+      "penalizer": 0.2,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 20,
+      "penalizer": 0.2,
+      "l1_ratio": 0.25
+    },
+    {
+      "candidate_id": 21,
+      "penalizer": 0.2,
+      "l1_ratio": 0.5
+    },
+    {
+      "candidate_id": 22,
+      "penalizer": 0.2,
+      "l1_ratio": 0.75
+    },
+    {
+      "candidate_id": 23,
+      "penalizer": 0.2,
+      "l1_ratio": 1.0
+    }
+  ],
+  "benchmark_horizons": [
+    10,
+    20,
+    30
+  ],
+  "calibration_bins": 10,
+  "calibration_contract_version": "v2_ipcw_km_observed_risk",
+  "calibration_observed_risk_method": "ipcw_km_pseudo_event_rate",
+  "variance_filter_threshold": 1e-12,
+  "best_candidate": {
+    "candidate_id": 2,
+    "penalizer": 0.001,
+    "l1_ratio": 0.25,
+    "val_cindex": 0.6860124585942712
+  },
+  "effective_window_weeks": 8,
+  "input_train_table": "enrollment_cox_ready_train_w8",
+  "input_test_table": "enrollment_cox_ready_test_w8",
+  "preprocessing": {
+    "categorical_features": [
+      "gender",
+      "region",
+      "highest_education",
+      "imd_band",
+      "age_band",
+      "disability"
+    ],
+    "numeric_features": [
+      "num_of_prev_attempts",
+      "studied_credits",
+      "clicks_first_8_weeks",
+      "active_weeks_first_8",
+      "mean_clicks_first_8_weeks"
+    ],
+    "numeric_prefill_values": {
+      "num_of_prev_attempts": 0.0,
+      "studied_credits": 60.0,
+      "clicks_first_8_weeks": 229.0,
+      "active_weeks_first_8": 7.0,
+      "mean_clicks_first_8_weeks": 37.857142857142854
+    },
+    "feature_names_before_filter": [
+      "num__num_of_prev_attempts",
+      "num__studied_credits",
+      "num__clicks_first_8_weeks",
+      "num__active_weeks_first_8",
+      "num__mean_clicks_first_8_weeks",
+      "cat__gender_F",
+      "cat__gender_M",
+      "cat__region_East Anglian Region",
+      "cat__region_East Midlands Region",
+      "cat__region_Ireland",
+      "cat__region_London Region",
+      "cat__region_North Region",
+      "cat__region_North Western Region",
+      "cat__region_Scotland",
+      "cat__region_South East Region",
+      "cat__region_South Region",
+      "cat__region_South West Region",
+      "cat__region_Wales",
+      "cat__region_West Midlands Region",
+      "cat__region_Yorkshire Region",
+      "cat__highest_education_A Level or Equivalent",
+      "cat__highest_education_HE Qualification",
+      "cat__highest_education_Lower Than A Level",
+      "cat__highest_education_No Formal quals",
+      "cat__highest_education_Post Graduate Qualification",
+      "cat__imd_band_0-10%",
+      "cat__imd_band_10-20",
+      "cat__imd_band_20-30%",
+      "cat__imd_band_30-40%",
+      "cat__imd_band_40-50%",
+      "cat__imd_band_50-60%",
+      "cat__imd_band_60-70%",
+      "cat__imd_band_70-80%",
+      "cat__imd_band_80-90%",
+      "cat__imd_band_90-100%",
+      "cat__imd_band_None",
+      "cat__age_band_0-35",
+      "cat__age_band_35-55",
+      "cat__age_band_55<=",
+      "cat__disability_N",
+      "cat__disability_Y"
+    ],
+    "feature_names_out": [
+      "num__num_of_prev_attempts",
+      "num__studied_credits",
+      "num__clicks_first_8_weeks",
+      "num__active_weeks_first_8",
+      "num__mean_clicks_first_8_weeks",
+      "cat__gender_F",
+      "cat__gender_M",
+      "cat__region_East Anglian Region",
+      "cat__region_East Midlands Region",
+      "cat__region_Ireland",
+      "cat__region_London Region",
+      "cat__region_North Region",
+      "cat__region_North Western Region",
+      "cat__region_Scotland",
+      "cat__region_South East Region",
+      "cat__region_South Region",
+      "cat__region_South West Region",
+      "cat__region_Wales",
+      "cat__region_West Midlands Region",
+      "cat__region_Yorkshire Region",
+      "cat__highest_education_A Level or Equivalent",
+      "cat__highest_education_HE Qualification",
+      "cat__highest_education_Lower Than A Level",
+      "cat__highest_education_No Formal quals",
+      "cat__highest_education_Post Graduate Qualification",
+      "cat__imd_band_0-10%",
+      "cat__imd_band_10-20",
+      "cat__imd_band_20-30%",
+      "cat__imd_band_30-40%",
+      "cat__imd_band_40-50%",
+      "cat__imd_band_50-60%",
+      "cat__imd_band_60-70%",
+      "cat__imd_band_70-80%",
+      "cat__imd_band_80-90%",
+      "cat__imd_band_90-100%",
+      "cat__imd_band_None",
+      "cat__age_band_0-35",
+      "cat__age_band_35-55",
+      "cat__age_band_55<=",
+      "cat__disability_N",
+      "cat__disability_Y"
+    ],
+    "dropped_low_variance_features": []
+  },
+  "design_note": "The comparable Cox arm integrates deterministic numeric prefill, low-variance feature filtering, and a local IPCW-supported time-dependent AUC path directly into D5.4 so no downstream repair stage is required."
+}
+
+ candidate_id  penalizer  l1_ratio  val_cindex
+            2      0.001      0.25    0.686012
+[END] 5.4.3 - 2026-04-05 11:37:36
+[START] 5.4 - 2026-04-05 11:37:36
+# ==============================================================
+# 5.4.4 - Close runtime resources
+# ==============================================================
+DuckDB connection closed.
+ARTIFACT | duckdb_connection | closed::/Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/benchmark_survival.duckdb
+[END] 5.4.4 - 2026-04-05 11:37:37
+[RUN_PLAN] comparable_window_weeks=10 script=dropout_bench_v3_D_04_comparable_continuous_time_cox_early_window.py
+[START] 5.4 - 2026-04-05 11:37:37
+# ==============================================================
+# 5.4.1 - Lightweight runtime bootstrap
+# ==============================================================
+ARTIFACT | benchmark_shared_config | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/benchmark_shared_config.toml
+ARTIFACT | benchmark_modeling_contract | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/benchmark_modeling_contract.toml
+ARTIFACT | run_metadata | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/metadata/run_metadata.json
+ARTIFACT | duckdb_path | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/benchmark_survival.duckdb
+{
+  "run_id": "f3e86c2afbd246e2814123195c22d973",
+  "random_seed": 42,
+  "test_size": 0.3,
+  "cpu_cores": 8,
+  "tuning_parallel_backend": "processes",
+  "early_window_weeks": 4,
+  "main_enrollment_window_weeks": 4,
+  "effective_window_weeks": 10,
+  "input_train_table": "enrollment_cox_ready_train_w10",
+  "input_test_table": "enrollment_cox_ready_test_w10"
+}
+[END] 5.4.1 - 2026-04-05 11:37:37
+[START] 5.4 - 2026-04-05 11:37:37
+# ==============================================================
+# 5.4.2 - Build comparable-window Cox treatment
+# ==============================================================
+[Stage 5.4.2 table_cox_preprocessing_summary — Cox preprocessing summary]
+table_name=table_cox_preprocessing_summary
+rows=1, cols=21
+model_family  train_rows  test_rows  n_input_features_raw  n_numeric_features  n_categorical_features  n_features_after_encoding_before_filter  n_features_after_variance_filter  n_features_dropped_by_variance_filter  n_events_train  n_events_test  mean_duration_train  mean_duration_test                              numeric_prefill_policy categorical_imputation          categorical_encoding                   numeric_scaling  variance_filter_threshold output_dtype                  cox_positioning_note  window_weeks
+         cox       22815       9778                    11                   5                       6                                       41                                41                                      0            5171           2216            30.536182           30.539476 deterministic_train_median_or_zero_when_all_missing       constant_missing one_hot_handle_unknown_ignore standard_scaler_fit_on_train_only               1.000000e-12      float32 early-window comparable Cox benchmark            10
+ARTIFACT | Stage 5.4.2 table_cox_preprocessing_summary — Cox preprocessing summary | duckdb://table_cox_preprocessing_summary
+[Stage 5.4.2 table_cox_raw_feature_manifest — Cox raw feature manifest]
+table_name=table_cox_raw_feature_manifest
+rows=11, cols=6
+  feature_name_operational feature_role  present_in_train  present_in_test  covered_by_canonical_config  numeric_prefill_value
+                    gender  categorical              True             True                        False                    NaN
+                    region  categorical              True             True                        False                    NaN
+         highest_education  categorical              True             True                        False                    NaN
+                  imd_band  categorical              True             True                        False                    NaN
+                  age_band  categorical              True             True                        False                    NaN
+                disability  categorical              True             True                        False                    NaN
+      num_of_prev_attempts      numeric              True             True                         True                    0.0
+           studied_credits      numeric              True             True                         True                   60.0
+     clicks_first_10_weeks      numeric              True             True                         True                  260.0
+     active_weeks_first_10      numeric              True             True                         True                    8.0
+mean_clicks_first_10_weeks      numeric              True             True                         True                   36.4
+ARTIFACT | Stage 5.4.2 table_cox_raw_feature_manifest — Cox raw feature manifest | duckdb://table_cox_raw_feature_manifest
+[Stage 5.4.2 table_cox_feature_names_out — Cox output feature manifest]
+table_name=table_cox_feature_names_out
+rows=41, cols=2
+                feature_name_out  transformed_variance_train
+       num__num_of_prev_attempts                    1.000000
+            num__studied_credits                    1.000000
+      num__clicks_first_10_weeks                    1.000000
+      num__active_weeks_first_10                    1.000000
+ num__mean_clicks_first_10_weeks                    1.000000
+                   cat__gender_F                    0.247988
+                   cat__gender_M                    0.247988
+ cat__region_East Anglian Region                    0.092080
+cat__region_East Midlands Region                    0.067091
+             cat__region_Ireland                    0.034283
+       cat__region_London Region                    0.088295
+        cat__region_North Region                    0.052060
+cat__region_North Western Region                    0.082139
+            cat__region_Scotland                    0.094370
+   cat__region_South East Region                    0.059974
+        cat__region_South Region                    0.087554
+   cat__region_South West Region                    0.068848
+               cat__region_Wales                    0.059707
+cat__region_West Midlands Region                    0.073261
+    cat__region_Yorkshire Region                    0.058136
+ARTIFACT | Stage 5.4.2 table_cox_feature_names_out — Cox output feature manifest | duckdb://table_cox_feature_names_out
+ARTIFACT | cox_preprocessing_config | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/metadata/cox_preprocessing_config_w10.json
+{
+  "model_family": "cox",
+  "duration_column": "duration",
+  "event_column": "event",
+  "categorical_features": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability"
+  ],
+  "numeric_features": [
+    "num_of_prev_attempts",
+    "studied_credits",
+    "clicks_first_10_weeks",
+    "active_weeks_first_10",
+    "mean_clicks_first_10_weeks"
+  ],
+  "raw_feature_columns": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability",
+    "num_of_prev_attempts",
+    "studied_credits",
+    "clicks_first_10_weeks",
+    "active_weeks_first_10",
+    "mean_clicks_first_10_weeks"
+  ],
+  "expected_features_raw": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "studied_credits",
+    "num_of_prev_attempts",
+    "clicks_first_10_weeks",
+    "active_weeks_first_10",
+    "mean_clicks_first_10_weeks"
+  ],
+  "expected_features_resolved": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "clicks_first_10_weeks",
+    "active_weeks_first_10",
+    "mean_clicks_first_10_weeks"
+  ],
+  "numeric_prefill_policy": "deterministic_train_median_or_zero_when_all_missing",
+  "numeric_fill_values": {
+    "num_of_prev_attempts": 0.0,
+    "studied_credits": 60.0,
+    "clicks_first_10_weeks": 260.0,
+    "active_weeks_first_10": 8.0,
+    "mean_clicks_first_10_weeks": 36.4
+  },
+  "categorical_imputation": "constant_missing",
+  "categorical_encoding": "one_hot_handle_unknown_ignore",
+  "numeric_scaling": "standard_scaler_fit_on_train_only",
+  "variance_filter_threshold": 1e-12,
+  "feature_names_before_filter": [
+    "num__num_of_prev_attempts",
+    "num__studied_credits",
+    "num__clicks_first_10_weeks",
+    "num__active_weeks_first_10",
+    "num__mean_clicks_first_10_weeks",
+    "cat__gender_F",
+    "cat__gender_M",
+    "cat__region_East Anglian Region",
+    "cat__region_East Midlands Region",
+    "cat__region_Ireland",
+    "cat__region_London Region",
+    "cat__region_North Region",
+    "cat__region_North Western Region",
+    "cat__region_Scotland",
+    "cat__region_South East Region",
+    "cat__region_South Region",
+    "cat__region_South West Region",
+    "cat__region_Wales",
+    "cat__region_West Midlands Region",
+    "cat__region_Yorkshire Region",
+    "cat__highest_education_A Level or Equivalent",
+    "cat__highest_education_HE Qualification",
+    "cat__highest_education_Lower Than A Level",
+    "cat__highest_education_No Formal quals",
+    "cat__highest_education_Post Graduate Qualification",
+    "cat__imd_band_0-10%",
+    "cat__imd_band_10-20",
+    "cat__imd_band_20-30%",
+    "cat__imd_band_30-40%",
+    "cat__imd_band_40-50%",
+    "cat__imd_band_50-60%",
+    "cat__imd_band_60-70%",
+    "cat__imd_band_70-80%",
+    "cat__imd_band_80-90%",
+    "cat__imd_band_90-100%",
+    "cat__imd_band_None",
+    "cat__age_band_0-35",
+    "cat__age_band_35-55",
+    "cat__age_band_55<=",
+    "cat__disability_N",
+    "cat__disability_Y"
+  ],
+  "feature_names_out": [
+    "num__num_of_prev_attempts",
+    "num__studied_credits",
+    "num__clicks_first_10_weeks",
+    "num__active_weeks_first_10",
+    "num__mean_clicks_first_10_weeks",
+    "cat__gender_F",
+    "cat__gender_M",
+    "cat__region_East Anglian Region",
+    "cat__region_East Midlands Region",
+    "cat__region_Ireland",
+    "cat__region_London Region",
+    "cat__region_North Region",
+    "cat__region_North Western Region",
+    "cat__region_Scotland",
+    "cat__region_South East Region",
+    "cat__region_South Region",
+    "cat__region_South West Region",
+    "cat__region_Wales",
+    "cat__region_West Midlands Region",
+    "cat__region_Yorkshire Region",
+    "cat__highest_education_A Level or Equivalent",
+    "cat__highest_education_HE Qualification",
+    "cat__highest_education_Lower Than A Level",
+    "cat__highest_education_No Formal quals",
+    "cat__highest_education_Post Graduate Qualification",
+    "cat__imd_band_0-10%",
+    "cat__imd_band_10-20",
+    "cat__imd_band_20-30%",
+    "cat__imd_band_30-40%",
+    "cat__imd_band_40-50%",
+    "cat__imd_band_50-60%",
+    "cat__imd_band_60-70%",
+    "cat__imd_band_70-80%",
+    "cat__imd_band_80-90%",
+    "cat__imd_band_90-100%",
+    "cat__imd_band_None",
+    "cat__age_band_0-35",
+    "cat__age_band_35-55",
+    "cat__age_band_55<=",
+    "cat__disability_N",
+    "cat__disability_Y"
+  ],
+  "dropped_low_variance_features": [],
+  "cox_positioning_note": "early-window comparable Cox benchmark",
+  "window_weeks": 10
+}
+
+[END] 5.4.2 - 2026-04-05 11:37:37
+[START] 5.4 - 2026-04-05 11:37:37
+# ==============================================================
+# 5.4.3 - Tune and evaluate the comparable-window Cox model
+# ==============================================================
+- TUNING_WORKERS: 8
+- TUNING_BACKEND: processes
+[Stage 5.4.3 table_cox_tuning_results — Cox tuning results]
+table_name=table_cox_tuning_results_w10
+rows=23, cols=4
+ candidate_id  penalizer  l1_ratio  val_cindex
+            6      0.010      0.25    0.702077
+            7      0.010      0.50    0.701923
+            4      0.001      0.75    0.701840
+            3      0.001      0.50    0.701666
+            2      0.001      0.25    0.701473
+            1      0.001      0.00    0.701333
+            8      0.010      0.75    0.701045
+            5      0.010      0.00    0.700881
+            9      0.050      0.00    0.696002
+           14      0.100      0.00    0.692579
+           10      0.050      0.25    0.688871
+           19      0.200      0.00    0.688804
+           13      0.050      1.00    0.682966
+           12      0.050      0.75    0.682685
+           16      0.100      0.50    0.682682
+           17      0.100      0.75    0.682567
+           18      0.100      1.00    0.682331
+           21      0.200      0.50    0.682270
+           20      0.200      0.25    0.681899
+           11      0.050      0.50    0.681277
+ARTIFACT | Stage 5.4.3 table_cox_tuning_results — Cox tuning results | duckdb://table_cox_tuning_results_w10
+[Stage 5.4.3 table_cox_tuned_test_predictions — Cox test predictions]
+table_name=table_cox_tuned_test_predictions_w10
+rows=29334, cols=7
+      enrollment_id  event  duration  partial_hazard  horizon_week  pred_survival_h  pred_risk_h
+ 100561||DDD||2014J      0        37        0.742434            10         0.918655     0.081345
+ 100621||CCC||2014B      1         6        1.454217            10         0.846887     0.153113
+ 101187||DDD||2014J      0        37        1.981918            10         0.797325     0.202675
+ 101279||DDD||2014J      0        37        1.027482            10         0.889211     0.110789
+ 101414||EEE||2013J      0        38        2.541374            10         0.747944     0.252056
+ 101700||CCC||2014J      0        38        2.753108            10         0.730063     0.269937
+ 101781||AAA||2013J      0        38        0.557978            10         0.938225     0.061775
+ 102209||CCC||2014J      1        15        0.549491            10         0.939135     0.060865
+ 102343||FFF||2013J      0        38        0.565082            10         0.937464     0.062536
+1023623||CCC||2014J      0        38        0.957625            10         0.896339     0.103661
+1033968||DDD||2014B      1        13        1.232689            10         0.868601     0.131399
+ 103891||DDD||2014B      0        34        2.079443            10         0.788488     0.211512
+ 104316||FFF||2014B      0        34        0.564766            10         0.937497     0.062503
+1045203||AAA||2014J      0        38        0.547912            10         0.939305     0.060695
+1047645||CCC||2014B      0        34        2.217166            10         0.776175     0.223825
+1053702||EEE||2013J      0        38        0.539671            10         0.940190     0.059810
+ 105629||FFF||2013J      0        38        0.505124            10         0.943909     0.056091
+1057883||CCC||2014B      0        34        0.864573            10         0.905921     0.094079
+ 106383||BBB||2014J      1        21        1.405568            10         0.851609     0.148391
+ 106553||DDD||2014J      0        37        0.668608            10         0.926438     0.073562
+ARTIFACT | Stage 5.4.3 table_cox_tuned_test_predictions — Cox test predictions | duckdb://table_cox_tuned_test_predictions_w10
+[Stage 5.4.3 table_cox_tuned_primary_metrics — Cox primary metrics]
+table_name=table_cox_tuned_primary_metrics_w10
+rows=2, cols=4
+metric_name metric_category  metric_value                         notes
+        ibs         primary      0.109141 sksurv_integrated_brier_score
+    c_index      co_primary      0.708161          pycox_concordance_td
+ARTIFACT | Stage 5.4.3 table_cox_tuned_primary_metrics — Cox primary metrics | duckdb://table_cox_tuned_primary_metrics_w10
+[Stage 5.4.3 table_cox_tuned_brier_by_horizon — Cox Brier scores by horizon]
+table_name=table_cox_tuned_brier_by_horizon_w10
+rows=3, cols=5
+ horizon_week      metric_name metric_category  metric_value              notes
+           10 brier_at_horizon         primary      0.092054 sksurv_brier_score
+           20 brier_at_horizon         primary      0.128097 sksurv_brier_score
+           30 brier_at_horizon         primary      0.153774 sksurv_brier_score
+ARTIFACT | Stage 5.4.3 table_cox_tuned_brier_by_horizon — Cox Brier scores by horizon | duckdb://table_cox_tuned_brier_by_horizon_w10
+[Stage 5.4.3 table_cox_tuned_secondary_metrics — Cox secondary metrics]
+table_name=table_cox_tuned_secondary_metrics_w10
+rows=6, cols=5
+ horizon_week         metric_name metric_category  metric_value                                                                                  notes
+           10 risk_auc_at_horizon       secondary      0.847651                                                            roc_auc_on_evaluable_subset
+           10  time_dependent_auc       secondary      0.845053 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.845053; local_ipcw_auc
+           20 risk_auc_at_horizon       secondary      0.754245                                                            roc_auc_on_evaluable_subset
+           20  time_dependent_auc       secondary      0.747774 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.747774; local_ipcw_auc
+           30 risk_auc_at_horizon       secondary      0.711097                                                            roc_auc_on_evaluable_subset
+           30  time_dependent_auc       secondary      0.702286 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.702286; local_ipcw_auc
+ARTIFACT | Stage 5.4.3 table_cox_tuned_secondary_metrics — Cox secondary metrics | duckdb://table_cox_tuned_secondary_metrics_w10
+[Stage 5.4.3 table_cox_tuned_td_auc_support_audit — Cox IPCW support audit]
+table_name=table_cox_tuned_td_auc_support_audit_w10
+rows=3, cols=6
+ horizon_week  max_ipcw_time  n_total_test_enrollments  n_supported_test_enrollments  mean_auc                                                 notes
+           10           38.0                      9778                          6742  0.845053 IPCW-supported subset used for Cox time-dependent AUC
+           20           38.0                      9778                          6742  0.747774 IPCW-supported subset used for Cox time-dependent AUC
+           30           38.0                      9778                          6742  0.702286 IPCW-supported subset used for Cox time-dependent AUC
+ARTIFACT | Stage 5.4.3 table_cox_tuned_td_auc_support_audit — Cox IPCW support audit | duckdb://table_cox_tuned_td_auc_support_audit_w10
+[Stage 5.4.3 table_cox_tuned_support_by_horizon — Cox support by horizon]
+table_name=table_cox_tuned_support_by_horizon_w10
+rows=3, cols=4
+ horizon_week  n_evaluable_enrollments  n_events_by_horizon  event_rate_by_horizon
+           10                     9778                 1215               0.124259
+           20                     9778                 1736               0.177541
+           30                     9778                 2129               0.217734
+ARTIFACT | Stage 5.4.3 table_cox_tuned_support_by_horizon — Cox support by horizon | duckdb://table_cox_tuned_support_by_horizon_w10
+[Stage 5.4.3 table_cox_tuned_calibration_summary — Cox calibration summary]
+table_name=table_cox_tuned_calibration_summary_w10
+rows=3, cols=5
+ horizon_week            metric_name metric_category  metric_value                                         notes
+           10 calibration_at_horizon         primary      0.064087 Weighted absolute calibration gap across bins
+           20 calibration_at_horizon         primary      0.030739 Weighted absolute calibration gap across bins
+           30 calibration_at_horizon         primary      0.018026 Weighted absolute calibration gap across bins
+ARTIFACT | Stage 5.4.3 table_cox_tuned_calibration_summary — Cox calibration summary | duckdb://table_cox_tuned_calibration_summary_w10
+[Stage 5.4.3 table_cox_tuned_calibration_bins_by_horizon — Cox calibration bins]
+table_name=table_cox_tuned_calibration_bins_by_horizon_w10
+rows=30, cols=6
+ calibration_bin   n  mean_predicted_risk  observed_event_rate  horizon_week  abs_calibration_gap
+               0 978             0.049220             0.006135            10             0.043085
+               1 978             0.059979             0.008180            10             0.051799
+               2 978             0.067773             0.011247            10             0.056525
+               3 977             0.076263             0.016377            10             0.059886
+               4 978             0.087648             0.033742            10             0.053905
+               5 978             0.104180             0.059305            10             0.044875
+               6 977             0.130802             0.111566            10             0.019236
+               7 978             0.171911             0.242331            10             0.070421
+               8 978             0.214493             0.337423            10             0.122931
+               9 978             0.298003             0.416155            10             0.118152
+               0 978             0.073525             0.043967            20             0.029558
+               1 978             0.089352             0.051125            20             0.038227
+               2 978             0.100753             0.057260            20             0.043493
+               3 977             0.113117             0.082907            20             0.030210
+               4 978             0.129602             0.102249            20             0.027353
+               5 978             0.153350             0.148262            20             0.005088
+               6 977             0.191106             0.192426            20             0.001319
+               7 978             0.248263             0.292434            20             0.044170
+               8 978             0.305968             0.365031            20             0.059063
+               9 978             0.410791             0.439673            20             0.028882
+ARTIFACT | Stage 5.4.3 table_cox_tuned_calibration_bins_by_horizon — Cox calibration bins | duckdb://table_cox_tuned_calibration_bins_by_horizon_w10
+[Stage 5.4.3 table_cox_tuned_predicted_vs_observed_survival — Cox predicted versus observed survival]
+table_name=table_cox_tuned_predicted_vs_observed_survival_w10
+rows=3, cols=5
+ horizon_week  n_evaluable_enrollments  mean_predicted_survival  mean_observed_survival  abs_gap
+           10                     9778                 0.873968                0.875741 0.001773
+           20                     9778                 0.818411                0.822459 0.004047
+           30                     9778                 0.777165                0.782266 0.005102
+ARTIFACT | Stage 5.4.3 table_cox_tuned_predicted_vs_observed_survival — Cox predicted versus observed survival | duckdb://table_cox_tuned_predicted_vs_observed_survival_w10
+[Stage 5.4.3 table_cox_tuned_coefficients — Cox coefficients]
+table_name=table_cox_tuned_coefficients_w10
+rows=41, cols=12
+                    feature_name          coef  exp(coef)  se(coef)  coef lower 95%  coef upper 95%  exp(coef) lower 95%  exp(coef) upper 95%  cmp to          z             p   -log2(p)
+       num__num_of_prev_attempts -1.092794e-02   0.989132  0.012979       -0.036367        0.014511             0.964286             1.014617     0.0  -0.841944  3.998194e-01   1.322580
+            num__studied_credits  1.037033e-01   1.109271  0.011626        0.080917        0.126490             1.084281             1.134838     0.0   8.919956  4.664715e-19  60.894845
+      num__clicks_first_10_weeks -6.923279e-01   0.500410  0.035576       -0.762055       -0.622601             0.466706             0.536547     0.0 -19.460750  2.363016e-84 277.801330
+      num__active_weeks_first_10 -4.516577e-01   0.636572  0.016724       -0.484436       -0.418880             0.616045             0.657783     0.0 -27.007077 1.220506e-160 531.221016
+ num__mean_clicks_first_10_weeks  6.271030e-01   1.872179  0.028320        0.571597        0.682609             1.771093             1.979034     0.0  22.143554 1.203628e-108 358.500845
+                   cat__gender_F -1.183366e-01   0.888397  0.109480       -0.332914        0.096241             0.716832             1.101024     0.0  -1.080895  2.797439e-01   1.837822
+                   cat__gender_M  1.183366e-01   1.125623  0.109480       -0.096241        0.332914             0.908245             1.395027     0.0   1.080895  2.797439e-01   1.837822
+ cat__region_East Anglian Region -2.840109e-02   0.971998  0.049650       -0.125713        0.068910             0.881868             1.071340     0.0  -0.572031  5.673012e-01   0.817813
+cat__region_East Midlands Region  9.187557e-03   1.009230  0.055351       -0.099298        0.117673             0.905473             1.124876     0.0   0.165988  8.681665e-01   0.203956
+             cat__region_Ireland -3.630985e-02   0.964341  0.081850       -0.196733        0.124113             0.821410             1.132144     0.0  -0.443615  6.573210e-01   0.605330
+       cat__region_London Region  2.767674e-06   1.000003  0.000693       -0.001356        0.001362             0.998645             1.001363     0.0   0.003991  9.968156e-01   0.004601
+        cat__region_North Region  2.785422e-02   1.028246  0.070812       -0.110934        0.166643             0.894997             1.181332     0.0   0.393355  6.940570e-01   0.526874
+cat__region_North Western Region  3.557009e-07   1.000000  0.000374       -0.000733        0.000734             0.999267             1.000734     0.0   0.000950  9.992418e-01   0.001094
+            cat__region_Scotland -1.746629e-01   0.839740  0.051857       -0.276300       -0.073026             0.758585             0.929577     0.0  -3.368180  7.566619e-04  10.368064
+   cat__region_South East Region -1.585402e-02   0.984271  0.059745       -0.132953        0.101245             0.875506             1.106547     0.0  -0.265360  7.907321e-01   0.338739
+        cat__region_South Region -1.825388e-06   0.999998  0.000493       -0.000968        0.000965             0.999032             1.000965     0.0  -0.003701  9.970469e-01   0.004267
+   cat__region_South West Region  2.443760e-02   1.024739  0.055868       -0.085062        0.133937             0.918456             1.143321     0.0   0.437417  6.618090e-01   0.595513
+               cat__region_Wales -1.091758e-01   0.896573  0.060779       -0.228301        0.009950             0.795884             1.010000     0.0  -1.796260  7.245316e-02   3.786808
+cat__region_West Midlands Region  7.457444e-03   1.007485  0.053305       -0.097019        0.111934             0.907539             1.118439     0.0   0.139901  8.887382e-01   0.170170
+    cat__region_Yorkshire Region  4.699844e-03   1.004711  0.059770       -0.112447        0.121846             0.893645             1.129581     0.0   0.078632  9.373250e-01   0.093379
+ARTIFACT | Stage 5.4.3 table_cox_tuned_coefficients — Cox coefficients | duckdb://table_cox_tuned_coefficients_w10
+[Stage 5.4.3 table_cox_tuned_stability_notes — Cox stability notes]
+table_name=table_cox_tuned_stability_notes_w10
+rows=1, cols=10
+ n_input_features_before_filter  n_input_features_after_filter  n_zero_or_low_variance_features_dropped dropped_zero_or_low_variance_features  best_penalizer  best_l1_ratio  validation_test_size  variance_filter_threshold excluded_candidates_under_strict_warnings  window_weeks
+                             41                             41                                        0                                                  0.01           0.25                   0.1               1.000000e-12               [[0.001, 1.0], [0.01, 1.0]]            10
+ARTIFACT | Stage 5.4.3 table_cox_tuned_stability_notes — Cox stability notes | duckdb://table_cox_tuned_stability_notes_w10
+ARTIFACT | cox_model | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/models/cox_early_window_tuned_w10.joblib
+ARTIFACT | cox_preprocessor | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/models/cox_preprocessor_w10.joblib
+ARTIFACT | cox_tuned_model_config | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/metadata/cox_tuned_model_config_w10.json
+{
+  "model_name": "cox_early_window_tuned_w10",
+  "selection_metric": "highest_validation_c_index",
+  "validation_split": {
+    "method": "GroupShuffleSplit",
+    "test_size": 0.1,
+    "group_column": "enrollment_id",
+    "random_seed": 42
+  },
+  "full_candidate_grid": [
+    {
+      "penalizer": 0.001,
+      "l1_ratio": 0.0
+    },
+    {
+      "penalizer": 0.001,
+      "l1_ratio": 0.25
+    },
+    {
+      "penalizer": 0.001,
+      "l1_ratio": 0.5
+    },
+    {
+      "penalizer": 0.001,
+      "l1_ratio": 0.75
+    },
+    {
+      "penalizer": 0.001,
+      "l1_ratio": 1.0
+    },
+    {
+      "penalizer": 0.01,
+      "l1_ratio": 0.0
+    },
+    {
+      "penalizer": 0.01,
+      "l1_ratio": 0.25
+    },
+    {
+      "penalizer": 0.01,
+      "l1_ratio": 0.5
+    },
+    {
+      "penalizer": 0.01,
+      "l1_ratio": 0.75
+    },
+    {
+      "penalizer": 0.01,
+      "l1_ratio": 1.0
+    },
+    {
+      "penalizer": 0.05,
+      "l1_ratio": 0.0
+    },
+    {
+      "penalizer": 0.05,
+      "l1_ratio": 0.25
+    },
+    {
+      "penalizer": 0.05,
+      "l1_ratio": 0.5
+    },
+    {
+      "penalizer": 0.05,
+      "l1_ratio": 0.75
+    },
+    {
+      "penalizer": 0.05,
+      "l1_ratio": 1.0
+    },
+    {
+      "penalizer": 0.1,
+      "l1_ratio": 0.0
+    },
+    {
+      "penalizer": 0.1,
+      "l1_ratio": 0.25
+    },
+    {
+      "penalizer": 0.1,
+      "l1_ratio": 0.5
+    },
+    {
+      "penalizer": 0.1,
+      "l1_ratio": 0.75
+    },
+    {
+      "penalizer": 0.1,
+      "l1_ratio": 1.0
+    },
+    {
+      "penalizer": 0.2,
+      "l1_ratio": 0.0
+    },
+    {
+      "penalizer": 0.2,
+      "l1_ratio": 0.25
+    },
+    {
+      "penalizer": 0.2,
+      "l1_ratio": 0.5
+    },
+    {
+      "penalizer": 0.2,
+      "l1_ratio": 0.75
+    },
+    {
+      "penalizer": 0.2,
+      "l1_ratio": 1.0
+    }
+  ],
+  "excluded_candidates_under_strict_warnings": [
+    {
+      "penalizer": 0.001,
+      "l1_ratio": 1.0
+    },
+    {
+      "penalizer": 0.01,
+      "l1_ratio": 1.0
+    }
+  ],
+  "search_space": [
+    {
+      "candidate_id": 1,
+      "penalizer": 0.001,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 2,
+      "penalizer": 0.001,
+      "l1_ratio": 0.25
+    },
+    {
+      "candidate_id": 3,
+      "penalizer": 0.001,
+      "l1_ratio": 0.5
+    },
+    {
+      "candidate_id": 4,
+      "penalizer": 0.001,
+      "l1_ratio": 0.75
+    },
+    {
+      "candidate_id": 5,
+      "penalizer": 0.01,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 6,
+      "penalizer": 0.01,
+      "l1_ratio": 0.25
+    },
+    {
+      "candidate_id": 7,
+      "penalizer": 0.01,
+      "l1_ratio": 0.5
+    },
+    {
+      "candidate_id": 8,
+      "penalizer": 0.01,
+      "l1_ratio": 0.75
+    },
+    {
+      "candidate_id": 9,
+      "penalizer": 0.05,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 10,
+      "penalizer": 0.05,
+      "l1_ratio": 0.25
+    },
+    {
+      "candidate_id": 11,
+      "penalizer": 0.05,
+      "l1_ratio": 0.5
+    },
+    {
+      "candidate_id": 12,
+      "penalizer": 0.05,
+      "l1_ratio": 0.75
+    },
+    {
+      "candidate_id": 13,
+      "penalizer": 0.05,
+      "l1_ratio": 1.0
+    },
+    {
+      "candidate_id": 14,
+      "penalizer": 0.1,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 15,
+      "penalizer": 0.1,
+      "l1_ratio": 0.25
+    },
+    {
+      "candidate_id": 16,
+      "penalizer": 0.1,
+      "l1_ratio": 0.5
+    },
+    {
+      "candidate_id": 17,
+      "penalizer": 0.1,
+      "l1_ratio": 0.75
+    },
+    {
+      "candidate_id": 18,
+      "penalizer": 0.1,
+      "l1_ratio": 1.0
+    },
+    {
+      "candidate_id": 19,
+      "penalizer": 0.2,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 20,
+      "penalizer": 0.2,
+      "l1_ratio": 0.25
+    },
+    {
+      "candidate_id": 21,
+      "penalizer": 0.2,
+      "l1_ratio": 0.5
+    },
+    {
+      "candidate_id": 22,
+      "penalizer": 0.2,
+      "l1_ratio": 0.75
+    },
+    {
+      "candidate_id": 23,
+      "penalizer": 0.2,
+      "l1_ratio": 1.0
+    }
+  ],
+  "benchmark_horizons": [
+    10,
+    20,
+    30
+  ],
+  "calibration_bins": 10,
+  "calibration_contract_version": "v2_ipcw_km_observed_risk",
+  "calibration_observed_risk_method": "ipcw_km_pseudo_event_rate",
+  "variance_filter_threshold": 1e-12,
+  "best_candidate": {
+    "candidate_id": 6,
+    "penalizer": 0.01,
+    "l1_ratio": 0.25,
+    "val_cindex": 0.702076562623631
+  },
+  "effective_window_weeks": 10,
+  "input_train_table": "enrollment_cox_ready_train_w10",
+  "input_test_table": "enrollment_cox_ready_test_w10",
+  "preprocessing": {
+    "categorical_features": [
+      "gender",
+      "region",
+      "highest_education",
+      "imd_band",
+      "age_band",
+      "disability"
+    ],
+    "numeric_features": [
+      "num_of_prev_attempts",
+      "studied_credits",
+      "clicks_first_10_weeks",
+      "active_weeks_first_10",
+      "mean_clicks_first_10_weeks"
+    ],
+    "numeric_prefill_values": {
+      "num_of_prev_attempts": 0.0,
+      "studied_credits": 60.0,
+      "clicks_first_10_weeks": 260.0,
+      "active_weeks_first_10": 8.0,
+      "mean_clicks_first_10_weeks": 36.4
+    },
+    "feature_names_before_filter": [
+      "num__num_of_prev_attempts",
+      "num__studied_credits",
+      "num__clicks_first_10_weeks",
+      "num__active_weeks_first_10",
+      "num__mean_clicks_first_10_weeks",
+      "cat__gender_F",
+      "cat__gender_M",
+      "cat__region_East Anglian Region",
+      "cat__region_East Midlands Region",
+      "cat__region_Ireland",
+      "cat__region_London Region",
+      "cat__region_North Region",
+      "cat__region_North Western Region",
+      "cat__region_Scotland",
+      "cat__region_South East Region",
+      "cat__region_South Region",
+      "cat__region_South West Region",
+      "cat__region_Wales",
+      "cat__region_West Midlands Region",
+      "cat__region_Yorkshire Region",
+      "cat__highest_education_A Level or Equivalent",
+      "cat__highest_education_HE Qualification",
+      "cat__highest_education_Lower Than A Level",
+      "cat__highest_education_No Formal quals",
+      "cat__highest_education_Post Graduate Qualification",
+      "cat__imd_band_0-10%",
+      "cat__imd_band_10-20",
+      "cat__imd_band_20-30%",
+      "cat__imd_band_30-40%",
+      "cat__imd_band_40-50%",
+      "cat__imd_band_50-60%",
+      "cat__imd_band_60-70%",
+      "cat__imd_band_70-80%",
+      "cat__imd_band_80-90%",
+      "cat__imd_band_90-100%",
+      "cat__imd_band_None",
+      "cat__age_band_0-35",
+      "cat__age_band_35-55",
+      "cat__age_band_55<=",
+      "cat__disability_N",
+      "cat__disability_Y"
+    ],
+    "feature_names_out": [
+      "num__num_of_prev_attempts",
+      "num__studied_credits",
+      "num__clicks_first_10_weeks",
+      "num__active_weeks_first_10",
+      "num__mean_clicks_first_10_weeks",
+      "cat__gender_F",
+      "cat__gender_M",
+      "cat__region_East Anglian Region",
+      "cat__region_East Midlands Region",
+      "cat__region_Ireland",
+      "cat__region_London Region",
+      "cat__region_North Region",
+      "cat__region_North Western Region",
+      "cat__region_Scotland",
+      "cat__region_South East Region",
+      "cat__region_South Region",
+      "cat__region_South West Region",
+      "cat__region_Wales",
+      "cat__region_West Midlands Region",
+      "cat__region_Yorkshire Region",
+      "cat__highest_education_A Level or Equivalent",
+      "cat__highest_education_HE Qualification",
+      "cat__highest_education_Lower Than A Level",
+      "cat__highest_education_No Formal quals",
+      "cat__highest_education_Post Graduate Qualification",
+      "cat__imd_band_0-10%",
+      "cat__imd_band_10-20",
+      "cat__imd_band_20-30%",
+      "cat__imd_band_30-40%",
+      "cat__imd_band_40-50%",
+      "cat__imd_band_50-60%",
+      "cat__imd_band_60-70%",
+      "cat__imd_band_70-80%",
+      "cat__imd_band_80-90%",
+      "cat__imd_band_90-100%",
+      "cat__imd_band_None",
+      "cat__age_band_0-35",
+      "cat__age_band_35-55",
+      "cat__age_band_55<=",
+      "cat__disability_N",
+      "cat__disability_Y"
+    ],
+    "dropped_low_variance_features": []
+  },
+  "design_note": "The comparable Cox arm integrates deterministic numeric prefill, low-variance feature filtering, and a local IPCW-supported time-dependent AUC path directly into D5.4 so no downstream repair stage is required."
+}
+
+ candidate_id  penalizer  l1_ratio  val_cindex
+            6       0.01      0.25    0.702077
+[END] 5.4.3 - 2026-04-05 11:37:40
+[START] 5.4 - 2026-04-05 11:37:40
+# ==============================================================
+# 5.4.4 - Close runtime resources
+# ==============================================================
+DuckDB connection closed.
+ARTIFACT | duckdb_connection | closed::/Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/benchmark_survival.duckdb
+[END] 5.4.4 - 2026-04-05 11:37:40
+[OK] 2026-04-05 11:37:41 dropout_bench_v3_D_04_comparable_continuous_time_cox_early_window.py
+[RUN] 2026-04-05 11:37:41 dropout_bench_v3_D_05_comparable_neural_deepsurv.py
+[RUN_PLAN] comparable_window_weeks=2 script=dropout_bench_v3_D_05_comparable_neural_deepsurv.py
+[START] 5.5 - 2026-04-05 11:37:43
+# ==============================================================
+# 5.5.1 - Lightweight runtime bootstrap
+# ==============================================================
+ARTIFACT | benchmark_shared_config | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/benchmark_shared_config.toml
+ARTIFACT | benchmark_modeling_contract | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/benchmark_modeling_contract.toml
+ARTIFACT | run_metadata | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/metadata/run_metadata.json
+ARTIFACT | duckdb_path | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/benchmark_survival.duckdb
+{
+  "run_id": "f3e86c2afbd246e2814123195c22d973",
+  "random_seed": 42,
+  "test_size": 0.3,
+  "validation_test_size": 0.2,
+  "cpu_cores": 8,
+  "early_window_weeks": 4,
+  "main_enrollment_window_weeks": 4,
+  "effective_window_weeks": 2,
+  "input_train_table": "enrollment_deepsurv_ready_train_w2",
+  "input_test_table": "enrollment_deepsurv_ready_test_w2",
+  "benchmark_horizons": [
+    10,
+    20,
+    30
+  ],
+  "calibration_bins": 10
+}
+[END] 5.5.1 - 2026-04-05 11:37:43
+[START] 5.5 - 2026-04-05 11:37:43
+# ==============================================================
+# 5.5.2 - Build comparable-window DeepSurv treatment
+# ==============================================================
+[Stage 5.5.2 table_deepsurv_preprocessing_summary - DeepSurv preprocessing summary]
+table_name=table_deepsurv_preprocessing_summary_w2
+rows=1, cols=18
+model_family  train_rows  test_rows  n_input_features_raw  n_numeric_features  n_categorical_features  n_features_after_transform  n_events_train  n_events_test  mean_duration_train  mean_duration_test                              numeric_prefill_policy categorical_imputation          categorical_encoding                   numeric_scaling output_dtype                                           comparability_note  window_weeks
+    deepsurv       22815       9778                    11                   5                       6                          41            5171           2216            30.536182           30.539476 deterministic_train_median_or_zero_when_all_missing       constant_missing one_hot_handle_unknown_ignore standard_scaler_fit_on_train_only      float32 same conceptual input design as the comparable Cox benchmark             2
+ARTIFACT | Stage 5.5.2 table_deepsurv_preprocessing_summary - DeepSurv preprocessing summary | duckdb://table_deepsurv_preprocessing_summary_w2
+[Stage 5.5.2 table_deepsurv_raw_feature_manifest - DeepSurv raw feature manifest]
+table_name=table_deepsurv_raw_feature_manifest_w2
+rows=11, cols=7
+ feature_name_operational feature_role                feature_scope  present_in_train  present_in_test  covered_by_canonical_config  numeric_prefill_value
+                   gender  categorical   fixed_demographic_metadata              True             True                        False                    NaN
+                   region  categorical   fixed_demographic_metadata              True             True                        False                    NaN
+        highest_education  categorical   fixed_demographic_metadata              True             True                        False                    NaN
+                 imd_band  categorical   fixed_demographic_metadata              True             True                        False                    NaN
+                 age_band  categorical   fixed_demographic_metadata              True             True                        False                    NaN
+               disability  categorical   fixed_demographic_metadata              True             True                        False                    NaN
+     num_of_prev_attempts      numeric canonical_comparable_numeric              True             True                         True                    0.0
+          studied_credits      numeric canonical_comparable_numeric              True             True                         True                   60.0
+     clicks_first_2_weeks      numeric canonical_comparable_numeric              True             True                         True                   56.0
+     active_weeks_first_2      numeric canonical_comparable_numeric              True             True                         True                    2.0
+mean_clicks_first_2_weeks      numeric canonical_comparable_numeric              True             True                         True                   33.0
+ARTIFACT | Stage 5.5.2 table_deepsurv_raw_feature_manifest - DeepSurv raw feature manifest | duckdb://table_deepsurv_raw_feature_manifest_w2
+[Stage 5.5.2 table_deepsurv_feature_names_out - DeepSurv output feature manifest]
+table_name=table_deepsurv_feature_names_out_w2
+rows=41, cols=1
+                feature_name_out
+       num__num_of_prev_attempts
+            num__studied_credits
+       num__clicks_first_2_weeks
+       num__active_weeks_first_2
+  num__mean_clicks_first_2_weeks
+                   cat__gender_F
+                   cat__gender_M
+ cat__region_East Anglian Region
+cat__region_East Midlands Region
+             cat__region_Ireland
+       cat__region_London Region
+        cat__region_North Region
+cat__region_North Western Region
+            cat__region_Scotland
+   cat__region_South East Region
+        cat__region_South Region
+   cat__region_South West Region
+               cat__region_Wales
+cat__region_West Midlands Region
+    cat__region_Yorkshire Region
+ARTIFACT | Stage 5.5.2 table_deepsurv_feature_names_out - DeepSurv output feature manifest | duckdb://table_deepsurv_feature_names_out_w2
+ARTIFACT | deepsurv_preprocessing_config | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/metadata/deepsurv_preprocessing_config_w2.json
+{
+  "model_family": "deepsurv",
+  "duration_column": "duration",
+  "event_column": "event",
+  "categorical_features": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability"
+  ],
+  "numeric_features": [
+    "num_of_prev_attempts",
+    "studied_credits",
+    "clicks_first_2_weeks",
+    "active_weeks_first_2",
+    "mean_clicks_first_2_weeks"
+  ],
+  "raw_feature_columns": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability",
+    "num_of_prev_attempts",
+    "studied_credits",
+    "clicks_first_2_weeks",
+    "active_weeks_first_2",
+    "mean_clicks_first_2_weeks"
+  ],
+  "expected_features_raw": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "num_of_prev_attempts",
+    "studied_credits",
+    "clicks_first_2_weeks",
+    "active_weeks_first_2",
+    "mean_clicks_first_2_weeks"
+  ],
+  "expected_features_resolved": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "clicks_first_2_weeks",
+    "active_weeks_first_2",
+    "mean_clicks_first_2_weeks"
+  ],
+  "numeric_prefill_policy": "deterministic_train_median_or_zero_when_all_missing",
+  "numeric_fill_values": {
+    "num_of_prev_attempts": 0.0,
+    "studied_credits": 60.0,
+    "clicks_first_2_weeks": 56.0,
+    "active_weeks_first_2": 2.0,
+    "mean_clicks_first_2_weeks": 33.0
+  },
+  "categorical_imputation": "constant_missing",
+  "categorical_encoding": "one_hot_handle_unknown_ignore",
+  "numeric_scaling": "standard_scaler_fit_on_train_only",
+  "feature_names_out": [
+    "num__num_of_prev_attempts",
+    "num__studied_credits",
+    "num__clicks_first_2_weeks",
+    "num__active_weeks_first_2",
+    "num__mean_clicks_first_2_weeks",
+    "cat__gender_F",
+    "cat__gender_M",
+    "cat__region_East Anglian Region",
+    "cat__region_East Midlands Region",
+    "cat__region_Ireland",
+    "cat__region_London Region",
+    "cat__region_North Region",
+    "cat__region_North Western Region",
+    "cat__region_Scotland",
+    "cat__region_South East Region",
+    "cat__region_South Region",
+    "cat__region_South West Region",
+    "cat__region_Wales",
+    "cat__region_West Midlands Region",
+    "cat__region_Yorkshire Region",
+    "cat__highest_education_A Level or Equivalent",
+    "cat__highest_education_HE Qualification",
+    "cat__highest_education_Lower Than A Level",
+    "cat__highest_education_No Formal quals",
+    "cat__highest_education_Post Graduate Qualification",
+    "cat__imd_band_0-10%",
+    "cat__imd_band_10-20",
+    "cat__imd_band_20-30%",
+    "cat__imd_band_30-40%",
+    "cat__imd_band_40-50%",
+    "cat__imd_band_50-60%",
+    "cat__imd_band_60-70%",
+    "cat__imd_band_70-80%",
+    "cat__imd_band_80-90%",
+    "cat__imd_band_90-100%",
+    "cat__imd_band_None",
+    "cat__age_band_0-35",
+    "cat__age_band_35-55",
+    "cat__age_band_55<=",
+    "cat__disability_N",
+    "cat__disability_Y"
+  ],
+  "comparability_note": "same conceptual input design as the comparable Cox benchmark",
+  "window_weeks": 2
+}
+
+[END] 5.5.2 - 2026-04-05 11:37:44
+[START] 5.5 - 2026-04-05 11:37:44
+# ==============================================================
+# 5.5.3 - Tune and evaluate the comparable-window DeepSurv model
+# ==============================================================
+[FAIL] 2026-04-05 11:39:01 dropout_bench_v3_D_05_comparable_neural_deepsurv.py exit=137
+[DONE] 2026-04-05 11:39:01 D04->D15 retrain

@@ -1,0 +1,21 @@
+model,metric,point_estimate,ci_95,n_successful_bootstrap
+Cox Comparable (Tuned),ibs,0.11762124570088119,"[0.114, 0.121]",200
+Cox Comparable (Tuned),c_index_td,0.6511595534058838,"[0.642, 0.661]",200
+Cox Comparable (Tuned),brier_h10,0.10115689321017396,"[0.096, 0.105]",200
+Cox Comparable (Tuned),brier_h20,0.1378134363109299,"[0.133, 0.142]",200
+Cox Comparable (Tuned),brier_h30,0.16232756626110104,"[0.158, 0.167]",200
+DeepSurv (Tuned),ibs,0.11450542886066452,"[0.111, 0.118]",200
+DeepSurv (Tuned),c_index_td,0.6610398280230456,"[0.649, 0.672]",200
+DeepSurv (Tuned),brier_h10,0.09765395366554169,"[0.093, 0.103]",200
+DeepSurv (Tuned),brier_h20,0.13437180703693183,"[0.131, 0.139]",200
+DeepSurv (Tuned),brier_h30,0.15908910834966603,"[0.155, 0.164]",200
+Random Survival Forest (Tuned),ibs,0.1119050259465049,"[0.108, 0.116]",200
+Random Survival Forest (Tuned),c_index_td,0.6727366456424279,"[0.662, 0.685]",200
+Random Survival Forest (Tuned),brier_h10,0.09469258672624392,"[0.091, 0.099]",200
+Random Survival Forest (Tuned),brier_h20,0.13303142862272785,"[0.128, 0.138]",200
+Random Survival Forest (Tuned),brier_h30,0.15760204518825524,"[0.152, 0.163]",200
+Neural-MTLR (Tuned),ibs,0.1150950473021,"[0.111, 0.119]",200
+Neural-MTLR (Tuned),c_index_td,0.6448917774435698,"[0.635, 0.656]",200
+Neural-MTLR (Tuned),brier_h10,0.096865438158335,"[0.092, 0.102]",200
+Neural-MTLR (Tuned),brier_h20,0.13646010829139377,"[0.131, 0.142]",200
+Neural-MTLR (Tuned),brier_h30,0.1618932471073228,"[0.157, 0.167]",200

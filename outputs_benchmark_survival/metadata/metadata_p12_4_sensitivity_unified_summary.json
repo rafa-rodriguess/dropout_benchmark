@@ -1,0 +1,15 @@
+{
+  "step": "E7",
+  "title": "Unified Sensitivity Summary",
+  "audit_status": "present",
+  "notes": [
+    "E7 consolidates explicit design-audit components from the E5 inventory.",
+    "The horizon-choice block is populated from the canonical E6 tables when the benchmark-wide upstream inputs exist.",
+    "Aggregate component status now distinguishes present, empty, partial, and missing_upstream states."
+  ],
+  "output_tables": [
+    "table_p12_4_sensitivity_unified_summary",
+    "table_p12_4_sensitivity_component_registry",
+    "table_p12_4_sensitivity_family_summary"
+  ]
+}

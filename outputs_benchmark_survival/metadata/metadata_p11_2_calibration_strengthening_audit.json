@@ -1,0 +1,16 @@
+{
+  "step": "E4",
+  "title": "Build Unified Calibration Strengthening Table",
+  "audit_status": "missing_required_upstream_tables",
+  "notes": [
+    "E4 now consumes the canonical calibration-audit and slope/intercept tables materialized by the D-stage pipeline.",
+    "When upstream calibration tables are absent, E4 materializes empty placeholders and records the missing dependencies instead of aborting the full audit run."
+  ],
+  "missing_upstream_tables": [
+    "table_p26_5_all_tuned_calibration_audit"
+  ],
+  "output_tables": [
+    "table_p11_2_calibration_strengthening_by_horizon",
+    "table_p11_2_calibration_strengthening_summary"
+  ]
+}

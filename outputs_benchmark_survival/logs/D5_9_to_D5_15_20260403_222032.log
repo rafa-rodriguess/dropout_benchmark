@@ -1,0 +1,7 @@
+[START] 2026-04-03 22:20:32 D5.9 -> D5.15 run
+[RUN] 2026-04-03 22:20:32 dropout_bench_v3_D_09_comparable_tree_survival_random_survival_forest.py
+  File "/Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/dropout_bench_v3_D_09_comparable_tree_survival_random_survival_forest.py", line 1243
+    "calibration_contract_version": CALIBRATION_CONTRACT_VERSION,
+    ^
+SyntaxError: illegal target for annotation
+[FAIL] 2026-04-03 22:20:32 dropout_bench_v3_D_09_comparable_tree_survival_random_survival_forest.py exit=1

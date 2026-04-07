@@ -1,0 +1,8 @@
+{
+  "n_models_in_subset": 8,
+  "n_temporal_dominant": 8,
+  "pct_temporal_dominant": 100.0,
+  "unanimous": true,
+  "top_recurring_threshold": 4,
+  "n_recurring_top_drivers": 1
+}

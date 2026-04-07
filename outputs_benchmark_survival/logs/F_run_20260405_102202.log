@@ -1,0 +1,301 @@
+[START] 2026-04-05 10:22:02 F (ablation stability)
+[START] F0 - 2026-04-05 10:22:02
+Runtime context ready.
+- SCRIPT_NAME   : dropout_bench_v3_F_ablation_stability_refatorado_v30.py
+- STAGE_PREFIX  : F
+- LINEAGE LABEL : dropout_bench_v3_F_ablation_stability_refatorado_v30.ipynb
+- RUN_ID        : f3e86c2afbd246e2814123195c22d973
+- DUCKDB_PATH   : /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/benchmark_survival.duckdb
+[END] F0 - 2026-04-05 10:22:04
+Runtime contract validated.
+[END] F0.1 - 2026-04-05 10:22:04
+[START] F1 - 2026-04-05 10:22:04
+
+======================================================================
+F1 — Define Ablation Study Design and Protocol
+======================================================================
+Methodological note: this step defines the ablation study only.
+No model is trained here.
+F1: materialized DuckDB table -> table_ablation_model_registry
+F1: materialized DuckDB table -> table_ablation_feature_blocks
+F1: materialized DuckDB table -> table_ablation_scenarios
+
+Ablation model registry:
+stage_id           model_id          canonical_model_name                          display_name                   family   operational_family_group                paper_methodological_arm    input_representation                       training_contract base_data_level         selection_scope                                                                                                                 selection_rationale  uses_dynamic_temporal_features  uses_static_features  uses_early_window_features                                             ablation_positioning_note
+    D5.6 poisson_pexp_tuned poisson_piecewise_exponential Poisson Piecewise-Exponential (Tuned)    discrete_time_poisson             dynamic_weekly            dynamic_weekly_person_period    weekly_person_period            dynamic_weekly_person_period   person_period manuscript_audit_subset                                                    Best IBS in the dynamic arm; GLM parametric paradigm; coefficient-interpretable.                            True                  True                       False     Tuned representative of the Poisson piecewise-exponential family.
+    D5.2       linear_tuned   linear_discrete_time_hazard   Linear Discrete-Time Hazard (Tuned)     discrete_time_linear             dynamic_weekly            dynamic_weekly_person_period    weekly_person_period            dynamic_weekly_person_period   person_period manuscript_audit_subset                                                   Classical linear logistic baseline for the dynamic arm; maximum interpretability.                            True                  True                       False       Tuned representative of the linear discrete-time hazard family.
+    D5.7    gb_weekly_tuned              gb_weekly_hazard              GB Weekly Hazard (Tuned)         discrete_time_gb             dynamic_weekly            dynamic_weekly_person_period    weekly_person_period            dynamic_weekly_person_period   person_period manuscript_audit_subset                                                                  Gradient-boosted tree paradigm representative for the dynamic arm.                            True                  True                       False                  Tuned representative of the GB weekly hazard family.
+    D5.3       neural_tuned neural_discrete_time_survival Neural Discrete-Time Survival (Tuned)     discrete_time_neural             dynamic_neural            dynamic_weekly_person_period    weekly_person_period            dynamic_weekly_person_period   person_period manuscript_audit_subset                                                                                     Only neural representative for the dynamic arm.                            True                  True                       False     Tuned representative of the neural discrete-time survival family.
+    D5.4          cox_tuned                cox_comparable                Cox Comparable (Tuned)      continuous_time_cox comparable_continuous_time comparable_continuous_time_early_window early_window_enrollment comparable_continuous_time_early_window      enrollment manuscript_audit_subset                                     Interpretable comparable-arm baseline retained as the reference continuous-time representative.                           False                  True                        True                    Tuned representative of the Cox comparable family.
+    D5.5     deepsurv_tuned                      deepsurv                      DeepSurv (Tuned) continuous_time_deepsurv          comparable_neural comparable_continuous_time_early_window early_window_enrollment comparable_continuous_time_early_window      enrollment manuscript_audit_subset                          Flexible comparable-arm representative retained to contrast with Cox under the same early-window contract.                           False                  True                        True                          Tuned representative of the DeepSurv family.
+    D5.9          rsf_tuned        random_survival_forest        Random Survival Forest (Tuned)        tree_survival_rsf   comparable_tree_survival comparable_continuous_time_early_window early_window_enrollment comparable_continuous_time_early_window      enrollment manuscript_audit_subset                      Best-performing comparable-arm tree-survival representative retained as the principal nonparametric benchmark.                           False                  True                        True Tuned representative of the comparable random survival forest family.
+   D5.14         mtlr_tuned                   neural_mtlr                   Neural-MTLR (Tuned)     continuous_time_mtlr          comparable_neural comparable_continuous_time_early_window early_window_enrollment comparable_continuous_time_early_window      enrollment manuscript_audit_subset Competitive comparable-arm neural discrete-duration representative retained to contrast with DeepSurv and the tree-survival winner.                           False                  True                        True                       Tuned representative of the Neural-MTLR family.
+
+Ablation feature blocks:
+                   block_id                         block_label applies_to_data_level                                           conceptual_role                                                                                                         examples
+          static_structural        Static structural covariates            enrollment         student background and enrollment-level structure         gender, region, highest_education, imd_band, age_band, num_of_prev_attempts, studied_credits, disability
+      early_window_behavior     Early-window behavior summaries            enrollment                  compressed early-course activity profile                                            clicks_first_4_weeks, active_weeks_first_4, mean_clicks_first_4_weeks
+dynamic_temporal_behavioral Weekly temporal-behavioral features         person_period                  week-by-week real-time behavioral signal total_clicks_week, active_this_week, n_vle_rows_week, n_distinct_sites_week, cum_clicks_until_t, recency, streak
+        discrete_time_index          Discrete time index (week)         person_period explicit week index encoding time-varying hazard baseline                                                                                                             week
+
+Ablation scenarios:
+           scenario_id                    scenario_label       scenario_type                                                                      interpretation_goal
+         full_features            Full tuned feature set           reference                                               Reference tuned benchmark for each family.
+drop_static_structural Drop static structural covariates leave_one_block_out               Estimate how much performance depends on background/structural covariates.
+  drop_temporal_signal  Drop early-window behavior block leave_one_block_out Estimate how much performance depends on compressed early-window behavioral information.
+only_static_structural Only static structural covariates   single_block_only                                       Assess how far structural covariates alone can go.
+  only_temporal_signal  Only early-window behavior block   single_block_only                           Assess how far early-window behavioral summaries alone can go.
+
+Ablation protocol summary:
+         ablation_scope                                                                                                   included_models  canonical_predictive_roster_size  subset_model_count  reuse_existing_train_test_split reuse_existing_horizons                                                                                              main_question                                                                                                             secondary_question
+manuscript_audit_subset poisson_pexp_tuned, linear_tuned, gb_weekly_tuned, neural_tuned, cox_tuned, deepsurv_tuned, rsf_tuned, mtlr_tuned                                14                   8                             True              10, 20, 30 How much of model performance is driven by structural covariates versus early-window behavioral summaries? Does the relative importance of structural versus early-window information vary across the retained comparable model families?
+
+Saved:
+- DuckDB table: table_ablation_model_registry
+- DuckDB table: table_ablation_feature_blocks
+- DuckDB table: table_ablation_scenarios
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/metadata/ablation_config.json
+[END] F1 - 2026-04-05 10:22:04
+[START] F2 - 2026-04-05 10:22:04
+
+======================================================================
+F2 — Materialize Ablation Variants (Revised v2)
+======================================================================
+Methodological note: this step materializes ablation-ready
+feature subsets only. No model is trained here.
+Revised behavior: ready datasets are loaded from DuckDB.
+Current retained subset: comparable early-window models only.
+F2: materialized DuckDB table -> poisson_pexp_tuned__full_features__train
+F2: materialized DuckDB table -> poisson_pexp_tuned__full_features__test
+F2: materialized DuckDB table -> poisson_pexp_tuned__drop_static_structural__train
+F2: materialized DuckDB table -> poisson_pexp_tuned__drop_static_structural__test
+F2: materialized DuckDB table -> poisson_pexp_tuned__drop_temporal_signal__train
+F2: materialized DuckDB table -> poisson_pexp_tuned__drop_temporal_signal__test
+F2: materialized DuckDB table -> poisson_pexp_tuned__only_static_structural__train
+F2: materialized DuckDB table -> poisson_pexp_tuned__only_static_structural__test
+F2: materialized DuckDB table -> poisson_pexp_tuned__only_temporal_signal__train
+F2: materialized DuckDB table -> poisson_pexp_tuned__only_temporal_signal__test
+F2: materialized DuckDB table -> linear_tuned__full_features__train
+F2: materialized DuckDB table -> linear_tuned__full_features__test
+F2: materialized DuckDB table -> linear_tuned__drop_static_structural__train
+F2: materialized DuckDB table -> linear_tuned__drop_static_structural__test
+F2: materialized DuckDB table -> linear_tuned__drop_temporal_signal__train
+F2: materialized DuckDB table -> linear_tuned__drop_temporal_signal__test
+F2: materialized DuckDB table -> linear_tuned__only_static_structural__train
+F2: materialized DuckDB table -> linear_tuned__only_static_structural__test
+F2: materialized DuckDB table -> linear_tuned__only_temporal_signal__train
+F2: materialized DuckDB table -> linear_tuned__only_temporal_signal__test
+F2: materialized DuckDB table -> gb_weekly_tuned__full_features__train
+F2: materialized DuckDB table -> gb_weekly_tuned__full_features__test
+F2: materialized DuckDB table -> gb_weekly_tuned__drop_static_structural__train
+F2: materialized DuckDB table -> gb_weekly_tuned__drop_static_structural__test
+F2: materialized DuckDB table -> gb_weekly_tuned__drop_temporal_signal__train
+F2: materialized DuckDB table -> gb_weekly_tuned__drop_temporal_signal__test
+F2: materialized DuckDB table -> gb_weekly_tuned__only_static_structural__train
+F2: materialized DuckDB table -> gb_weekly_tuned__only_static_structural__test
+F2: materialized DuckDB table -> gb_weekly_tuned__only_temporal_signal__train
+F2: materialized DuckDB table -> gb_weekly_tuned__only_temporal_signal__test
+F2: materialized DuckDB table -> neural_tuned__full_features__train
+F2: materialized DuckDB table -> neural_tuned__full_features__test
+F2: materialized DuckDB table -> neural_tuned__drop_static_structural__train
+F2: materialized DuckDB table -> neural_tuned__drop_static_structural__test
+F2: materialized DuckDB table -> neural_tuned__drop_temporal_signal__train
+F2: materialized DuckDB table -> neural_tuned__drop_temporal_signal__test
+F2: materialized DuckDB table -> neural_tuned__only_static_structural__train
+F2: materialized DuckDB table -> neural_tuned__only_static_structural__test
+F2: materialized DuckDB table -> neural_tuned__only_temporal_signal__train
+F2: materialized DuckDB table -> neural_tuned__only_temporal_signal__test
+F2: materialized DuckDB table -> cox_tuned__full_features__train
+F2: materialized DuckDB table -> cox_tuned__full_features__test
+F2: materialized DuckDB table -> cox_tuned__drop_static_structural__train
+F2: materialized DuckDB table -> cox_tuned__drop_static_structural__test
+F2: materialized DuckDB table -> cox_tuned__drop_temporal_signal__train
+F2: materialized DuckDB table -> cox_tuned__drop_temporal_signal__test
+F2: materialized DuckDB table -> cox_tuned__only_static_structural__train
+F2: materialized DuckDB table -> cox_tuned__only_static_structural__test
+F2: materialized DuckDB table -> cox_tuned__only_temporal_signal__train
+F2: materialized DuckDB table -> cox_tuned__only_temporal_signal__test
+F2: materialized DuckDB table -> deepsurv_tuned__full_features__train
+F2: materialized DuckDB table -> deepsurv_tuned__full_features__test
+F2: materialized DuckDB table -> deepsurv_tuned__drop_static_structural__train
+F2: materialized DuckDB table -> deepsurv_tuned__drop_static_structural__test
+F2: materialized DuckDB table -> deepsurv_tuned__drop_temporal_signal__train
+F2: materialized DuckDB table -> deepsurv_tuned__drop_temporal_signal__test
+F2: materialized DuckDB table -> deepsurv_tuned__only_static_structural__train
+F2: materialized DuckDB table -> deepsurv_tuned__only_static_structural__test
+F2: materialized DuckDB table -> deepsurv_tuned__only_temporal_signal__train
+F2: materialized DuckDB table -> deepsurv_tuned__only_temporal_signal__test
+F2: materialized DuckDB table -> rsf_tuned__full_features__train
+F2: materialized DuckDB table -> rsf_tuned__full_features__test
+F2: materialized DuckDB table -> rsf_tuned__drop_static_structural__train
+F2: materialized DuckDB table -> rsf_tuned__drop_static_structural__test
+F2: materialized DuckDB table -> rsf_tuned__drop_temporal_signal__train
+F2: materialized DuckDB table -> rsf_tuned__drop_temporal_signal__test
+F2: materialized DuckDB table -> rsf_tuned__only_static_structural__train
+F2: materialized DuckDB table -> rsf_tuned__only_static_structural__test
+F2: materialized DuckDB table -> rsf_tuned__only_temporal_signal__train
+F2: materialized DuckDB table -> rsf_tuned__only_temporal_signal__test
+F2: materialized DuckDB table -> mtlr_tuned__full_features__train
+F2: materialized DuckDB table -> mtlr_tuned__full_features__test
+F2: materialized DuckDB table -> mtlr_tuned__drop_static_structural__train
+F2: materialized DuckDB table -> mtlr_tuned__drop_static_structural__test
+F2: materialized DuckDB table -> mtlr_tuned__drop_temporal_signal__train
+F2: materialized DuckDB table -> mtlr_tuned__drop_temporal_signal__test
+F2: materialized DuckDB table -> mtlr_tuned__only_static_structural__train
+F2: materialized DuckDB table -> mtlr_tuned__only_static_structural__test
+F2: materialized DuckDB table -> mtlr_tuned__only_temporal_signal__train
+F2: materialized DuckDB table -> mtlr_tuned__only_temporal_signal__test
+F2: materialized DuckDB table -> table_ablation_variant_registry
+F2: materialized DuckDB table -> table_ablation_variant_feature_manifest
+
+Ablation variant registry:
+          model_id                   family    data_level            scenario_id                    scenario_label                                  train_table_name                                  test_table_name storage_contract  n_train_rows  n_test_rows  n_columns_total  n_aux_columns  n_target_columns  n_feature_columns
+poisson_pexp_tuned    discrete_time_poisson person_period          full_features            Full tuned feature set          poisson_pexp_tuned__full_features__train          poisson_pexp_tuned__full_features__test      duckdb_only        719498       308393               26              9                 1                 16
+poisson_pexp_tuned    discrete_time_poisson person_period drop_static_structural Drop static structural covariates poisson_pexp_tuned__drop_static_structural__train poisson_pexp_tuned__drop_static_structural__test      duckdb_only        719498       308393               18              9                 1                  8
+poisson_pexp_tuned    discrete_time_poisson person_period   drop_temporal_signal        Drop temporal signal block   poisson_pexp_tuned__drop_temporal_signal__train   poisson_pexp_tuned__drop_temporal_signal__test      duckdb_only        719498       308393               19              9                 1                  9
+poisson_pexp_tuned    discrete_time_poisson person_period only_static_structural Only static structural covariates poisson_pexp_tuned__only_static_structural__train poisson_pexp_tuned__only_static_structural__test      duckdb_only        719498       308393               19              9                 1                  9
+poisson_pexp_tuned    discrete_time_poisson person_period   only_temporal_signal        Only temporal signal block   poisson_pexp_tuned__only_temporal_signal__train   poisson_pexp_tuned__only_temporal_signal__test      duckdb_only        719498       308393               18              9                 1                  8
+      linear_tuned     discrete_time_linear person_period          full_features            Full tuned feature set                linear_tuned__full_features__train                linear_tuned__full_features__test      duckdb_only        719498       308393               26              9                 1                 16
+      linear_tuned     discrete_time_linear person_period drop_static_structural Drop static structural covariates       linear_tuned__drop_static_structural__train       linear_tuned__drop_static_structural__test      duckdb_only        719498       308393               18              9                 1                  8
+      linear_tuned     discrete_time_linear person_period   drop_temporal_signal        Drop temporal signal block         linear_tuned__drop_temporal_signal__train         linear_tuned__drop_temporal_signal__test      duckdb_only        719498       308393               19              9                 1                  9
+      linear_tuned     discrete_time_linear person_period only_static_structural Only static structural covariates       linear_tuned__only_static_structural__train       linear_tuned__only_static_structural__test      duckdb_only        719498       308393               19              9                 1                  9
+      linear_tuned     discrete_time_linear person_period   only_temporal_signal        Only temporal signal block         linear_tuned__only_temporal_signal__train         linear_tuned__only_temporal_signal__test      duckdb_only        719498       308393               18              9                 1                  8
+   gb_weekly_tuned         discrete_time_gb person_period          full_features            Full tuned feature set             gb_weekly_tuned__full_features__train             gb_weekly_tuned__full_features__test      duckdb_only        719498       308393               26              9                 1                 16
+   gb_weekly_tuned         discrete_time_gb person_period drop_static_structural Drop static structural covariates    gb_weekly_tuned__drop_static_structural__train    gb_weekly_tuned__drop_static_structural__test      duckdb_only        719498       308393               18              9                 1                  8
+   gb_weekly_tuned         discrete_time_gb person_period   drop_temporal_signal        Drop temporal signal block      gb_weekly_tuned__drop_temporal_signal__train      gb_weekly_tuned__drop_temporal_signal__test      duckdb_only        719498       308393               19              9                 1                  9
+   gb_weekly_tuned         discrete_time_gb person_period only_static_structural Only static structural covariates    gb_weekly_tuned__only_static_structural__train    gb_weekly_tuned__only_static_structural__test      duckdb_only        719498       308393               19              9                 1                  9
+   gb_weekly_tuned         discrete_time_gb person_period   only_temporal_signal        Only temporal signal block      gb_weekly_tuned__only_temporal_signal__train      gb_weekly_tuned__only_temporal_signal__test      duckdb_only        719498       308393               18              9                 1                  8
+      neural_tuned     discrete_time_neural person_period          full_features            Full tuned feature set                neural_tuned__full_features__train                neural_tuned__full_features__test      duckdb_only        715824       312067               25              8                 1                 16
+      neural_tuned     discrete_time_neural person_period drop_static_structural Drop static structural covariates       neural_tuned__drop_static_structural__train       neural_tuned__drop_static_structural__test      duckdb_only        715824       312067               17              8                 1                  8
+      neural_tuned     discrete_time_neural person_period   drop_temporal_signal        Drop temporal signal block         neural_tuned__drop_temporal_signal__train         neural_tuned__drop_temporal_signal__test      duckdb_only        715824       312067               18              8                 1                  9
+      neural_tuned     discrete_time_neural person_period only_static_structural Only static structural covariates       neural_tuned__only_static_structural__train       neural_tuned__only_static_structural__test      duckdb_only        715824       312067               18              8                 1                  9
+      neural_tuned     discrete_time_neural person_period   only_temporal_signal        Only temporal signal block         neural_tuned__only_temporal_signal__train         neural_tuned__only_temporal_signal__test      duckdb_only        715824       312067               17              8                 1                  8
+         cox_tuned      continuous_time_cox    enrollment          full_features            Full tuned feature set                   cox_tuned__full_features__train                   cox_tuned__full_features__test      duckdb_only         22815         9778               20              8                 1                 11
+         cox_tuned      continuous_time_cox    enrollment drop_static_structural Drop static structural covariates          cox_tuned__drop_static_structural__train          cox_tuned__drop_static_structural__test      duckdb_only         22815         9778               12              8                 1                  3
+         cox_tuned      continuous_time_cox    enrollment   drop_temporal_signal        Drop temporal signal block            cox_tuned__drop_temporal_signal__train            cox_tuned__drop_temporal_signal__test      duckdb_only         22815         9778               17              8                 1                  8
+         cox_tuned      continuous_time_cox    enrollment only_static_structural Only static structural covariates          cox_tuned__only_static_structural__train          cox_tuned__only_static_structural__test      duckdb_only         22815         9778               17              8                 1                  8
+         cox_tuned      continuous_time_cox    enrollment   only_temporal_signal        Only temporal signal block            cox_tuned__only_temporal_signal__train            cox_tuned__only_temporal_signal__test      duckdb_only         22815         9778               12              8                 1                  3
+    deepsurv_tuned continuous_time_deepsurv    enrollment          full_features            Full tuned feature set              deepsurv_tuned__full_features__train              deepsurv_tuned__full_features__test      duckdb_only         22815         9778               20              8                 1                 11
+    deepsurv_tuned continuous_time_deepsurv    enrollment drop_static_structural Drop static structural covariates     deepsurv_tuned__drop_static_structural__train     deepsurv_tuned__drop_static_structural__test      duckdb_only         22815         9778               12              8                 1                  3
+    deepsurv_tuned continuous_time_deepsurv    enrollment   drop_temporal_signal        Drop temporal signal block       deepsurv_tuned__drop_temporal_signal__train       deepsurv_tuned__drop_temporal_signal__test      duckdb_only         22815         9778               17              8                 1                  8
+    deepsurv_tuned continuous_time_deepsurv    enrollment only_static_structural Only static structural covariates     deepsurv_tuned__only_static_structural__train     deepsurv_tuned__only_static_structural__test      duckdb_only         22815         9778               17              8                 1                  8
+    deepsurv_tuned continuous_time_deepsurv    enrollment   only_temporal_signal        Only temporal signal block       deepsurv_tuned__only_temporal_signal__train       deepsurv_tuned__only_temporal_signal__test      duckdb_only         22815         9778               12              8                 1                  3
+         rsf_tuned        tree_survival_rsf    enrollment          full_features            Full tuned feature set                   rsf_tuned__full_features__train                   rsf_tuned__full_features__test      duckdb_only         22815         9778               20              8                 1                 11
+         rsf_tuned        tree_survival_rsf    enrollment drop_static_structural Drop static structural covariates          rsf_tuned__drop_static_structural__train          rsf_tuned__drop_static_structural__test      duckdb_only         22815         9778               12              8                 1                  3
+         rsf_tuned        tree_survival_rsf    enrollment   drop_temporal_signal        Drop temporal signal block            rsf_tuned__drop_temporal_signal__train            rsf_tuned__drop_temporal_signal__test      duckdb_only         22815         9778               17              8                 1                  8
+         rsf_tuned        tree_survival_rsf    enrollment only_static_structural Only static structural covariates          rsf_tuned__only_static_structural__train          rsf_tuned__only_static_structural__test      duckdb_only         22815         9778               17              8                 1                  8
+         rsf_tuned        tree_survival_rsf    enrollment   only_temporal_signal        Only temporal signal block            rsf_tuned__only_temporal_signal__train            rsf_tuned__only_temporal_signal__test      duckdb_only         22815         9778               12              8                 1                  3
+        mtlr_tuned     continuous_time_mtlr    enrollment          full_features            Full tuned feature set                  mtlr_tuned__full_features__train                  mtlr_tuned__full_features__test      duckdb_only         22815         9778               20              8                 1                 11
+        mtlr_tuned     continuous_time_mtlr    enrollment drop_static_structural Drop static structural covariates         mtlr_tuned__drop_static_structural__train         mtlr_tuned__drop_static_structural__test      duckdb_only         22815         9778               12              8                 1                  3
+        mtlr_tuned     continuous_time_mtlr    enrollment   drop_temporal_signal        Drop temporal signal block           mtlr_tuned__drop_temporal_signal__train           mtlr_tuned__drop_temporal_signal__test      duckdb_only         22815         9778               17              8                 1                  8
+        mtlr_tuned     continuous_time_mtlr    enrollment only_static_structural Only static structural covariates         mtlr_tuned__only_static_structural__train         mtlr_tuned__only_static_structural__test      duckdb_only         22815         9778               17              8                 1                  8
+        mtlr_tuned     continuous_time_mtlr    enrollment   only_temporal_signal        Only temporal signal block           mtlr_tuned__only_temporal_signal__train           mtlr_tuned__only_temporal_signal__test      duckdb_only         22815         9778               12              8                 1                  3
+
+Ablation variant feature manifest (first rows):
+          model_id                family    data_level            scenario_id                    scenario_label                           column_name      role               feature_block
+poisson_pexp_tuned discrete_time_poisson person_period          full_features            Full tuned feature set                         enrollment_id auxiliary               aux_or_target
+poisson_pexp_tuned discrete_time_poisson person_period          full_features            Full tuned feature set                            id_student auxiliary               aux_or_target
+poisson_pexp_tuned discrete_time_poisson person_period          full_features            Full tuned feature set                           code_module auxiliary               aux_or_target
+poisson_pexp_tuned discrete_time_poisson person_period          full_features            Full tuned feature set                     code_presentation auxiliary               aux_or_target
+poisson_pexp_tuned discrete_time_poisson person_period          full_features            Full tuned feature set                        event_observed auxiliary               aux_or_target
+poisson_pexp_tuned discrete_time_poisson person_period          full_features            Full tuned feature set                          t_event_week auxiliary               aux_or_target
+poisson_pexp_tuned discrete_time_poisson person_period          full_features            Full tuned feature set                          t_final_week auxiliary               aux_or_target
+poisson_pexp_tuned discrete_time_poisson person_period          full_features            Full tuned feature set used_zero_week_fallback_for_censoring auxiliary               aux_or_target
+poisson_pexp_tuned discrete_time_poisson person_period          full_features            Full tuned feature set                                 split auxiliary               aux_or_target
+poisson_pexp_tuned discrete_time_poisson person_period          full_features            Full tuned feature set                               event_t    target               aux_or_target
+poisson_pexp_tuned discrete_time_poisson person_period          full_features            Full tuned feature set                                gender   feature           static_structural
+poisson_pexp_tuned discrete_time_poisson person_period          full_features            Full tuned feature set                                region   feature           static_structural
+poisson_pexp_tuned discrete_time_poisson person_period          full_features            Full tuned feature set                     highest_education   feature           static_structural
+poisson_pexp_tuned discrete_time_poisson person_period          full_features            Full tuned feature set                              imd_band   feature           static_structural
+poisson_pexp_tuned discrete_time_poisson person_period          full_features            Full tuned feature set                              age_band   feature           static_structural
+poisson_pexp_tuned discrete_time_poisson person_period          full_features            Full tuned feature set                  num_of_prev_attempts   feature           static_structural
+poisson_pexp_tuned discrete_time_poisson person_period          full_features            Full tuned feature set                       studied_credits   feature           static_structural
+poisson_pexp_tuned discrete_time_poisson person_period          full_features            Full tuned feature set                            disability   feature           static_structural
+poisson_pexp_tuned discrete_time_poisson person_period          full_features            Full tuned feature set                     total_clicks_week   feature dynamic_temporal_behavioral
+poisson_pexp_tuned discrete_time_poisson person_period          full_features            Full tuned feature set                      active_this_week   feature dynamic_temporal_behavioral
+poisson_pexp_tuned discrete_time_poisson person_period          full_features            Full tuned feature set                       n_vle_rows_week   feature dynamic_temporal_behavioral
+poisson_pexp_tuned discrete_time_poisson person_period          full_features            Full tuned feature set                 n_distinct_sites_week   feature dynamic_temporal_behavioral
+poisson_pexp_tuned discrete_time_poisson person_period          full_features            Full tuned feature set                    cum_clicks_until_t   feature dynamic_temporal_behavioral
+poisson_pexp_tuned discrete_time_poisson person_period          full_features            Full tuned feature set                               recency   feature dynamic_temporal_behavioral
+poisson_pexp_tuned discrete_time_poisson person_period          full_features            Full tuned feature set                                streak   feature dynamic_temporal_behavioral
+poisson_pexp_tuned discrete_time_poisson person_period          full_features            Full tuned feature set                                  week   feature         discrete_time_index
+poisson_pexp_tuned discrete_time_poisson person_period drop_static_structural Drop static structural covariates                         enrollment_id auxiliary               aux_or_target
+poisson_pexp_tuned discrete_time_poisson person_period drop_static_structural Drop static structural covariates                            id_student auxiliary               aux_or_target
+poisson_pexp_tuned discrete_time_poisson person_period drop_static_structural Drop static structural covariates                           code_module auxiliary               aux_or_target
+poisson_pexp_tuned discrete_time_poisson person_period drop_static_structural Drop static structural covariates                     code_presentation auxiliary               aux_or_target
+poisson_pexp_tuned discrete_time_poisson person_period drop_static_structural Drop static structural covariates                        event_observed auxiliary               aux_or_target
+poisson_pexp_tuned discrete_time_poisson person_period drop_static_structural Drop static structural covariates                          t_event_week auxiliary               aux_or_target
+poisson_pexp_tuned discrete_time_poisson person_period drop_static_structural Drop static structural covariates                          t_final_week auxiliary               aux_or_target
+poisson_pexp_tuned discrete_time_poisson person_period drop_static_structural Drop static structural covariates used_zero_week_fallback_for_censoring auxiliary               aux_or_target
+poisson_pexp_tuned discrete_time_poisson person_period drop_static_structural Drop static structural covariates                                 split auxiliary               aux_or_target
+poisson_pexp_tuned discrete_time_poisson person_period drop_static_structural Drop static structural covariates                               event_t    target               aux_or_target
+poisson_pexp_tuned discrete_time_poisson person_period drop_static_structural Drop static structural covariates                     total_clicks_week   feature dynamic_temporal_behavioral
+poisson_pexp_tuned discrete_time_poisson person_period drop_static_structural Drop static structural covariates                      active_this_week   feature dynamic_temporal_behavioral
+poisson_pexp_tuned discrete_time_poisson person_period drop_static_structural Drop static structural covariates                       n_vle_rows_week   feature dynamic_temporal_behavioral
+poisson_pexp_tuned discrete_time_poisson person_period drop_static_structural Drop static structural covariates                 n_distinct_sites_week   feature dynamic_temporal_behavioral
+poisson_pexp_tuned discrete_time_poisson person_period drop_static_structural Drop static structural covariates                    cum_clicks_until_t   feature dynamic_temporal_behavioral
+poisson_pexp_tuned discrete_time_poisson person_period drop_static_structural Drop static structural covariates                               recency   feature dynamic_temporal_behavioral
+poisson_pexp_tuned discrete_time_poisson person_period drop_static_structural Drop static structural covariates                                streak   feature dynamic_temporal_behavioral
+poisson_pexp_tuned discrete_time_poisson person_period drop_static_structural Drop static structural covariates                                  week   feature         discrete_time_index
+poisson_pexp_tuned discrete_time_poisson person_period   drop_temporal_signal        Drop temporal signal block                         enrollment_id auxiliary               aux_or_target
+poisson_pexp_tuned discrete_time_poisson person_period   drop_temporal_signal        Drop temporal signal block                            id_student auxiliary               aux_or_target
+poisson_pexp_tuned discrete_time_poisson person_period   drop_temporal_signal        Drop temporal signal block                           code_module auxiliary               aux_or_target
+poisson_pexp_tuned discrete_time_poisson person_period   drop_temporal_signal        Drop temporal signal block                     code_presentation auxiliary               aux_or_target
+poisson_pexp_tuned discrete_time_poisson person_period   drop_temporal_signal        Drop temporal signal block                        event_observed auxiliary               aux_or_target
+poisson_pexp_tuned discrete_time_poisson person_period   drop_temporal_signal        Drop temporal signal block                          t_event_week auxiliary               aux_or_target
+poisson_pexp_tuned discrete_time_poisson person_period   drop_temporal_signal        Drop temporal signal block                          t_final_week auxiliary               aux_or_target
+poisson_pexp_tuned discrete_time_poisson person_period   drop_temporal_signal        Drop temporal signal block used_zero_week_fallback_for_censoring auxiliary               aux_or_target
+poisson_pexp_tuned discrete_time_poisson person_period   drop_temporal_signal        Drop temporal signal block                                 split auxiliary               aux_or_target
+poisson_pexp_tuned discrete_time_poisson person_period   drop_temporal_signal        Drop temporal signal block                               event_t    target               aux_or_target
+poisson_pexp_tuned discrete_time_poisson person_period   drop_temporal_signal        Drop temporal signal block                                gender   feature           static_structural
+poisson_pexp_tuned discrete_time_poisson person_period   drop_temporal_signal        Drop temporal signal block                                region   feature           static_structural
+poisson_pexp_tuned discrete_time_poisson person_period   drop_temporal_signal        Drop temporal signal block                     highest_education   feature           static_structural
+poisson_pexp_tuned discrete_time_poisson person_period   drop_temporal_signal        Drop temporal signal block                              imd_band   feature           static_structural
+poisson_pexp_tuned discrete_time_poisson person_period   drop_temporal_signal        Drop temporal signal block                              age_band   feature           static_structural
+poisson_pexp_tuned discrete_time_poisson person_period   drop_temporal_signal        Drop temporal signal block                  num_of_prev_attempts   feature           static_structural
+
+Saved:
+- DuckDB table: table_ablation_variant_registry
+- DuckDB table: table_ablation_variant_feature_manifest
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/metadata/ablation_variant_registry.json
+[END] F2 - 2026-04-05 10:23:21
+[START] F3 - 2026-04-05 10:23:21
+
+======================================================================
+F3 — Dynamic Arm Ablation (Poisson / Linear / GB / Neural)
+======================================================================
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_linear_loss.py:165: RuntimeWarning: divide by zero encountered in matmul
+  raw_prediction = X @ weights + intercept
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_linear_loss.py:165: RuntimeWarning: overflow encountered in matmul
+  raw_prediction = X @ weights + intercept
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_linear_loss.py:165: RuntimeWarning: invalid value encountered in matmul
+  raw_prediction = X @ weights + intercept
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_linear_loss.py:295: RuntimeWarning: divide by zero encountered in matmul
+  grad[:n_features] = X.T @ grad_pointwise + l2_reg_strength * weights
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_linear_loss.py:295: RuntimeWarning: overflow encountered in matmul
+  grad[:n_features] = X.T @ grad_pointwise + l2_reg_strength * weights
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_linear_loss.py:295: RuntimeWarning: invalid value encountered in matmul
+  grad[:n_features] = X.T @ grad_pointwise + l2_reg_strength * weights
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_glm/glm.py:345: RuntimeWarning: divide by zero encountered in matmul
+  return X @ self.coef_ + self.intercept_
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_glm/glm.py:345: RuntimeWarning: overflow encountered in matmul
+  return X @ self.coef_ + self.intercept_
+/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/linear_model/_glm/glm.py:345: RuntimeWarning: invalid value encountered in matmul
+  return X @ self.coef_ + self.intercept_
+Traceback (most recent call last):
+  File "/Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/dropout_bench_v3_F_ablation_stability_refatorado_v30.py", line 1466, in <module>
+    eval_out = _evaluate_pp_survival(surv_df, truth_test, HORIZONS_WEEKS)
+  File "/Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/dropout_bench_v3_F_ablation_stability_refatorado_v30.py", line 1325, in _evaluate_pp_survival
+    rauc = roc_auc_score(ev["obs_event"], ev["pred_risk"]) if ev["obs_event"].nunique() >= 2 else np.nan
+  File "/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/utils/_param_validation.py", line 213, in wrapper
+    return func(*args, **kwargs)
+  File "/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/metrics/_ranking.py", line 619, in roc_auc_score
+    y_score = check_array(y_score, ensure_2d=False)
+  File "/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/utils/validation.py", line 1064, in check_array
+    _assert_all_finite(
+  File "/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/utils/validation.py", line 123, in _assert_all_finite
+    _assert_all_finite_element_wise(
+  File "/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/utils/validation.py", line 172, in _assert_all_finite_element_wise
+    raise ValueError(msg_err)
+ValueError: Input contains NaN.
+[FAIL] 2026-04-05 10:23:29 F exit=1

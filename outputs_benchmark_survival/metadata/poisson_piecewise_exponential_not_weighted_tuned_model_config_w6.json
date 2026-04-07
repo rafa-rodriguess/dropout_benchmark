@@ -1,0 +1,75 @@
+{
+  "model_name": "poisson_piecewise_exponential_not_weighted_tuned",
+  "family_name": "discrete_time_dynamic",
+  "model_type": "poisson_piecewise_exponential",
+  "alpha_grid": [
+    2e-05,
+    5e-05,
+    0.0001,
+    0.001,
+    0.01,
+    0.05
+  ],
+  "selection_metric": "val_log_loss_on_discrete_hazard",
+  "validation_split": {
+    "method": "GroupShuffleSplit",
+    "test_size": 0.2,
+    "group_column": "enrollment_id",
+    "random_seed": 42
+  },
+  "guardrails": {
+    "active_window_weeks": 6,
+    "search_row_cap": 76086,
+    "final_row_cap": 76086,
+    "search_rows_selected": 76086,
+    "final_rows_selected": 76086,
+    "subtrain_total_rows": 120781,
+    "full_total_rows": 151041,
+    "n_features": 46,
+    "subtrain_event_rate": 0.014555269454632765,
+    "full_event_rate": 0.014499374342066062,
+    "sampled_subtrain_event_rate": 0.02310543332544752,
+    "sampled_full_event_rate": 0.02878321898903872,
+    "sample_weight_strategy": "none"
+  },
+  "benchmark_horizons": [
+    10,
+    20,
+    30
+  ],
+  "calibration_bins": 10,
+  "calibration_contract_version": "v2_ipcw_km_observed_risk",
+  "calibration_observed_risk_method": "ipcw_km_pseudo_event_rate",
+  "active_window_weeks": 6,
+  "best_candidate": {
+    "alpha": 2e-05,
+    "val_log_loss": 0.07042270692996436
+  },
+  "preprocessing": {
+    "categorical_features": [
+      "gender",
+      "region",
+      "highest_education",
+      "imd_band",
+      "age_band",
+      "disability"
+    ],
+    "numeric_features": [
+      "num_of_prev_attempts",
+      "studied_credits",
+      "week",
+      "total_clicks_week",
+      "active_this_week",
+      "n_vle_rows_week",
+      "n_distinct_sites_week",
+      "cum_clicks_until_t",
+      "recency",
+      "streak"
+    ],
+    "categorical_encoder": "OneHotEncoder(handle_unknown=ignore, sparse_output=True)",
+    "numeric_scaler": "MaxAbsScaler"
+  },
+  "event_rate_to_hazard_mapping": "pred_hazard = 1 - exp(-pred_rate)",
+  "weighting_strategy": "none; this official D5.6 variant fits the same sampled person-period rows without frequency weights.",
+  "design_note": "This not-weighted Poisson variant preserves the dynamic weekly contract, split discipline, and evaluation stack so the weighted script remains a pure Item 6 sensitivity counterpart."
+}

@@ -1,0 +1,445 @@
+[START] 2026-04-05 12:28:29 G explainability run
+[START] G0 - 2026-04-05 12:28:29
+Runtime context ready.
+- NOTEBOOK_NAME: dropout_bench_v3_G_explainability_paper.ipynb
+- RUN_ID       : f3e86c2afbd246e2814123195c22d973
+- DUCKDB_PATH  : /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/benchmark_survival.duckdb
+- MONOLITHIC   : /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/dropout_bench.ipynb
+[END] G0 - 2026-04-05 12:28:30
+[START] G0.1 - 2026-04-05 12:28:30
+Runtime contract validated.
+[END] G0.1 - 2026-04-05 12:28:30
+[START] G0.2 - 2026-04-05 12:28:30
+Shared globals harmonized for G notebook.
+- DATA_DIR    : /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/data
+- TABLES_DIR  : /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/tables
+- METADATA_DIR: /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/metadata
+[END] G0.2 - 2026-04-05 12:28:30
+[START] G1 - 2026-04-05 12:28:30
+
+======================================================================
+G1 — Define Explainability Protocol
+======================================================================
+Methodological note: this step defines the explainability study only.
+No model is trained and no explanation is computed here.
+G1: materialized DuckDB table -> table_explainability_model_registry
+G1: materialized DuckDB table -> table_explainability_feature_blocks
+G1: materialized DuckDB table -> table_explainability_block_taxonomy
+G1: materialized DuckDB table -> table_explainability_outputs
+
+Explainability model registry:
+             model_id  ...                                   positioning_note
+0  poisson_pexp_tuned  ...  Dynamic GLM anchor with log-rate coefficients;...
+1        linear_tuned  ...  Dynamic logistic discrete-time anchor with dir...
+2     gb_weekly_tuned  ...  Dynamic GB benchmark using MDI (mean decrease ...
+3        neural_tuned  ...  Dynamic neural benchmark using grouped permuta...
+4           cox_tuned  ...  Classical comparable continuous-time anchor wi...
+5      deepsurv_tuned  ...  Nonlinear comparable continuous-time benchmark...
+6           rsf_tuned  ...  Tree-based comparable benchmark and the curren...
+7          mtlr_tuned  ...  Discrete-time-inspired continuous-time compara...
+
+[8 rows x 9 columns]
+
+Explainability feature blocks:
+                      block_id  ...                                interpretation_goal
+0            static_structural  ...  Assess contribution of background and structur...
+1        early_window_behavior  ...  Assess contribution of compressed early-course...
+2  dynamic_temporal_behavioral  ...  Assess contribution of dynamic weekly behavior...
+3          discrete_time_index  ...  Assess contribution of elapsed time (week inde...
+
+[4 rows x 5 columns]
+
+Explainability taxonomy:
+                      block_id  ...                                  manuscript_reason
+0            static_structural  ...  Captures background and enrollment structure t...
+1        early_window_behavior  ...  Captures compressed early-course engagement pa...
+2  dynamic_temporal_behavioral  ...  Captures rich week-by-week engagement; primary...
+3          discrete_time_index  ...  Week index encodes hazard shape; important for...
+
+[4 rows x 5 columns]
+
+Explainability planned outputs:
+                             output_id  ...          planned_for
+0               global_feature_ranking  ...           all_models
+1                feature_block_summary  ...           all_models
+2                  signed_effect_table  ...            cox_tuned
+3  cross_family_explainability_summary  ...  final_consolidation
+
+[4 rows x 3 columns]
+
+Explainability protocol summary:
+               scope  ...                             paper_positioning_note
+0  tuned_models_only  ...  Explainability is treated here as a post-bench...
+
+[1 rows x 5 columns]
+
+Saved:
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/tables/table_explainability_model_registry.csv
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/tables/table_explainability_feature_blocks.csv
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/tables/table_explainability_block_taxonomy.csv
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/tables/table_explainability_outputs.csv
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/metadata/explainability_config.json
+[END] G1 - 2026-04-05 12:28:30
+[START] G2 - 2026-04-05 12:28:30
+
+======================================================================
+G2 — Explainability for Linear Tuned
+======================================================================
+Methodological note: this step computes global explainability
+for the tuned linear discrete-time hazard model.
+G2: materialized DuckDB table -> table_linear_explainability_feature_coefficients
+G2: materialized DuckDB table -> table_linear_explainability_signed_effects
+G2: materialized DuckDB table -> table_linear_explainability_block_summary
+G2: materialized DuckDB table -> table_linear_explainability_top_positive
+G2: materialized DuckDB table -> table_linear_explainability_top_negative
+
+Top features by absolute coefficient:
+                                     feature_name_out  ...                    effect_direction
+0                                num__n_vle_rows_week  ...  decreases_log_odds_of_weekly_event
+1                              num__total_clicks_week  ...  decreases_log_odds_of_weekly_event
+2                          num__n_distinct_sites_week  ...  increases_log_odds_of_weekly_event
+3                             num__cum_clicks_until_t  ...  increases_log_odds_of_weekly_event
+4                                num__studied_credits  ...  increases_log_odds_of_weekly_event
+5                           num__num_of_prev_attempts  ...  decreases_log_odds_of_weekly_event
+6                                  cat__imd_band_None  ...  decreases_log_odds_of_weekly_event
+7                                  cat__age_band_55<=  ...  decreases_log_odds_of_weekly_event
+8                                cat__region_Scotland  ...  decreases_log_odds_of_weekly_event
+9                                 cat__age_band_35-55  ...  decreases_log_odds_of_weekly_event
+10                                       num__recency  ...  decreases_log_odds_of_weekly_event
+11                                          num__week  ...  decreases_log_odds_of_weekly_event
+12                                 cat__age_band_0-35  ...  decreases_log_odds_of_weekly_event
+13       cat__highest_education_A Level or Equivalent  ...  decreases_log_odds_of_weekly_event
+14            cat__highest_education_HE Qualification  ...  decreases_log_odds_of_weekly_event
+15                                        num__streak  ...  decreases_log_odds_of_weekly_event
+16                                cat__region_Ireland  ...  decreases_log_odds_of_weekly_event
+17  cat__highest_education_Post Graduate Qualifica...  ...  decreases_log_odds_of_weekly_event
+18                              num__active_this_week  ...  decreases_log_odds_of_weekly_event
+19                                  cat__region_Wales  ...  decreases_log_odds_of_weekly_event
+
+[20 rows x 6 columns]
+
+Top positive effects:
+                          feature_name_out  ...                    effect_direction
+0               num__n_distinct_sites_week  ...  increases_log_odds_of_weekly_event
+1                  num__cum_clicks_until_t  ...  increases_log_odds_of_weekly_event
+2                     num__studied_credits  ...  increases_log_odds_of_weekly_event
+3                 cat__region_North Region  ...  increases_log_odds_of_weekly_event
+4                     cat__imd_band_20-30%  ...  increases_log_odds_of_weekly_event
+5             cat__region_Yorkshire Region  ...  increases_log_odds_of_weekly_event
+6                      cat__imd_band_10-20  ...  increases_log_odds_of_weekly_event
+7                cat__region_London Region  ...  increases_log_odds_of_weekly_event
+8            cat__region_South West Region  ...  increases_log_odds_of_weekly_event
+9         cat__region_West Midlands Region  ...  increases_log_odds_of_weekly_event
+10  cat__highest_education_No Formal quals  ...  increases_log_odds_of_weekly_event
+11                    cat__imd_band_30-40%  ...  increases_log_odds_of_weekly_event
+12                     cat__imd_band_0-10%  ...  increases_log_odds_of_weekly_event
+13                    cat__imd_band_60-70%  ...                             neutral
+14        cat__region_North Western Region  ...  decreases_log_odds_of_weekly_event
+
+[15 rows x 6 columns]
+
+Top negative effects:
+                                     feature_name_out  ...                    effect_direction
+0                                num__n_vle_rows_week  ...  decreases_log_odds_of_weekly_event
+1                              num__total_clicks_week  ...  decreases_log_odds_of_weekly_event
+2                           num__num_of_prev_attempts  ...  decreases_log_odds_of_weekly_event
+3                                  cat__imd_band_None  ...  decreases_log_odds_of_weekly_event
+4                                  cat__age_band_55<=  ...  decreases_log_odds_of_weekly_event
+5                                cat__region_Scotland  ...  decreases_log_odds_of_weekly_event
+6                                 cat__age_band_35-55  ...  decreases_log_odds_of_weekly_event
+7                                        num__recency  ...  decreases_log_odds_of_weekly_event
+8                                           num__week  ...  decreases_log_odds_of_weekly_event
+9                                  cat__age_band_0-35  ...  decreases_log_odds_of_weekly_event
+10       cat__highest_education_A Level or Equivalent  ...  decreases_log_odds_of_weekly_event
+11            cat__highest_education_HE Qualification  ...  decreases_log_odds_of_weekly_event
+12                                        num__streak  ...  decreases_log_odds_of_weekly_event
+13                                cat__region_Ireland  ...  decreases_log_odds_of_weekly_event
+14  cat__highest_education_Post Graduate Qualifica...  ...  decreases_log_odds_of_weekly_event
+
+[15 rows x 6 columns]
+
+Feature-block summary:
+                 feature_block  ...  mean_coefficient
+0  dynamic_temporal_behavioral  ...         -1.754639
+1          discrete_time_index  ...         -0.825334
+2            static_structural  ...         -0.229147
+
+[3 rows x 6 columns]
+
+Saved:
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/tables/table_linear_explainability_feature_coefficients.csv
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/tables/table_linear_explainability_signed_effects.csv
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/tables/table_linear_explainability_block_summary.csv
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/tables/table_linear_explainability_top_positive.csv
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/tables/table_linear_explainability_top_negative.csv
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/metadata/linear_explainability_summary.json
+[END] G2 - 2026-04-05 12:28:31
+[START] G3 - 2026-04-05 12:28:31
+
+======================================================================
+G3 — Explainability for Neural Tuned (Revised v2)
+======================================================================
+Methodological note: this step computes global explainability
+for the tuned neural discrete-time survival model using GROUPED
+permutation importance at the original-feature level.
+[END] G3 - 2026-04-05 12:28:32
+[START] G3.1 - 2026-04-05 12:28:32
+[END] G3.1 - 2026-04-05 12:28:32
+[START] G3.2 - 2026-04-05 12:28:32
+[END] G3.2 - 2026-04-05 12:29:33
+[START] G3.3 - 2026-04-05 12:29:33
+[END] G3.3 - 2026-04-05 12:29:33
+[START] G3.4 - 2026-04-05 12:29:33
+[END] G3.4 - 2026-04-05 12:29:33
+[START] G3.5 - 2026-04-05 12:29:33
+[END] G3.5 - 2026-04-05 12:29:33
+[START] G3.6 - 2026-04-05 12:29:33
+[END] G3.6 - 2026-04-05 12:29:33
+[START] G3.7 - 2026-04-05 12:29:33
+G3: materialized DuckDB table -> table_neural_explainability_grouped_permutation_importance
+G3: materialized DuckDB table -> table_neural_explainability_grouped_block_summary
+G3: materialized DuckDB table -> table_neural_explainability_grouped_top_features
+
+Top neural features by GROUPED permutation importance:
+    feature_name_original  ...                feature_block
+0                    week  ...          discrete_time_index
+1      cum_clicks_until_t  ...  dynamic_temporal_behavioral
+2                 recency  ...  dynamic_temporal_behavioral
+3        active_this_week  ...  dynamic_temporal_behavioral
+4         studied_credits  ...            static_structural
+5                  streak  ...  dynamic_temporal_behavioral
+6         n_vle_rows_week  ...  dynamic_temporal_behavioral
+7   n_distinct_sites_week  ...  dynamic_temporal_behavioral
+8                imd_band  ...            static_structural
+9                  region  ...            static_structural
+10                 gender  ...            static_structural
+11   num_of_prev_attempts  ...            static_structural
+12      highest_education  ...            static_structural
+13               age_band  ...            static_structural
+14             disability  ...            static_structural
+15      total_clicks_week  ...  dynamic_temporal_behavioral
+
+[16 rows x 19 columns]
+
+Neural grouped feature-block summary:
+                 feature_block  ...  mean_importance_score_auc
+0          discrete_time_index  ...                   0.279585
+1  dynamic_temporal_behavioral  ...                   0.053321
+2            static_structural  ...                   0.014974
+
+[3 rows x 6 columns]
+
+Saved:
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/tables/table_neural_explainability_grouped_permutation_importance.csv
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/tables/table_neural_explainability_grouped_block_summary.csv
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/tables/table_neural_explainability_grouped_top_features.csv
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/metadata/neural_explainability_grouped_summary.json
+[END] G3.7 - 2026-04-05 12:29:53
+[START] G4 - 2026-04-05 12:29:53
+
+======================================================================
+G4 — Explainability for Cox Tuned (Revised)
+======================================================================
+Methodological note: this step computes global explainability
+for the tuned Cox comparable benchmark.
+[END] G4 - 2026-04-05 12:29:53
+[START] G4.1 - 2026-04-05 12:29:53
+[END] G4.1 - 2026-04-05 12:29:53
+[START] G4.2 - 2026-04-05 12:29:53
+[END] G4.2 - 2026-04-05 12:29:53
+[START] G4.3 - 2026-04-05 12:29:53
+[END] G4.3 - 2026-04-05 12:29:53
+[START] G4.4 - 2026-04-05 12:29:53
+G4: materialized DuckDB table -> table_cox_explainability_feature_coefficients
+G4: materialized DuckDB table -> table_cox_explainability_signed_effects
+G4: materialized DuckDB table -> table_cox_explainability_block_summary
+G4: materialized DuckDB table -> table_cox_explainability_top_positive
+G4: materialized DuckDB table -> table_cox_explainability_top_negative
+G4: materialized DuckDB table -> table_cox_explainability_significant_effects
+
+Top Cox features by absolute coefficient:
+                             feature_name_out  ...  effect_direction
+0                   num__clicks_first_4_weeks  ...  decreases_hazard
+1              num__mean_clicks_first_4_weeks  ...  increases_hazard
+2      cat__highest_education_No Formal quals  ...  increases_hazard
+3                          cat__imd_band_None  ...  decreases_hazard
+4   cat__highest_education_Lower Than A Level  ...  increases_hazard
+5                        cat__region_Scotland  ...  decreases_hazard
+6                   num__active_weeks_first_4  ...  decreases_hazard
+7                           cat__region_Wales  ...  decreases_hazard
+8                       cat__imd_band_90-100%  ...  decreases_hazard
+9                        num__studied_credits  ...  increases_hazard
+10                          cat__disability_N  ...  decreases_hazard
+11                          cat__disability_Y  ...  increases_hazard
+12                       cat__imd_band_70-80%  ...  decreases_hazard
+13                              cat__gender_M  ...  increases_hazard
+14                              cat__gender_F  ...  decreases_hazard
+15                   cat__region_North Region  ...  increases_hazard
+16                       cat__imd_band_20-30%  ...  increases_hazard
+17                       cat__imd_band_80-90%  ...  decreases_hazard
+18                        cat__imd_band_0-10%  ...  increases_hazard
+19                        cat__region_Ireland  ...  decreases_hazard
+
+[20 rows x 13 columns]
+
+Top positive Cox effects:
+                             feature_name_out  ...  effect_direction
+0              num__mean_clicks_first_4_weeks  ...  increases_hazard
+1      cat__highest_education_No Formal quals  ...  increases_hazard
+2   cat__highest_education_Lower Than A Level  ...  increases_hazard
+3                        num__studied_credits  ...  increases_hazard
+4                           cat__disability_Y  ...  increases_hazard
+5                               cat__gender_M  ...  increases_hazard
+6                    cat__region_North Region  ...  increases_hazard
+7                        cat__imd_band_20-30%  ...  increases_hazard
+8                         cat__imd_band_0-10%  ...  increases_hazard
+9            cat__region_East Midlands Region  ...  increases_hazard
+10              cat__region_South West Region  ...  increases_hazard
+11               cat__region_Yorkshire Region  ...  increases_hazard
+12           cat__region_West Midlands Region  ...  increases_hazard
+13                        cat__imd_band_10-20  ...  increases_hazard
+14                         cat__age_band_0-35  ...  increases_hazard
+
+[15 rows x 13 columns]
+
+Top negative Cox effects:
+                                     feature_name_out  ...  effect_direction
+0                           num__clicks_first_4_weeks  ...  decreases_hazard
+1                                  cat__imd_band_None  ...  decreases_hazard
+2                                cat__region_Scotland  ...  decreases_hazard
+3                           num__active_weeks_first_4  ...  decreases_hazard
+4                                   cat__region_Wales  ...  decreases_hazard
+5                               cat__imd_band_90-100%  ...  decreases_hazard
+6                                   cat__disability_N  ...  decreases_hazard
+7                                cat__imd_band_70-80%  ...  decreases_hazard
+8                                       cat__gender_F  ...  decreases_hazard
+9                                cat__imd_band_80-90%  ...  decreases_hazard
+10                                cat__region_Ireland  ...  decreases_hazard
+11                               cat__imd_band_50-60%  ...  decreases_hazard
+12                      cat__region_South East Region  ...  decreases_hazard
+13                    cat__region_East Anglian Region  ...  decreases_hazard
+14  cat__highest_education_Post Graduate Qualifica...  ...  decreases_hazard
+
+[15 rows x 13 columns]
+
+Significant Cox effects (p < 0.05):
+                             feature_name_out  ...  effect_direction
+0                   num__clicks_first_4_weeks  ...  decreases_hazard
+1              num__mean_clicks_first_4_weeks  ...  increases_hazard
+2      cat__highest_education_No Formal quals  ...  increases_hazard
+3                          cat__imd_band_None  ...  decreases_hazard
+4   cat__highest_education_Lower Than A Level  ...  increases_hazard
+5                        cat__region_Scotland  ...  decreases_hazard
+6                   num__active_weeks_first_4  ...  decreases_hazard
+7                           cat__region_Wales  ...  decreases_hazard
+8                       cat__imd_band_90-100%  ...  decreases_hazard
+9                        num__studied_credits  ...  increases_hazard
+10                       cat__imd_band_70-80%  ...  decreases_hazard
+11                       cat__imd_band_20-30%  ...  increases_hazard
+
+[12 rows x 13 columns]
+
+Cox feature-block summary:
+           feature_block  n_features  ...  mean_coefficient  mean_hazard_ratio
+0  early_window_behavior           3  ...         -0.126576           1.145629
+1      static_structural          38  ...         -0.004538           1.004878
+
+[2 rows x 7 columns]
+
+Saved:
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/tables/table_cox_explainability_feature_coefficients.csv
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/tables/table_cox_explainability_signed_effects.csv
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/tables/table_cox_explainability_block_summary.csv
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/tables/table_cox_explainability_top_positive.csv
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/tables/table_cox_explainability_top_negative.csv
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/tables/table_cox_explainability_significant_effects.csv
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/metadata/cox_explainability_summary.json
+[END] G4.4 - 2026-04-05 12:29:53
+[START] G5 - 2026-04-05 12:29:53
+
+======================================================================
+G5 — Explainability for DeepSurv Tuned
+======================================================================
+Methodological note: this step computes global explainability
+for the tuned DeepSurv model using GROUPED permutation
+importance at the original-feature level.
+[END] G5 - 2026-04-05 12:29:53
+[START] G5.1 - 2026-04-05 12:29:53
+[END] G5.1 - 2026-04-05 12:29:53
+[START] G5.2 - 2026-04-05 12:29:53
+[END] G5.2 - 2026-04-05 12:29:56
+[START] G5.3 - 2026-04-05 12:29:56
+[END] G5.3 - 2026-04-05 12:29:56
+[START] G5.4 - 2026-04-05 12:29:56
+[END] G5.4 - 2026-04-05 12:29:56
+[START] G5.5 - 2026-04-05 12:29:56
+[END] G5.5 - 2026-04-05 12:29:56
+[START] G5.6 - 2026-04-05 12:29:56
+[END] G5.6 - 2026-04-05 12:29:56
+[START] G5.7 - 2026-04-05 12:29:56
+[END] G5.7 - 2026-04-05 12:29:56
+[START] G5.8 - 2026-04-05 12:29:56
+G5: materialized DuckDB table -> table_deepsurv_explainability_grouped_permutation_importance
+G5: materialized DuckDB table -> table_deepsurv_explainability_grouped_block_summary
+G5: materialized DuckDB table -> table_deepsurv_explainability_grouped_top_features
+
+Top DeepSurv features by GROUPED permutation importance:
+        feature_name_original  ...          feature_block
+0        active_weeks_first_4  ...  early_window_behavior
+1   mean_clicks_first_4_weeks  ...  early_window_behavior
+2        clicks_first_4_weeks  ...  early_window_behavior
+3             studied_credits  ...      static_structural
+4                      region  ...      static_structural
+5                      gender  ...      static_structural
+6           highest_education  ...      static_structural
+7        num_of_prev_attempts  ...      static_structural
+8                    age_band  ...      static_structural
+9                    imd_band  ...      static_structural
+10                 disability  ...      static_structural
+
+[11 rows x 19 columns]
+
+DeepSurv grouped feature-block summary:
+           feature_block  ...  mean_importance_score_auc
+0  early_window_behavior  ...                   0.051715
+1      static_structural  ...                   0.011693
+
+[2 rows x 6 columns]
+
+Saved:
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/tables/table_deepsurv_explainability_grouped_permutation_importance.csv
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/tables/table_deepsurv_explainability_grouped_block_summary.csv
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/tables/table_deepsurv_explainability_grouped_top_features.csv
+- /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/metadata/deepsurv_explainability_grouped_summary.json
+[END] G5.8 - 2026-04-05 12:29:57
+[START] G5.9 - 2026-04-05 12:29:57
+
+======================================================================
+G5.9 — Explainability for Poisson PPE (Tuned)
+======================================================================
+G5.9: materialized DuckDB table -> table_poisson_explainability_feature_coefficients
+G5.9: materialized DuckDB table -> table_poisson_explainability_block_summary
+G5.9 done: table_poisson_explainability_feature_coefficients.csv table_poisson_explainability_block_summary.csv
+[END] G5.9 - 2026-04-05 12:29:57
+[START] G5.10 - 2026-04-05 12:29:57
+
+======================================================================
+G5.10 — Explainability for GB Weekly Hazard (Tuned)
+======================================================================
+Traceback (most recent call last):
+  File "/Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/dropout_bench_v3_G_explainability_paper_refatorado_v7.py", line 2552, in <module>
+    y_pred_gb_base  = gb_pipeline.predict_proba(X_test_gb_base)[:, 1]
+  File "/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/ensemble/_hist_gradient_boosting/gradient_boosting.py", line 2207, in predict_proba
+    raw_predictions = self._raw_predict(X)
+  File "/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/ensemble/_hist_gradient_boosting/gradient_boosting.py", line 1278, in _raw_predict
+    X = self._preprocess_X(X, reset=False)
+  File "/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/ensemble/_hist_gradient_boosting/gradient_boosting.py", line 268, in _preprocess_X
+    return self._validate_data(X, reset=False, **check_X_kwargs)
+  File "/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/base.py", line 633, in _validate_data
+    out = check_array(X, input_name="X", **check_params)
+  File "/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/utils/validation.py", line 971, in check_array
+    array = _ensure_sparse_format(
+  File "/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sklearn/utils/validation.py", line 595, in _ensure_sparse_format
+    raise TypeError(
+TypeError: Sparse data was passed for X, but dense data is required. Use '.toarray()' to convert to a dense numpy array.
+[DONE] 2026-04-05 12:29:59 G explainability run

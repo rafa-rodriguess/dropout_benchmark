@@ -1,0 +1,23 @@
+{
+  "models_run": [
+    "cox_tuned",
+    "deepsurv_tuned",
+    "mtlr_tuned",
+    "rsf_tuned"
+  ],
+  "scenarios_run": [
+    "drop_static_structural",
+    "drop_temporal_signal",
+    "full_features",
+    "only_static_structural",
+    "only_temporal_signal"
+  ],
+  "horizons": [
+    10,
+    20,
+    30
+  ],
+  "n_total_runs": 20,
+  "benchmark_scope": "manuscript_audit_subset",
+  "canonical_predictive_roster_size": 14
+}

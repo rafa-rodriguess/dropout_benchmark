@@ -1,0 +1,3 @@
+feature_block,n_features,mean_importance_score_ibs,median_importance_score_ibs,max_importance_score_ibs,mean_importance_score_auc
+early_window_behavior,3,0.008043064460409552,0.006259824823505122,0.014070496606932409,0.008043064460409552
+static_structural,8,0.0014627170443843526,0.001069456228458554,0.004964119660848615,0.0014627170443843526

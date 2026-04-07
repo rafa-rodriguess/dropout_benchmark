@@ -1,0 +1,77 @@
+digraph M1 {
+  graph [
+    rankdir=TB,
+    labelloc=t,
+    label="Data preparation pipeline",
+    fontname="Helvetica",
+    fontsize=18,
+    pad=0.3,
+    nodesep=0.22,
+    ranksep=0.6,
+    splines=ortho,
+    bgcolor="white"
+  ];
+
+  node [
+    shape=box,
+    style="rounded,filled",
+    fontname="Helvetica",
+    fontsize=10,
+    color="#264653",
+    fillcolor="#F7FBFF",
+    margin="0.12,0.08"
+  ];
+
+  edge [
+    color="#5C677D",
+    penwidth=1.3,
+    arrowsize=0.8,
+    fontname="Helvetica",
+    fontsize=9
+  ];
+
+  subgraph cluster_raw {
+    label="Raw OULAD sources";
+    color="#C8D5E0";
+    style="rounded";
+
+    raw_admin [label="Administrative records\nDemographics · registration · courses", fillcolor="#FFF7E6"];
+    raw_learning [label="Learning activity records\nWeekly VLE interactions · assessments", fillcolor="#FFF7E6"];
+  }
+
+  outcome [label="Define dropout outcome\nWithdrawn + unregistration date → event\nRemaining enrollments → right-censored", fillcolor="#E9F5F2"];
+
+  features [label=<Construct feature blocks<BR/>Static: demographic and academic attributes<BR/>Temporal: weekly click and activity summaries<BR/>Early-window: cumulative activity over weeks 0&#8211;3<BR/><B><FONT COLOR="darkgreen">&#8594; Table 'Feature Blocks'</FONT></B>>, fillcolor="#E9F5F2"];
+
+  split [label=<Partition into train / test sets<BR/>Stratified by outcome &#183; deterministic<BR/><B><FONT COLOR="darkgreen">&#8594; Table 'Split and Contextual Overlap Audit'</FONT></B>>, fillcolor="#E9F5F2"];
+
+  subgraph cluster_dynamic {
+    label="Dynamic arm representation";
+    color="#9AD1D4";
+    style="rounded";
+    dyn [label="Weekly person-period rows\nOne row per enrollment × week\nBinary dropout target at each week", fillcolor="#F2FBFB"];
+  }
+
+  subgraph cluster_comparable {
+    label="Comparable arm representation";
+    color="#F4A261";
+    style="rounded";
+    comp [label="Enrollment-level feature vectors\nFixed early-window snapshot per enrollment\nTime-to-event and censoring label", fillcolor="#FFF8F1"];
+  }
+
+  note_repr [
+    shape=note,
+    label="Two data contracts:\nweekly granularity for the dynamic arm\nfixed enrollment snapshot for the comparable arm",
+    fillcolor="#FFFDEB",
+    color="#B08900"
+  ];
+
+  raw_admin -> outcome;
+  raw_learning -> outcome;
+  outcome -> features;
+  features -> split;
+  split -> dyn;
+  split -> comp;
+  dyn -> note_repr;
+  comp -> note_repr;
+}

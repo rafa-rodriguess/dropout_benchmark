@@ -1,0 +1,34 @@
+{
+  "n_bootstrap": 200,
+  "ci_alpha": 0.05,
+  "metrics": [
+    "ibs",
+    "c_index_td",
+    "brier_h10",
+    "brier_h20",
+    "brier_h30"
+  ],
+  "max_horizon_for_ibs": 30,
+  "resampling_unit": "enrollment",
+  "random_seed": 42,
+  "note": "Enrollment-level bootstrap on the held-out test set using fixed tuned-model predictions.",
+  "inferential_scope": "Quantifies held-out test-set sampling variability conditional on fixed tuned models and fixed survival predictions.",
+  "model_retraining_policy": "no_refit_within_bootstrap_iterations",
+  "supported_use": "Use for uncertainty intervals and cautious directional rank-stability language inside the selected manuscript audit subset.",
+  "unsupported_use": "Do not use as a retraining-based generalization claim, null-hypothesis test, or proof of universally fixed hierarchy.",
+  "alternative_refit_status": "not_materialized_in_current_stage_due_compute_cost",
+  "scipy_simps_note": "not_needed",
+  "sanity_tolerance_abs": 0.02,
+  "selected_models": [
+    "cox_tuned",
+    "deepsurv_tuned",
+    "rsf_tuned",
+    "mtlr_tuned"
+  ],
+  "selected_model_display_names": [
+    "Cox Comparable (Tuned)",
+    "DeepSurv (Tuned)",
+    "Random Survival Forest (Tuned)",
+    "Neural-MTLR (Tuned)"
+  ]
+}

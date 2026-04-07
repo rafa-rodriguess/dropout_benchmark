@@ -1,0 +1,84 @@
+digraph M4 {
+  graph [
+    rankdir=TB,
+    labelloc=t,
+    label="Ablation and stability audit flow",
+    fontname="Helvetica",
+    fontsize=18,
+    pad=0.35,
+    nodesep=0.25,
+    ranksep=0.50,
+    splines=polyline,
+    bgcolor="white",
+    compound=true
+  ];
+
+  node [
+    shape=box,
+    style="rounded,filled",
+    fontname="Helvetica",
+    fontsize=10,
+    color="#264653",
+    fillcolor="#F7FBFF",
+    margin="0.14,0.09"
+  ];
+
+  edge [
+    color="#5C677D",
+    penwidth=1.3,
+    arrowsize=0.8,
+    fontname="Helvetica",
+    fontsize=9
+  ];
+
+  // ── Top ─────────────────────────────────────────────────────────────
+  upstream [
+    label="Frozen benchmark context\nTuned artifacts · consolidated inventory · train/test split",
+    fillcolor="#E9F5F2"
+  ];
+
+  // ── Two parallel paths from upstream ────────────────────────────────
+  { rank=same; f1; f7; }
+  f1 [label="Define ablation protocol\nRetained subset · block-removal scenarios", fillcolor="#F2FBFB"];
+  f7 [label=<Bootstrap uncertainty<BR/>200 resamples · frozen predictions<BR/><B><FONT COLOR="darkgreen">&#8594; Table 'Bootstrap Uncertainty'</FONT></B><BR/><B><FONT COLOR="darkgreen">&#8594; Table 'Bootstrap Inferential Scope'</FONT></B>>, fillcolor="#EAF4EA"];
+
+  { rank=same; f2; f8; }
+  f2 [label="Materialize ablation variants\nFull · minus-static · minus-temporal", fillcolor="#F2FBFB"];
+  f8 [label="Cox PH assumption audit\nFormal proportional-hazards check", fillcolor="#EAF4EA"];
+
+  // ── Arm cluster (ablation spine) ─────────────────────────────────────
+  subgraph cluster_arms {
+    label="Arm-specific execution";
+    color="#C8D5E0";
+    style="rounded";
+
+    f3 [label="Dynamic arm\nRetrain on ablated person-period variants", fillcolor="#FFF8F1"];
+    f4 [label="Comparable arm\nRetrain on ablated enrollment variants", fillcolor="#FFF8F1"];
+    { rank=same; f3; f4; }
+  }
+
+  { rank=same; f5; f9; }
+  f5 [label="Consolidate ablation results\nMetric delta by block and family", fillcolor="#FCEFE8"];
+  f9 [label=<Interpretive scope boundary<BR/>Bootstrap scope · PH-qualified claims<BR/><B><FONT COLOR="darkgreen">&#8594; Table 'Cox PH Global Audit Summary'</FONT></B><BR/><B><FONT COLOR="darkgreen">&#8594; Table 'Proportional-Hazards Scope Boundary'</FONT></B>>, fillcolor="#EAF4EA"];
+
+  f5conv [
+    label=<Cross-arm convergence<BR/>Compare temporal-vs-static conclusions across arms<BR/><B><FONT COLOR="darkgreen">&#8594; Table 'Ablation Results — Comparable Arm'</FONT></B><BR/><B><FONT COLOR="darkgreen">&#8594; Table 'Ablation Results — Dynamic Arm'</FONT></B><BR/><B><FONT COLOR="darkgreen">&#8594; Figure 'Ablation Impact'</FONT></B>>,
+    fillcolor="#FCEFE8"
+  ];
+
+  // ── Edges ────────────────────────────────────────────────────────────
+  upstream -> f1;
+  upstream -> f7;
+
+  f1 -> f2;
+  f7 -> f8;
+
+  f2 -> f3;
+  f2 -> f4;
+  f8 -> f9;
+
+  f3 -> f5;
+  f4 -> f5;
+
+  f5 -> f5conv;
+}

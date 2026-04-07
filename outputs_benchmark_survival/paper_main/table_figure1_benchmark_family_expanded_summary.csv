@@ -1,0 +1,15 @@
+Model,Family,IBS,TD Concordance
+Linear Discrete-Time Hazard,discrete_time_dynamic,0.1398247252150237,0.5004503385856992
+Neural Discrete-Time Survival,discrete_time_dynamic,0.14116053807713275,0.5032985480313198
+Poisson Piecewise-Exponential,discrete_time_dynamic,0.1396263570636054,0.5003127107329629
+Gradient-Boosted Weekly Hazard,discrete_time_dynamic,0.14030340581049666,0.49848157318554803
+CatBoost Weekly Hazard,discrete_time_dynamic,0.1405976179416654,0.5007331886208837
+Cox Comparable,continuous_time_comparable,0.12253321006594096,0.5908912627856611
+DeepSurv,continuous_time_comparable,0.12243931595889038,0.5934973061052676
+Random Survival Forest,continuous_time_comparable,0.12193207890792099,0.6022572879346714
+Gradient-Boosted Cox,continuous_time_comparable,0.12290033808777226,0.5897744830211711
+Weibull AFT,continuous_time_comparable,0.12276789433139224,0.5779612706749815
+Royston-Parmar,continuous_time_comparable,0.12294911210757734,0.5903154627733965
+XGBoost AFT,continuous_time_comparable,0.14966568129262742,0.5145112658781548
+Neural-MTLR,continuous_time_comparable,0.12221011855165612,0.5717901028525387
+DeepHit,continuous_time_comparable,0.12231674548297118,0.5625658594996308

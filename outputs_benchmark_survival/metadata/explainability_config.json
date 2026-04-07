@@ -1,0 +1,84 @@
+{
+  "scope": "tuned_models_only",
+  "included_models": [
+    "poisson_pexp_tuned",
+    "linear_tuned",
+    "gb_weekly_tuned",
+    "neural_tuned",
+    "cox_tuned",
+    "deepsurv_tuned",
+    "rsf_tuned",
+    "mtlr_tuned"
+  ],
+  "main_goals": [
+    "Identify which individual features are most influential within each retained comparable model family.",
+    "Compare the dominant explanatory signals across Cox, DeepSurv, Random Survival Forest, and Neural-MTLR.",
+    "Connect explainability findings back to the ablation results for the manuscript-facing comparable quartet."
+  ],
+  "global_vs_local_policy": {
+    "global_explanations": true,
+    "local_explanations": false,
+    "rationale": "The main goal of this benchmark stage is model-level interpretation, not case-level explanation."
+  },
+  "method_policy_by_family": {
+    "continuous_time_cox": {
+      "primary": "hazard_ratio_analysis",
+      "secondary": "coefficient_ranking"
+    },
+    "continuous_time_deepsurv": {
+      "primary": "grouped_permutation_importance",
+      "secondary": "feature_block_importance_summary"
+    },
+    "continuous_time_tree_ensemble": {
+      "primary": "grouped_permutation_importance",
+      "secondary": "feature_block_importance_summary"
+    },
+    "continuous_time_neural_mtlr": {
+      "primary": "grouped_permutation_importance",
+      "secondary": "feature_block_importance_summary"
+    }
+  },
+  "interpretation_rules": {
+    "large_positive_signed_effect": "Associated with increased risk when sign-based methods apply.",
+    "large_negative_signed_effect": "Associated with reduced risk when sign-based methods apply.",
+    "high_permutation_importance": "Model performance depends strongly on that feature.",
+    "consistency_with_ablation": "If an important feature belongs to a behavior-derived block, the result should align with the ablation conclusion that behavioral information dominates."
+  },
+  "limitations_to_document": [
+    "Permutation importance is global and model-dependent, not causal.",
+    "Coefficient and hazard-ratio interpretations apply only to model families with directly interpretable parameters.",
+    "Explainability describes how the model uses information, not whether the relationships are causal.",
+    "The manuscript-facing quartet is editorially retained even when the raw feature-level explainability implementations are richer for some families than for others in the current notebook revision."
+  ],
+  "paper_positioning_note": "Explainability is treated here as a post-benchmark interpretive layer, intended to explain why the retained comparable manuscript models behave as they do after the benchmark hierarchy, window sensitivity, and cross-arm layers have already been separated.",
+  "taxonomy": [
+    {
+      "block_id": "static_structural",
+      "block_label": "Static structural covariates",
+      "applies_to": "all_families",
+      "taxonomy_role": "baseline_context",
+      "manuscript_reason": "Captures background and enrollment structure that anchor interpretation across retained families."
+    },
+    {
+      "block_id": "early_window_behavior",
+      "block_label": "Early-window behavioral summaries",
+      "applies_to": "comparable_quartet",
+      "taxonomy_role": "behavioral_signal",
+      "manuscript_reason": "Captures compressed early-course engagement patterns expected to explain much of the retained comparable-arm performance."
+    },
+    {
+      "block_id": "dynamic_temporal_behavioral",
+      "block_label": "Weekly temporal-behavioral features",
+      "applies_to": "dynamic_arm",
+      "taxonomy_role": "dynamic_behavioral_signal",
+      "manuscript_reason": "Captures rich week-by-week engagement; primary driver for dynamic-arm models."
+    },
+    {
+      "block_id": "discrete_time_index",
+      "block_label": "Discrete time index (week)",
+      "applies_to": "dynamic_arm",
+      "taxonomy_role": "temporal_covariate",
+      "manuscript_reason": "Week index encodes hazard shape; important for discrete-time hazard models."
+    }
+  ]
+}

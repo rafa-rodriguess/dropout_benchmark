@@ -1,0 +1,5 @@
+output_id,description,planned_for
+global_feature_ranking,Rank features by global importance within each tuned family.,all_models
+feature_block_summary,Summarize importance patterns at the feature-block level.,all_models
+signed_effect_table,Report signed coefficient or hazard-ratio direction when directly available.,cox_tuned
+cross_family_explainability_summary,Compare whether the strongest drivers are consistent across families.,final_consolidation

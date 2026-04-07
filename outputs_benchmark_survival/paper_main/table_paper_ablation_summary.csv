@@ -1,0 +1,9 @@
+Model,Family,Delta IBS static,Delta IBS temporal,Delta TD concordance static,Delta TD concordance temporal,IBS ratio
+Cox Comparable (Tuned),continuous_time_cox,0.002003826503817,0.0049263055658095,-0.0287814763655934,-0.0597506104782015,2.458449150375839
+DeepSurv (Tuned),continuous_time_deepsurv,0.0044736352236823,0.0080483370072087,-0.034385290930247,-0.0681495775047068,1.7990597366103676
+GB Weekly Hazard (Tuned),discrete_time_gb,,,-0.0364481588580856,-0.0779825038009103,
+Linear Discrete-Time Hazard (Tuned),discrete_time_linear,,,-0.0336111859207119,-0.0556508864933399,
+Neural-MTLR (Tuned),continuous_time_mtlr,0.0052934970354296,0.009753599558247,-0.0357196198268214,-0.0711265805827868,1.8425625806467096
+Neural Discrete-Time Survival (Tuned),discrete_time_neural,,,0.0083781369749527,-0.0535784063513401,
+Poisson Piecewise-Exponential (Tuned),discrete_time_poisson,,,-0.035597852240898,-0.0541195183211137,
+Random Survival Forest (Tuned),tree_survival_rsf,0.0103329817256059,0.0116610651629786,-0.0590380092069107,-0.0833512816102995,1.1285285770013134

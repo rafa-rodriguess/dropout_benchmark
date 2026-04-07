@@ -1,0 +1,16 @@
+{
+  "step": "E1.1",
+  "title": "Integrate Comparable Discrete-Time Minimal Arm into Benchmark Results",
+  "source_table_expected": "table_p10_4_comparable_discrete_metrics_by_horizon",
+  "integration_status": "na_upstream_missing",
+  "notes": [
+    "Upstream comparable discrete-time result was not materialized, so integration is marked N/A rather than failing artificially.",
+    "This step does not fabricate upstream results.",
+    "If the upstream result table is absent, the step records N/A explicitly and continues."
+  ],
+  "output_tables": [
+    "table_p10_5_comparable_arm_benchmark_results",
+    "table_p10_5_comparable_arm_best_by_variant",
+    "table_p10_5_benchmark_result_inventory"
+  ]
+}

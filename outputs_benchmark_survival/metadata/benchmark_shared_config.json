@@ -1,0 +1,33 @@
+{
+  "paths": {
+    "data_dir": "content",
+    "output_dir": "outputs_benchmark_survival",
+    "tables_subdir": "tables",
+    "figures_subdir": "figures",
+    "models_subdir": "models",
+    "metadata_subdir": "metadata",
+    "data_output_subdir": "data",
+    "duckdb_filename": "benchmark_survival.duckdb"
+  },
+  "benchmark": {
+    "seed": 42,
+    "test_size": 0.3,
+    "temporal_buckets_q": 4,
+    "early_window_weeks": 4,
+    "main_enrollment_window_weeks": 4,
+    "unit_of_analysis": "enrollment",
+    "time_granularity": "weekly",
+    "event_definition": "Withdrawn with valid date_unregistration"
+  },
+  "keys": {
+    "enrollment_key": [
+      "id_student",
+      "code_module",
+      "code_presentation"
+    ]
+  },
+  "runtime": {
+    "cpu_cores": 8,
+    "tuning_parallel_backend": "processes"
+  }
+}

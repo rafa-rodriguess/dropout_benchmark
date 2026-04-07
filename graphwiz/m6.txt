@@ -1,0 +1,75 @@
+digraph M6 {
+  graph [
+    rankdir=TB,
+    labelloc=t,
+    label="End-to-end reproducibility pipeline",
+    fontname="Helvetica",
+    fontsize=18,
+    pad=0.38,
+    nodesep=0.40,
+    ranksep=0.52,
+    splines=polyline,
+    bgcolor="white",
+    compound=true,
+    newrank=true
+  ];
+
+  node [
+    shape=box,
+    style="rounded,filled",
+    fontname="Helvetica",
+    fontsize=10,
+    color="#264653",
+    fillcolor="#F7FBFF",
+    margin="0.16,0.10"
+  ];
+
+  edge [
+    color="#5C677D",
+    penwidth=1.3,
+    arrowsize=0.8
+  ];
+
+  // ── Top ──────────────────────────────────────────────────────────────
+  raw [
+    label="Ingest raw OULAD data\nAdministrative records · learning activity · assessments",
+    fillcolor="#FFF7E6"
+  ];
+
+  // ── Data preparation (horizontal band) ───────────────────────────────
+  subgraph cluster_data {
+    label="Data preparation";
+    color="#9AD1D4";
+    style="rounded";
+
+    d1 [label="Define outcome\nand censoring rules\nWithdrawn → event;\nremaining → censored", fillcolor="#E9F5F2"];
+    d2 [label="Construct and validate\nfeature blocks\nStatic · temporal-behavioral\nearly-window", fillcolor="#E9F5F2"];
+    d3 [label="Partition into\ntrain / test sets\nStratified by outcome;\naudited for overlap", fillcolor="#E9F5F2"];
+
+    { rank=same; d1; d2; d3 }
+    d1 -> d2 -> d3;
+  }
+
+  // ── Invisible connector to keep clusters centered ─────────────────────
+  conn [style=invis, width=0, height=0, label=""];
+
+  // ── Modeling & evaluation (horizontal band) ───────────────────────────
+  subgraph cluster_model {
+    label="Modeling and evaluation";
+    color="#F4A261";
+    style="rounded";
+
+    m1 [label="Fit and tune 14 model families\n5 dynamic (weekly person-period)\n9 comparable (early-window)", fillcolor="#F2FBFB"];
+    m2 [label="Evaluate and consolidate\nIBS · TD concordance · Brier\nat horizons 10/20/30\nwindow-sensitivity · parity", fillcolor="#FCEFE8"];
+    m3 [label="Run post-hoc audits\nFeature-block ablation\nbootstrap uncertainty\nexplainability · calibration", fillcolor="#EAF4EA"];
+
+    { rank=same; m1; m2; m3 }
+    m1 -> m2 -> m3;
+  }
+
+  // ── Sequential edges via central connector ────────────────────────────
+  raw  -> d2  [lhead=cluster_data];
+  d2   -> conn [ltail=cluster_data, style=invis];
+  conn -> m2  [lhead=cluster_model, style=invis];
+  d2   -> m2  [ltail=cluster_data, lhead=cluster_model];
+}

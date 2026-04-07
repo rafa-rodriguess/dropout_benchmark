@@ -1,0 +1,185 @@
+[START] 2026-04-03 21:31:46 D5.3 -> D5.6 -> D5.7 -> D5.8 IPCW rerun
+[RUN] 2026-04-03 21:31:46 dropout_bench_v3_D_03_A_dynamic_neural_neural_discrete_time_survival.py
+[START] 5.3 - 2026-04-03 21:31:48
+# ==============================================================
+# 5.3.1 - Lightweight runtime bootstrap
+# ==============================================================
+- SCRIPT_NAME: dropout_bench_v3_D_03_A_dynamic_neural_neural_discrete_time_survival.py
+- RUN_ID: f3e86c2afbd246e2814123195c22d973
+- CPU_CORES: 8
+- DUCKDB_PATH: /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/benchmark_survival.duckdb
+- BENCHMARK_HORIZONS: [10, 20, 30]
+- CALIBRATION_BINS: 10
+- EARLY_WINDOW_SENSITIVITY_WEEKS: [2, 4, 6, 8, 10]
+ARTIFACT | shared_config | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/benchmark_shared_config.toml
+ARTIFACT | modeling_contract | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/benchmark_modeling_contract.toml
+ARTIFACT | run_metadata | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/metadata/run_metadata.json
+[END] 5.3.1 - 2026-04-03 21:31:48
+[RUN_PLAN] neural_dynamic_execution=dynamic_window_w2(suffix=_w2), dynamic_window_w4(suffix=_w4), dynamic_window_w6(suffix=_w6), dynamic_window_w8(suffix=_w8), dynamic_window_w10(suffix=_w10)
+[RUN] dynamic_window_weeks=2 output_suffix=_w2
+[START] 5.3 - 2026-04-03 21:31:48
+# ==============================================================
+# 5.3.2 - Prepare the neural discrete-time treatment
+# ==============================================================
+[Stage 5.3.2 table_p18_neural_not_weighted_treatment_summary_w2 — Neural treatment summary]
+table_name=table_p18_neural_not_weighted_treatment_summary_w2
+rows=1, cols=9
+                 model_family  train_rows  test_rows  n_input_features_raw  n_numeric_features  n_categorical_features  n_output_features_after_preprocessing  train_event_rate  test_event_rate
+neural_discrete_time_survival       66712      28573                    16                  10                       6                                     46          0.021091         0.020614
+ARTIFACT | Stage 5.3.2 table_p18_neural_not_weighted_treatment_summary_w2 — Neural treatment summary | duckdb://table_p18_neural_not_weighted_treatment_summary_w2
+[Stage 5.3.2 table_p18_neural_not_weighted_feature_manifest_w2 — Neural feature manifest]
+table_name=table_p18_neural_not_weighted_feature_manifest_w2
+rows=16, cols=6
+feature_name_operational feature_role  present_in_train  present_in_test  covered_by_canonical_config_after_alias canonical_source_name
+                  gender  categorical              True             True                                    False                      
+                  region  categorical              True             True                                    False                      
+       highest_education  categorical              True             True                                    False                      
+                imd_band  categorical              True             True                                    False                      
+                age_band  categorical              True             True                                    False                      
+              disability  categorical              True             True                                    False                      
+    num_of_prev_attempts      numeric              True             True                                     True  num_of_prev_attempts
+         studied_credits      numeric              True             True                                     True       studied_credits
+                    week      numeric              True             True                                     True                  week
+       total_clicks_week      numeric              True             True                                     True          total_clicks
+        active_this_week      numeric              True             True                                    False                      
+         n_vle_rows_week      numeric              True             True                                    False                      
+   n_distinct_sites_week      numeric              True             True                                    False                      
+      cum_clicks_until_t      numeric              True             True                                    False                      
+                 recency      numeric              True             True                                    False                      
+                  streak      numeric              True             True                                    False                      
+ARTIFACT | Stage 5.3.2 table_p18_neural_not_weighted_feature_manifest_w2 — Neural feature manifest | duckdb://table_p18_neural_not_weighted_feature_manifest_w2
+[Stage 5.3.2 table_p18_neural_not_weighted_canonical_alignment_w2 — Canonical feature alignment]
+table_name=table_p18_neural_not_weighted_canonical_alignment_w2
+rows=4, cols=3
+canonical_feature_raw canonical_feature_resolved  covered_by_operational_treatment_spec
+      studied_credits            studied_credits                                   True
+ num_of_prev_attempts       num_of_prev_attempts                                   True
+                 week                       week                                   True
+         total_clicks          total_clicks_week                                   True
+ARTIFACT | Stage 5.3.2 table_p18_neural_not_weighted_canonical_alignment_w2 — Canonical feature alignment | duckdb://table_p18_neural_not_weighted_canonical_alignment_w2
+[Stage 5.3.2 table_p18_neural_not_weighted_output_feature_manifest_w2 — Preprocessed feature manifest]
+table_name=table_p18_neural_not_weighted_output_feature_manifest_w2
+rows=46, cols=1
+       preprocessed_feature_name
+       num__num_of_prev_attempts
+            num__studied_credits
+                       num__week
+          num__total_clicks_week
+           num__active_this_week
+            num__n_vle_rows_week
+      num__n_distinct_sites_week
+         num__cum_clicks_until_t
+                    num__recency
+                     num__streak
+                   cat__gender_F
+                   cat__gender_M
+ cat__region_East Anglian Region
+cat__region_East Midlands Region
+             cat__region_Ireland
+       cat__region_London Region
+        cat__region_North Region
+cat__region_North Western Region
+            cat__region_Scotland
+   cat__region_South East Region
+ARTIFACT | Stage 5.3.2 table_p18_neural_not_weighted_output_feature_manifest_w2 — Preprocessed feature manifest | duckdb://table_p18_neural_not_weighted_output_feature_manifest_w2
+ARTIFACT | metadata_p18_neural_treatment | /Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/metadata/metadata_p18_neural_not_weighted_treatment_w2.json
+{
+  "step": "P18",
+  "model_family": "neural_discrete_time_survival",
+  "run_label": "dynamic_window_w2",
+  "is_window_truncated_run": true,
+  "active_window_weeks": 2,
+  "output_suffix": "_w2",
+  "train_table": "pp_neural_hazard_ready_train",
+  "test_table": "pp_neural_hazard_ready_test",
+  "target_column": "event_t",
+  "categorical_features": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability"
+  ],
+  "numeric_features": [
+    "num_of_prev_attempts",
+    "studied_credits",
+    "week",
+    "total_clicks_week",
+    "active_this_week",
+    "n_vle_rows_week",
+    "n_distinct_sites_week",
+    "cum_clicks_until_t",
+    "recency",
+    "streak"
+  ],
+  "operational_feature_columns": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability",
+    "num_of_prev_attempts",
+    "studied_credits",
+    "week",
+    "total_clicks_week",
+    "active_this_week",
+    "n_vle_rows_week",
+    "n_distinct_sites_week",
+    "cum_clicks_until_t",
+    "recency",
+    "streak"
+  ],
+  "canonical_expected_features_raw": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "week",
+    "total_clicks"
+  ],
+  "canonical_expected_features_resolved": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "week",
+    "total_clicks_week"
+  ],
+  "feature_alias_map": {
+    "total_clicks": "total_clicks_week"
+  },
+  "n_train_rows": 66712,
+  "n_test_rows": 28573,
+  "n_output_features_after_preprocessing": 46,
+  "train_event_rate": 0.02109065835232042,
+  "test_event_rate": 0.020613866237356945,
+  "methodological_note": "All learned preprocessing operations were fit on training data only and then applied unchanged to test data.",
+  "design_note": "Enrollment truth for neural evaluation is derived directly from the neural person-period tables to preserve identifier consistency with the person-period prediction surface.",
+  "cross_arm_parity_note": "This run truncates weekly person-period information at or before the active window and is intended for cross-arm information-parity analysis."
+}
+
+[END] 5.3.2 - 2026-04-03 21:31:49
+[START] 5.3 - 2026-04-03 21:31:49
+# ==============================================================
+# 5.3.3 - Tune and evaluate the neural discrete-time hazard model
+# ==============================================================
+- DATA_LOADER_WORKERS: 7
+[START] 5.3 - 2026-04-03 21:35:27
+# ==============================================================
+# 5.3.4 - Close the DuckDB runtime cleanly
+# ==============================================================
+DuckDB connection closed.
+[END] 5.3.4 - 2026-04-03 21:35:28
+Traceback (most recent call last):
+  File "/Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/dropout_bench_v3_D_03_A_dynamic_neural_neural_discrete_time_survival.py", line 1518, in <module>
+    main()
+  File "/Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/dropout_bench_v3_D_03_A_dynamic_neural_neural_discrete_time_survival.py", line 1512, in main
+    tune_and_evaluate_neural_model(ctx, treatment_state, run_spec)
+  File "/Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/dropout_bench_v3_D_03_A_dynamic_neural_neural_discrete_time_survival.py", line 1189, in tune_and_evaluate_neural_model
+    calibration_table, predicted_vs_observed_row = build_ipcw_calibration_artifacts(
+  File "/Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/dropout_bench_v3_D_00_common.py", line 321, in build_ipcw_calibration_artifacts
+    censoring_estimator.fit(survival_train)
+  File "/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sksurv/nonparametric.py", line 551, in fit
+    event, time = check_y_survival(y)
+  File "/Users/rafars/.pyenv/versions/3.9.13/lib/python3.9/site-packages/sksurv/util.py", line 132, in check_y_survival
+    raise ValueError(
+ValueError: y must be a structured array with the first field being a binary class event indicator and the second field the time of the event/censoring
+[FAIL] 2026-04-03 21:35:30 dropout_bench_v3_D_03_A_dynamic_neural_neural_discrete_time_survival.py exit=1

@@ -1,0 +1,20 @@
+[START] 2026-04-05 11:38:41 D5.4 -> D5.5 -> D5.9 configured-window run
+[RUN] 2026-04-05 11:38:41 dropout_bench_v3_D_04_comparable_continuous_time_cox_early_window.py
+[RUN_PLAN] comparable_window_weeks=2 script=dropout_bench_v3_D_04_comparable_continuous_time_cox_early_window.py
+[START] 5.4 - 2026-04-05 11:38:43
+# ==============================================================
+# 5.4.1 - Lightweight runtime bootstrap
+# ==============================================================
+Traceback (most recent call last):
+  File "/Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/dropout_bench_v3_D_04_comparable_continuous_time_cox_early_window.py", line 1382, in <module>
+    main()
+  File "/Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/dropout_bench_v3_D_04_comparable_continuous_time_cox_early_window.py", line 1378, in main
+    run_single_window(int(window_weeks))
+  File "/Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/dropout_bench_v3_D_04_comparable_continuous_time_cox_early_window.py", line 1354, in run_single_window
+    ctx = initialize_context(window_weeks)
+  File "/Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/dropout_bench_v3_D_04_comparable_continuous_time_cox_early_window.py", line 606, in initialize_context
+    con = open_duckdb_connection(duckdb_path)
+  File "/Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/util.py", line 286, in open_duckdb_connection
+    return duckdb.connect(str(duckdb_path))
+_duckdb.IOException: IO Error: Could not set lock on file "/Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/benchmark_survival.duckdb": Conflicting lock is held in /Users/rafars/.pyenv/versions/3.9.13/bin/python3.9 (PID 10904) by user rafars. See also https://duckdb.org/docs/stable/connect/concurrency
+[FAIL] 2026-04-05 11:38:44 dropout_bench_v3_D_04_comparable_continuous_time_cox_early_window.py exit=1

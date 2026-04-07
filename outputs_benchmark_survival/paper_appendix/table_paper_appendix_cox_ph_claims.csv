@@ -1,0 +1,4 @@
+claim_section,claim_id,source_table,related_tex_label,metric,value_1,value_2,value_3,claim_text
+cox_ph,cox_ph_flagged_share,table_paper_appendix_cox_ph_global_summary.csv,tab:appendix_cox_ph_summary,share_covariates_flagged,0.2631578947368421,38.0,10.0,Comparable Cox PH audit flagged 10 of 38 covariates (0.2632)
+cox_ph,cox_ph_global_classification,table_paper_appendix_cox_ph_global_summary.csv,tab:appendix_cox_ph_summary,global_classification,,,,Global PH classification = C_broad_departure
+cox_ph,flagged_covariates,table_paper_appendix_cox_ph_audit.csv,fig:appendix_cox_ph_diagnostics,flagged_covariates,10.0,,,"Flagged covariates: cat__region_Scotland, num__studied_credits, cat__region_Wales, cat__age_band_0-35, cat__region_Ireland, cat__imd_band_None, num__num_of_prev_attempts, cat__imd_band_10-20, cat__highest_education_No Formal quals, cat__imd_band_80-90%"

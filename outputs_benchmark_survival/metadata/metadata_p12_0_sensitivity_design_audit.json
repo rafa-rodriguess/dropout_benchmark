@@ -1,0 +1,14 @@
+{
+  "step": "E5",
+  "title": "Sensitivity Design Audit",
+  "audit_status": "computed_from_duckdb_catalog",
+  "notes": [
+    "E5 inventories expected sensitivity artifacts and distinguishes present, empty, missing, and missing_upstream states.",
+    "The horizon-choice upstream benchmark-wide tables are tracked explicitly so downstream summaries do not mistake placeholder outputs for completed evidence."
+  ],
+  "output_tables": [
+    "table_p12_0_sensitivity_artifact_inventory",
+    "table_p12_0_sensitivity_design_summary",
+    "table_p12_0_sensitivity_missing_components"
+  ]
+}

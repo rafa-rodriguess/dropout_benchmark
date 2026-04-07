@@ -1,0 +1,79 @@
+{
+  "model_name": "linear_discrete_time_hazard_weighted_tuned",
+  "search_space": {
+    "penalty": [
+      "l1",
+      "l1",
+      "l1",
+      "l1",
+      "l2",
+      "l2",
+      "l2",
+      "l2"
+    ],
+    "C": [
+      0.01,
+      0.1,
+      1.0,
+      10.0
+    ]
+  },
+  "solver": "liblinear",
+  "class_weight": "balanced",
+  "max_iter": 2000,
+  "tuning_parallel_workers": 8,
+  "tuning_parallel_backend": "processes",
+  "run_label": "dynamic_window_w8",
+  "is_window_truncated_run": true,
+  "active_window_weeks": 8,
+  "output_suffix": "_w8",
+  "selection_metric": "val_log_loss",
+  "validation_split": {
+    "method": "GroupShuffleSplit",
+    "test_size": 0.2,
+    "group_column": "enrollment_id",
+    "random_seed": 42
+  },
+  "benchmark_horizons": [
+    10,
+    20,
+    30
+  ],
+  "calibration_bins": 10,
+  "best_candidate": {
+    "candidate_id": 4,
+    "penalty": "l1",
+    "l1_ratio": 1.0,
+    "C": 10.0,
+    "val_log_loss": 0.5644741091454818,
+    "val_brier": 0.19584323805761622,
+    "val_roc_auc": 0.7556140453123251,
+    "val_pr_auc": 0.038791880505971904
+  },
+  "preprocessing": {
+    "categorical_features": [
+      "gender",
+      "region",
+      "highest_education",
+      "imd_band",
+      "age_band",
+      "disability"
+    ],
+    "numeric_features": [
+      "num_of_prev_attempts",
+      "studied_credits",
+      "week",
+      "total_clicks_week",
+      "active_this_week",
+      "n_vle_rows_week",
+      "n_distinct_sites_week",
+      "cum_clicks_until_t",
+      "recency",
+      "streak"
+    ],
+    "categorical_encoder": "OneHotEncoder(handle_unknown=ignore, sparse_output=True)",
+    "numeric_scaler": "MaxAbsScaler"
+  },
+  "weighting_strategy": "liblinear class_weight='balanced' on the same weekly dynamic feature contract as the official D5.2 baseline.",
+  "design_note": "The repaired IPCW-supported time-dependent AUC path is integrated directly into this weighted D5.2 variant so the Item 6 comparison changes only the fitting weights, not the evaluation stack."
+}

@@ -1,0 +1,73 @@
+{
+  "random_seed": 42,
+  "test_size": 0.3,
+  "benchmark_horizons": [
+    10,
+    20,
+    30
+  ],
+  "calibration_bins": 10,
+  "early_window_weeks": 4,
+  "main_enrollment_window_weeks": 4,
+  "early_window_sensitivity_weeks": [
+    2,
+    4,
+    6,
+    8,
+    10
+  ],
+  "main_clicks_feature": "clicks_first_4_weeks",
+  "main_active_feature": "active_weeks_first_4",
+  "main_mean_clicks_feature": "mean_clicks_first_4_weeks",
+  "static_features": [
+    "studied_credits",
+    "num_of_prev_attempts"
+  ],
+  "temporal_features_discrete": [
+    "week",
+    "total_clicks"
+  ],
+  "main_enrollment_window_features": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "clicks_first_4_weeks"
+  ],
+  "optional_comparable_window_features": [
+    "active_weeks_first_4",
+    "mean_clicks_first_4_weeks"
+  ],
+  "dynamic_arm_features_linear": [
+    "week",
+    "total_clicks",
+    "studied_credits",
+    "num_of_prev_attempts"
+  ],
+  "dynamic_arm_features_neural": [
+    "week",
+    "total_clicks",
+    "studied_credits",
+    "num_of_prev_attempts"
+  ],
+  "calibration_contract_version": "v2_ipcw_km_observed_risk",
+  "calibration_observed_risk_method": "ipcw_km_pseudo_event_rate",
+  "item_6_weighting_protocol": {
+    "comparison_rule": "official_baseline_vs_weighted_variant_same_split_same_features_same_evaluation",
+    "promotion_rule": "promote_only_if_weighted_variant_consistently_outperforms_official_baseline",
+    "tuning_policy": "full_variant_specific_retuning_required",
+    "stage_weighting_protocol": {
+      "D5.2": "official_baseline_vs_weighted_variant",
+      "D5.3": "official_baseline_vs_weighted_variant",
+      "D5.6": "official_baseline_vs_weighted_variant",
+      "D5.7": "gb_weekly_hazard_unweighted_vs_weighted_variant",
+      "D5.8": "official_baseline_vs_weighted_variant"
+    }
+  },
+  "selected_official_window_weeks": "pending",
+  "selected_loss_variant_by_stage": {
+    "D5.2": "weighted",
+    "D5.3": "weighted",
+    "D5.6": "weighted",
+    "D5.7": "weighted",
+    "D5.8": "weighted"
+  }
+}

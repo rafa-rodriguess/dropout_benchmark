@@ -1,0 +1,17 @@
+feature_name_out,feature_block,importance_mdi
+studied_credits,static_structural,0.022336232326466976
+recency,dynamic_temporal_behavioral,0.02096267261176321
+week,discrete_time_index,0.013024345123769043
+gender,static_structural,0.00485580574678901
+highest_education,static_structural,0.003711572018066378
+streak,dynamic_temporal_behavioral,0.0021873948454810277
+n_vle_rows_week,dynamic_temporal_behavioral,0.0019038752267103165
+imd_band,static_structural,0.0017319293875490693
+disability,static_structural,0.0005492410475010923
+active_this_week,dynamic_temporal_behavioral,0.0
+cum_clicks_until_t,dynamic_temporal_behavioral,-6.425579622038047e-05
+age_band,static_structural,-0.00019664527018581346
+region,static_structural,-0.0002866144241431279
+total_clicks_week,dynamic_temporal_behavioral,-0.00033704819931934527
+n_distinct_sites_week,dynamic_temporal_behavioral,-0.0012214378795754044
+num_of_prev_attempts,static_structural,-0.001758509569731892

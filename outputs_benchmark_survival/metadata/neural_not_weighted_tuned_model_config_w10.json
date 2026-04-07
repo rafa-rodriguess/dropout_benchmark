@@ -1,0 +1,68 @@
+{
+  "model_name": "neural_discrete_time_survival_not_weighted_tuned",
+  "search_strategy": "controlled_grid_search",
+  "selection_criterion": "lowest_validation_loss",
+  "validation_split": {
+    "method": "GroupShuffleSplit",
+    "unit": "enrollment_id",
+    "test_size": 0.1,
+    "random_seed": 42
+  },
+  "batch_size": 1024,
+  "max_epochs": 30,
+  "early_stopping_patience": 5,
+  "optimizer": "Adam",
+  "loss": "BCEWithLogitsLoss()",
+  "random_state": 42,
+  "run_label": "dynamic_window_w10",
+  "is_window_truncated_run": true,
+  "active_window_weeks": 10,
+  "output_suffix": "_w10",
+  "device": "cpu",
+  "benchmark_horizons": [
+    10,
+    20,
+    30
+  ],
+  "calibration_bins": 10,
+  "calibration_contract_version": "v2_ipcw_km_observed_risk",
+  "calibration_observed_risk_method": "ipcw_km_pseudo_event_rate",
+  "best_candidate": {
+    "candidate_id": 13,
+    "hidden_dims": [
+      128,
+      64
+    ],
+    "dropout": 0.3,
+    "learning_rate": 0.001,
+    "weight_decay": 1e-05,
+    "best_val_loss": 0.05792186733173287,
+    "best_epoch": 22
+  },
+  "preprocessing": {
+    "categorical_features": [
+      "gender",
+      "region",
+      "highest_education",
+      "imd_band",
+      "age_band",
+      "disability"
+    ],
+    "numeric_features": [
+      "num_of_prev_attempts",
+      "studied_credits",
+      "week",
+      "total_clicks_week",
+      "active_this_week",
+      "n_vle_rows_week",
+      "n_distinct_sites_week",
+      "cum_clicks_until_t",
+      "recency",
+      "streak"
+    ],
+    "categorical_encoder": "OneHotEncoder(handle_unknown=ignore, sparse_output=False)",
+    "numeric_scaler": "StandardScaler"
+  },
+  "weighting_strategy": "none; this official D5.3 variant uses the same grouped validation protocol and evaluation contract without positive-class loss weighting.",
+  "design_note": "Enrollment truth and evaluation alignment are derived directly from the neural person-period tables so the Item 6 comparison changes only the fitting loss in the weighted sensitivity counterpart, not the evaluation contract."
+}

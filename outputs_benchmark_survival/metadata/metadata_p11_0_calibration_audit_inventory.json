@@ -1,0 +1,14 @@
+{
+  "step": "E2",
+  "title": "Survival Calibration Audit Inventory",
+  "audit_status": "computed_from_duckdb_catalog",
+  "notes": [
+    "E2 now inventories calibration-related artifacts directly from DuckDB.",
+    "Availability flags reflect the actual presence of canonical upstream tables."
+  ],
+  "output_tables": [
+    "table_p11_0_calibration_artifact_inventory",
+    "table_p11_0_calibration_audit_summary",
+    "table_p11_0_calibration_missing_components"
+  ]
+}

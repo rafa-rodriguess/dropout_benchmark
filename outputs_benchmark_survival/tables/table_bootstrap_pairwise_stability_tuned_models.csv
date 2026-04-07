@@ -1,0 +1,13 @@
+metric,model_a,model_b,prob_a_better_than_b,prob_b_better_than_a,n_bootstrap_pairs
+ibs,Cox Comparable (Tuned),DeepSurv (Tuned),0.15,0.85,200
+ibs,Cox Comparable (Tuned),Neural-MTLR (Tuned),0.205,0.795,200
+ibs,Cox Comparable (Tuned),Random Survival Forest (Tuned),0.03,0.97,200
+ibs,DeepSurv (Tuned),Neural-MTLR (Tuned),0.62,0.38,200
+ibs,DeepSurv (Tuned),Random Survival Forest (Tuned),0.175,0.825,200
+ibs,Neural-MTLR (Tuned),Random Survival Forest (Tuned),0.14,0.86,200
+c_index_td,Cox Comparable (Tuned),DeepSurv (Tuned),0.1,0.9,200
+c_index_td,Cox Comparable (Tuned),Neural-MTLR (Tuned),0.765,0.235,200
+c_index_td,Cox Comparable (Tuned),Random Survival Forest (Tuned),0.01,0.99,200
+c_index_td,DeepSurv (Tuned),Neural-MTLR (Tuned),0.96,0.04,200
+c_index_td,DeepSurv (Tuned),Random Survival Forest (Tuned),0.105,0.895,200
+c_index_td,Neural-MTLR (Tuned),Random Survival Forest (Tuned),0.0,1.0,200

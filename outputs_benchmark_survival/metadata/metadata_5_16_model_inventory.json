@@ -1,0 +1,467 @@
+{
+  "stage_id": "5.16",
+  "notebook_name": "dropout_bench_v3_D_16_benchmark_consolidation.py",
+  "run_id": "f3e86c2afbd246e2814123195c22d973",
+  "generated_at_utc": "2026-04-05T03:46:11.988234+00:00",
+  "predictive_model_count": 14,
+  "inventory_rows": 15,
+  "primary_summary_rows": 14,
+  "alias_tables_materialized": [
+    {
+      "alias_table": "table_linear_tuning_results",
+      "source_table": "table_linear_not_weighted_tuning_results_w4"
+    },
+    {
+      "alias_table": "table_linear_tuned_test_predictions",
+      "source_table": "table_linear_not_weighted_tuned_test_predictions_w4"
+    },
+    {
+      "alias_table": "table_linear_tuned_primary_metrics",
+      "source_table": "table_linear_not_weighted_tuned_primary_metrics_w4"
+    },
+    {
+      "alias_table": "table_linear_tuned_brier_by_horizon",
+      "source_table": "table_linear_not_weighted_tuned_brier_by_horizon_w4"
+    },
+    {
+      "alias_table": "table_linear_tuned_secondary_metrics",
+      "source_table": "table_linear_not_weighted_tuned_secondary_metrics_w4"
+    },
+    {
+      "alias_table": "table_linear_tuned_td_auc_support_audit",
+      "source_table": "table_linear_not_weighted_tuned_td_auc_support_audit_w4"
+    },
+    {
+      "alias_table": "table_linear_tuned_row_diagnostics",
+      "source_table": "table_linear_not_weighted_tuned_row_diagnostics_w4"
+    },
+    {
+      "alias_table": "table_linear_tuned_support_by_horizon",
+      "source_table": "table_linear_not_weighted_tuned_support_by_horizon_w4"
+    },
+    {
+      "alias_table": "table_linear_tuned_calibration_summary",
+      "source_table": "table_linear_not_weighted_tuned_calibration_summary_w4"
+    },
+    {
+      "alias_table": "table_linear_tuned_calibration_bins_by_horizon",
+      "source_table": "table_linear_not_weighted_tuned_calibration_bins_by_horizon_w4"
+    },
+    {
+      "alias_table": "table_linear_tuned_predicted_vs_observed_survival",
+      "source_table": "table_linear_not_weighted_tuned_predicted_vs_observed_survival_w4"
+    },
+    {
+      "alias_table": "table_neural_tuning_results",
+      "source_table": "table_neural_not_weighted_tuning_results_w4"
+    },
+    {
+      "alias_table": "table_neural_tuned_test_predictions",
+      "source_table": "table_neural_not_weighted_tuned_test_predictions_w4"
+    },
+    {
+      "alias_table": "table_neural_tuned_primary_metrics",
+      "source_table": "table_neural_not_weighted_tuned_primary_metrics_w4"
+    },
+    {
+      "alias_table": "table_neural_tuned_brier_by_horizon",
+      "source_table": "table_neural_not_weighted_tuned_brier_by_horizon_w4"
+    },
+    {
+      "alias_table": "table_neural_tuned_secondary_metrics",
+      "source_table": "table_neural_not_weighted_tuned_secondary_metrics_w4"
+    },
+    {
+      "alias_table": "table_neural_tuned_td_auc_support_audit",
+      "source_table": "table_neural_not_weighted_tuned_td_auc_support_audit_w4"
+    },
+    {
+      "alias_table": "table_neural_tuned_row_diagnostics",
+      "source_table": "table_neural_not_weighted_tuned_row_diagnostics_w4"
+    },
+    {
+      "alias_table": "table_neural_tuned_support_by_horizon",
+      "source_table": "table_neural_not_weighted_tuned_support_by_horizon_w4"
+    },
+    {
+      "alias_table": "table_neural_tuned_calibration_summary",
+      "source_table": "table_neural_not_weighted_tuned_calibration_summary_w4"
+    },
+    {
+      "alias_table": "table_neural_tuned_calibration_bins_by_horizon",
+      "source_table": "table_neural_not_weighted_tuned_calibration_bins_by_horizon_w4"
+    },
+    {
+      "alias_table": "table_neural_tuned_predicted_vs_observed_survival",
+      "source_table": "table_neural_not_weighted_tuned_predicted_vs_observed_survival_w4"
+    },
+    {
+      "alias_table": "table_poisson_pexp_tuning_results",
+      "source_table": "table_poisson_pexp_not_weighted_tuning_results_w4"
+    },
+    {
+      "alias_table": "table_poisson_pexp_tuned_test_predictions",
+      "source_table": "table_poisson_pexp_not_weighted_tuned_test_predictions_w4"
+    },
+    {
+      "alias_table": "table_poisson_pexp_tuned_primary_metrics",
+      "source_table": "table_poisson_pexp_not_weighted_tuned_primary_metrics_w4"
+    },
+    {
+      "alias_table": "table_poisson_pexp_tuned_brier_by_horizon",
+      "source_table": "table_poisson_pexp_not_weighted_tuned_brier_by_horizon_w4"
+    },
+    {
+      "alias_table": "table_poisson_pexp_tuned_secondary_metrics",
+      "source_table": "table_poisson_pexp_not_weighted_tuned_secondary_metrics_w4"
+    },
+    {
+      "alias_table": "table_poisson_pexp_tuned_td_auc_support_audit",
+      "source_table": "table_poisson_pexp_not_weighted_tuned_td_auc_support_audit_w4"
+    },
+    {
+      "alias_table": "table_poisson_pexp_tuned_row_diagnostics",
+      "source_table": "table_poisson_pexp_not_weighted_tuned_row_diagnostics_w4"
+    },
+    {
+      "alias_table": "table_poisson_pexp_tuned_support_by_horizon",
+      "source_table": "table_poisson_pexp_not_weighted_tuned_support_by_horizon_w4"
+    },
+    {
+      "alias_table": "table_poisson_pexp_tuned_calibration_summary",
+      "source_table": "table_poisson_pexp_not_weighted_tuned_calibration_summary_w4"
+    },
+    {
+      "alias_table": "table_poisson_pexp_tuned_calibration_bins_by_horizon",
+      "source_table": "table_poisson_pexp_not_weighted_tuned_calibration_bins_by_horizon_w4"
+    },
+    {
+      "alias_table": "table_poisson_pexp_tuned_predicted_vs_observed_survival",
+      "source_table": "table_poisson_pexp_not_weighted_tuned_predicted_vs_observed_survival_w4"
+    },
+    {
+      "alias_table": "table_gb_weekly_hazard_unweighted_tuning_results",
+      "source_table": "table_gb_weekly_hazard_not_weighted_tuning_results_w4"
+    },
+    {
+      "alias_table": "table_gb_weekly_hazard_unweighted_tuned_test_predictions",
+      "source_table": "table_gb_weekly_hazard_not_weighted_tuned_test_predictions_w4"
+    },
+    {
+      "alias_table": "table_gb_weekly_hazard_unweighted_tuned_primary_metrics",
+      "source_table": "table_gb_weekly_hazard_not_weighted_tuned_primary_metrics_w4"
+    },
+    {
+      "alias_table": "table_gb_weekly_hazard_unweighted_tuned_brier_by_horizon",
+      "source_table": "table_gb_weekly_hazard_not_weighted_tuned_brier_by_horizon_w4"
+    },
+    {
+      "alias_table": "table_gb_weekly_hazard_unweighted_tuned_secondary_metrics",
+      "source_table": "table_gb_weekly_hazard_not_weighted_tuned_secondary_metrics_w4"
+    },
+    {
+      "alias_table": "table_gb_weekly_hazard_unweighted_tuned_td_auc_support_audit",
+      "source_table": "table_gb_weekly_hazard_not_weighted_tuned_td_auc_support_audit_w4"
+    },
+    {
+      "alias_table": "table_gb_weekly_hazard_unweighted_tuned_row_diagnostics",
+      "source_table": "table_gb_weekly_hazard_not_weighted_tuned_row_diagnostics_w4"
+    },
+    {
+      "alias_table": "table_gb_weekly_hazard_unweighted_tuned_support_by_horizon",
+      "source_table": "table_gb_weekly_hazard_not_weighted_tuned_support_by_horizon_w4"
+    },
+    {
+      "alias_table": "table_gb_weekly_hazard_unweighted_tuned_calibration_summary",
+      "source_table": "table_gb_weekly_hazard_not_weighted_tuned_calibration_summary_w4"
+    },
+    {
+      "alias_table": "table_gb_weekly_hazard_unweighted_tuned_calibration_bins_by_horizon",
+      "source_table": "table_gb_weekly_hazard_not_weighted_tuned_calibration_bins_by_horizon_w4"
+    },
+    {
+      "alias_table": "table_gb_weekly_hazard_unweighted_tuned_predicted_vs_observed_survival",
+      "source_table": "table_gb_weekly_hazard_not_weighted_tuned_predicted_vs_observed_survival_w4"
+    },
+    {
+      "alias_table": "table_catboost_weekly_hazard_tuning_results",
+      "source_table": "table_catboost_weekly_hazard_not_weighted_tuning_results_w4"
+    },
+    {
+      "alias_table": "table_catboost_weekly_hazard_tuned_test_predictions",
+      "source_table": "table_catboost_weekly_hazard_not_weighted_tuned_test_predictions_w4"
+    },
+    {
+      "alias_table": "table_catboost_weekly_hazard_tuned_primary_metrics",
+      "source_table": "table_catboost_weekly_hazard_not_weighted_tuned_primary_metrics_w4"
+    },
+    {
+      "alias_table": "table_catboost_weekly_hazard_tuned_brier_by_horizon",
+      "source_table": "table_catboost_weekly_hazard_not_weighted_tuned_brier_by_horizon_w4"
+    },
+    {
+      "alias_table": "table_catboost_weekly_hazard_tuned_secondary_metrics",
+      "source_table": "table_catboost_weekly_hazard_not_weighted_tuned_secondary_metrics_w4"
+    },
+    {
+      "alias_table": "table_catboost_weekly_hazard_tuned_td_auc_support_audit",
+      "source_table": "table_catboost_weekly_hazard_not_weighted_tuned_td_auc_support_audit_w4"
+    },
+    {
+      "alias_table": "table_catboost_weekly_hazard_tuned_row_diagnostics",
+      "source_table": "table_catboost_weekly_hazard_not_weighted_tuned_row_diagnostics_w4"
+    },
+    {
+      "alias_table": "table_catboost_weekly_hazard_tuned_support_by_horizon",
+      "source_table": "table_catboost_weekly_hazard_not_weighted_tuned_support_by_horizon_w4"
+    },
+    {
+      "alias_table": "table_catboost_weekly_hazard_tuned_calibration_summary",
+      "source_table": "table_catboost_weekly_hazard_not_weighted_tuned_calibration_summary_w4"
+    },
+    {
+      "alias_table": "table_catboost_weekly_hazard_tuned_calibration_bins_by_horizon",
+      "source_table": "table_catboost_weekly_hazard_not_weighted_tuned_calibration_bins_by_horizon_w4"
+    },
+    {
+      "alias_table": "table_catboost_weekly_hazard_tuned_predicted_vs_observed_survival",
+      "source_table": "table_catboost_weekly_hazard_not_weighted_tuned_predicted_vs_observed_survival_w4"
+    },
+    {
+      "alias_table": "table_linear_weighted_tuning_results",
+      "source_table": "table_linear_weighted_tuning_results_w4"
+    },
+    {
+      "alias_table": "table_linear_weighted_tuned_test_predictions",
+      "source_table": "table_linear_weighted_tuned_test_predictions_w4"
+    },
+    {
+      "alias_table": "table_linear_weighted_tuned_primary_metrics",
+      "source_table": "table_linear_weighted_tuned_primary_metrics_w4"
+    },
+    {
+      "alias_table": "table_linear_weighted_tuned_brier_by_horizon",
+      "source_table": "table_linear_weighted_tuned_brier_by_horizon_w4"
+    },
+    {
+      "alias_table": "table_linear_weighted_tuned_secondary_metrics",
+      "source_table": "table_linear_weighted_tuned_secondary_metrics_w4"
+    },
+    {
+      "alias_table": "table_linear_weighted_tuned_td_auc_support_audit",
+      "source_table": "table_linear_weighted_tuned_td_auc_support_audit_w4"
+    },
+    {
+      "alias_table": "table_linear_weighted_tuned_row_diagnostics",
+      "source_table": "table_linear_weighted_tuned_row_diagnostics_w4"
+    },
+    {
+      "alias_table": "table_linear_weighted_tuned_support_by_horizon",
+      "source_table": "table_linear_weighted_tuned_support_by_horizon_w4"
+    },
+    {
+      "alias_table": "table_linear_weighted_tuned_calibration_summary",
+      "source_table": "table_linear_weighted_tuned_calibration_summary_w4"
+    },
+    {
+      "alias_table": "table_linear_weighted_tuned_calibration_bins_by_horizon",
+      "source_table": "table_linear_weighted_tuned_calibration_bins_by_horizon_w4"
+    },
+    {
+      "alias_table": "table_linear_weighted_tuned_predicted_vs_observed_survival",
+      "source_table": "table_linear_weighted_tuned_predicted_vs_observed_survival_w4"
+    },
+    {
+      "alias_table": "table_neural_weighted_tuning_results",
+      "source_table": "table_neural_weighted_tuning_results_w4"
+    },
+    {
+      "alias_table": "table_neural_weighted_tuned_test_predictions",
+      "source_table": "table_neural_weighted_tuned_test_predictions_w4"
+    },
+    {
+      "alias_table": "table_neural_weighted_tuned_primary_metrics",
+      "source_table": "table_neural_weighted_tuned_primary_metrics_w4"
+    },
+    {
+      "alias_table": "table_neural_weighted_tuned_brier_by_horizon",
+      "source_table": "table_neural_weighted_tuned_brier_by_horizon_w4"
+    },
+    {
+      "alias_table": "table_neural_weighted_tuned_secondary_metrics",
+      "source_table": "table_neural_weighted_tuned_secondary_metrics_w4"
+    },
+    {
+      "alias_table": "table_neural_weighted_tuned_td_auc_support_audit",
+      "source_table": "table_neural_weighted_tuned_td_auc_support_audit_w4"
+    },
+    {
+      "alias_table": "table_neural_weighted_tuned_row_diagnostics",
+      "source_table": "table_neural_weighted_tuned_row_diagnostics_w4"
+    },
+    {
+      "alias_table": "table_neural_weighted_tuned_support_by_horizon",
+      "source_table": "table_neural_weighted_tuned_support_by_horizon_w4"
+    },
+    {
+      "alias_table": "table_neural_weighted_tuned_calibration_summary",
+      "source_table": "table_neural_weighted_tuned_calibration_summary_w4"
+    },
+    {
+      "alias_table": "table_neural_weighted_tuned_calibration_bins_by_horizon",
+      "source_table": "table_neural_weighted_tuned_calibration_bins_by_horizon_w4"
+    },
+    {
+      "alias_table": "table_neural_weighted_tuned_predicted_vs_observed_survival",
+      "source_table": "table_neural_weighted_tuned_predicted_vs_observed_survival_w4"
+    },
+    {
+      "alias_table": "table_poisson_pexp_weighted_tuning_results",
+      "source_table": "table_poisson_pexp_weighted_tuning_results_w4"
+    },
+    {
+      "alias_table": "table_poisson_pexp_weighted_tuned_test_predictions",
+      "source_table": "table_poisson_pexp_weighted_tuned_test_predictions_w4"
+    },
+    {
+      "alias_table": "table_poisson_pexp_weighted_tuned_primary_metrics",
+      "source_table": "table_poisson_pexp_weighted_tuned_primary_metrics_w4"
+    },
+    {
+      "alias_table": "table_poisson_pexp_weighted_tuned_brier_by_horizon",
+      "source_table": "table_poisson_pexp_weighted_tuned_brier_by_horizon_w4"
+    },
+    {
+      "alias_table": "table_poisson_pexp_weighted_tuned_secondary_metrics",
+      "source_table": "table_poisson_pexp_weighted_tuned_secondary_metrics_w4"
+    },
+    {
+      "alias_table": "table_poisson_pexp_weighted_tuned_td_auc_support_audit",
+      "source_table": "table_poisson_pexp_weighted_tuned_td_auc_support_audit_w4"
+    },
+    {
+      "alias_table": "table_poisson_pexp_weighted_tuned_row_diagnostics",
+      "source_table": "table_poisson_pexp_weighted_tuned_row_diagnostics_w4"
+    },
+    {
+      "alias_table": "table_poisson_pexp_weighted_tuned_support_by_horizon",
+      "source_table": "table_poisson_pexp_weighted_tuned_support_by_horizon_w4"
+    },
+    {
+      "alias_table": "table_poisson_pexp_weighted_tuned_calibration_summary",
+      "source_table": "table_poisson_pexp_weighted_tuned_calibration_summary_w4"
+    },
+    {
+      "alias_table": "table_poisson_pexp_weighted_tuned_calibration_bins_by_horizon",
+      "source_table": "table_poisson_pexp_weighted_tuned_calibration_bins_by_horizon_w4"
+    },
+    {
+      "alias_table": "table_poisson_pexp_weighted_tuned_predicted_vs_observed_survival",
+      "source_table": "table_poisson_pexp_weighted_tuned_predicted_vs_observed_survival_w4"
+    },
+    {
+      "alias_table": "table_gb_weekly_hazard_weighted_tuning_results",
+      "source_table": "table_gb_weekly_hazard_weighted_tuning_results_w4"
+    },
+    {
+      "alias_table": "table_gb_weekly_hazard_weighted_tuned_test_predictions",
+      "source_table": "table_gb_weekly_hazard_weighted_tuned_test_predictions_w4"
+    },
+    {
+      "alias_table": "table_gb_weekly_hazard_weighted_tuned_primary_metrics",
+      "source_table": "table_gb_weekly_hazard_weighted_tuned_primary_metrics_w4"
+    },
+    {
+      "alias_table": "table_gb_weekly_hazard_weighted_tuned_brier_by_horizon",
+      "source_table": "table_gb_weekly_hazard_weighted_tuned_brier_by_horizon_w4"
+    },
+    {
+      "alias_table": "table_gb_weekly_hazard_weighted_tuned_secondary_metrics",
+      "source_table": "table_gb_weekly_hazard_weighted_tuned_secondary_metrics_w4"
+    },
+    {
+      "alias_table": "table_gb_weekly_hazard_weighted_tuned_td_auc_support_audit",
+      "source_table": "table_gb_weekly_hazard_weighted_tuned_td_auc_support_audit_w4"
+    },
+    {
+      "alias_table": "table_gb_weekly_hazard_weighted_tuned_row_diagnostics",
+      "source_table": "table_gb_weekly_hazard_weighted_tuned_row_diagnostics_w4"
+    },
+    {
+      "alias_table": "table_gb_weekly_hazard_weighted_tuned_support_by_horizon",
+      "source_table": "table_gb_weekly_hazard_weighted_tuned_support_by_horizon_w4"
+    },
+    {
+      "alias_table": "table_gb_weekly_hazard_weighted_tuned_calibration_summary",
+      "source_table": "table_gb_weekly_hazard_weighted_tuned_calibration_summary_w4"
+    },
+    {
+      "alias_table": "table_gb_weekly_hazard_weighted_tuned_calibration_bins_by_horizon",
+      "source_table": "table_gb_weekly_hazard_weighted_tuned_calibration_bins_by_horizon_w4"
+    },
+    {
+      "alias_table": "table_gb_weekly_hazard_weighted_tuned_predicted_vs_observed_survival",
+      "source_table": "table_gb_weekly_hazard_weighted_tuned_predicted_vs_observed_survival_w4"
+    },
+    {
+      "alias_table": "table_catboost_weekly_hazard_weighted_tuning_results",
+      "source_table": "table_catboost_weekly_hazard_weighted_tuning_results_w4"
+    },
+    {
+      "alias_table": "table_catboost_weekly_hazard_weighted_tuned_test_predictions",
+      "source_table": "table_catboost_weekly_hazard_weighted_tuned_test_predictions_w4"
+    },
+    {
+      "alias_table": "table_catboost_weekly_hazard_weighted_tuned_primary_metrics",
+      "source_table": "table_catboost_weekly_hazard_weighted_tuned_primary_metrics_w4"
+    },
+    {
+      "alias_table": "table_catboost_weekly_hazard_weighted_tuned_brier_by_horizon",
+      "source_table": "table_catboost_weekly_hazard_weighted_tuned_brier_by_horizon_w4"
+    },
+    {
+      "alias_table": "table_catboost_weekly_hazard_weighted_tuned_secondary_metrics",
+      "source_table": "table_catboost_weekly_hazard_weighted_tuned_secondary_metrics_w4"
+    },
+    {
+      "alias_table": "table_catboost_weekly_hazard_weighted_tuned_td_auc_support_audit",
+      "source_table": "table_catboost_weekly_hazard_weighted_tuned_td_auc_support_audit_w4"
+    },
+    {
+      "alias_table": "table_catboost_weekly_hazard_weighted_tuned_row_diagnostics",
+      "source_table": "table_catboost_weekly_hazard_weighted_tuned_row_diagnostics_w4"
+    },
+    {
+      "alias_table": "table_catboost_weekly_hazard_weighted_tuned_support_by_horizon",
+      "source_table": "table_catboost_weekly_hazard_weighted_tuned_support_by_horizon_w4"
+    },
+    {
+      "alias_table": "table_catboost_weekly_hazard_weighted_tuned_calibration_summary",
+      "source_table": "table_catboost_weekly_hazard_weighted_tuned_calibration_summary_w4"
+    },
+    {
+      "alias_table": "table_catboost_weekly_hazard_weighted_tuned_calibration_bins_by_horizon",
+      "source_table": "table_catboost_weekly_hazard_weighted_tuned_calibration_bins_by_horizon_w4"
+    },
+    {
+      "alias_table": "table_catboost_weekly_hazard_weighted_tuned_predicted_vs_observed_survival",
+      "source_table": "table_catboost_weekly_hazard_weighted_tuned_predicted_vs_observed_survival_w4"
+    }
+  ],
+  "outputs": {
+    "table_5_16_model_inventory": "duckdb://table_5_16_model_inventory",
+    "table_5_16_model_primary_summary": "duckdb://table_5_16_model_primary_summary",
+    "table_5_16_item6_loss_sensitivity": "duckdb://table_5_16_item6_loss_sensitivity",
+    "table_5_16_item6_decision_summary": "duckdb://table_5_16_item6_decision_summary",
+    "table_5_16_comparable_window_sensitivity": "duckdb://table_5_16_comparable_window_sensitivity",
+    "table_5_16_comparable_window_champions": "duckdb://table_5_16_comparable_window_champions",
+    "table_5_16_comparable_window_leadership_stability": "duckdb://table_5_16_comparable_window_leadership_stability",
+    "table_5_16_cross_arm_parity_protocol": "duckdb://table_5_16_cross_arm_parity_protocol",
+    "table_5_16_cross_arm_execution_scope": "duckdb://table_5_16_cross_arm_execution_scope",
+    "table_5_16_cross_arm_window_sensitivity": "duckdb://table_5_16_cross_arm_window_sensitivity",
+    "table_5_16_cross_arm_arm_champions": "duckdb://table_5_16_cross_arm_arm_champions",
+    "table_5_16_cross_arm_window_champions": "duckdb://table_5_16_cross_arm_window_champions",
+    "table_5_16_cross_arm_window_leadership_stability": "duckdb://table_5_16_cross_arm_window_leadership_stability",
+    "table_5_16_cross_arm_decision_summary": "duckdb://table_5_16_cross_arm_decision_summary"
+  }
+}

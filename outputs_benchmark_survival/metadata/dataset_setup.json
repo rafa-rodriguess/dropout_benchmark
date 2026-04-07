@@ -1,0 +1,26 @@
+{
+  "dataset_url": "https://analyse.kmi.open.ac.uk/open-dataset/download",
+  "zip_filename": "anonymisedData.zip",
+  "zip_path": "/Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/anonymisedData.zip",
+  "data_dir": "/Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/content",
+  "expected_csvs": [
+    "studentInfo.csv",
+    "studentRegistration.csv",
+    "studentVle.csv",
+    "courses.csv",
+    "vle.csv",
+    "studentAssessment.csv",
+    "assessments.csv"
+  ],
+  "missing_before": [],
+  "missing_after": [],
+  "resolved_source_files": {
+    "studentInfo": "/Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/content/studentInfo.csv",
+    "studentRegistration": "/Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/content/studentRegistration.csv",
+    "studentVle": "/Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/content/studentVle.csv",
+    "courses": "/Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/content/courses.csv",
+    "vle": "/Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/content/vle.csv",
+    "studentAssessment": "/Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/content/studentAssessment.csv",
+    "assessments": "/Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/content/assessments.csv"
+  }
+}

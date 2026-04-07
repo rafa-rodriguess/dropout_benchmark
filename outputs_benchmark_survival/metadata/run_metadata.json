@@ -1,0 +1,7 @@
+{
+  "run_id": "f3e86c2afbd246e2814123195c22d973",
+  "created_at": "2026-04-03T14:40:19.002535-03:00",
+  "last_seen_at": "2026-04-03T14:40:33.399223-03:00",
+  "created_by_notebook": "dropout_bench_v3_A_1_foundation.py",
+  "last_notebook": "dropout_bench_v3_C_split_and_audit_from_scratch_v2_minimal_changes.py"
+}

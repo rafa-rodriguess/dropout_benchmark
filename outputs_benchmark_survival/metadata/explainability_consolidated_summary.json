@@ -1,0 +1,51 @@
+{
+  "included_models": [
+    "cox_tuned",
+    "deepsurv_tuned",
+    "gb_weekly_tuned",
+    "linear_tuned",
+    "mtlr_tuned",
+    "neural_tuned",
+    "poisson_pexp_tuned",
+    "rsf_tuned"
+  ],
+  "n_total_normalized_feature_rows": 198,
+  "n_total_block_rows": 20,
+  "dominant_blocks_by_model": {
+    "cox_tuned": "early_window_behavior",
+    "deepsurv_tuned": "early_window_behavior",
+    "gb_weekly_tuned": "discrete_time_index",
+    "linear_tuned": "dynamic_temporal_behavioral",
+    "mtlr_tuned": "early_window_behavior",
+    "neural_tuned": "discrete_time_index",
+    "poisson_pexp_tuned": "dynamic_temporal_behavioral",
+    "rsf_tuned": "early_window_behavior"
+  },
+  "dominant_block_labels_by_model": {
+    "cox_tuned": "Early-window behavioral summaries",
+    "deepsurv_tuned": "Early-window behavioral summaries",
+    "gb_weekly_tuned": "Discrete time index (week)",
+    "linear_tuned": "Weekly temporal-behavioral features",
+    "mtlr_tuned": "Early-window behavioral summaries",
+    "neural_tuned": "Discrete time index (week)",
+    "poisson_pexp_tuned": "Weekly temporal-behavioral features",
+    "rsf_tuned": "Early-window behavioral summaries"
+  },
+  "taxonomy_roles_by_block": {
+    "static_structural": "baseline_context",
+    "early_window_behavior": "behavioral_signal",
+    "dynamic_temporal_behavioral": "dynamic_behavioral_signal",
+    "discrete_time_index": "temporal_covariate"
+  },
+  "recurring_top_drivers_count": 13,
+  "top_driver_by_model": {
+    "cox_tuned": "num__clicks_first_4_weeks",
+    "deepsurv_tuned": "active_weeks_first_4",
+    "gb_weekly_tuned": "studied_credits",
+    "linear_tuned": "num__n_vle_rows_week",
+    "mtlr_tuned": "active_weeks_first_4",
+    "neural_tuned": "week",
+    "poisson_pexp_tuned": "num__n_vle_rows_week",
+    "rsf_tuned": "active_weeks_first_4"
+  }
+}

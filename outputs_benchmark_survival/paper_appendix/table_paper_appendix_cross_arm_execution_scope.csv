@@ -1,0 +1,5 @@
+scope_key,scope_value,notes
+predictive_model_count,14,Expanded benchmark roster excluding the contract stage.
+dynamic_arm_model_count,5,Dynamic weekly person-period models retained in the expanded roster.
+comparable_arm_model_count,9,Comparable early-window continuous-time models retained in the expanded roster.
+contract_stage_count,1,Non-predictive runtime contract materialization stage kept in the inventory for provenance.

@@ -1,0 +1,4 @@
+claim_section,claim_id,source_table,related_tex_label,metric,value_1,value_2,value_3,claim_text
+cross_arm_parity,winning_arm_sequence,table_paper_appendix_cross_arm_window_champions.csv,appendix:cross_arm_parity,winning_arm_sequence,5.0,,,"Cross-arm winning arm sequence across windows = comparable, comparable, comparable, comparable, comparable"
+cross_arm_parity,winning_model_sequence,table_paper_appendix_cross_arm_window_champions.csv,appendix:cross_arm_parity,winning_model_sequence,5.0,,,"Cross-arm winning model sequence across windows = Random Survival Forest, Random Survival Forest, Random Survival Forest, Random Survival Forest, Random Survival Forest"
+cross_arm_parity,changes_main_benchmark_narrative,table_5_16_cross_arm_decision_summary,appendix:cross_arm_parity,changes_main_benchmark_narrative,,,,Cross-arm parity summary says the sensitivity-window answer changes the main benchmark narrative = no

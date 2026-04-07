@@ -1,0 +1,4 @@
+protocol_order,protocol_key,protocol_value,notes
+1,arm_definition,dynamic_weekly_person_period_vs_comparable_continuous_time_early_window,Cross-arm interpretation must remain contract-aware because the two arms operate on different data representations.
+2,canonical_window_weeks,4,The canonical enrollment window remains fixed at four weeks for paper-aligned comparability.
+3,sensitivity_windows,"2,4,6,8,10",Window sensitivity is tracked separately from the canonical roster and does not redefine the main benchmark inventory.

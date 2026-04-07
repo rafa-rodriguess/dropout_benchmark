@@ -1,0 +1,106 @@
+{
+  "model_name": "gb_weekly_hazard_not_weighted_tuned",
+  "family_name": "discrete_time_dynamic",
+  "model_family": "discrete_time_boosted",
+  "model_type": "gradient_boosted_weekly_hazard",
+  "implementation": "sklearn_hist_gradient_boosting",
+  "candidate_grid": [
+    {
+      "max_depth": 2,
+      "learning_rate": 0.02,
+      "max_iter": 80,
+      "min_samples_leaf": 300,
+      "l2_regularization": 5.0
+    },
+    {
+      "max_depth": 3,
+      "learning_rate": 0.03,
+      "max_iter": 120,
+      "min_samples_leaf": 200,
+      "l2_regularization": 5.0
+    },
+    {
+      "max_depth": 3,
+      "learning_rate": 0.05,
+      "max_iter": 200,
+      "min_samples_leaf": 160,
+      "l2_regularization": 10.0
+    },
+    {
+      "max_depth": 2,
+      "learning_rate": 0.05,
+      "max_iter": 120,
+      "min_samples_leaf": 300,
+      "l2_regularization": 1.0
+    }
+  ],
+  "selection_metric": "val_log_loss_on_discrete_hazard",
+  "validation_split": {
+    "method": "GroupShuffleSplit",
+    "test_size": 0.2,
+    "group_column": "enrollment_id",
+    "random_seed": 42
+  },
+  "guardrails": {
+    "active_window_weeks": 4,
+    "search_row_cap": 80000,
+    "final_row_cap": 108695,
+    "search_rows_selected": 80000,
+    "final_rows_selected": 108695,
+    "subtrain_total_rows": 87386,
+    "full_total_rows": 109284,
+    "n_features": 46,
+    "subtrain_event_rate": 0.017108003570365963,
+    "full_event_rate": 0.01701987482156583,
+    "sampled_subtrain_event_rate": 0.0186875,
+    "sampled_full_event_rate": 0.017112102672616036,
+    "sample_weight_strategy": "none",
+    "implementation": "sklearn_hist_gradient_boosting"
+  },
+  "benchmark_horizons": [
+    10,
+    20,
+    30
+  ],
+  "calibration_bins": 10,
+  "calibration_contract_version": "v2_ipcw_km_observed_risk",
+  "calibration_observed_risk_method": "ipcw_km_pseudo_event_rate",
+  "active_window_weeks": 4,
+  "best_candidate": {
+    "candidate_id": 3,
+    "params": {
+      "max_depth": 3,
+      "learning_rate": 0.05,
+      "max_iter": 200,
+      "min_samples_leaf": 160,
+      "l2_regularization": 10.0
+    },
+    "val_log_loss": 0.07510225945281279
+  },
+  "preprocessing": {
+    "categorical_features": [
+      "gender",
+      "region",
+      "highest_education",
+      "imd_band",
+      "age_band",
+      "disability"
+    ],
+    "numeric_features": [
+      "num_of_prev_attempts",
+      "studied_credits",
+      "week",
+      "total_clicks_week",
+      "active_this_week",
+      "n_vle_rows_week",
+      "n_distinct_sites_week",
+      "cum_clicks_until_t",
+      "recency",
+      "streak"
+    ],
+    "categorical_encoder": "OneHotEncoder(handle_unknown=ignore, sparse_output=True)",
+    "numeric_scaler": "MaxAbsScaler"
+  },
+  "weighting_strategy": "none; this official D5.7 variant preserves the same candidate grid and evaluation contract without positive-class weighting.",
+  "design_note": "This variant keeps the same weekly benchmark arm, feature contract, and conservative boosted configuration while leaving positive-class weighting exclusively to the weighted sensitivity counterpart."
+}

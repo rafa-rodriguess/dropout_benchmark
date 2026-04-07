@@ -1,0 +1,27 @@
+{
+  "step_id": "P31.7",
+  "model": "Cox Comparable (Tuned)",
+  "duration_col": "duration",
+  "event_col": "event",
+  "n_rows_before_cleaning": 22815,
+  "n_rows_after_cleaning": 22815,
+  "n_rows_used": 22815,
+  "n_covariates_tested": 41,
+  "n_covariates_flagged": 10,
+  "alpha": 0.05,
+  "global_classification": "C_broad_departure",
+  "global_interpretation": "The comparable Cox benchmark showed broad evidence of proportional-hazards departure and should therefore be interpreted as an approximate comparable benchmark rather than a fully assumption-clean Cox specification.",
+  "top_flagged_covariates": [
+    "num__active_weeks_first_4",
+    "cat__region_Scotland",
+    "num__num_of_prev_attempts",
+    "num__mean_clicks_first_4_weeks",
+    "cat__region_Wales"
+  ],
+  "dropped_constant_covariates": [],
+  "penalizer": 0.001,
+  "l1_ratio": 0.75,
+  "figure_created": true,
+  "figure_note": "top_smallest_p_values_barh",
+  "deep_surv_note": "DeepSurv shares the Cox-type ranking structure but was not subjected to an identical classical proportional-hazards diagnostic."
+}
