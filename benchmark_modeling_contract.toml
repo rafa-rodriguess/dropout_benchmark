@@ -1,0 +1,70 @@
+# Benchmark modeling contract exported by stage B.
+# This file contains stable modeling configuration consumed downstream.
+# Values marked as paper-aligned should not be changed casually because they
+# affect benchmark comparability with the written paper.
+
+[benchmark]
+# Random seed used by benchmark design. Paper-aligned and locked.
+seed = 42
+# Main train/test split proportion. Paper-aligned and locked.
+test_size = 0.3
+# Benchmark reporting horizons in weeks for survival metrics and calibration.
+benchmark_horizons = [10, 20, 30]
+# Number of quantile bins used by horizon-wise calibration summaries.
+calibration_bins = 10
+# Canonical early-window framing in weeks. Paper-aligned and locked.
+early_window_weeks = 4
+# Canonical comparable enrollment window in weeks. Paper-aligned and locked.
+main_enrollment_window_weeks = 4
+# Sensitivity grid for comparable early-window analyses.
+early_window_sensitivity_weeks = [2, 4, 6, 8, 10]
+
+[modeling]
+# Canonical clicks feature for comparable enrollment-level models.
+main_clicks_feature = "clicks_first_4_weeks"
+# Optional active-weeks feature for comparable models.
+main_active_feature = "active_weeks_first_4"
+# Optional mean-clicks feature for comparable models.
+main_mean_clicks_feature = "mean_clicks_first_4_weeks"
+
+[feature_contract]
+# Stable structural features used across benchmark families.
+static_features = [
+  "studied_credits",
+  "num_of_prev_attempts",
+]
+
+# Weekly-updating dynamic features used in person-period models.
+temporal_features_discrete = [
+  "week",
+  "total_clicks",
+]
+
+# Canonical early-window comparable features. Changing these alters comparability.
+main_enrollment_window_features = [
+  "studied_credits",
+  "num_of_prev_attempts",
+  "clicks_first_4_weeks",
+]
+
+# Optional comparable features that are not part of the minimal paper-aligned set.
+optional_comparable_window_features = [
+  "active_weeks_first_4",
+  "mean_clicks_first_4_weeks",
+]
+
+# Dynamic person-period feature contract for linear discrete-time models.
+dynamic_arm_features_linear = [
+  "week",
+  "total_clicks",
+  "studied_credits",
+  "num_of_prev_attempts",
+]
+
+# Dynamic person-period feature contract for neural discrete-time models.
+dynamic_arm_features_neural = [
+  "week",
+  "total_clicks",
+  "studied_credits",
+  "num_of_prev_attempts",
+]
