@@ -266,16 +266,16 @@
   "calibration_contract_version": "v2_ipcw_km_observed_risk",
   "calibration_observed_risk_method": "ipcw_km_pseudo_event_rate",
   "best_candidate": {
-    "candidate_id": 16,
+    "candidate_id": 6,
     "hidden_dims": [
-      64,
-      32
+      32,
+      16
     ],
     "dropout": 0.3,
-    "learning_rate": 0.001,
+    "learning_rate": 0.0005,
     "weight_decay": 0.0001,
-    "best_val_loss": 8.074031829833984,
-    "best_epoch": 41
+    "best_val_loss": 8.07685375213623,
+    "best_epoch": 93
   },
   "preprocessing": {
     "categorical_features": [

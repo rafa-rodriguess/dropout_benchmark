@@ -1,0 +1,2027 @@
+[START] 5.2 - 2026-06-19 12:47:20
+# ==============================================================
+# 5.2.1 - Lightweight runtime bootstrap
+# ==============================================================
+[PROGRESS] 5.2.1 - 2026-06-19 12:47:20 - Resolving config, contract, and metadata paths
+[PROGRESS] 5.2.1 - 2026-06-19 12:47:20 - Configuration artifacts loaded into memory
+[PROGRESS] 5.2.1 - 2026-06-19 12:47:20 - Runtime CPU configuration resolved to 8 cores
+[PROGRESS] 5.2.1 - 2026-06-19 12:47:20 - Runtime tuning backend resolved to 'processes'
+[PROGRESS] 5.2.1 - 2026-06-19 12:47:20 - DuckDB connection opened and pipeline catalog ensured
+- SCRIPT_NAME: dropout_bench_v3_D_02_A_dynamic_weekly_linear_discrete_time_hazard.py
+- RUN_ID: f3766e75053447a7beb7a1c4936d231f
+- CPU_CORES: 8
+- DUCKDB_PATH: /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/benchmark_survival.duckdb
+- BENCHMARK_HORIZONS: [10, 20, 30]
+- CALIBRATION_BINS: 10
+- EARLY_WINDOW_SENSITIVITY_WEEKS: [2, 4, 6, 8, 10]
+ARTIFACT | shared_config | /Users/rafars/dropout_benchmark_desenv/benchmark_shared_config.toml
+ARTIFACT | modeling_contract | /Users/rafars/dropout_benchmark_desenv/benchmark_modeling_contract.toml
+ARTIFACT | run_metadata | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/metadata/run_metadata.json
+[END] 5.2.1 - 2026-06-19 12:47:20
+[RUN_PLAN] linear_dynamic_execution=dynamic_window_w2(suffix=_w2), dynamic_window_w4(suffix=_w4), dynamic_window_w6(suffix=_w6), dynamic_window_w8(suffix=_w8), dynamic_window_w10(suffix=_w10)
+[RUN] dynamic_window_weeks=2 output_suffix=_w2
+[START] 5.2 - 2026-06-19 12:47:20
+# ==============================================================
+# 5.2.2 - Prepare the linear discrete-time treatment
+# ==============================================================
+[PROGRESS] 5.2.2 - 2026-06-19 12:47:20 - Resolving feature contract and expected canonical features
+[PROGRESS] 5.2.2 - 2026-06-19 12:47:21 - Loaded training and test tables with shapes train=(66712, 26), test=(28573, 26)
+[PROGRESS] 5.2.2 - 2026-06-19 12:47:21 - Fitting sparse preprocessor on training data
+[PROGRESS] 5.2.2 - 2026-06-19 12:47:22 - Transforming test data with fitted preprocessor
+[PROGRESS] 5.2.2 - 2026-06-19 12:47:22 - Preprocessing finished with 46 output features
+[PROGRESS] 5.2.2 - 2026-06-19 12:47:22 - Materializing treatment audit tables
+[Stage 5.2.2 table_p16_linear_not_weighted_treatment_audit_w2 — Linear treatment audit]
+table_name=table_p16_linear_not_weighted_treatment_audit_w2
+rows=9, cols=2
+                            component                value
+                        target_column              event_t
+                         n_train_rows                66712
+                          n_test_rows                28573
+               n_operational_features                   16
+                   n_numeric_features                   10
+               n_categorical_features                    6
+n_output_features_after_preprocessing                   46
+                     train_event_rate  0.02109065835232042
+                      test_event_rate 0.020613866237356945
+ARTIFACT | Stage 5.2.2 table_p16_linear_not_weighted_treatment_audit_w2 — Linear treatment audit | duckdb://table_p16_linear_not_weighted_treatment_audit_w2
+[Stage 5.2.2 table_p16_linear_not_weighted_feature_manifest_w2 — Linear feature manifest]
+table_name=table_p16_linear_not_weighted_feature_manifest_w2
+rows=16, cols=6
+feature_name_operational feature_role  present_in_train  present_in_test  covered_by_canonical_config_after_alias canonical_source_name
+                  gender  categorical              True             True                                    False                      
+                  region  categorical              True             True                                    False                      
+       highest_education  categorical              True             True                                    False                      
+                imd_band  categorical              True             True                                    False                      
+                age_band  categorical              True             True                                    False                      
+              disability  categorical              True             True                                    False                      
+    num_of_prev_attempts      numeric              True             True                                     True  num_of_prev_attempts
+         studied_credits      numeric              True             True                                     True       studied_credits
+                    week      numeric              True             True                                     True                  week
+       total_clicks_week      numeric              True             True                                     True          total_clicks
+        active_this_week      numeric              True             True                                    False                      
+         n_vle_rows_week      numeric              True             True                                    False                      
+   n_distinct_sites_week      numeric              True             True                                    False                      
+      cum_clicks_until_t      numeric              True             True                                    False                      
+                 recency      numeric              True             True                                    False                      
+                  streak      numeric              True             True                                    False                      
+ARTIFACT | Stage 5.2.2 table_p16_linear_not_weighted_feature_manifest_w2 — Linear feature manifest | duckdb://table_p16_linear_not_weighted_feature_manifest_w2
+[Stage 5.2.2 table_p16_linear_not_weighted_canonical_alignment_w2 — Canonical feature alignment]
+table_name=table_p16_linear_not_weighted_canonical_alignment_w2
+rows=4, cols=3
+canonical_feature_raw canonical_feature_resolved  covered_by_operational_treatment_spec
+      studied_credits            studied_credits                                   True
+ num_of_prev_attempts       num_of_prev_attempts                                   True
+                 week                       week                                   True
+         total_clicks          total_clicks_week                                   True
+ARTIFACT | Stage 5.2.2 table_p16_linear_not_weighted_canonical_alignment_w2 — Canonical feature alignment | duckdb://table_p16_linear_not_weighted_canonical_alignment_w2
+[Stage 5.2.2 table_p16_linear_not_weighted_output_feature_manifest_w2 — Preprocessed feature manifest]
+table_name=table_p16_linear_not_weighted_output_feature_manifest_w2
+rows=46, cols=1
+       preprocessed_feature_name
+       num__num_of_prev_attempts
+            num__studied_credits
+                       num__week
+          num__total_clicks_week
+           num__active_this_week
+            num__n_vle_rows_week
+      num__n_distinct_sites_week
+         num__cum_clicks_until_t
+                    num__recency
+                     num__streak
+                   cat__gender_F
+                   cat__gender_M
+ cat__region_East Anglian Region
+cat__region_East Midlands Region
+             cat__region_Ireland
+       cat__region_London Region
+        cat__region_North Region
+cat__region_North Western Region
+            cat__region_Scotland
+   cat__region_South East Region
+ARTIFACT | Stage 5.2.2 table_p16_linear_not_weighted_output_feature_manifest_w2 — Preprocessed feature manifest | duckdb://table_p16_linear_not_weighted_output_feature_manifest_w2
+ARTIFACT | metadata_p16_linear_treatment | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/metadata/metadata_p16_linear_not_weighted_treatment_w2.json
+{
+  "step": "P16",
+  "model_family": "linear_discrete_time_hazard_not_weighted_tuned",
+  "run_label": "dynamic_window_w2",
+  "is_window_truncated_run": true,
+  "active_window_weeks": 2,
+  "output_suffix": "_w2",
+  "train_table": "pp_linear_hazard_ready_train",
+  "test_table": "pp_linear_hazard_ready_test",
+  "target_column": "event_t",
+  "categorical_features": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability"
+  ],
+  "numeric_features": [
+    "num_of_prev_attempts",
+    "studied_credits",
+    "week",
+    "total_clicks_week",
+    "active_this_week",
+    "n_vle_rows_week",
+    "n_distinct_sites_week",
+    "cum_clicks_until_t",
+    "recency",
+    "streak"
+  ],
+  "operational_feature_columns": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability",
+    "num_of_prev_attempts",
+    "studied_credits",
+    "week",
+    "total_clicks_week",
+    "active_this_week",
+    "n_vle_rows_week",
+    "n_distinct_sites_week",
+    "cum_clicks_until_t",
+    "recency",
+    "streak"
+  ],
+  "canonical_expected_features_raw": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "week",
+    "total_clicks"
+  ],
+  "canonical_expected_features_resolved": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "week",
+    "total_clicks_week"
+  ],
+  "feature_alias_map": {
+    "total_clicks": "total_clicks_week"
+  },
+  "n_train_rows": 66712,
+  "n_test_rows": 28573,
+  "n_output_features_after_preprocessing": 46,
+  "train_event_rate": 0.02109065835232042,
+  "test_event_rate": 0.020613866237356945,
+  "design_note": "Sparse linear preprocessing is used to eliminate dense-matrix runtime warnings while preserving the benchmark feature contract.",
+  "methodological_note": "All learned preprocessing operations were fit on training data only and then applied unchanged to test data.",
+  "cross_arm_parity_note": "This run truncates weekly person-period information at or before the active window and is intended for cross-arm information-parity analysis."
+}
+
+[PROGRESS] 5.2.2 - 2026-06-19 12:47:22 - Treatment metadata persisted
+[END] 5.2.2 - 2026-06-19 12:47:22
+[START] 5.2 - 2026-06-19 12:47:22
+# ==============================================================
+# 5.2.3 - Tune and evaluate the linear discrete-time hazard model
+# ==============================================================
+[PROGRESS] 5.2.3 - 2026-06-19 12:47:22 - Preparing grouped validation split
+[PROGRESS] 5.2.3 - 2026-06-19 12:47:22 - Validation split ready with subtrain_rows=53348, validation_rows=13364
+- TUNING_WORKERS: 8
+- TUNING_BACKEND: processes
+[PROGRESS] 5.2.3 - 2026-06-19 12:47:22 - Starting tuning across 24 candidates
+[PROGRESS] 5.2.3 - 2026-06-19 12:47:43 - Tuning completed with 24 evaluated candidates
+[PROGRESS] 5.2.3 - 2026-06-19 12:47:43 - Best candidate selected: id=12, penalty=l1, C=500.0
+[PROGRESS] 5.2.3 - 2026-06-19 12:47:43 - Fitting best model on full training data
+[PROGRESS] 5.2.3 - 2026-06-19 12:47:43 - Generating row-level predictions on test data
+[PROGRESS] 5.2.3 - 2026-06-19 12:47:45 - Survival surface assembled; computing benchmark metrics
+[PROGRESS] 5.2.3 - 2026-06-19 12:47:46 - Calibration summaries computed; starting IPCW-dependent metrics
+[PROGRESS] 5.2.3 - 2026-06-19 12:47:46 - All evaluation metrics computed; persisting artifacts and DuckDB tables
+[Stage 5.2.3 table_linear_not_weighted_tuning_results_w2 — Linear tuning results]
+table_name=table_linear_not_weighted_tuning_results_w2
+rows=24, cols=8
+ candidate_id penalty  l1_ratio       C  val_log_loss  val_brier  val_roc_auc  val_pr_auc
+           12      l1       1.0 500.000      0.090999   0.019654     0.759685    0.052858
+           24      l2       0.0 500.000      0.091001   0.019655     0.759661    0.052852
+           11      l1       1.0 100.000      0.091001   0.019655     0.759658    0.052849
+           10      l1       1.0  50.000      0.091002   0.019654     0.759640    0.052854
+           23      l2       0.0 100.000      0.091004   0.019654     0.759550    0.052857
+           22      l2       0.0  50.000      0.091010   0.019654     0.759415    0.052850
+            9      l1       1.0  10.000      0.091013   0.019654     0.759355    0.052803
+            8      l1       1.0   5.000      0.091022   0.019653     0.759101    0.052796
+           21      l2       0.0  10.000      0.091047   0.019654     0.758765    0.052780
+            7      l1       1.0   1.000      0.091064   0.019645     0.757739    0.052667
+           20      l2       0.0   5.000      0.091077   0.019653     0.758232    0.052702
+            6      l1       1.0   0.500      0.091078   0.019639     0.756968    0.052370
+           19      l2       0.0   1.000      0.091237   0.019651     0.756062    0.052141
+           18      l2       0.0   0.500      0.091411   0.019649     0.753755    0.051597
+            5      l1       1.0   0.100      0.091926   0.019637     0.745592    0.050374
+           17      l2       0.0   0.100      0.092200   0.019652     0.741784    0.050257
+           16      l2       0.0   0.050      0.092629   0.019660     0.734586    0.049738
+            4      l1       1.0   0.050      0.093809   0.019695     0.712071    0.046831
+           15      l2       0.0   0.010      0.093837   0.019699     0.716426    0.045934
+           14      l2       0.0   0.005      0.094694   0.019739     0.706170    0.042757
+ARTIFACT | Stage 5.2.3 table_linear_not_weighted_tuning_results_w2 — Linear tuning results | duckdb://table_linear_not_weighted_tuning_results_w2
+[Stage 5.2.3 table_linear_not_weighted_tuned_test_predictions_w2 — Linear test predictions]
+table_name=table_linear_not_weighted_tuned_test_predictions_w2
+rows=28573, cols=29
+   enrollment_id  id_student code_module code_presentation  week  event_t  event_observed  t_event_week  t_final_week  used_zero_week_fallback_for_censoring gender               region     highest_education imd_band age_band  num_of_prev_attempts  studied_credits disability  total_clicks_week  active_this_week  n_vle_rows_week  n_distinct_sites_week  cum_clicks_until_t  recency  streak split  pred_hazard  pred_survival  pred_risk
+100561|DDD|2014J      100561         DDD             2014J     0        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               10.0                 1                8                      4                10.0        0       1  test     0.082140       0.917860   0.082140
+100561|DDD|2014J      100561         DDD             2014J     1        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N                0.0                 0                0                      0                10.0        1       0  test     0.026287       0.893732   0.106268
+100561|DDD|2014J      100561         DDD             2014J     2        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               91.0                 1               26                     11               101.0        0       2  test     0.019922       0.875927   0.124073
+100621|CCC|2014B      100621         CCC             2014B     0        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                0.0                 0                0                      0                 0.0        1       0  test     0.044241       0.955759   0.044241
+100621|CCC|2014B      100621         CCC             2014B     1        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                3.0                 1                2                      2                 3.0        0       2  test     0.019162       0.937444   0.062556
+100621|CCC|2014B      100621         CCC             2014B     2        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                1.0                 1                1                      1                 4.0        0       3  test     0.008126       0.929827   0.070173
+101187|DDD|2014J      101187         DDD             2014J     0        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        1       0  test     0.014538       0.985462   0.014538
+101187|DDD|2014J      101187         DDD             2014J     1        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        2       0  test     0.047359       0.938792   0.061208
+101187|DDD|2014J      101187         DDD             2014J     2        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        3       0  test     0.065996       0.876836   0.123164
+101279|DDD|2014J      101279         DDD             2014J     0        0               0           NaN            37                                      0      F     Yorkshire Region A Level or Equivalent    0-10%    35-55                     0               60          N               79.0                 1               31                     21                79.0        0       1  test     0.024594       0.975406   0.024594
+101279|DDD|2014J      101279         DDD             2014J     1        0               0           NaN            37                                      0      F     Yorkshire Region A Level or Equivalent    0-10%    35-55                     0               60          N                1.0                 1                1                      1                80.0        0       2  test     0.050749       0.925905   0.074095
+101279|DDD|2014J      101279         DDD             2014J     2        0               0           NaN            37                                      0      F     Yorkshire Region A Level or Equivalent    0-10%    35-55                     0               60          N                1.0                 1                1                      1                81.0        0       3  test     0.036043       0.892532   0.107468
+101414|EEE|2013J      101414         EEE             2013J     0        0               0           NaN            38                                      0      M     Yorkshire Region    Lower Than A Level   70-80%    35-55                     0              105          N                0.0                 0                0                      0                 0.0        1       0  test     0.031082       0.968918   0.031082
+101414|EEE|2013J      101414         EEE             2013J     1        0               0           NaN            38                                      0      M     Yorkshire Region    Lower Than A Level   70-80%    35-55                     0              105          N                0.0                 0                0                      0                 0.0        2       0  test     0.134460       0.838637   0.161363
+101414|EEE|2013J      101414         EEE             2013J     2        0               0           NaN            38                                      0      M     Yorkshire Region    Lower Than A Level   70-80%    35-55                     0              105          N                0.0                 0                0                      0                 0.0        3       0  test     0.004523       0.834844   0.165156
+101700|CCC|2014J      101700         CCC             2014J     0        0               0           NaN            38                                      0      M        London Region A Level or Equivalent    10-20     0-35                     0               60          Y                0.0                 0                0                      0                 0.0        1       0  test     0.003401       0.996599   0.003401
+101700|CCC|2014J      101700         CCC             2014J     1        0               0           NaN            38                                      0      M        London Region A Level or Equivalent    10-20     0-35                     0               60          Y                0.0                 0                0                      0                 0.0        2       0  test     0.002189       0.994418   0.005582
+101700|CCC|2014J      101700         CCC             2014J     2        0               0           NaN            38                                      0      M        London Region A Level or Equivalent    10-20     0-35                     0               60          Y                0.0                 0                0                      0                 0.0        3       0  test     0.006724       0.987731   0.012269
+101781|AAA|2013J      101781         AAA             2013J     0        0               0           NaN            38                                      0      M         South Region    Lower Than A Level   80-90%    35-55                     0               60          N              182.0                 1               43                     11               182.0        0       1  test     0.023672       0.976328   0.023672
+101781|AAA|2013J      101781         AAA             2013J     1        0               0           NaN            38                                      0      M         South Region    Lower Than A Level   80-90%    35-55                     0               60          N              514.0                 1               59                     20               696.0        0       2  test     0.015606       0.961092   0.038908
+ARTIFACT | Stage 5.2.3 table_linear_not_weighted_tuned_test_predictions_w2 — Linear test predictions | duckdb://table_linear_not_weighted_tuned_test_predictions_w2
+[Stage 5.2.3 table_linear_not_weighted_tuned_primary_metrics_w2 — Linear primary metrics]
+table_name=table_linear_not_weighted_tuned_primary_metrics_w2
+rows=2, cols=4
+metric_name metric_category  metric_value                         notes
+        ibs         primary      0.140570 sksurv_integrated_brier_score
+    c_index      co_primary      0.482552          pycox_concordance_td
+ARTIFACT | Stage 5.2.3 table_linear_not_weighted_tuned_primary_metrics_w2 — Linear primary metrics | duckdb://table_linear_not_weighted_tuned_primary_metrics_w2
+[Stage 5.2.3 table_linear_not_weighted_tuned_brier_by_horizon_w2 — Linear Brier scores by horizon]
+table_name=table_linear_not_weighted_tuned_brier_by_horizon_w2
+rows=3, cols=5
+ horizon_week      metric_name metric_category  metric_value              notes
+           10 brier_at_horizon         primary      0.118010 sksurv_brier_score
+           20 brier_at_horizon         primary      0.165292 sksurv_brier_score
+           30 brier_at_horizon         primary      0.200428 sksurv_brier_score
+ARTIFACT | Stage 5.2.3 table_linear_not_weighted_tuned_brier_by_horizon_w2 — Linear Brier scores by horizon | duckdb://table_linear_not_weighted_tuned_brier_by_horizon_w2
+[Stage 5.2.3 table_linear_not_weighted_tuned_secondary_metrics_w2 — Linear secondary metrics]
+table_name=table_linear_not_weighted_tuned_secondary_metrics_w2
+rows=6, cols=5
+ horizon_week         metric_name metric_category  metric_value                                                                                  notes
+           10 risk_auc_at_horizon       secondary      0.387502                                                            roc_auc_on_evaluable_subset
+           10  time_dependent_auc       secondary      0.387736 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.387736; local_ipcw_auc
+           20 risk_auc_at_horizon       secondary      0.408627                                                            roc_auc_on_evaluable_subset
+           20  time_dependent_auc       secondary      0.407659 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.407659; local_ipcw_auc
+           30 risk_auc_at_horizon       secondary      0.425604                                                            roc_auc_on_evaluable_subset
+           30  time_dependent_auc       secondary      0.424519 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.424519; local_ipcw_auc
+ARTIFACT | Stage 5.2.3 table_linear_not_weighted_tuned_secondary_metrics_w2 — Linear secondary metrics | duckdb://table_linear_not_weighted_tuned_secondary_metrics_w2
+[Stage 5.2.3 table_linear_not_weighted_tuned_td_auc_support_audit_w2 — Linear IPCW support audit]
+table_name=table_linear_not_weighted_tuned_td_auc_support_audit_w2
+rows=3, cols=6
+ horizon_week  max_ipcw_time  n_total_test_enrollments  n_supported_test_enrollments  mean_auc                                                                                  notes
+           10           38.0                      9778                          6742  0.387736 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.387736; local_ipcw_auc
+           20           38.0                      9778                          6742  0.407659 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.407659; local_ipcw_auc
+           30           38.0                      9778                          6742  0.424519 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.424519; local_ipcw_auc
+ARTIFACT | Stage 5.2.3 table_linear_not_weighted_tuned_td_auc_support_audit_w2 — Linear IPCW support audit | duckdb://table_linear_not_weighted_tuned_td_auc_support_audit_w2
+[Stage 5.2.3 table_linear_not_weighted_tuned_row_diagnostics_w2 — Linear row-level diagnostics]
+table_name=table_linear_not_weighted_tuned_row_diagnostics_w2
+rows=1, cols=5
+                                    model_name  row_level_roc_auc  row_level_pr_auc  row_level_log_loss  row_level_brier
+linear_discrete_time_hazard_not_weighted_tuned           0.778987          0.063897             0.09022         0.019724
+ARTIFACT | Stage 5.2.3 table_linear_not_weighted_tuned_row_diagnostics_w2 — Linear row-level diagnostics | duckdb://table_linear_not_weighted_tuned_row_diagnostics_w2
+[Stage 5.2.3 table_linear_not_weighted_tuned_support_by_horizon_w2 — Linear support by horizon]
+table_name=table_linear_not_weighted_tuned_support_by_horizon_w2
+rows=3, cols=4
+ horizon_week  n_evaluable_enrollments  n_events_by_horizon  event_rate_by_horizon
+           10                     9778                 1215               0.124259
+           20                     9778                 1736               0.177541
+           30                     9778                 2129               0.217734
+ARTIFACT | Stage 5.2.3 table_linear_not_weighted_tuned_support_by_horizon_w2 — Linear support by horizon | duckdb://table_linear_not_weighted_tuned_support_by_horizon_w2
+[Stage 5.2.3 table_linear_not_weighted_tuned_calibration_summary_w2 — Linear calibration summary]
+table_name=table_linear_not_weighted_tuned_calibration_summary_w2
+rows=3, cols=5
+ horizon_week            metric_name metric_category  metric_value                                         notes
+           10 calibration_at_horizon         primary      0.080578 Weighted absolute calibration gap across bins
+           20 calibration_at_horizon         primary      0.124306 Weighted absolute calibration gap across bins
+           30 calibration_at_horizon         primary      0.158046 Weighted absolute calibration gap across bins
+ARTIFACT | Stage 5.2.3 table_linear_not_weighted_tuned_calibration_summary_w2 — Linear calibration summary | duckdb://table_linear_not_weighted_tuned_calibration_summary_w2
+[Stage 5.2.3 table_linear_not_weighted_tuned_calibration_bins_by_horizon_w2 — Linear calibration bins]
+table_name=table_linear_not_weighted_tuned_calibration_bins_by_horizon_w2
+rows=30, cols=6
+ calibration_bin   n  mean_predicted_risk  observed_event_rate  horizon_week  abs_calibration_gap
+               0 978             0.006792             0.250511            10             0.243719
+               1 978             0.017620             0.161554            10             0.143934
+               2 978             0.027065             0.147239            10             0.120175
+               3 977             0.036186             0.118731            10             0.082545
+               4 978             0.045554             0.106339            10             0.060785
+               5 978             0.056058             0.100204            10             0.044146
+               6 977             0.067839             0.097236            10             0.029397
+               7 978             0.082835             0.083845            10             0.001009
+               8 978             0.104002             0.097137            10             0.006865
+               9 978             0.152907             0.079755            10             0.073153
+               0 978             0.006792             0.302658            20             0.295867
+               1 978             0.017620             0.221881            20             0.204261
+               2 978             0.027065             0.205521            20             0.178457
+               3 977             0.036186             0.174002            20             0.137816
+               4 978             0.045554             0.162577            20             0.117022
+               5 978             0.056058             0.159509            20             0.103451
+               6 977             0.067839             0.147390            20             0.079551
+               7 978             0.082835             0.140082            20             0.057246
+               8 978             0.104002             0.141104            20             0.037103
+               9 978             0.152907             0.120654            20             0.032253
+ARTIFACT | Stage 5.2.3 table_linear_not_weighted_tuned_calibration_bins_by_horizon_w2 — Linear calibration bins | duckdb://table_linear_not_weighted_tuned_calibration_bins_by_horizon_w2
+[Stage 5.2.3 table_linear_not_weighted_tuned_predicted_vs_observed_survival_w2 — Linear predicted versus observed survival]
+table_name=table_linear_not_weighted_tuned_predicted_vs_observed_survival_w2
+rows=3, cols=5
+ horizon_week  n_evaluable_enrollments  mean_predicted_survival  mean_observed_survival  abs_gap
+           10                     9778                 0.940313                0.875741 0.064571
+           20                     9778                 0.940313                0.822459 0.117854
+           30                     9778                 0.940313                0.782266 0.158046
+ARTIFACT | Stage 5.2.3 table_linear_not_weighted_tuned_predicted_vs_observed_survival_w2 — Linear predicted versus observed survival | duckdb://table_linear_not_weighted_tuned_predicted_vs_observed_survival_w2
+ARTIFACT | linear_model | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/models/linear_discrete_time_hazard_not_weighted_tuned_w2.joblib
+ARTIFACT | linear_preprocessor | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/models/linear_discrete_time_not_weighted_preprocessor_w2.joblib
+ARTIFACT | linear_tuned_model_config | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/metadata/linear_not_weighted_tuned_model_config_w2.json
+{
+  "model_name": "linear_discrete_time_hazard_not_weighted_tuned",
+  "search_space": {
+    "penalty": [
+      "l1",
+      "l1",
+      "l1",
+      "l1",
+      "l1",
+      "l1",
+      "l1",
+      "l1"
+    ],
+    "C": [
+      0.01,
+      0.1,
+      1.0,
+      10.0
+    ]
+  },
+  "solver": "liblinear",
+  "class_weight": "none",
+  "max_iter": 2000,
+  "tuning_parallel_workers": 8,
+  "tuning_parallel_backend": "processes",
+  "run_label": "dynamic_window_w2",
+  "is_window_truncated_run": true,
+  "active_window_weeks": 2,
+  "output_suffix": "_w2",
+  "selection_metric": "val_log_loss",
+  "validation_split": {
+    "method": "GroupShuffleSplit",
+    "test_size": 0.2,
+    "group_column": "enrollment_id",
+    "random_seed": 42
+  },
+  "benchmark_horizons": [
+    10,
+    20,
+    30
+  ],
+  "calibration_bins": 10,
+  "calibration_contract_version": "v2_ipcw_km_observed_risk",
+  "calibration_observed_risk_method": "ipcw_km_pseudo_event_rate",
+  "best_candidate": {
+    "candidate_id": 12,
+    "penalty": "l1",
+    "l1_ratio": 1.0,
+    "C": 500.0,
+    "val_log_loss": 0.09099921885528306,
+    "val_brier": 0.01965440756829942,
+    "val_roc_auc": 0.7596851355115833,
+    "val_pr_auc": 0.05285765771280076
+  },
+  "preprocessing": {
+    "categorical_features": [
+      "gender",
+      "region",
+      "highest_education",
+      "imd_band",
+      "age_band",
+      "disability"
+    ],
+    "numeric_features": [
+      "num_of_prev_attempts",
+      "studied_credits",
+      "week",
+      "total_clicks_week",
+      "active_this_week",
+      "n_vle_rows_week",
+      "n_distinct_sites_week",
+      "cum_clicks_until_t",
+      "recency",
+      "streak"
+    ],
+    "categorical_encoder": "OneHotEncoder(handle_unknown=ignore, sparse_output=True)",
+    "numeric_scaler": "MaxAbsScaler"
+  },
+  "weighting_strategy": "none; this official D5.2 variant fits the same weekly dynamic feature contract without class reweighting.",
+  "design_note": "The repaired IPCW-supported time-dependent AUC path is integrated directly into this not-weighted D5.2 official variant so the Item 6 comparison changes only the fitting weights in the weighted sensitivity counterpart, not the evaluation stack."
+}
+
+ candidate_id penalty  l1_ratio     C  val_log_loss  val_brier  val_roc_auc  val_pr_auc
+           12      l1       1.0 500.0      0.090999   0.019654     0.759685    0.052858
+[PROGRESS] 5.2.3 - 2026-06-19 12:47:46 - Model artifacts, config, and benchmark tables persisted successfully
+[END] 5.2.3 - 2026-06-19 12:47:46
+[RUN] dynamic_window_weeks=4 output_suffix=_w4
+[START] 5.2 - 2026-06-19 12:47:46
+# ==============================================================
+# 5.2.2 - Prepare the linear discrete-time treatment
+# ==============================================================
+[PROGRESS] 5.2.2 - 2026-06-19 12:47:46 - Resolving feature contract and expected canonical features
+[PROGRESS] 5.2.2 - 2026-06-19 12:47:48 - Loaded training and test tables with shapes train=(109284, 26), test=(46835, 26)
+[PROGRESS] 5.2.2 - 2026-06-19 12:47:48 - Fitting sparse preprocessor on training data
+[PROGRESS] 5.2.2 - 2026-06-19 12:47:48 - Transforming test data with fitted preprocessor
+[PROGRESS] 5.2.2 - 2026-06-19 12:47:48 - Preprocessing finished with 46 output features
+[PROGRESS] 5.2.2 - 2026-06-19 12:47:48 - Materializing treatment audit tables
+[Stage 5.2.2 table_p16_linear_not_weighted_treatment_audit_w4 — Linear treatment audit]
+table_name=table_p16_linear_not_weighted_treatment_audit_w4
+rows=9, cols=2
+                            component               value
+                        target_column             event_t
+                         n_train_rows              109284
+                          n_test_rows               46835
+               n_operational_features                  16
+                   n_numeric_features                  10
+               n_categorical_features                   6
+n_output_features_after_preprocessing                  46
+                     train_event_rate 0.01701987482156583
+                      test_event_rate 0.01705989110707804
+ARTIFACT | Stage 5.2.2 table_p16_linear_not_weighted_treatment_audit_w4 — Linear treatment audit | duckdb://table_p16_linear_not_weighted_treatment_audit_w4
+[Stage 5.2.2 table_p16_linear_not_weighted_feature_manifest_w4 — Linear feature manifest]
+table_name=table_p16_linear_not_weighted_feature_manifest_w4
+rows=16, cols=6
+feature_name_operational feature_role  present_in_train  present_in_test  covered_by_canonical_config_after_alias canonical_source_name
+                  gender  categorical              True             True                                    False                      
+                  region  categorical              True             True                                    False                      
+       highest_education  categorical              True             True                                    False                      
+                imd_band  categorical              True             True                                    False                      
+                age_band  categorical              True             True                                    False                      
+              disability  categorical              True             True                                    False                      
+    num_of_prev_attempts      numeric              True             True                                     True  num_of_prev_attempts
+         studied_credits      numeric              True             True                                     True       studied_credits
+                    week      numeric              True             True                                     True                  week
+       total_clicks_week      numeric              True             True                                     True          total_clicks
+        active_this_week      numeric              True             True                                    False                      
+         n_vle_rows_week      numeric              True             True                                    False                      
+   n_distinct_sites_week      numeric              True             True                                    False                      
+      cum_clicks_until_t      numeric              True             True                                    False                      
+                 recency      numeric              True             True                                    False                      
+                  streak      numeric              True             True                                    False                      
+ARTIFACT | Stage 5.2.2 table_p16_linear_not_weighted_feature_manifest_w4 — Linear feature manifest | duckdb://table_p16_linear_not_weighted_feature_manifest_w4
+[Stage 5.2.2 table_p16_linear_not_weighted_canonical_alignment_w4 — Canonical feature alignment]
+table_name=table_p16_linear_not_weighted_canonical_alignment_w4
+rows=4, cols=3
+canonical_feature_raw canonical_feature_resolved  covered_by_operational_treatment_spec
+      studied_credits            studied_credits                                   True
+ num_of_prev_attempts       num_of_prev_attempts                                   True
+                 week                       week                                   True
+         total_clicks          total_clicks_week                                   True
+ARTIFACT | Stage 5.2.2 table_p16_linear_not_weighted_canonical_alignment_w4 — Canonical feature alignment | duckdb://table_p16_linear_not_weighted_canonical_alignment_w4
+[Stage 5.2.2 table_p16_linear_not_weighted_output_feature_manifest_w4 — Preprocessed feature manifest]
+table_name=table_p16_linear_not_weighted_output_feature_manifest_w4
+rows=46, cols=1
+       preprocessed_feature_name
+       num__num_of_prev_attempts
+            num__studied_credits
+                       num__week
+          num__total_clicks_week
+           num__active_this_week
+            num__n_vle_rows_week
+      num__n_distinct_sites_week
+         num__cum_clicks_until_t
+                    num__recency
+                     num__streak
+                   cat__gender_F
+                   cat__gender_M
+ cat__region_East Anglian Region
+cat__region_East Midlands Region
+             cat__region_Ireland
+       cat__region_London Region
+        cat__region_North Region
+cat__region_North Western Region
+            cat__region_Scotland
+   cat__region_South East Region
+ARTIFACT | Stage 5.2.2 table_p16_linear_not_weighted_output_feature_manifest_w4 — Preprocessed feature manifest | duckdb://table_p16_linear_not_weighted_output_feature_manifest_w4
+ARTIFACT | metadata_p16_linear_treatment | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/metadata/metadata_p16_linear_not_weighted_treatment_w4.json
+{
+  "step": "P16",
+  "model_family": "linear_discrete_time_hazard_not_weighted_tuned",
+  "run_label": "dynamic_window_w4",
+  "is_window_truncated_run": true,
+  "active_window_weeks": 4,
+  "output_suffix": "_w4",
+  "train_table": "pp_linear_hazard_ready_train",
+  "test_table": "pp_linear_hazard_ready_test",
+  "target_column": "event_t",
+  "categorical_features": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability"
+  ],
+  "numeric_features": [
+    "num_of_prev_attempts",
+    "studied_credits",
+    "week",
+    "total_clicks_week",
+    "active_this_week",
+    "n_vle_rows_week",
+    "n_distinct_sites_week",
+    "cum_clicks_until_t",
+    "recency",
+    "streak"
+  ],
+  "operational_feature_columns": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability",
+    "num_of_prev_attempts",
+    "studied_credits",
+    "week",
+    "total_clicks_week",
+    "active_this_week",
+    "n_vle_rows_week",
+    "n_distinct_sites_week",
+    "cum_clicks_until_t",
+    "recency",
+    "streak"
+  ],
+  "canonical_expected_features_raw": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "week",
+    "total_clicks"
+  ],
+  "canonical_expected_features_resolved": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "week",
+    "total_clicks_week"
+  ],
+  "feature_alias_map": {
+    "total_clicks": "total_clicks_week"
+  },
+  "n_train_rows": 109284,
+  "n_test_rows": 46835,
+  "n_output_features_after_preprocessing": 46,
+  "train_event_rate": 0.01701987482156583,
+  "test_event_rate": 0.01705989110707804,
+  "design_note": "Sparse linear preprocessing is used to eliminate dense-matrix runtime warnings while preserving the benchmark feature contract.",
+  "methodological_note": "All learned preprocessing operations were fit on training data only and then applied unchanged to test data.",
+  "cross_arm_parity_note": "This run truncates weekly person-period information at or before the active window and is intended for cross-arm information-parity analysis."
+}
+
+[PROGRESS] 5.2.2 - 2026-06-19 12:47:48 - Treatment metadata persisted
+[END] 5.2.2 - 2026-06-19 12:47:48
+[START] 5.2 - 2026-06-19 12:47:48
+# ==============================================================
+# 5.2.3 - Tune and evaluate the linear discrete-time hazard model
+# ==============================================================
+[PROGRESS] 5.2.3 - 2026-06-19 12:47:48 - Preparing grouped validation split
+[PROGRESS] 5.2.3 - 2026-06-19 12:47:48 - Validation split ready with subtrain_rows=87386, validation_rows=21898
+- TUNING_WORKERS: 8
+- TUNING_BACKEND: processes
+[PROGRESS] 5.2.3 - 2026-06-19 12:47:48 - Starting tuning across 24 candidates
+[PROGRESS] 5.2.3 - 2026-06-19 12:48:21 - Tuning completed with 24 evaluated candidates
+[PROGRESS] 5.2.3 - 2026-06-19 12:48:21 - Best candidate selected: id=12, penalty=l1, C=500.0
+[PROGRESS] 5.2.3 - 2026-06-19 12:48:21 - Fitting best model on full training data
+[PROGRESS] 5.2.3 - 2026-06-19 12:48:21 - Generating row-level predictions on test data
+[PROGRESS] 5.2.3 - 2026-06-19 12:48:23 - Survival surface assembled; computing benchmark metrics
+[PROGRESS] 5.2.3 - 2026-06-19 12:48:23 - Calibration summaries computed; starting IPCW-dependent metrics
+[PROGRESS] 5.2.3 - 2026-06-19 12:48:23 - All evaluation metrics computed; persisting artifacts and DuckDB tables
+[Stage 5.2.3 table_linear_not_weighted_tuning_results_w4 — Linear tuning results]
+table_name=table_linear_not_weighted_tuning_results_w4
+rows=24, cols=8
+ candidate_id penalty  l1_ratio       C  val_log_loss  val_brier  val_roc_auc  val_pr_auc
+           12      l1       1.0 500.000      0.077595   0.016150     0.758120    0.047135
+           11      l1       1.0 100.000      0.077601   0.016150     0.758044    0.047123
+           24      l2       0.0 500.000      0.077602   0.016150     0.758027    0.047121
+           10      l1       1.0  50.000      0.077604   0.016150     0.757996    0.047118
+           23      l2       0.0 100.000      0.077605   0.016150     0.757952    0.047121
+           22      l2       0.0  50.000      0.077612   0.016151     0.757831    0.047129
+            9      l1       1.0  10.000      0.077622   0.016151     0.757687    0.047074
+            8      l1       1.0   5.000      0.077646   0.016151     0.757309    0.047047
+           21      l2       0.0  10.000      0.077658   0.016151     0.757091    0.047040
+           20      l2       0.0   5.000      0.077696   0.016152     0.756548    0.046916
+            7      l1       1.0   1.000      0.077709   0.016150     0.756162    0.046900
+            6      l1       1.0   0.500      0.077717   0.016149     0.755824    0.046788
+           19      l2       0.0   1.000      0.077845   0.016154     0.754385    0.046384
+           18      l2       0.0   0.500      0.077991   0.016155     0.752139    0.046011
+            5      l1       1.0   0.100      0.078191   0.016156     0.748364    0.044670
+           17      l2       0.0   0.100      0.078651   0.016165     0.740349    0.044540
+           16      l2       0.0   0.050      0.078995   0.016173     0.733656    0.043782
+            4      l1       1.0   0.050      0.079279   0.016187     0.730024    0.042006
+           15      l2       0.0   0.010      0.079754   0.016197     0.719838    0.041244
+           14      l2       0.0   0.005      0.080261   0.016217     0.713634    0.039251
+ARTIFACT | Stage 5.2.3 table_linear_not_weighted_tuning_results_w4 — Linear tuning results | duckdb://table_linear_not_weighted_tuning_results_w4
+[Stage 5.2.3 table_linear_not_weighted_tuned_test_predictions_w4 — Linear test predictions]
+table_name=table_linear_not_weighted_tuned_test_predictions_w4
+rows=46835, cols=29
+   enrollment_id  id_student code_module code_presentation  week  event_t  event_observed  t_event_week  t_final_week  used_zero_week_fallback_for_censoring gender               region     highest_education imd_band age_band  num_of_prev_attempts  studied_credits disability  total_clicks_week  active_this_week  n_vle_rows_week  n_distinct_sites_week  cum_clicks_until_t  recency  streak split  pred_hazard  pred_survival  pred_risk
+100561|DDD|2014J      100561         DDD             2014J     0        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               10.0                 1                8                      4                10.0        0       1  test     0.075033       0.924967   0.075033
+100561|DDD|2014J      100561         DDD             2014J     1        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N                0.0                 0                0                      0                10.0        1       0  test     0.022723       0.903948   0.096052
+100561|DDD|2014J      100561         DDD             2014J     2        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               91.0                 1               26                     11               101.0        0       2  test     0.021143       0.884836   0.115164
+100561|DDD|2014J      100561         DDD             2014J     3        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N                6.0                 1                4                      2               107.0        0       3  test     0.039228       0.850126   0.149874
+100561|DDD|2014J      100561         DDD             2014J     4        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               30.0                 1               17                      8               137.0        0       4  test     0.012365       0.839614   0.160386
+100621|CCC|2014B      100621         CCC             2014B     0        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                0.0                 0                0                      0                 0.0        1       0  test     0.004245       0.995755   0.004245
+100621|CCC|2014B      100621         CCC             2014B     1        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                3.0                 1                2                      2                 3.0        0       2  test     0.014116       0.981699   0.018301
+100621|CCC|2014B      100621         CCC             2014B     2        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                1.0                 1                1                      1                 4.0        0       3  test     0.014410       0.967552   0.032448
+100621|CCC|2014B      100621         CCC             2014B     3        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                1.0                 1                1                      1                 5.0        0       4  test     0.038875       0.929939   0.070061
+100621|CCC|2014B      100621         CCC             2014B     4        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                0.0                 0                0                      0                 5.0        1       0  test     0.012163       0.918628   0.081372
+101187|DDD|2014J      101187         DDD             2014J     0        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        1       0  test     0.018708       0.981292   0.018708
+101187|DDD|2014J      101187         DDD             2014J     1        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        2       0  test     0.060350       0.922071   0.077929
+101187|DDD|2014J      101187         DDD             2014J     2        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        3       0  test     0.057963       0.868625   0.131375
+101187|DDD|2014J      101187         DDD             2014J     3        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        4       0  test     0.021305       0.850119   0.149881
+101187|DDD|2014J      101187         DDD             2014J     4        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        5       0  test     0.015406       0.837022   0.162978
+101279|DDD|2014J      101279         DDD             2014J     0        0               0           NaN            37                                      0      F     Yorkshire Region A Level or Equivalent    0-10%    35-55                     0               60          N               79.0                 1               31                     21                79.0        0       1  test     0.013138       0.986862   0.013138
+101279|DDD|2014J      101279         DDD             2014J     1        0               0           NaN            37                                      0      F     Yorkshire Region A Level or Equivalent    0-10%    35-55                     0               60          N                1.0                 1                1                      1                80.0        0       2  test     0.050379       0.937144   0.062856
+101279|DDD|2014J      101279         DDD             2014J     2        0               0           NaN            37                                      0      F     Yorkshire Region A Level or Equivalent    0-10%    35-55                     0               60          N                1.0                 1                1                      1                81.0        0       3  test     0.052361       0.888075   0.111925
+101279|DDD|2014J      101279         DDD             2014J     3        0               0           NaN            37                                      0      F     Yorkshire Region A Level or Equivalent    0-10%    35-55                     0               60          N                0.0                 0                0                      0                81.0        1       0  test     0.017872       0.872203   0.127797
+101279|DDD|2014J      101279         DDD             2014J     4        0               0           NaN            37                                      0      F     Yorkshire Region A Level or Equivalent    0-10%    35-55                     0               60          N                9.0                 1                5                      4                90.0        0       2  test     0.038291       0.838805   0.161195
+ARTIFACT | Stage 5.2.3 table_linear_not_weighted_tuned_test_predictions_w4 — Linear test predictions | duckdb://table_linear_not_weighted_tuned_test_predictions_w4
+[Stage 5.2.3 table_linear_not_weighted_tuned_primary_metrics_w4 — Linear primary metrics]
+table_name=table_linear_not_weighted_tuned_primary_metrics_w4
+rows=2, cols=4
+metric_name metric_category  metric_value                         notes
+        ibs         primary      0.140023 sksurv_integrated_brier_score
+    c_index      co_primary      0.501283          pycox_concordance_td
+ARTIFACT | Stage 5.2.3 table_linear_not_weighted_tuned_primary_metrics_w4 — Linear primary metrics | duckdb://table_linear_not_weighted_tuned_primary_metrics_w4
+[Stage 5.2.3 table_linear_not_weighted_tuned_brier_by_horizon_w4 — Linear Brier scores by horizon]
+table_name=table_linear_not_weighted_tuned_brier_by_horizon_w4
+rows=3, cols=5
+ horizon_week      metric_name metric_category  metric_value              notes
+           10 brier_at_horizon         primary      0.119525 sksurv_brier_score
+           20 brier_at_horizon         primary      0.163672 sksurv_brier_score
+           30 brier_at_horizon         primary      0.197142 sksurv_brier_score
+ARTIFACT | Stage 5.2.3 table_linear_not_weighted_tuned_brier_by_horizon_w4 — Linear Brier scores by horizon | duckdb://table_linear_not_weighted_tuned_brier_by_horizon_w4
+[Stage 5.2.3 table_linear_not_weighted_tuned_secondary_metrics_w4 — Linear secondary metrics]
+table_name=table_linear_not_weighted_tuned_secondary_metrics_w4
+rows=6, cols=5
+ horizon_week         metric_name metric_category  metric_value                                                                                  notes
+           10 risk_auc_at_horizon       secondary      0.316701                                                            roc_auc_on_evaluable_subset
+           10  time_dependent_auc       secondary      0.319865 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.319865; local_ipcw_auc
+           20 risk_auc_at_horizon       secondary      0.377736                                                            roc_auc_on_evaluable_subset
+           20  time_dependent_auc       secondary      0.381753 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.381753; local_ipcw_auc
+           30 risk_auc_at_horizon       secondary      0.402796                                                            roc_auc_on_evaluable_subset
+           30  time_dependent_auc       secondary      0.407474 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.407474; local_ipcw_auc
+ARTIFACT | Stage 5.2.3 table_linear_not_weighted_tuned_secondary_metrics_w4 — Linear secondary metrics | duckdb://table_linear_not_weighted_tuned_secondary_metrics_w4
+[Stage 5.2.3 table_linear_not_weighted_tuned_td_auc_support_audit_w4 — Linear IPCW support audit]
+table_name=table_linear_not_weighted_tuned_td_auc_support_audit_w4
+rows=3, cols=6
+ horizon_week  max_ipcw_time  n_total_test_enrollments  n_supported_test_enrollments  mean_auc                                                                                  notes
+           10           38.0                      9778                          6742  0.319865 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.319865; local_ipcw_auc
+           20           38.0                      9778                          6742  0.381753 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.381753; local_ipcw_auc
+           30           38.0                      9778                          6742  0.407474 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.407474; local_ipcw_auc
+ARTIFACT | Stage 5.2.3 table_linear_not_weighted_tuned_td_auc_support_audit_w4 — Linear IPCW support audit | duckdb://table_linear_not_weighted_tuned_td_auc_support_audit_w4
+[Stage 5.2.3 table_linear_not_weighted_tuned_row_diagnostics_w4 — Linear row-level diagnostics]
+table_name=table_linear_not_weighted_tuned_row_diagnostics_w4
+rows=1, cols=5
+                                    model_name  row_level_roc_auc  row_level_pr_auc  row_level_log_loss  row_level_brier
+linear_discrete_time_hazard_not_weighted_tuned           0.776853          0.055853            0.077727         0.016422
+ARTIFACT | Stage 5.2.3 table_linear_not_weighted_tuned_row_diagnostics_w4 — Linear row-level diagnostics | duckdb://table_linear_not_weighted_tuned_row_diagnostics_w4
+[Stage 5.2.3 table_linear_not_weighted_tuned_support_by_horizon_w4 — Linear support by horizon]
+table_name=table_linear_not_weighted_tuned_support_by_horizon_w4
+rows=3, cols=4
+ horizon_week  n_evaluable_enrollments  n_events_by_horizon  event_rate_by_horizon
+           10                     9778                 1215               0.124259
+           20                     9778                 1736               0.177541
+           30                     9778                 2129               0.217734
+ARTIFACT | Stage 5.2.3 table_linear_not_weighted_tuned_support_by_horizon_w4 — Linear support by horizon | duckdb://table_linear_not_weighted_tuned_support_by_horizon_w4
+[Stage 5.2.3 table_linear_not_weighted_tuned_calibration_summary_w4 — Linear calibration summary]
+table_name=table_linear_not_weighted_tuned_calibration_summary_w4
+rows=3, cols=5
+ horizon_week            metric_name metric_category  metric_value                                         notes
+           10 calibration_at_horizon         primary      0.089747 Weighted absolute calibration gap across bins
+           20 calibration_at_horizon         primary      0.112330 Weighted absolute calibration gap across bins
+           30 calibration_at_horizon         primary      0.142704 Weighted absolute calibration gap across bins
+ARTIFACT | Stage 5.2.3 table_linear_not_weighted_tuned_calibration_summary_w4 — Linear calibration summary | duckdb://table_linear_not_weighted_tuned_calibration_summary_w4
+[Stage 5.2.3 table_linear_not_weighted_tuned_calibration_bins_by_horizon_w4 — Linear calibration bins]
+table_name=table_linear_not_weighted_tuned_calibration_bins_by_horizon_w4
+rows=30, cols=6
+ calibration_bin   n  mean_predicted_risk  observed_event_rate  horizon_week  abs_calibration_gap
+               0 978             0.012352             0.378323            10             0.365971
+               1 978             0.028716             0.167689            10             0.138973
+               2 978             0.041065             0.121677            10             0.080612
+               3 977             0.052517             0.105425            10             0.052907
+               4 978             0.064362             0.097137            10             0.032775
+               5 978             0.076156             0.075665            10             0.000492
+               6 977             0.090099             0.098260            10             0.008161
+               7 978             0.106617             0.069530            10             0.037087
+               8 978             0.129179             0.076687            10             0.052492
+               9 978             0.180023             0.052147            10             0.127875
+               0 978             0.012352             0.415133            20             0.402781
+               1 978             0.028716             0.214724            20             0.186008
+               2 978             0.041065             0.174847            20             0.133782
+               3 977             0.052517             0.163767            20             0.111249
+               4 978             0.064362             0.141104            20             0.076742
+               5 978             0.076156             0.123722            20             0.047566
+               6 977             0.090099             0.156602            20             0.066503
+               7 978             0.106617             0.126789            20             0.020172
+               8 978             0.129179             0.143149            20             0.013970
+               9 978             0.180023             0.115542            20             0.064481
+ARTIFACT | Stage 5.2.3 table_linear_not_weighted_tuned_calibration_bins_by_horizon_w4 — Linear calibration bins | duckdb://table_linear_not_weighted_tuned_calibration_bins_by_horizon_w4
+[Stage 5.2.3 table_linear_not_weighted_tuned_predicted_vs_observed_survival_w4 — Linear predicted versus observed survival]
+table_name=table_linear_not_weighted_tuned_predicted_vs_observed_survival_w4
+rows=3, cols=5
+ horizon_week  n_evaluable_enrollments  mean_predicted_survival  mean_observed_survival  abs_gap
+           10                     9778                  0.92189                0.875741 0.046149
+           20                     9778                  0.92189                0.822459 0.099431
+           30                     9778                  0.92189                0.782266 0.139624
+ARTIFACT | Stage 5.2.3 table_linear_not_weighted_tuned_predicted_vs_observed_survival_w4 — Linear predicted versus observed survival | duckdb://table_linear_not_weighted_tuned_predicted_vs_observed_survival_w4
+ARTIFACT | linear_model | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/models/linear_discrete_time_hazard_not_weighted_tuned_w4.joblib
+ARTIFACT | linear_preprocessor | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/models/linear_discrete_time_not_weighted_preprocessor_w4.joblib
+ARTIFACT | linear_tuned_model_config | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/metadata/linear_not_weighted_tuned_model_config_w4.json
+{
+  "model_name": "linear_discrete_time_hazard_not_weighted_tuned",
+  "search_space": {
+    "penalty": [
+      "l1",
+      "l1",
+      "l1",
+      "l1",
+      "l1",
+      "l1",
+      "l1",
+      "l1"
+    ],
+    "C": [
+      0.01,
+      0.1,
+      1.0,
+      10.0
+    ]
+  },
+  "solver": "liblinear",
+  "class_weight": "none",
+  "max_iter": 2000,
+  "tuning_parallel_workers": 8,
+  "tuning_parallel_backend": "processes",
+  "run_label": "dynamic_window_w4",
+  "is_window_truncated_run": true,
+  "active_window_weeks": 4,
+  "output_suffix": "_w4",
+  "selection_metric": "val_log_loss",
+  "validation_split": {
+    "method": "GroupShuffleSplit",
+    "test_size": 0.2,
+    "group_column": "enrollment_id",
+    "random_seed": 42
+  },
+  "benchmark_horizons": [
+    10,
+    20,
+    30
+  ],
+  "calibration_bins": 10,
+  "calibration_contract_version": "v2_ipcw_km_observed_risk",
+  "calibration_observed_risk_method": "ipcw_km_pseudo_event_rate",
+  "best_candidate": {
+    "candidate_id": 12,
+    "penalty": "l1",
+    "l1_ratio": 1.0,
+    "C": 500.0,
+    "val_log_loss": 0.07759549966611255,
+    "val_brier": 0.016150164075141582,
+    "val_roc_auc": 0.7581199038875659,
+    "val_pr_auc": 0.04713513375874356
+  },
+  "preprocessing": {
+    "categorical_features": [
+      "gender",
+      "region",
+      "highest_education",
+      "imd_band",
+      "age_band",
+      "disability"
+    ],
+    "numeric_features": [
+      "num_of_prev_attempts",
+      "studied_credits",
+      "week",
+      "total_clicks_week",
+      "active_this_week",
+      "n_vle_rows_week",
+      "n_distinct_sites_week",
+      "cum_clicks_until_t",
+      "recency",
+      "streak"
+    ],
+    "categorical_encoder": "OneHotEncoder(handle_unknown=ignore, sparse_output=True)",
+    "numeric_scaler": "MaxAbsScaler"
+  },
+  "weighting_strategy": "none; this official D5.2 variant fits the same weekly dynamic feature contract without class reweighting.",
+  "design_note": "The repaired IPCW-supported time-dependent AUC path is integrated directly into this not-weighted D5.2 official variant so the Item 6 comparison changes only the fitting weights in the weighted sensitivity counterpart, not the evaluation stack."
+}
+
+ candidate_id penalty  l1_ratio     C  val_log_loss  val_brier  val_roc_auc  val_pr_auc
+           12      l1       1.0 500.0      0.077595    0.01615      0.75812    0.047135
+[PROGRESS] 5.2.3 - 2026-06-19 12:48:24 - Model artifacts, config, and benchmark tables persisted successfully
+[END] 5.2.3 - 2026-06-19 12:48:24
+[RUN] dynamic_window_weeks=6 output_suffix=_w6
+[START] 5.2 - 2026-06-19 12:48:24
+# ==============================================================
+# 5.2.2 - Prepare the linear discrete-time treatment
+# ==============================================================
+[PROGRESS] 5.2.2 - 2026-06-19 12:48:24 - Resolving feature contract and expected canonical features
+[PROGRESS] 5.2.2 - 2026-06-19 12:48:26 - Loaded training and test tables with shapes train=(151041, 26), test=(64730, 26)
+[PROGRESS] 5.2.2 - 2026-06-19 12:48:26 - Fitting sparse preprocessor on training data
+[PROGRESS] 5.2.2 - 2026-06-19 12:48:26 - Transforming test data with fitted preprocessor
+[PROGRESS] 5.2.2 - 2026-06-19 12:48:27 - Preprocessing finished with 46 output features
+[PROGRESS] 5.2.2 - 2026-06-19 12:48:27 - Materializing treatment audit tables
+[Stage 5.2.2 table_p16_linear_not_weighted_treatment_audit_w6 — Linear treatment audit]
+table_name=table_p16_linear_not_weighted_treatment_audit_w6
+rows=9, cols=2
+                            component                value
+                        target_column              event_t
+                         n_train_rows               151041
+                          n_test_rows                64730
+               n_operational_features                   16
+                   n_numeric_features                   10
+               n_categorical_features                    6
+n_output_features_after_preprocessing                   46
+                     train_event_rate 0.014499374342066062
+                      test_event_rate 0.014382820948555539
+ARTIFACT | Stage 5.2.2 table_p16_linear_not_weighted_treatment_audit_w6 — Linear treatment audit | duckdb://table_p16_linear_not_weighted_treatment_audit_w6
+[Stage 5.2.2 table_p16_linear_not_weighted_feature_manifest_w6 — Linear feature manifest]
+table_name=table_p16_linear_not_weighted_feature_manifest_w6
+rows=16, cols=6
+feature_name_operational feature_role  present_in_train  present_in_test  covered_by_canonical_config_after_alias canonical_source_name
+                  gender  categorical              True             True                                    False                      
+                  region  categorical              True             True                                    False                      
+       highest_education  categorical              True             True                                    False                      
+                imd_band  categorical              True             True                                    False                      
+                age_band  categorical              True             True                                    False                      
+              disability  categorical              True             True                                    False                      
+    num_of_prev_attempts      numeric              True             True                                     True  num_of_prev_attempts
+         studied_credits      numeric              True             True                                     True       studied_credits
+                    week      numeric              True             True                                     True                  week
+       total_clicks_week      numeric              True             True                                     True          total_clicks
+        active_this_week      numeric              True             True                                    False                      
+         n_vle_rows_week      numeric              True             True                                    False                      
+   n_distinct_sites_week      numeric              True             True                                    False                      
+      cum_clicks_until_t      numeric              True             True                                    False                      
+                 recency      numeric              True             True                                    False                      
+                  streak      numeric              True             True                                    False                      
+ARTIFACT | Stage 5.2.2 table_p16_linear_not_weighted_feature_manifest_w6 — Linear feature manifest | duckdb://table_p16_linear_not_weighted_feature_manifest_w6
+[Stage 5.2.2 table_p16_linear_not_weighted_canonical_alignment_w6 — Canonical feature alignment]
+table_name=table_p16_linear_not_weighted_canonical_alignment_w6
+rows=4, cols=3
+canonical_feature_raw canonical_feature_resolved  covered_by_operational_treatment_spec
+      studied_credits            studied_credits                                   True
+ num_of_prev_attempts       num_of_prev_attempts                                   True
+                 week                       week                                   True
+         total_clicks          total_clicks_week                                   True
+ARTIFACT | Stage 5.2.2 table_p16_linear_not_weighted_canonical_alignment_w6 — Canonical feature alignment | duckdb://table_p16_linear_not_weighted_canonical_alignment_w6
+[Stage 5.2.2 table_p16_linear_not_weighted_output_feature_manifest_w6 — Preprocessed feature manifest]
+table_name=table_p16_linear_not_weighted_output_feature_manifest_w6
+rows=46, cols=1
+       preprocessed_feature_name
+       num__num_of_prev_attempts
+            num__studied_credits
+                       num__week
+          num__total_clicks_week
+           num__active_this_week
+            num__n_vle_rows_week
+      num__n_distinct_sites_week
+         num__cum_clicks_until_t
+                    num__recency
+                     num__streak
+                   cat__gender_F
+                   cat__gender_M
+ cat__region_East Anglian Region
+cat__region_East Midlands Region
+             cat__region_Ireland
+       cat__region_London Region
+        cat__region_North Region
+cat__region_North Western Region
+            cat__region_Scotland
+   cat__region_South East Region
+ARTIFACT | Stage 5.2.2 table_p16_linear_not_weighted_output_feature_manifest_w6 — Preprocessed feature manifest | duckdb://table_p16_linear_not_weighted_output_feature_manifest_w6
+ARTIFACT | metadata_p16_linear_treatment | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/metadata/metadata_p16_linear_not_weighted_treatment_w6.json
+{
+  "step": "P16",
+  "model_family": "linear_discrete_time_hazard_not_weighted_tuned",
+  "run_label": "dynamic_window_w6",
+  "is_window_truncated_run": true,
+  "active_window_weeks": 6,
+  "output_suffix": "_w6",
+  "train_table": "pp_linear_hazard_ready_train",
+  "test_table": "pp_linear_hazard_ready_test",
+  "target_column": "event_t",
+  "categorical_features": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability"
+  ],
+  "numeric_features": [
+    "num_of_prev_attempts",
+    "studied_credits",
+    "week",
+    "total_clicks_week",
+    "active_this_week",
+    "n_vle_rows_week",
+    "n_distinct_sites_week",
+    "cum_clicks_until_t",
+    "recency",
+    "streak"
+  ],
+  "operational_feature_columns": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability",
+    "num_of_prev_attempts",
+    "studied_credits",
+    "week",
+    "total_clicks_week",
+    "active_this_week",
+    "n_vle_rows_week",
+    "n_distinct_sites_week",
+    "cum_clicks_until_t",
+    "recency",
+    "streak"
+  ],
+  "canonical_expected_features_raw": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "week",
+    "total_clicks"
+  ],
+  "canonical_expected_features_resolved": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "week",
+    "total_clicks_week"
+  ],
+  "feature_alias_map": {
+    "total_clicks": "total_clicks_week"
+  },
+  "n_train_rows": 151041,
+  "n_test_rows": 64730,
+  "n_output_features_after_preprocessing": 46,
+  "train_event_rate": 0.014499374342066062,
+  "test_event_rate": 0.014382820948555539,
+  "design_note": "Sparse linear preprocessing is used to eliminate dense-matrix runtime warnings while preserving the benchmark feature contract.",
+  "methodological_note": "All learned preprocessing operations were fit on training data only and then applied unchanged to test data.",
+  "cross_arm_parity_note": "This run truncates weekly person-period information at or before the active window and is intended for cross-arm information-parity analysis."
+}
+
+[PROGRESS] 5.2.2 - 2026-06-19 12:48:27 - Treatment metadata persisted
+[END] 5.2.2 - 2026-06-19 12:48:27
+[START] 5.2 - 2026-06-19 12:48:27
+# ==============================================================
+# 5.2.3 - Tune and evaluate the linear discrete-time hazard model
+# ==============================================================
+[PROGRESS] 5.2.3 - 2026-06-19 12:48:27 - Preparing grouped validation split
+[PROGRESS] 5.2.3 - 2026-06-19 12:48:27 - Validation split ready with subtrain_rows=120781, validation_rows=30260
+- TUNING_WORKERS: 8
+- TUNING_BACKEND: processes
+[PROGRESS] 5.2.3 - 2026-06-19 12:48:27 - Starting tuning across 24 candidates
+[PROGRESS] 5.2.3 - 2026-06-19 12:49:26 - Tuning completed with 24 evaluated candidates
+[PROGRESS] 5.2.3 - 2026-06-19 12:49:26 - Best candidate selected: id=23, penalty=l2, C=100.0
+[PROGRESS] 5.2.3 - 2026-06-19 12:49:26 - Fitting best model on full training data
+[PROGRESS] 5.2.3 - 2026-06-19 12:49:27 - Generating row-level predictions on test data
+[PROGRESS] 5.2.3 - 2026-06-19 12:49:29 - Survival surface assembled; computing benchmark metrics
+[PROGRESS] 5.2.3 - 2026-06-19 12:49:29 - Calibration summaries computed; starting IPCW-dependent metrics
+[PROGRESS] 5.2.3 - 2026-06-19 12:49:29 - All evaluation metrics computed; persisting artifacts and DuckDB tables
+[Stage 5.2.3 table_linear_not_weighted_tuning_results_w6 — Linear tuning results]
+table_name=table_linear_not_weighted_tuning_results_w6
+rows=24, cols=8
+ candidate_id penalty  l1_ratio       C  val_log_loss  val_brier  val_roc_auc  val_pr_auc
+           23      l2       0.0 100.000      0.068446   0.013876     0.761055    0.043353
+           22      l2       0.0  50.000      0.068449   0.013876     0.760944    0.043367
+           12      l1       1.0 500.000      0.068449   0.013876     0.761092    0.043343
+           24      l2       0.0 500.000      0.068449   0.013876     0.761066    0.043344
+           11      l1       1.0 100.000      0.068450   0.013876     0.761066    0.043340
+           10      l1       1.0  50.000      0.068452   0.013876     0.761025    0.043332
+            9      l1       1.0  10.000      0.068460   0.013876     0.760796    0.043313
+            8      l1       1.0   5.000      0.068468   0.013876     0.760576    0.043311
+           21      l2       0.0  10.000      0.068492   0.013876     0.760000    0.043293
+           20      l2       0.0   5.000      0.068534   0.013877     0.759288    0.043178
+            7      l1       1.0   1.000      0.068554   0.013876     0.758947    0.043200
+            6      l1       1.0   0.500      0.068607   0.013877     0.758122    0.042938
+           19      l2       0.0   1.000      0.068695   0.013879     0.756593    0.042594
+           18      l2       0.0   0.500      0.068818   0.013880     0.754151    0.042147
+            5      l1       1.0   0.100      0.068913   0.013880     0.751848    0.041367
+           17      l2       0.0   0.100      0.069353   0.013886     0.742741    0.040774
+            4      l1       1.0   0.050      0.069600   0.013896     0.738212    0.039264
+           16      l2       0.0   0.050      0.069648   0.013891     0.736018    0.040123
+           15      l2       0.0   0.010      0.070295   0.013911     0.721541    0.037915
+           14      l2       0.0   0.005      0.070695   0.013926     0.715673    0.036438
+ARTIFACT | Stage 5.2.3 table_linear_not_weighted_tuning_results_w6 — Linear tuning results | duckdb://table_linear_not_weighted_tuning_results_w6
+[Stage 5.2.3 table_linear_not_weighted_tuned_test_predictions_w6 — Linear test predictions]
+table_name=table_linear_not_weighted_tuned_test_predictions_w6
+rows=64730, cols=29
+   enrollment_id  id_student code_module code_presentation  week  event_t  event_observed  t_event_week  t_final_week  used_zero_week_fallback_for_censoring gender               region     highest_education imd_band age_band  num_of_prev_attempts  studied_credits disability  total_clicks_week  active_this_week  n_vle_rows_week  n_distinct_sites_week  cum_clicks_until_t  recency  streak split  pred_hazard  pred_survival  pred_risk
+100561|DDD|2014J      100561         DDD             2014J     0        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               10.0                 1                8                      4                10.0        0       1  test     0.074067       0.925933   0.074067
+100561|DDD|2014J      100561         DDD             2014J     1        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N                0.0                 0                0                      0                10.0        1       0  test     0.022296       0.905288   0.094712
+100561|DDD|2014J      100561         DDD             2014J     2        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               91.0                 1               26                     11               101.0        0       2  test     0.019039       0.888052   0.111948
+100561|DDD|2014J      100561         DDD             2014J     3        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N                6.0                 1                4                      2               107.0        0       3  test     0.005772       0.882926   0.117074
+100561|DDD|2014J      100561         DDD             2014J     4        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               30.0                 1               17                      8               137.0        0       4  test     0.037525       0.849794   0.150206
+100561|DDD|2014J      100561         DDD             2014J     5        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               65.0                 1               36                     14               202.0        0       5  test     0.011232       0.840249   0.159751
+100561|DDD|2014J      100561         DDD             2014J     6        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               27.0                 1               15                      9               229.0        0       6  test     0.004019       0.836873   0.163127
+100621|CCC|2014B      100621         CCC             2014B     0        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                0.0                 0                0                      0                 0.0        1       0  test     0.013666       0.986334   0.013666
+100621|CCC|2014B      100621         CCC             2014B     1        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                3.0                 1                2                      2                 3.0        0       2  test     0.014522       0.972010   0.027990
+100621|CCC|2014B      100621         CCC             2014B     2        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                1.0                 1                1                      1                 4.0        0       3  test     0.017375       0.955122   0.044878
+100621|CCC|2014B      100621         CCC             2014B     3        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                1.0                 1                1                      1                 5.0        0       4  test     0.040012       0.916905   0.083095
+100621|CCC|2014B      100621         CCC             2014B     4        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                0.0                 0                0                      0                 5.0        1       0  test     0.012570       0.905380   0.094620
+100621|CCC|2014B      100621         CCC             2014B     5        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                0.0                 0                0                      0                 5.0        2       0  test     0.010213       0.896133   0.103867
+100621|CCC|2014B      100621         CCC             2014B     6        1               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                0.0                 0                0                      0                 5.0        3       0  test     0.008009       0.888956   0.111044
+101187|DDD|2014J      101187         DDD             2014J     0        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        1       0  test     0.018982       0.981018   0.018982
+101187|DDD|2014J      101187         DDD             2014J     1        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        2       0  test     0.074773       0.907665   0.092335
+101187|DDD|2014J      101187         DDD             2014J     2        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        3       0  test     0.057546       0.855432   0.144568
+101187|DDD|2014J      101187         DDD             2014J     3        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        4       0  test     0.021227       0.837274   0.162726
+101187|DDD|2014J      101187         DDD             2014J     4        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        5       0  test     0.015357       0.824416   0.175584
+101187|DDD|2014J      101187         DDD             2014J     5        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        6       0  test     0.011474       0.814957   0.185043
+ARTIFACT | Stage 5.2.3 table_linear_not_weighted_tuned_test_predictions_w6 — Linear test predictions | duckdb://table_linear_not_weighted_tuned_test_predictions_w6
+[Stage 5.2.3 table_linear_not_weighted_tuned_primary_metrics_w6 — Linear primary metrics]
+table_name=table_linear_not_weighted_tuned_primary_metrics_w6
+rows=2, cols=4
+metric_name metric_category  metric_value                         notes
+        ibs         primary      0.141713 sksurv_integrated_brier_score
+    c_index      co_primary      0.494617          pycox_concordance_td
+ARTIFACT | Stage 5.2.3 table_linear_not_weighted_tuned_primary_metrics_w6 — Linear primary metrics | duckdb://table_linear_not_weighted_tuned_primary_metrics_w6
+[Stage 5.2.3 table_linear_not_weighted_tuned_brier_by_horizon_w6 — Linear Brier scores by horizon]
+table_name=table_linear_not_weighted_tuned_brier_by_horizon_w6
+rows=3, cols=5
+ horizon_week      metric_name metric_category  metric_value              notes
+           10 brier_at_horizon         primary      0.122210 sksurv_brier_score
+           20 brier_at_horizon         primary      0.165524 sksurv_brier_score
+           30 brier_at_horizon         primary      0.197779 sksurv_brier_score
+ARTIFACT | Stage 5.2.3 table_linear_not_weighted_tuned_brier_by_horizon_w6 — Linear Brier scores by horizon | duckdb://table_linear_not_weighted_tuned_brier_by_horizon_w6
+[Stage 5.2.3 table_linear_not_weighted_tuned_secondary_metrics_w6 — Linear secondary metrics]
+table_name=table_linear_not_weighted_tuned_secondary_metrics_w6
+rows=6, cols=5
+ horizon_week         metric_name metric_category  metric_value                                                                                  notes
+           10 risk_auc_at_horizon       secondary      0.253720                                                            roc_auc_on_evaluable_subset
+           10  time_dependent_auc       secondary      0.253344 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.253344; local_ipcw_auc
+           20 risk_auc_at_horizon       secondary      0.321396                                                            roc_auc_on_evaluable_subset
+           20  time_dependent_auc       secondary      0.320618 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.320618; local_ipcw_auc
+           30 risk_auc_at_horizon       secondary      0.356971                                                            roc_auc_on_evaluable_subset
+           30  time_dependent_auc       secondary      0.356538 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.356538; local_ipcw_auc
+ARTIFACT | Stage 5.2.3 table_linear_not_weighted_tuned_secondary_metrics_w6 — Linear secondary metrics | duckdb://table_linear_not_weighted_tuned_secondary_metrics_w6
+[Stage 5.2.3 table_linear_not_weighted_tuned_td_auc_support_audit_w6 — Linear IPCW support audit]
+table_name=table_linear_not_weighted_tuned_td_auc_support_audit_w6
+rows=3, cols=6
+ horizon_week  max_ipcw_time  n_total_test_enrollments  n_supported_test_enrollments  mean_auc                                                                                  notes
+           10           38.0                      9778                          6742  0.253344 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.253344; local_ipcw_auc
+           20           38.0                      9778                          6742  0.320618 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.320618; local_ipcw_auc
+           30           38.0                      9778                          6742  0.356538 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.356538; local_ipcw_auc
+ARTIFACT | Stage 5.2.3 table_linear_not_weighted_tuned_td_auc_support_audit_w6 — Linear IPCW support audit | duckdb://table_linear_not_weighted_tuned_td_auc_support_audit_w6
+[Stage 5.2.3 table_linear_not_weighted_tuned_row_diagnostics_w6 — Linear row-level diagnostics]
+table_name=table_linear_not_weighted_tuned_row_diagnostics_w6
+rows=1, cols=5
+                                    model_name  row_level_roc_auc  row_level_pr_auc  row_level_log_loss  row_level_brier
+linear_discrete_time_hazard_not_weighted_tuned           0.789921          0.052121            0.067114         0.013886
+ARTIFACT | Stage 5.2.3 table_linear_not_weighted_tuned_row_diagnostics_w6 — Linear row-level diagnostics | duckdb://table_linear_not_weighted_tuned_row_diagnostics_w6
+[Stage 5.2.3 table_linear_not_weighted_tuned_support_by_horizon_w6 — Linear support by horizon]
+table_name=table_linear_not_weighted_tuned_support_by_horizon_w6
+rows=3, cols=4
+ horizon_week  n_evaluable_enrollments  n_events_by_horizon  event_rate_by_horizon
+           10                     9778                 1215               0.124259
+           20                     9778                 1736               0.177541
+           30                     9778                 2129               0.217734
+ARTIFACT | Stage 5.2.3 table_linear_not_weighted_tuned_support_by_horizon_w6 — Linear support by horizon | duckdb://table_linear_not_weighted_tuned_support_by_horizon_w6
+[Stage 5.2.3 table_linear_not_weighted_tuned_calibration_summary_w6 — Linear calibration summary]
+table_name=table_linear_not_weighted_tuned_calibration_summary_w6
+rows=3, cols=5
+ horizon_week            metric_name metric_category  metric_value                                         notes
+           10 calibration_at_horizon         primary      0.109478 Weighted absolute calibration gap across bins
+           20 calibration_at_horizon         primary      0.118634 Weighted absolute calibration gap across bins
+           30 calibration_at_horizon         primary      0.138660 Weighted absolute calibration gap across bins
+ARTIFACT | Stage 5.2.3 table_linear_not_weighted_tuned_calibration_summary_w6 — Linear calibration summary | duckdb://table_linear_not_weighted_tuned_calibration_summary_w6
+[Stage 5.2.3 table_linear_not_weighted_tuned_calibration_bins_by_horizon_w6 — Linear calibration bins]
+table_name=table_linear_not_weighted_tuned_calibration_bins_by_horizon_w6
+rows=30, cols=6
+ calibration_bin   n  mean_predicted_risk  observed_event_rate  horizon_week  abs_calibration_gap
+               0 978             0.014864             0.482618            10             0.467754
+               1 978             0.034418             0.168712            10             0.134294
+               2 978             0.049253             0.117587            10             0.068333
+               3 977             0.063001             0.104401            10             0.041400
+               4 978             0.076540             0.079755            10             0.003215
+               5 978             0.089882             0.067485            10             0.022397
+               6 977             0.105253             0.068577            10             0.036676
+               7 978             0.123306             0.061350            10             0.061957
+               8 978             0.148322             0.047035            10             0.101288
+               9 978             0.202314             0.044990            10             0.157324
+               0 978             0.014864             0.516360            20             0.501496
+               1 978             0.034418             0.229039            20             0.194621
+               2 978             0.049253             0.173824            20             0.124571
+               3 977             0.063001             0.166837            20             0.103836
+               4 978             0.076540             0.128834            20             0.052294
+               5 978             0.089882             0.125767            20             0.035885
+               6 977             0.105253             0.119754            20             0.014502
+               7 978             0.123306             0.110429            20             0.012877
+               8 978             0.148322             0.100204            20             0.048118
+               9 978             0.202314             0.104294            20             0.098020
+ARTIFACT | Stage 5.2.3 table_linear_not_weighted_tuned_calibration_bins_by_horizon_w6 — Linear calibration bins | duckdb://table_linear_not_weighted_tuned_calibration_bins_by_horizon_w6
+[Stage 5.2.3 table_linear_not_weighted_tuned_predicted_vs_observed_survival_w6 — Linear predicted versus observed survival]
+table_name=table_linear_not_weighted_tuned_predicted_vs_observed_survival_w6
+rows=3, cols=5
+ horizon_week  n_evaluable_enrollments  mean_predicted_survival  mean_observed_survival  abs_gap
+           10                     9778                 0.909283                0.875741 0.033542
+           20                     9778                 0.909283                0.822459 0.086825
+           30                     9778                 0.909283                0.782266 0.127017
+ARTIFACT | Stage 5.2.3 table_linear_not_weighted_tuned_predicted_vs_observed_survival_w6 — Linear predicted versus observed survival | duckdb://table_linear_not_weighted_tuned_predicted_vs_observed_survival_w6
+ARTIFACT | linear_model | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/models/linear_discrete_time_hazard_not_weighted_tuned_w6.joblib
+ARTIFACT | linear_preprocessor | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/models/linear_discrete_time_not_weighted_preprocessor_w6.joblib
+ARTIFACT | linear_tuned_model_config | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/metadata/linear_not_weighted_tuned_model_config_w6.json
+{
+  "model_name": "linear_discrete_time_hazard_not_weighted_tuned",
+  "search_space": {
+    "penalty": [
+      "l1",
+      "l1",
+      "l1",
+      "l1",
+      "l1",
+      "l1",
+      "l1",
+      "l1"
+    ],
+    "C": [
+      0.01,
+      0.1,
+      1.0,
+      10.0
+    ]
+  },
+  "solver": "liblinear",
+  "class_weight": "none",
+  "max_iter": 2000,
+  "tuning_parallel_workers": 8,
+  "tuning_parallel_backend": "processes",
+  "run_label": "dynamic_window_w6",
+  "is_window_truncated_run": true,
+  "active_window_weeks": 6,
+  "output_suffix": "_w6",
+  "selection_metric": "val_log_loss",
+  "validation_split": {
+    "method": "GroupShuffleSplit",
+    "test_size": 0.2,
+    "group_column": "enrollment_id",
+    "random_seed": 42
+  },
+  "benchmark_horizons": [
+    10,
+    20,
+    30
+  ],
+  "calibration_bins": 10,
+  "calibration_contract_version": "v2_ipcw_km_observed_risk",
+  "calibration_observed_risk_method": "ipcw_km_pseudo_event_rate",
+  "best_candidate": {
+    "candidate_id": 23,
+    "penalty": "l2",
+    "l1_ratio": 0.0,
+    "C": 100.0,
+    "val_log_loss": 0.06844610860360285,
+    "val_brier": 0.013875931924148734,
+    "val_roc_auc": 0.7610551653554453,
+    "val_pr_auc": 0.04335348866559625
+  },
+  "preprocessing": {
+    "categorical_features": [
+      "gender",
+      "region",
+      "highest_education",
+      "imd_band",
+      "age_band",
+      "disability"
+    ],
+    "numeric_features": [
+      "num_of_prev_attempts",
+      "studied_credits",
+      "week",
+      "total_clicks_week",
+      "active_this_week",
+      "n_vle_rows_week",
+      "n_distinct_sites_week",
+      "cum_clicks_until_t",
+      "recency",
+      "streak"
+    ],
+    "categorical_encoder": "OneHotEncoder(handle_unknown=ignore, sparse_output=True)",
+    "numeric_scaler": "MaxAbsScaler"
+  },
+  "weighting_strategy": "none; this official D5.2 variant fits the same weekly dynamic feature contract without class reweighting.",
+  "design_note": "The repaired IPCW-supported time-dependent AUC path is integrated directly into this not-weighted D5.2 official variant so the Item 6 comparison changes only the fitting weights in the weighted sensitivity counterpart, not the evaluation stack."
+}
+
+ candidate_id penalty  l1_ratio     C  val_log_loss  val_brier  val_roc_auc  val_pr_auc
+           23      l2       0.0 100.0      0.068446   0.013876     0.761055    0.043353
+[PROGRESS] 5.2.3 - 2026-06-19 12:49:30 - Model artifacts, config, and benchmark tables persisted successfully
+[END] 5.2.3 - 2026-06-19 12:49:30
+[RUN] dynamic_window_weeks=8 output_suffix=_w8
+[START] 5.2 - 2026-06-19 12:49:30
+# ==============================================================
+# 5.2.2 - Prepare the linear discrete-time treatment
+# ==============================================================
+[PROGRESS] 5.2.2 - 2026-06-19 12:49:30 - Resolving feature contract and expected canonical features
+[PROGRESS] 5.2.2 - 2026-06-19 12:49:32 - Loaded training and test tables with shapes train=(192111, 26), test=(82348, 26)
+[PROGRESS] 5.2.2 - 2026-06-19 12:49:32 - Fitting sparse preprocessor on training data
+[PROGRESS] 5.2.2 - 2026-06-19 12:49:32 - Transforming test data with fitted preprocessor
+[PROGRESS] 5.2.2 - 2026-06-19 12:49:33 - Preprocessing finished with 46 output features
+[PROGRESS] 5.2.2 - 2026-06-19 12:49:33 - Materializing treatment audit tables
+[Stage 5.2.2 table_p16_linear_not_weighted_treatment_audit_w8 — Linear treatment audit]
+table_name=table_p16_linear_not_weighted_treatment_audit_w8
+rows=9, cols=2
+                            component                value
+                        target_column              event_t
+                         n_train_rows               192111
+                          n_test_rows                82348
+               n_operational_features                   16
+                   n_numeric_features                   10
+               n_categorical_features                    6
+n_output_features_after_preprocessing                   46
+                     train_event_rate    0.013148648437622
+                      test_event_rate 0.013127216204400835
+ARTIFACT | Stage 5.2.2 table_p16_linear_not_weighted_treatment_audit_w8 — Linear treatment audit | duckdb://table_p16_linear_not_weighted_treatment_audit_w8
+[Stage 5.2.2 table_p16_linear_not_weighted_feature_manifest_w8 — Linear feature manifest]
+table_name=table_p16_linear_not_weighted_feature_manifest_w8
+rows=16, cols=6
+feature_name_operational feature_role  present_in_train  present_in_test  covered_by_canonical_config_after_alias canonical_source_name
+                  gender  categorical              True             True                                    False                      
+                  region  categorical              True             True                                    False                      
+       highest_education  categorical              True             True                                    False                      
+                imd_band  categorical              True             True                                    False                      
+                age_band  categorical              True             True                                    False                      
+              disability  categorical              True             True                                    False                      
+    num_of_prev_attempts      numeric              True             True                                     True  num_of_prev_attempts
+         studied_credits      numeric              True             True                                     True       studied_credits
+                    week      numeric              True             True                                     True                  week
+       total_clicks_week      numeric              True             True                                     True          total_clicks
+        active_this_week      numeric              True             True                                    False                      
+         n_vle_rows_week      numeric              True             True                                    False                      
+   n_distinct_sites_week      numeric              True             True                                    False                      
+      cum_clicks_until_t      numeric              True             True                                    False                      
+                 recency      numeric              True             True                                    False                      
+                  streak      numeric              True             True                                    False                      
+ARTIFACT | Stage 5.2.2 table_p16_linear_not_weighted_feature_manifest_w8 — Linear feature manifest | duckdb://table_p16_linear_not_weighted_feature_manifest_w8
+[Stage 5.2.2 table_p16_linear_not_weighted_canonical_alignment_w8 — Canonical feature alignment]
+table_name=table_p16_linear_not_weighted_canonical_alignment_w8
+rows=4, cols=3
+canonical_feature_raw canonical_feature_resolved  covered_by_operational_treatment_spec
+      studied_credits            studied_credits                                   True
+ num_of_prev_attempts       num_of_prev_attempts                                   True
+                 week                       week                                   True
+         total_clicks          total_clicks_week                                   True
+ARTIFACT | Stage 5.2.2 table_p16_linear_not_weighted_canonical_alignment_w8 — Canonical feature alignment | duckdb://table_p16_linear_not_weighted_canonical_alignment_w8
+[Stage 5.2.2 table_p16_linear_not_weighted_output_feature_manifest_w8 — Preprocessed feature manifest]
+table_name=table_p16_linear_not_weighted_output_feature_manifest_w8
+rows=46, cols=1
+       preprocessed_feature_name
+       num__num_of_prev_attempts
+            num__studied_credits
+                       num__week
+          num__total_clicks_week
+           num__active_this_week
+            num__n_vle_rows_week
+      num__n_distinct_sites_week
+         num__cum_clicks_until_t
+                    num__recency
+                     num__streak
+                   cat__gender_F
+                   cat__gender_M
+ cat__region_East Anglian Region
+cat__region_East Midlands Region
+             cat__region_Ireland
+       cat__region_London Region
+        cat__region_North Region
+cat__region_North Western Region
+            cat__region_Scotland
+   cat__region_South East Region
+ARTIFACT | Stage 5.2.2 table_p16_linear_not_weighted_output_feature_manifest_w8 — Preprocessed feature manifest | duckdb://table_p16_linear_not_weighted_output_feature_manifest_w8
+ARTIFACT | metadata_p16_linear_treatment | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/metadata/metadata_p16_linear_not_weighted_treatment_w8.json
+{
+  "step": "P16",
+  "model_family": "linear_discrete_time_hazard_not_weighted_tuned",
+  "run_label": "dynamic_window_w8",
+  "is_window_truncated_run": true,
+  "active_window_weeks": 8,
+  "output_suffix": "_w8",
+  "train_table": "pp_linear_hazard_ready_train",
+  "test_table": "pp_linear_hazard_ready_test",
+  "target_column": "event_t",
+  "categorical_features": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability"
+  ],
+  "numeric_features": [
+    "num_of_prev_attempts",
+    "studied_credits",
+    "week",
+    "total_clicks_week",
+    "active_this_week",
+    "n_vle_rows_week",
+    "n_distinct_sites_week",
+    "cum_clicks_until_t",
+    "recency",
+    "streak"
+  ],
+  "operational_feature_columns": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability",
+    "num_of_prev_attempts",
+    "studied_credits",
+    "week",
+    "total_clicks_week",
+    "active_this_week",
+    "n_vle_rows_week",
+    "n_distinct_sites_week",
+    "cum_clicks_until_t",
+    "recency",
+    "streak"
+  ],
+  "canonical_expected_features_raw": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "week",
+    "total_clicks"
+  ],
+  "canonical_expected_features_resolved": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "week",
+    "total_clicks_week"
+  ],
+  "feature_alias_map": {
+    "total_clicks": "total_clicks_week"
+  },
+  "n_train_rows": 192111,
+  "n_test_rows": 82348,
+  "n_output_features_after_preprocessing": 46,
+  "train_event_rate": 0.013148648437622,
+  "test_event_rate": 0.013127216204400835,
+  "design_note": "Sparse linear preprocessing is used to eliminate dense-matrix runtime warnings while preserving the benchmark feature contract.",
+  "methodological_note": "All learned preprocessing operations were fit on training data only and then applied unchanged to test data.",
+  "cross_arm_parity_note": "This run truncates weekly person-period information at or before the active window and is intended for cross-arm information-parity analysis."
+}
+
+[PROGRESS] 5.2.2 - 2026-06-19 12:49:33 - Treatment metadata persisted
+[END] 5.2.2 - 2026-06-19 12:49:33
+[START] 5.2 - 2026-06-19 12:49:33
+# ==============================================================
+# 5.2.3 - Tune and evaluate the linear discrete-time hazard model
+# ==============================================================
+[PROGRESS] 5.2.3 - 2026-06-19 12:49:33 - Preparing grouped validation split
+[PROGRESS] 5.2.3 - 2026-06-19 12:49:33 - Validation split ready with subtrain_rows=153632, validation_rows=38479
+- TUNING_WORKERS: 8
+- TUNING_BACKEND: processes
+[PROGRESS] 5.2.3 - 2026-06-19 12:49:33 - Starting tuning across 24 candidates
+[PROGRESS] 5.2.3 - 2026-06-19 12:50:47 - Tuning completed with 24 evaluated candidates
+[PROGRESS] 5.2.3 - 2026-06-19 12:50:47 - Best candidate selected: id=23, penalty=l2, C=100.0
+[PROGRESS] 5.2.3 - 2026-06-19 12:50:47 - Fitting best model on full training data
+[PROGRESS] 5.2.3 - 2026-06-19 12:50:48 - Generating row-level predictions on test data
+[PROGRESS] 5.2.3 - 2026-06-19 12:50:53 - Survival surface assembled; computing benchmark metrics
+[PROGRESS] 5.2.3 - 2026-06-19 12:50:53 - Calibration summaries computed; starting IPCW-dependent metrics
+[PROGRESS] 5.2.3 - 2026-06-19 12:50:54 - All evaluation metrics computed; persisting artifacts and DuckDB tables
+[Stage 5.2.3 table_linear_not_weighted_tuning_results_w8 — Linear tuning results]
+table_name=table_linear_not_weighted_tuning_results_w8
+rows=24, cols=8
+ candidate_id penalty  l1_ratio       C  val_log_loss  val_brier  val_roc_auc  val_pr_auc
+           23      l2       0.0 100.000      0.064579   0.012835     0.754581    0.039958
+           22      l2       0.0  50.000      0.064580   0.012835     0.754538    0.039976
+           24      l2       0.0 500.000      0.064585   0.012835     0.754544    0.039930
+           12      l1       1.0 500.000      0.064586   0.012835     0.754539    0.039926
+           11      l1       1.0 100.000      0.064586   0.012835     0.754521    0.039925
+           10      l1       1.0  50.000      0.064587   0.012835     0.754502    0.039923
+            9      l1       1.0  10.000      0.064590   0.012835     0.754389    0.039923
+            8      l1       1.0   5.000      0.064594   0.012835     0.754272    0.039933
+           21      l2       0.0  10.000      0.064607   0.012834     0.753885    0.039981
+           20      l2       0.0   5.000      0.064639   0.012835     0.753146    0.039896
+            7      l1       1.0   1.000      0.064652   0.012834     0.753011    0.039937
+            6      l1       1.0   0.500      0.064697   0.012835     0.751860    0.039705
+           19      l2       0.0   1.000      0.064768   0.012838     0.749970    0.039345
+           18      l2       0.0   0.500      0.064870   0.012839     0.747212    0.038894
+            5      l1       1.0   0.100      0.064907   0.012840     0.745689    0.038327
+           17      l2       0.0   0.100      0.065322   0.012846     0.735069    0.037514
+            4      l1       1.0   0.050      0.065363   0.012850     0.734406    0.036648
+           16      l2       0.0   0.050      0.065579   0.012852     0.728110    0.036900
+           15      l2       0.0   0.010      0.066103   0.012870     0.715153    0.035000
+           14      l2       0.0   0.005      0.066395   0.012881     0.710674    0.033696
+ARTIFACT | Stage 5.2.3 table_linear_not_weighted_tuning_results_w8 — Linear tuning results | duckdb://table_linear_not_weighted_tuning_results_w8
+[Stage 5.2.3 table_linear_not_weighted_tuned_test_predictions_w8 — Linear test predictions]
+table_name=table_linear_not_weighted_tuned_test_predictions_w8
+rows=82348, cols=29
+   enrollment_id  id_student code_module code_presentation  week  event_t  event_observed  t_event_week  t_final_week  used_zero_week_fallback_for_censoring gender               region     highest_education imd_band age_band  num_of_prev_attempts  studied_credits disability  total_clicks_week  active_this_week  n_vle_rows_week  n_distinct_sites_week  cum_clicks_until_t  recency  streak split  pred_hazard  pred_survival  pred_risk
+100561|DDD|2014J      100561         DDD             2014J     0        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               10.0                 1                8                      4                10.0        0       1  test     0.066981       0.933019   0.066981
+100561|DDD|2014J      100561         DDD             2014J     1        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N                0.0                 0                0                      0                10.0        1       0  test     0.022796       0.911750   0.088250
+100561|DDD|2014J      100561         DDD             2014J     2        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               91.0                 1               26                     11               101.0        0       2  test     0.021603       0.892053   0.107947
+100561|DDD|2014J      100561         DDD             2014J     3        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N                6.0                 1                4                      2               107.0        0       3  test     0.008406       0.884554   0.115446
+100561|DDD|2014J      100561         DDD             2014J     4        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               30.0                 1               17                      8               137.0        0       4  test     0.036847       0.851961   0.148039
+100561|DDD|2014J      100561         DDD             2014J     5        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               65.0                 1               36                     14               202.0        0       5  test     0.010729       0.842820   0.157180
+100561|DDD|2014J      100561         DDD             2014J     6        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               27.0                 1               15                      9               229.0        0       6  test     0.003751       0.839659   0.160341
+100561|DDD|2014J      100561         DDD             2014J     7        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               59.0                 1               14                      5               288.0        0       7  test     0.013078       0.828678   0.171322
+100561|DDD|2014J      100561         DDD             2014J     8        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               62.0                 1               22                      7               350.0        0       8  test     0.014449       0.816705   0.183295
+100621|CCC|2014B      100621         CCC             2014B     0        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                0.0                 0                0                      0                 0.0        1       0  test     0.017934       0.982066   0.017934
+100621|CCC|2014B      100621         CCC             2014B     1        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                3.0                 1                2                      2                 3.0        0       2  test     0.036988       0.945742   0.054258
+100621|CCC|2014B      100621         CCC             2014B     2        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                1.0                 1                1                      1                 4.0        0       3  test     0.013275       0.933188   0.066812
+100621|CCC|2014B      100621         CCC             2014B     3        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                1.0                 1                1                      1                 5.0        0       4  test     0.010939       0.922979   0.077021
+100621|CCC|2014B      100621         CCC             2014B     4        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                0.0                 0                0                      0                 5.0        1       0  test     0.008750       0.914903   0.085097
+100621|CCC|2014B      100621         CCC             2014B     5        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                0.0                 0                0                      0                 5.0        2       0  test     0.005839       0.909561   0.090439
+100621|CCC|2014B      100621         CCC             2014B     6        1               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                0.0                 0                0                      0                 5.0        3       0  test     0.020530       0.890888   0.109112
+101187|DDD|2014J      101187         DDD             2014J     0        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        1       0  test     0.018398       0.981602   0.018398
+101187|DDD|2014J      101187         DDD             2014J     1        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        2       0  test     0.009637       0.972142   0.027858
+101187|DDD|2014J      101187         DDD             2014J     2        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        3       0  test     0.074509       0.899708   0.100292
+101187|DDD|2014J      101187         DDD             2014J     3        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        4       0  test     0.049963       0.854756   0.145244
+ARTIFACT | Stage 5.2.3 table_linear_not_weighted_tuned_test_predictions_w8 — Linear test predictions | duckdb://table_linear_not_weighted_tuned_test_predictions_w8
+[Stage 5.2.3 table_linear_not_weighted_tuned_primary_metrics_w8 — Linear primary metrics]
+table_name=table_linear_not_weighted_tuned_primary_metrics_w8
+rows=2, cols=4
+metric_name metric_category  metric_value                         notes
+        ibs         primary      0.142962 sksurv_integrated_brier_score
+    c_index      co_primary      0.496499          pycox_concordance_td
+ARTIFACT | Stage 5.2.3 table_linear_not_weighted_tuned_primary_metrics_w8 — Linear primary metrics | duckdb://table_linear_not_weighted_tuned_primary_metrics_w8
+[Stage 5.2.3 table_linear_not_weighted_tuned_brier_by_horizon_w8 — Linear Brier scores by horizon]
+table_name=table_linear_not_weighted_tuned_brier_by_horizon_w8
+rows=3, cols=5
+ horizon_week      metric_name metric_category  metric_value              notes
+           10 brier_at_horizon         primary      0.125139 sksurv_brier_score
+           20 brier_at_horizon         primary      0.167155 sksurv_brier_score
+           30 brier_at_horizon         primary      0.198148 sksurv_brier_score
+ARTIFACT | Stage 5.2.3 table_linear_not_weighted_tuned_brier_by_horizon_w8 — Linear Brier scores by horizon | duckdb://table_linear_not_weighted_tuned_brier_by_horizon_w8
+[Stage 5.2.3 table_linear_not_weighted_tuned_secondary_metrics_w8 — Linear secondary metrics]
+table_name=table_linear_not_weighted_tuned_secondary_metrics_w8
+rows=6, cols=5
+ horizon_week         metric_name metric_category  metric_value                                                                                  notes
+           10 risk_auc_at_horizon       secondary      0.213196                                                            roc_auc_on_evaluable_subset
+           10  time_dependent_auc       secondary      0.215477 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.215477; local_ipcw_auc
+           20 risk_auc_at_horizon       secondary      0.290500                                                            roc_auc_on_evaluable_subset
+           20  time_dependent_auc       secondary      0.292805 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.292805; local_ipcw_auc
+           30 risk_auc_at_horizon       secondary      0.332053                                                            roc_auc_on_evaluable_subset
+           30  time_dependent_auc       secondary      0.335035 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.335035; local_ipcw_auc
+ARTIFACT | Stage 5.2.3 table_linear_not_weighted_tuned_secondary_metrics_w8 — Linear secondary metrics | duckdb://table_linear_not_weighted_tuned_secondary_metrics_w8
+[Stage 5.2.3 table_linear_not_weighted_tuned_td_auc_support_audit_w8 — Linear IPCW support audit]
+table_name=table_linear_not_weighted_tuned_td_auc_support_audit_w8
+rows=3, cols=6
+ horizon_week  max_ipcw_time  n_total_test_enrollments  n_supported_test_enrollments  mean_auc                                                                                  notes
+           10           38.0                      9778                          6742  0.215477 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.215477; local_ipcw_auc
+           20           38.0                      9778                          6742  0.292805 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.292805; local_ipcw_auc
+           30           38.0                      9778                          6742  0.335035 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.335035; local_ipcw_auc
+ARTIFACT | Stage 5.2.3 table_linear_not_weighted_tuned_td_auc_support_audit_w8 — Linear IPCW support audit | duckdb://table_linear_not_weighted_tuned_td_auc_support_audit_w8
+[Stage 5.2.3 table_linear_not_weighted_tuned_row_diagnostics_w8 — Linear row-level diagnostics]
+table_name=table_linear_not_weighted_tuned_row_diagnostics_w8
+rows=1, cols=5
+                                    model_name  row_level_roc_auc  row_level_pr_auc  row_level_log_loss  row_level_brier
+linear_discrete_time_hazard_not_weighted_tuned           0.781048          0.047224             0.06287         0.012722
+ARTIFACT | Stage 5.2.3 table_linear_not_weighted_tuned_row_diagnostics_w8 — Linear row-level diagnostics | duckdb://table_linear_not_weighted_tuned_row_diagnostics_w8
+[Stage 5.2.3 table_linear_not_weighted_tuned_support_by_horizon_w8 — Linear support by horizon]
+table_name=table_linear_not_weighted_tuned_support_by_horizon_w8
+rows=3, cols=4
+ horizon_week  n_evaluable_enrollments  n_events_by_horizon  event_rate_by_horizon
+           10                     9778                 1215               0.124259
+           20                     9778                 1736               0.177541
+           30                     9778                 2129               0.217734
+ARTIFACT | Stage 5.2.3 table_linear_not_weighted_tuned_support_by_horizon_w8 — Linear support by horizon | duckdb://table_linear_not_weighted_tuned_support_by_horizon_w8
+[Stage 5.2.3 table_linear_not_weighted_tuned_calibration_summary_w8 — Linear calibration summary]
+table_name=table_linear_not_weighted_tuned_calibration_summary_w8
+rows=3, cols=5
+ horizon_week            metric_name metric_category  metric_value                                         notes
+           10 calibration_at_horizon         primary      0.126954 Weighted absolute calibration gap across bins
+           20 calibration_at_horizon         primary      0.125043 Weighted absolute calibration gap across bins
+           30 calibration_at_horizon         primary      0.134757 Weighted absolute calibration gap across bins
+ARTIFACT | Stage 5.2.3 table_linear_not_weighted_tuned_calibration_summary_w8 — Linear calibration summary | duckdb://table_linear_not_weighted_tuned_calibration_summary_w8
+[Stage 5.2.3 table_linear_not_weighted_tuned_calibration_bins_by_horizon_w8 — Linear calibration bins]
+table_name=table_linear_not_weighted_tuned_calibration_bins_by_horizon_w8
+rows=30, cols=6
+ calibration_bin   n  mean_predicted_risk  observed_event_rate  horizon_week  abs_calibration_gap
+               0 978             0.016314             0.562372            10             0.546058
+               1 978             0.040611             0.162577            10             0.121966
+               2 978             0.057722             0.116564            10             0.058842
+               3 977             0.073636             0.084954            10             0.011318
+               4 978             0.089972             0.078732            10             0.011240
+               5 978             0.106183             0.058282            10             0.047901
+               6 977             0.122681             0.053224            10             0.069457
+               7 978             0.141257             0.051125            10             0.090132
+               8 978             0.167259             0.046012            10             0.121247
+               9 978             0.219828             0.028630            10             0.191198
+               0 978             0.016314             0.600204            20             0.583890
+               1 978             0.040611             0.217791            20             0.177181
+               2 978             0.057722             0.162577            20             0.104854
+               3 977             0.073636             0.163767            20             0.090131
+               4 978             0.089972             0.124744            20             0.034772
+               5 978             0.106183             0.110429            20             0.004246
+               6 977             0.122681             0.112590            20             0.010091
+               7 978             0.141257             0.100204            20             0.041052
+               8 978             0.167259             0.101227            20             0.066032
+               9 978             0.219828             0.081800            20             0.138028
+ARTIFACT | Stage 5.2.3 table_linear_not_weighted_tuned_calibration_bins_by_horizon_w8 — Linear calibration bins | duckdb://table_linear_not_weighted_tuned_calibration_bins_by_horizon_w8
+[Stage 5.2.3 table_linear_not_weighted_tuned_predicted_vs_observed_survival_w8 — Linear predicted versus observed survival]
+table_name=table_linear_not_weighted_tuned_predicted_vs_observed_survival_w8
+rows=3, cols=5
+ horizon_week  n_evaluable_enrollments  mean_predicted_survival  mean_observed_survival  abs_gap
+           10                     9778                 0.896453                0.875741 0.020711
+           20                     9778                 0.896453                0.822459 0.073994
+           30                     9778                 0.896453                0.782266 0.114186
+ARTIFACT | Stage 5.2.3 table_linear_not_weighted_tuned_predicted_vs_observed_survival_w8 — Linear predicted versus observed survival | duckdb://table_linear_not_weighted_tuned_predicted_vs_observed_survival_w8
+ARTIFACT | linear_model | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/models/linear_discrete_time_hazard_not_weighted_tuned_w8.joblib
+ARTIFACT | linear_preprocessor | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/models/linear_discrete_time_not_weighted_preprocessor_w8.joblib
+ARTIFACT | linear_tuned_model_config | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/metadata/linear_not_weighted_tuned_model_config_w8.json
+{
+  "model_name": "linear_discrete_time_hazard_not_weighted_tuned",
+  "search_space": {
+    "penalty": [
+      "l1",
+      "l1",
+      "l1",
+      "l1",
+      "l1",
+      "l1",
+      "l1",
+      "l1"
+    ],
+    "C": [
+      0.01,
+      0.1,
+      1.0,
+      10.0
+    ]
+  },
+  "solver": "liblinear",
+  "class_weight": "none",
+  "max_iter": 2000,
+  "tuning_parallel_workers": 8,
+  "tuning_parallel_backend": "processes",
+  "run_label": "dynamic_window_w8",
+  "is_window_truncated_run": true,
+  "active_window_weeks": 8,
+  "output_suffix": "_w8",
+  "selection_metric": "val_log_loss",
+  "validation_split": {
+    "method": "GroupShuffleSplit",
+    "test_size": 0.2,
+    "group_column": "enrollment_id",
+    "random_seed": 42
+  },
+  "benchmark_horizons": [
+    10,
+    20,
+    30
+  ],
+  "calibration_bins": 10,
+  "calibration_contract_version": "v2_ipcw_km_observed_risk",
+  "calibration_observed_risk_method": "ipcw_km_pseudo_event_rate",
+  "best_candidate": {
+    "candidate_id": 23,
+    "penalty": "l2",
+    "l1_ratio": 0.0,
+    "C": 100.0,
+    "val_log_loss": 0.06457943670689534,
+    "val_brier": 0.012834855578429828,
+    "val_roc_auc": 0.7545809473231704,
+    "val_pr_auc": 0.039958483586666635
+  },
+  "preprocessing": {
+    "categorical_features": [
+      "gender",
+      "region",
+      "highest_education",
+      "imd_band",
+      "age_band",
+      "disability"
+    ],
+    "numeric_features": [
+      "num_of_prev_attempts",
+      "studied_credits",
+      "week",
+      "total_clicks_week",
+      "active_this_week",
+      "n_vle_rows_week",
+      "n_distinct_sites_week",
+      "cum_clicks_until_t",
+      "recency",
+      "streak"
+    ],
+    "categorical_encoder": "OneHotEncoder(handle_unknown=ignore, sparse_output=True)",
+    "numeric_scaler": "MaxAbsScaler"
+  },
+  "weighting_strategy": "none; this official D5.2 variant fits the same weekly dynamic feature contract without class reweighting.",
+  "design_note": "The repaired IPCW-supported time-dependent AUC path is integrated directly into this not-weighted D5.2 official variant so the Item 6 comparison changes only the fitting weights in the weighted sensitivity counterpart, not the evaluation stack."
+}
+
+ candidate_id penalty  l1_ratio     C  val_log_loss  val_brier  val_roc_auc  val_pr_auc
+           23      l2       0.0 100.0      0.064579   0.012835     0.754581    0.039958
+[PROGRESS] 5.2.3 - 2026-06-19 12:50:55 - Model artifacts, config, and benchmark tables persisted successfully
+[END] 5.2.3 - 2026-06-19 12:50:55
+[RUN] dynamic_window_weeks=10 output_suffix=_w10
+[START] 5.2 - 2026-06-19 12:50:55
+# ==============================================================
+# 5.2.2 - Prepare the linear discrete-time treatment
+# ==============================================================
+[PROGRESS] 5.2.2 - 2026-06-19 12:50:55 - Resolving feature contract and expected canonical features
+[PROGRESS] 5.2.2 - 2026-06-19 12:50:57 - Loaded training and test tables with shapes train=(232541, 26), test=(99670, 26)
+[PROGRESS] 5.2.2 - 2026-06-19 12:50:57 - Fitting sparse preprocessor on training data
+[PROGRESS] 5.2.2 - 2026-06-19 12:50:57 - Transforming test data with fitted preprocessor
+[PROGRESS] 5.2.2 - 2026-06-19 12:50:58 - Preprocessing finished with 46 output features
+[PROGRESS] 5.2.2 - 2026-06-19 12:50:58 - Materializing treatment audit tables
+[Stage 5.2.2 table_p16_linear_not_weighted_treatment_audit_w10 — Linear treatment audit]
+table_name=table_p16_linear_not_weighted_treatment_audit_w10
+rows=9, cols=2
+                            component                value
+                        target_column              event_t
+                         n_train_rows               232541
+                          n_test_rows                99670
+               n_operational_features                   16
+                   n_numeric_features                   10
+               n_categorical_features                    6
+n_output_features_after_preprocessing                   46
+                     train_event_rate 0.012105392167402737
+                      test_event_rate 0.012190227751580214
+ARTIFACT | Stage 5.2.2 table_p16_linear_not_weighted_treatment_audit_w10 — Linear treatment audit | duckdb://table_p16_linear_not_weighted_treatment_audit_w10
+[Stage 5.2.2 table_p16_linear_not_weighted_feature_manifest_w10 — Linear feature manifest]
+table_name=table_p16_linear_not_weighted_feature_manifest_w10
+rows=16, cols=6
+feature_name_operational feature_role  present_in_train  present_in_test  covered_by_canonical_config_after_alias canonical_source_name
+                  gender  categorical              True             True                                    False                      
+                  region  categorical              True             True                                    False                      
+       highest_education  categorical              True             True                                    False                      
+                imd_band  categorical              True             True                                    False                      
+                age_band  categorical              True             True                                    False                      
+              disability  categorical              True             True                                    False                      
+    num_of_prev_attempts      numeric              True             True                                     True  num_of_prev_attempts
+         studied_credits      numeric              True             True                                     True       studied_credits
+                    week      numeric              True             True                                     True                  week
+       total_clicks_week      numeric              True             True                                     True          total_clicks
+        active_this_week      numeric              True             True                                    False                      
+         n_vle_rows_week      numeric              True             True                                    False                      
+   n_distinct_sites_week      numeric              True             True                                    False                      
+      cum_clicks_until_t      numeric              True             True                                    False                      
+                 recency      numeric              True             True                                    False                      
+                  streak      numeric              True             True                                    False                      
+ARTIFACT | Stage 5.2.2 table_p16_linear_not_weighted_feature_manifest_w10 — Linear feature manifest | duckdb://table_p16_linear_not_weighted_feature_manifest_w10
+[Stage 5.2.2 table_p16_linear_not_weighted_canonical_alignment_w10 — Canonical feature alignment]
+table_name=table_p16_linear_not_weighted_canonical_alignment_w10
+rows=4, cols=3
+canonical_feature_raw canonical_feature_resolved  covered_by_operational_treatment_spec
+      studied_credits            studied_credits                                   True
+ num_of_prev_attempts       num_of_prev_attempts                                   True
+                 week                       week                                   True
+         total_clicks          total_clicks_week                                   True
+ARTIFACT | Stage 5.2.2 table_p16_linear_not_weighted_canonical_alignment_w10 — Canonical feature alignment | duckdb://table_p16_linear_not_weighted_canonical_alignment_w10
+[Stage 5.2.2 table_p16_linear_not_weighted_output_feature_manifest_w10 — Preprocessed feature manifest]
+table_name=table_p16_linear_not_weighted_output_feature_manifest_w10
+rows=46, cols=1
+       preprocessed_feature_name
+       num__num_of_prev_attempts
+            num__studied_credits
+                       num__week
+          num__total_clicks_week
+           num__active_this_week
+            num__n_vle_rows_week
+      num__n_distinct_sites_week
+         num__cum_clicks_until_t
+                    num__recency
+                     num__streak
+                   cat__gender_F
+                   cat__gender_M
+ cat__region_East Anglian Region
+cat__region_East Midlands Region
+             cat__region_Ireland
+       cat__region_London Region
+        cat__region_North Region
+cat__region_North Western Region
+            cat__region_Scotland
+   cat__region_South East Region
+ARTIFACT | Stage 5.2.2 table_p16_linear_not_weighted_output_feature_manifest_w10 — Preprocessed feature manifest | duckdb://table_p16_linear_not_weighted_output_feature_manifest_w10
+ARTIFACT | metadata_p16_linear_treatment | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/metadata/metadata_p16_linear_not_weighted_treatment_w10.json
+{
+  "step": "P16",
+  "model_family": "linear_discrete_time_hazard_not_weighted_tuned",
+  "run_label": "dynamic_window_w10",
+  "is_window_truncated_run": true,
+  "active_window_weeks": 10,
+  "output_suffix": "_w10",
+  "train_table": "pp_linear_hazard_ready_train",
+  "test_table": "pp_linear_hazard_ready_test",
+  "target_column": "event_t",
+  "categorical_features": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability"
+  ],
+  "numeric_features": [
+    "num_of_prev_attempts",
+    "studied_credits",
+    "week",
+    "total_clicks_week",
+    "active_this_week",
+    "n_vle_rows_week",
+    "n_distinct_sites_week",
+    "cum_clicks_until_t",
+    "recency",
+    "streak"
+  ],
+  "operational_feature_columns": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability",
+    "num_of_prev_attempts",
+    "studied_credits",
+    "week",
+    "total_clicks_week",
+    "active_this_week",
+    "n_vle_rows_week",
+    "n_distinct_sites_week",
+    "cum_clicks_until_t",
+    "recency",
+    "streak"
+  ],
+  "canonical_expected_features_raw": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "week",
+    "total_clicks"
+  ],
+  "canonical_expected_features_resolved": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "week",
+    "total_clicks_week"
+  ],
+  "feature_alias_map": {
+    "total_clicks": "total_clicks_week"
+  },
+  "n_train_rows": 232541,
+  "n_test_rows": 99670,
+  "n_output_features_after_preprocessing": 46,
+  "train_event_rate": 0.012105392167402737,
+  "test_event_rate": 0.012190227751580214,
+  "design_note": "Sparse linear preprocessing is used to eliminate dense-matrix runtime warnings while preserving the benchmark feature contract.",
+  "methodological_note": "All learned preprocessing operations were fit on training data only and then applied unchanged to test data.",
+  "cross_arm_parity_note": "This run truncates weekly person-period information at or before the active window and is intended for cross-arm information-parity analysis."
+}
+
+[PROGRESS] 5.2.2 - 2026-06-19 12:50:58 - Treatment metadata persisted
+[END] 5.2.2 - 2026-06-19 12:50:58
+[START] 5.2 - 2026-06-19 12:50:58
+# ==============================================================
+# 5.2.3 - Tune and evaluate the linear discrete-time hazard model
+# ==============================================================
+[PROGRESS] 5.2.3 - 2026-06-19 12:50:58 - Preparing grouped validation split
+[PROGRESS] 5.2.3 - 2026-06-19 12:50:58 - Validation split ready with subtrain_rows=185979, validation_rows=46562
+- TUNING_WORKERS: 8
+- TUNING_BACKEND: processes
+[PROGRESS] 5.2.3 - 2026-06-19 12:50:58 - Starting tuning across 24 candidates
+[PROGRESS] 5.2.3 - 2026-06-19 12:52:23 - Tuning completed with 24 evaluated candidates
+[PROGRESS] 5.2.3 - 2026-06-19 12:52:23 - Best candidate selected: id=23, penalty=l2, C=100.0
+[PROGRESS] 5.2.3 - 2026-06-19 12:52:23 - Fitting best model on full training data
+[PROGRESS] 5.2.3 - 2026-06-19 12:52:26 - Generating row-level predictions on test data
+[PROGRESS] 5.2.3 - 2026-06-19 12:52:28 - Survival surface assembled; computing benchmark metrics
+[PROGRESS] 5.2.3 - 2026-06-19 12:52:28 - Calibration summaries computed; starting IPCW-dependent metrics
+[PROGRESS] 5.2.3 - 2026-06-19 12:52:28 - All evaluation metrics computed; persisting artifacts and DuckDB tables
+[Stage 5.2.3 table_linear_not_weighted_tuning_results_w10 — Linear tuning results]
+table_name=table_linear_not_weighted_tuning_results_w10
+rows=24, cols=8
+ candidate_id penalty  l1_ratio       C  val_log_loss  val_brier  val_roc_auc  val_pr_auc
+           23      l2       0.0 100.000      0.059783   0.011691     0.755553    0.037908
+           24      l2       0.0 500.000      0.059784   0.011691     0.755547    0.037889
+           22      l2       0.0  50.000      0.059785   0.011691     0.755510    0.037910
+           12      l1       1.0 500.000      0.059786   0.011691     0.755521    0.037885
+           11      l1       1.0 100.000      0.059787   0.011691     0.755505    0.037883
+           10      l1       1.0  50.000      0.059788   0.011691     0.755484    0.037877
+            9      l1       1.0  10.000      0.059792   0.011691     0.755400    0.037866
+            8      l1       1.0   5.000      0.059798   0.011691     0.755286    0.037862
+           21      l2       0.0  10.000      0.059809   0.011691     0.754982    0.037885
+           20      l2       0.0   5.000      0.059836   0.011691     0.754343    0.037782
+            7      l1       1.0   1.000      0.059854   0.011690     0.754270    0.037867
+            6      l1       1.0   0.500      0.059878   0.011691     0.753365    0.037669
+           19      l2       0.0   1.000      0.059947   0.011694     0.751211    0.037231
+           18      l2       0.0   0.500      0.060038   0.011696     0.748552    0.036819
+            5      l1       1.0   0.100      0.060066   0.011698     0.747531    0.036236
+            4      l1       1.0   0.050      0.060391   0.011705     0.738748    0.034940
+           17      l2       0.0   0.100      0.060430   0.011703     0.736978    0.035566
+           16      l2       0.0   0.050      0.060658   0.011708     0.730304    0.034990
+           15      l2       0.0   0.010      0.061157   0.011724     0.717602    0.033145
+           14      l2       0.0   0.005      0.061444   0.011735     0.713176    0.031820
+ARTIFACT | Stage 5.2.3 table_linear_not_weighted_tuning_results_w10 — Linear tuning results | duckdb://table_linear_not_weighted_tuning_results_w10
+[Stage 5.2.3 table_linear_not_weighted_tuned_test_predictions_w10 — Linear test predictions]
+table_name=table_linear_not_weighted_tuned_test_predictions_w10
+rows=99670, cols=29
+   enrollment_id  id_student code_module code_presentation  week  event_t  event_observed  t_event_week  t_final_week  used_zero_week_fallback_for_censoring gender               region     highest_education imd_band age_band  num_of_prev_attempts  studied_credits disability  total_clicks_week  active_this_week  n_vle_rows_week  n_distinct_sites_week  cum_clicks_until_t  recency  streak split  pred_hazard  pred_survival  pred_risk
+100561|DDD|2014J      100561         DDD             2014J     0        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               10.0                 1                8                      4                10.0        0       1  test     0.018696       0.981304   0.018696
+100561|DDD|2014J      100561         DDD             2014J     1        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N                0.0                 0                0                      0                10.0        1       0  test     0.062614       0.919860   0.080140
+100561|DDD|2014J      100561         DDD             2014J     2        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               91.0                 1               26                     11               101.0        0       2  test     0.022324       0.899325   0.100675
+100561|DDD|2014J      100561         DDD             2014J     3        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N                6.0                 1                4                      2               107.0        0       3  test     0.021479       0.880009   0.119991
+100561|DDD|2014J      100561         DDD             2014J     4        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               30.0                 1               17                      8               137.0        0       4  test     0.009305       0.871821   0.128179
+100561|DDD|2014J      100561         DDD             2014J     5        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               65.0                 1               36                     14               202.0        0       5  test     0.002401       0.869727   0.130273
+100561|DDD|2014J      100561         DDD             2014J     6        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               27.0                 1               15                      9               229.0        0       6  test     0.006252       0.864290   0.135710
+100561|DDD|2014J      100561         DDD             2014J     7        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               59.0                 1               14                      5               288.0        0       7  test     0.033343       0.835472   0.164528
+100561|DDD|2014J      100561         DDD             2014J     8        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               62.0                 1               22                      7               350.0        0       8  test     0.009698       0.827370   0.172630
+100561|DDD|2014J      100561         DDD             2014J     9        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N                4.0                 1                3                      2               354.0        0       9  test     0.003381       0.824572   0.175428
+100561|DDD|2014J      100561         DDD             2014J    10        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N                3.0                 1                3                      3               357.0        0      10  test     0.012890       0.813944   0.186056
+100621|CCC|2014B      100621         CCC             2014B     0        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                0.0                 0                0                      0                 0.0        1       0  test     0.014863       0.985137   0.014863
+100621|CCC|2014B      100621         CCC             2014B     1        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                3.0                 1                2                      2                 3.0        0       2  test     0.019636       0.965794   0.034206
+100621|CCC|2014B      100621         CCC             2014B     2        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                1.0                 1                1                      1                 4.0        0       3  test     0.035123       0.931872   0.068128
+100621|CCC|2014B      100621         CCC             2014B     3        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                1.0                 1                1                      1                 5.0        0       4  test     0.013239       0.919535   0.080465
+100621|CCC|2014B      100621         CCC             2014B     4        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                0.0                 0                0                      0                 5.0        1       0  test     0.011487       0.908972   0.091028
+100621|CCC|2014B      100621         CCC             2014B     5        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                0.0                 0                0                      0                 5.0        2       0  test     0.009631       0.900218   0.099782
+100621|CCC|2014B      100621         CCC             2014B     6        1               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                0.0                 0                0                      0                 5.0        3       0  test     0.006683       0.894201   0.105799
+101187|DDD|2014J      101187         DDD             2014J     0        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        1       0  test     0.025151       0.974849   0.025151
+101187|DDD|2014J      101187         DDD             2014J     1        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        2       0  test     0.018080       0.957224   0.042776
+ARTIFACT | Stage 5.2.3 table_linear_not_weighted_tuned_test_predictions_w10 — Linear test predictions | duckdb://table_linear_not_weighted_tuned_test_predictions_w10
+[Stage 5.2.3 table_linear_not_weighted_tuned_primary_metrics_w10 — Linear primary metrics]
+table_name=table_linear_not_weighted_tuned_primary_metrics_w10
+rows=2, cols=4
+metric_name metric_category  metric_value                         notes
+        ibs         primary      0.144510 sksurv_integrated_brier_score
+    c_index      co_primary      0.491452          pycox_concordance_td
+ARTIFACT | Stage 5.2.3 table_linear_not_weighted_tuned_primary_metrics_w10 — Linear primary metrics | duckdb://table_linear_not_weighted_tuned_primary_metrics_w10
+[Stage 5.2.3 table_linear_not_weighted_tuned_brier_by_horizon_w10 — Linear Brier scores by horizon]
+table_name=table_linear_not_weighted_tuned_brier_by_horizon_w10
+rows=3, cols=5
+ horizon_week      metric_name metric_category  metric_value              notes
+           10 brier_at_horizon         primary      0.128841 sksurv_brier_score
+           20 brier_at_horizon         primary      0.168910 sksurv_brier_score
+           30 brier_at_horizon         primary      0.199451 sksurv_brier_score
+ARTIFACT | Stage 5.2.3 table_linear_not_weighted_tuned_brier_by_horizon_w10 — Linear Brier scores by horizon | duckdb://table_linear_not_weighted_tuned_brier_by_horizon_w10
+[Stage 5.2.3 table_linear_not_weighted_tuned_secondary_metrics_w10 — Linear secondary metrics]
+table_name=table_linear_not_weighted_tuned_secondary_metrics_w10
+rows=6, cols=5
+ horizon_week         metric_name metric_category  metric_value                                                                                  notes
+           10 risk_auc_at_horizon       secondary      0.160882                                                            roc_auc_on_evaluable_subset
+           10  time_dependent_auc       secondary      0.162259 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.162259; local_ipcw_auc
+           20 risk_auc_at_horizon       secondary      0.261787                                                            roc_auc_on_evaluable_subset
+           20  time_dependent_auc       secondary      0.264163 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.264163; local_ipcw_auc
+           30 risk_auc_at_horizon       secondary      0.302185                                                            roc_auc_on_evaluable_subset
+           30  time_dependent_auc       secondary      0.304822 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.304822; local_ipcw_auc
+ARTIFACT | Stage 5.2.3 table_linear_not_weighted_tuned_secondary_metrics_w10 — Linear secondary metrics | duckdb://table_linear_not_weighted_tuned_secondary_metrics_w10
+[Stage 5.2.3 table_linear_not_weighted_tuned_td_auc_support_audit_w10 — Linear IPCW support audit]
+table_name=table_linear_not_weighted_tuned_td_auc_support_audit_w10
+rows=3, cols=6
+ horizon_week  max_ipcw_time  n_total_test_enrollments  n_supported_test_enrollments  mean_auc                                                                                  notes
+           10           38.0                      9778                          6742  0.162259 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.162259; local_ipcw_auc
+           20           38.0                      9778                          6742  0.264163 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.264163; local_ipcw_auc
+           30           38.0                      9778                          6742  0.304822 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.304822; local_ipcw_auc
+ARTIFACT | Stage 5.2.3 table_linear_not_weighted_tuned_td_auc_support_audit_w10 — Linear IPCW support audit | duckdb://table_linear_not_weighted_tuned_td_auc_support_audit_w10
+[Stage 5.2.3 table_linear_not_weighted_tuned_row_diagnostics_w10 — Linear row-level diagnostics]
+table_name=table_linear_not_weighted_tuned_row_diagnostics_w10
+rows=1, cols=5
+                                    model_name  row_level_roc_auc  row_level_pr_auc  row_level_log_loss  row_level_brier
+linear_discrete_time_hazard_not_weighted_tuned           0.770139          0.043881            0.059741         0.011847
+ARTIFACT | Stage 5.2.3 table_linear_not_weighted_tuned_row_diagnostics_w10 — Linear row-level diagnostics | duckdb://table_linear_not_weighted_tuned_row_diagnostics_w10
+[Stage 5.2.3 table_linear_not_weighted_tuned_support_by_horizon_w10 — Linear support by horizon]
+table_name=table_linear_not_weighted_tuned_support_by_horizon_w10
+rows=3, cols=4
+ horizon_week  n_evaluable_enrollments  n_events_by_horizon  event_rate_by_horizon
+           10                     9778                 1215               0.124259
+           20                     9778                 1736               0.177541
+           30                     9778                 2129               0.217734
+ARTIFACT | Stage 5.2.3 table_linear_not_weighted_tuned_support_by_horizon_w10 — Linear support by horizon | duckdb://table_linear_not_weighted_tuned_support_by_horizon_w10
+[Stage 5.2.3 table_linear_not_weighted_tuned_calibration_summary_w10 — Linear calibration summary]
+table_name=table_linear_not_weighted_tuned_calibration_summary_w10
+rows=3, cols=5
+ horizon_week            metric_name metric_category  metric_value                                         notes
+           10 calibration_at_horizon         primary      0.151527 Weighted absolute calibration gap across bins
+           20 calibration_at_horizon         primary      0.138085 Weighted absolute calibration gap across bins
+           30 calibration_at_horizon         primary      0.142657 Weighted absolute calibration gap across bins
+ARTIFACT | Stage 5.2.3 table_linear_not_weighted_tuned_calibration_summary_w10 — Linear calibration summary | duckdb://table_linear_not_weighted_tuned_calibration_summary_w10
+[Stage 5.2.3 table_linear_not_weighted_tuned_calibration_bins_by_horizon_w10 — Linear calibration bins]
+table_name=table_linear_not_weighted_tuned_calibration_bins_by_horizon_w10
+rows=30, cols=6
+ calibration_bin   n  mean_predicted_risk  observed_event_rate  horizon_week  abs_calibration_gap
+               0 978             0.017407             0.627812            10             0.610405
+               1 978             0.046545             0.189162            10             0.142617
+               2 978             0.066790             0.118609            10             0.051820
+               3 977             0.085023             0.077789            10             0.007234
+               4 978             0.102406             0.057260            10             0.045146
+               5 978             0.119782             0.056237            10             0.063545
+               6 977             0.137032             0.039918            10             0.097114
+               7 978             0.156868             0.036810            10             0.120058
+               8 978             0.181918             0.021472            10             0.160445
+               9 978             0.234069             0.017382            10             0.216686
+               0 978             0.017407             0.652352            20             0.634945
+               1 978             0.046545             0.237219            20             0.190674
+               2 978             0.066790             0.163599            20             0.096810
+               3 977             0.085023             0.144319            20             0.059297
+               4 978             0.102406             0.124744            20             0.022339
+               5 978             0.119782             0.110429            20             0.009353
+               6 977             0.137032             0.095189            20             0.041843
+               7 978             0.156868             0.087935            20             0.068933
+               8 978             0.181918             0.077710            20             0.104208
+               9 978             0.234069             0.081800            20             0.152269
+ARTIFACT | Stage 5.2.3 table_linear_not_weighted_tuned_calibration_bins_by_horizon_w10 — Linear calibration bins | duckdb://table_linear_not_weighted_tuned_calibration_bins_by_horizon_w10
+[Stage 5.2.3 table_linear_not_weighted_tuned_predicted_vs_observed_survival_w10 — Linear predicted versus observed survival]
+table_name=table_linear_not_weighted_tuned_predicted_vs_observed_survival_w10
+rows=3, cols=5
+ horizon_week  n_evaluable_enrollments  mean_predicted_survival  mean_observed_survival  abs_gap
+           10                     9778                 0.885215                0.875741 0.009474
+           20                     9778                 0.885215                0.822459 0.062757
+           30                     9778                 0.885215                0.782266 0.102949
+ARTIFACT | Stage 5.2.3 table_linear_not_weighted_tuned_predicted_vs_observed_survival_w10 — Linear predicted versus observed survival | duckdb://table_linear_not_weighted_tuned_predicted_vs_observed_survival_w10
+ARTIFACT | linear_model | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/models/linear_discrete_time_hazard_not_weighted_tuned_w10.joblib
+ARTIFACT | linear_preprocessor | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/models/linear_discrete_time_not_weighted_preprocessor_w10.joblib
+ARTIFACT | linear_tuned_model_config | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/metadata/linear_not_weighted_tuned_model_config_w10.json
+{
+  "model_name": "linear_discrete_time_hazard_not_weighted_tuned",
+  "search_space": {
+    "penalty": [
+      "l1",
+      "l1",
+      "l1",
+      "l1",
+      "l1",
+      "l1",
+      "l1",
+      "l1"
+    ],
+    "C": [
+      0.01,
+      0.1,
+      1.0,
+      10.0
+    ]
+  },
+  "solver": "liblinear",
+  "class_weight": "none",
+  "max_iter": 2000,
+  "tuning_parallel_workers": 8,
+  "tuning_parallel_backend": "processes",
+  "run_label": "dynamic_window_w10",
+  "is_window_truncated_run": true,
+  "active_window_weeks": 10,
+  "output_suffix": "_w10",
+  "selection_metric": "val_log_loss",
+  "validation_split": {
+    "method": "GroupShuffleSplit",
+    "test_size": 0.2,
+    "group_column": "enrollment_id",
+    "random_seed": 42
+  },
+  "benchmark_horizons": [
+    10,
+    20,
+    30
+  ],
+  "calibration_bins": 10,
+  "calibration_contract_version": "v2_ipcw_km_observed_risk",
+  "calibration_observed_risk_method": "ipcw_km_pseudo_event_rate",
+  "best_candidate": {
+    "candidate_id": 23,
+    "penalty": "l2",
+    "l1_ratio": 0.0,
+    "C": 100.0,
+    "val_log_loss": 0.059782664155056224,
+    "val_brier": 0.011690769246183529,
+    "val_roc_auc": 0.7555530662909474,
+    "val_pr_auc": 0.03790799532729186
+  },
+  "preprocessing": {
+    "categorical_features": [
+      "gender",
+      "region",
+      "highest_education",
+      "imd_band",
+      "age_band",
+      "disability"
+    ],
+    "numeric_features": [
+      "num_of_prev_attempts",
+      "studied_credits",
+      "week",
+      "total_clicks_week",
+      "active_this_week",
+      "n_vle_rows_week",
+      "n_distinct_sites_week",
+      "cum_clicks_until_t",
+      "recency",
+      "streak"
+    ],
+    "categorical_encoder": "OneHotEncoder(handle_unknown=ignore, sparse_output=True)",
+    "numeric_scaler": "MaxAbsScaler"
+  },
+  "weighting_strategy": "none; this official D5.2 variant fits the same weekly dynamic feature contract without class reweighting.",
+  "design_note": "The repaired IPCW-supported time-dependent AUC path is integrated directly into this not-weighted D5.2 official variant so the Item 6 comparison changes only the fitting weights in the weighted sensitivity counterpart, not the evaluation stack."
+}
+
+ candidate_id penalty  l1_ratio     C  val_log_loss  val_brier  val_roc_auc  val_pr_auc
+           23      l2       0.0 100.0      0.059783   0.011691     0.755553    0.037908
+[PROGRESS] 5.2.3 - 2026-06-19 12:52:30 - Model artifacts, config, and benchmark tables persisted successfully
+[END] 5.2.3 - 2026-06-19 12:52:30
+[START] 5.2 - 2026-06-19 12:52:30
+# ==============================================================
+# 5.2.4 - Close the DuckDB runtime cleanly
+# ==============================================================
+DuckDB connection closed.
+[END] 5.2.4 - 2026-06-19 12:52:31

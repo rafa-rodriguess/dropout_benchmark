@@ -6,10 +6,10 @@
       "l1",
       "l1",
       "l1",
-      "l2",
-      "l2",
-      "l2",
-      "l2"
+      "l1",
+      "l1",
+      "l1",
+      "l1"
     ],
     "C": [
       0.01,
@@ -41,14 +41,14 @@
   ],
   "calibration_bins": 10,
   "best_candidate": {
-    "candidate_id": 4,
+    "candidate_id": 12,
     "penalty": "l1",
     "l1_ratio": 1.0,
-    "C": 10.0,
-    "val_log_loss": 0.5613333184448972,
-    "val_brier": 0.19340595548560105,
-    "val_roc_auc": 0.7610879148475953,
-    "val_pr_auc": 0.042320598799599596
+    "C": 500.0,
+    "val_log_loss": 0.5613258986754215,
+    "val_brier": 0.19340768389294596,
+    "val_roc_auc": 0.7611057640968713,
+    "val_pr_auc": 0.04232196159297526
   },
   "preprocessing": {
     "categorical_features": [

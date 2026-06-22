@@ -1,0 +1,3270 @@
+[RUN_PLAN] comparable_window_weeks=2
+[START] 5.11 - 2026-06-19 22:15:33
+# ==============================================================
+# 5.11.1 - Lightweight runtime bootstrap
+# ==============================================================
+ARTIFACT | benchmark_shared_config | /Users/rafars/dropout_benchmark_desenv/benchmark_shared_config.toml
+ARTIFACT | benchmark_modeling_contract | /Users/rafars/dropout_benchmark_desenv/benchmark_modeling_contract.toml
+ARTIFACT | run_metadata | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/metadata/run_metadata.json
+ARTIFACT | duckdb_path | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/benchmark_survival.duckdb
+{
+  "run_id": "f3766e75053447a7beb7a1c4936d231f",
+  "random_seed": 42,
+  "tuning_parallel_backend": "processes",
+  "test_size": 0.3,
+  "early_window_weeks": 4,
+  "main_enrollment_window_weeks": 4,
+  "effective_window_weeks": 2,
+  "input_train_table": "enrollment_cox_ready_train_w2",
+  "input_test_table": "enrollment_cox_ready_test_w2"
+}
+[END] 5.11.1 - 2026-06-19 22:15:33
+[START] 5.11 - 2026-06-19 22:15:33
+# ==============================================================
+# 5.11.2 - Build comparable-window Weibull AFT treatment
+# ==============================================================
+[Stage 5.11.2 table_weibull_aft_preprocessing_summary - Weibull AFT preprocessing summary]
+table_name=table_weibull_aft_preprocessing_summary_w2
+rows=1, cols=21
+model_family  train_rows  test_rows  n_input_features_raw  n_numeric_features  n_categorical_features  n_features_after_encoding_before_filter  n_features_after_variance_filter  n_features_dropped_by_variance_filter  n_events_train  n_events_test  mean_duration_train  mean_duration_test                              numeric_prefill_policy categorical_imputation          categorical_encoding                   numeric_scaling  variance_filter_threshold output_dtype                          aft_positioning_note  window_weeks
+ weibull_aft       22815       9778                    11                   5                       6                                       41                                41                                      0            5171           2216            30.536182           30.539476 deterministic_train_median_or_zero_when_all_missing       constant_missing one_hot_handle_unknown_ignore standard_scaler_fit_on_train_only               1.000000e-12      float64 early-window comparable Weibull AFT benchmark             2
+ARTIFACT | Stage 5.11.2 table_weibull_aft_preprocessing_summary - Weibull AFT preprocessing summary | duckdb://table_weibull_aft_preprocessing_summary_w2
+[Stage 5.11.2 table_weibull_aft_raw_feature_manifest - Weibull AFT raw feature manifest]
+table_name=table_weibull_aft_raw_feature_manifest_w2
+rows=11, cols=6
+ feature_name_operational feature_role  present_in_train  present_in_test  covered_by_canonical_config  numeric_prefill_value
+                   gender  categorical              True             True                        False                    NaN
+                   region  categorical              True             True                        False                    NaN
+        highest_education  categorical              True             True                        False                    NaN
+                 imd_band  categorical              True             True                        False                    NaN
+                 age_band  categorical              True             True                        False                    NaN
+               disability  categorical              True             True                        False                    NaN
+     num_of_prev_attempts      numeric              True             True                         True                    0.0
+          studied_credits      numeric              True             True                         True                   60.0
+     clicks_first_2_weeks      numeric              True             True                         True                   56.0
+     active_weeks_first_2      numeric              True             True                         True                    2.0
+mean_clicks_first_2_weeks      numeric              True             True                         True                   33.0
+ARTIFACT | Stage 5.11.2 table_weibull_aft_raw_feature_manifest - Weibull AFT raw feature manifest | duckdb://table_weibull_aft_raw_feature_manifest_w2
+[Stage 5.11.2 table_weibull_aft_feature_names_out - Weibull AFT output feature manifest]
+table_name=table_weibull_aft_feature_names_out_w2
+rows=41, cols=2
+                feature_name_out  transformed_variance_train
+       num__num_of_prev_attempts                    1.000000
+            num__studied_credits                    1.000000
+       num__clicks_first_2_weeks                    1.000000
+       num__active_weeks_first_2                    1.000000
+  num__mean_clicks_first_2_weeks                    1.000000
+                   cat__gender_F                    0.247988
+                   cat__gender_M                    0.247988
+ cat__region_East Anglian Region                    0.092080
+cat__region_East Midlands Region                    0.067091
+             cat__region_Ireland                    0.034283
+       cat__region_London Region                    0.088295
+        cat__region_North Region                    0.052060
+cat__region_North Western Region                    0.082139
+            cat__region_Scotland                    0.094370
+   cat__region_South East Region                    0.059974
+        cat__region_South Region                    0.087554
+   cat__region_South West Region                    0.068848
+               cat__region_Wales                    0.059707
+cat__region_West Midlands Region                    0.073261
+    cat__region_Yorkshire Region                    0.058136
+ARTIFACT | Stage 5.11.2 table_weibull_aft_feature_names_out - Weibull AFT output feature manifest | duckdb://table_weibull_aft_feature_names_out_w2
+ARTIFACT | weibull_aft_preprocessing_config | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/metadata/weibull_aft_preprocessing_config_w2.json
+{
+  "model_family": "weibull_aft",
+  "duration_column": "duration",
+  "event_column": "event",
+  "categorical_features": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability"
+  ],
+  "numeric_features": [
+    "num_of_prev_attempts",
+    "studied_credits",
+    "clicks_first_2_weeks",
+    "active_weeks_first_2",
+    "mean_clicks_first_2_weeks"
+  ],
+  "raw_feature_columns": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability",
+    "num_of_prev_attempts",
+    "studied_credits",
+    "clicks_first_2_weeks",
+    "active_weeks_first_2",
+    "mean_clicks_first_2_weeks"
+  ],
+  "expected_features_raw": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "num_of_prev_attempts",
+    "studied_credits",
+    "clicks_first_2_weeks",
+    "active_weeks_first_2",
+    "mean_clicks_first_2_weeks"
+  ],
+  "expected_features_resolved": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "clicks_first_2_weeks",
+    "active_weeks_first_2",
+    "mean_clicks_first_2_weeks"
+  ],
+  "numeric_prefill_policy": "deterministic_train_median_or_zero_when_all_missing",
+  "numeric_fill_values": {
+    "num_of_prev_attempts": 0.0,
+    "studied_credits": 60.0,
+    "clicks_first_2_weeks": 56.0,
+    "active_weeks_first_2": 2.0,
+    "mean_clicks_first_2_weeks": 33.0
+  },
+  "categorical_imputation": "constant_missing",
+  "categorical_encoding": "one_hot_handle_unknown_ignore",
+  "numeric_scaling": "standard_scaler_fit_on_train_only",
+  "variance_filter_threshold": 1e-12,
+  "feature_names_before_filter": [
+    "num__num_of_prev_attempts",
+    "num__studied_credits",
+    "num__clicks_first_2_weeks",
+    "num__active_weeks_first_2",
+    "num__mean_clicks_first_2_weeks",
+    "cat__gender_F",
+    "cat__gender_M",
+    "cat__region_East Anglian Region",
+    "cat__region_East Midlands Region",
+    "cat__region_Ireland",
+    "cat__region_London Region",
+    "cat__region_North Region",
+    "cat__region_North Western Region",
+    "cat__region_Scotland",
+    "cat__region_South East Region",
+    "cat__region_South Region",
+    "cat__region_South West Region",
+    "cat__region_Wales",
+    "cat__region_West Midlands Region",
+    "cat__region_Yorkshire Region",
+    "cat__highest_education_A Level or Equivalent",
+    "cat__highest_education_HE Qualification",
+    "cat__highest_education_Lower Than A Level",
+    "cat__highest_education_No Formal quals",
+    "cat__highest_education_Post Graduate Qualification",
+    "cat__imd_band_0-10%",
+    "cat__imd_band_10-20",
+    "cat__imd_band_20-30%",
+    "cat__imd_band_30-40%",
+    "cat__imd_band_40-50%",
+    "cat__imd_band_50-60%",
+    "cat__imd_band_60-70%",
+    "cat__imd_band_70-80%",
+    "cat__imd_band_80-90%",
+    "cat__imd_band_90-100%",
+    "cat__imd_band_None",
+    "cat__age_band_0-35",
+    "cat__age_band_35-55",
+    "cat__age_band_55<=",
+    "cat__disability_N",
+    "cat__disability_Y"
+  ],
+  "feature_names_out": [
+    "num__num_of_prev_attempts",
+    "num__studied_credits",
+    "num__clicks_first_2_weeks",
+    "num__active_weeks_first_2",
+    "num__mean_clicks_first_2_weeks",
+    "cat__gender_F",
+    "cat__gender_M",
+    "cat__region_East Anglian Region",
+    "cat__region_East Midlands Region",
+    "cat__region_Ireland",
+    "cat__region_London Region",
+    "cat__region_North Region",
+    "cat__region_North Western Region",
+    "cat__region_Scotland",
+    "cat__region_South East Region",
+    "cat__region_South Region",
+    "cat__region_South West Region",
+    "cat__region_Wales",
+    "cat__region_West Midlands Region",
+    "cat__region_Yorkshire Region",
+    "cat__highest_education_A Level or Equivalent",
+    "cat__highest_education_HE Qualification",
+    "cat__highest_education_Lower Than A Level",
+    "cat__highest_education_No Formal quals",
+    "cat__highest_education_Post Graduate Qualification",
+    "cat__imd_band_0-10%",
+    "cat__imd_band_10-20",
+    "cat__imd_band_20-30%",
+    "cat__imd_band_30-40%",
+    "cat__imd_band_40-50%",
+    "cat__imd_band_50-60%",
+    "cat__imd_band_60-70%",
+    "cat__imd_band_70-80%",
+    "cat__imd_band_80-90%",
+    "cat__imd_band_90-100%",
+    "cat__imd_band_None",
+    "cat__age_band_0-35",
+    "cat__age_band_35-55",
+    "cat__age_band_55<=",
+    "cat__disability_N",
+    "cat__disability_Y"
+  ],
+  "dropped_low_variance_features": [],
+  "aft_positioning_note": "early-window comparable Weibull AFT benchmark",
+  "window_weeks": 2,
+  "duration_floor": 1.0
+}
+
+[END] 5.11.2 - 2026-06-19 22:15:33
+[START] 5.11 - 2026-06-19 22:15:33
+# ==============================================================
+# 5.11.3 - Tune and evaluate the comparable-window Weibull AFT model
+# ==============================================================
+- TUNING_WORKERS: 8
+- TUNING_BACKEND: processes
+[Stage 5.11.3 table_weibull_aft_tuning_results - Weibull AFT tuning results]
+table_name=table_weibull_aft_tuning_results_w2
+rows=24, cols=7
+ candidate_id  penalizer  l1_ratio  duration_floor  val_ibs  val_c_index        implementation
+            1     0.0001       0.0             1.0 0.118895     0.581454 lifelines_weibull_aft
+            2     0.0002       0.0             1.0 0.118912     0.581264 lifelines_weibull_aft
+            3     0.0005       0.0             1.0 0.118953     0.580793 lifelines_weibull_aft
+            4     0.0010       0.0             1.0 0.118998     0.580149 lifelines_weibull_aft
+            5     0.0020       0.0             1.0 0.119048     0.579514 lifelines_weibull_aft
+            6     0.0050       0.0             1.0 0.119116     0.578984 lifelines_weibull_aft
+            7     0.0100       0.0             1.0 0.119180     0.578654 lifelines_weibull_aft
+            8     0.0200       0.0             1.0 0.119286     0.578441 lifelines_weibull_aft
+            9     0.0500       0.0             1.0 0.119578     0.577803 lifelines_weibull_aft
+           10     0.1000       0.0             1.0 0.119987     0.577108 lifelines_weibull_aft
+           11     0.1500       0.0             1.0 0.120318     0.576641 lifelines_weibull_aft
+           12     0.2000       0.0             1.0 0.120592     0.576292 lifelines_weibull_aft
+           13     0.3000       0.0             1.0 0.121024     0.575576 lifelines_weibull_aft
+           14     0.4000       0.0             1.0 0.121353     0.575081 lifelines_weibull_aft
+           15     0.5000       0.0             1.0 0.121614     0.574700 lifelines_weibull_aft
+           16     0.6000       0.0             1.0 0.121828     0.574415 lifelines_weibull_aft
+           17     0.7000       0.0             1.0 0.122007     0.574229 lifelines_weibull_aft
+           18     0.8000       0.0             1.0 0.122159     0.574022 lifelines_weibull_aft
+           19     1.0000       0.0             1.0 0.122406     0.573652 lifelines_weibull_aft
+           20     1.5000       0.0             1.0 0.122817     0.573107 lifelines_weibull_aft
+ARTIFACT | Stage 5.11.3 table_weibull_aft_tuning_results - Weibull AFT tuning results | duckdb://table_weibull_aft_tuning_results_w2
+[Stage 5.11.3 table_weibull_aft_tuned_test_predictions - Weibull AFT test predictions]
+table_name=table_weibull_aft_tuned_test_predictions_w2
+rows=29334, cols=6
+      enrollment_id  event  duration  horizon_week  pred_survival_h  pred_risk_h
+ 100561||DDD||2014J      0        37            10         0.876401     0.123599
+ 100621||CCC||2014B      1         6            10         0.890733     0.109267
+ 101187||DDD||2014J      0        37            10         0.871746     0.128254
+ 101279||DDD||2014J      0        37            10         0.911807     0.088193
+ 101414||EEE||2013J      0        38            10         0.838452     0.161548
+ 101700||CCC||2014J      0        38            10         0.824961     0.175039
+ 101781||AAA||2013J      0        38            10         0.950964     0.049036
+ 102209||CCC||2014J      1        15            10         0.930079     0.069921
+ 102343||FFF||2013J      0        38            10         0.907822     0.092178
+1023623||CCC||2014J      0        38            10         0.893839     0.106161
+1033968||DDD||2014B      1        13            10         0.859390     0.140610
+ 103891||DDD||2014B      0        34            10         0.888783     0.111217
+ 104316||FFF||2014B      0        34            10         0.910716     0.089284
+1045203||AAA||2014J      0        38            10         0.964078     0.035922
+1047645||CCC||2014B      0        34            10         0.860165     0.139835
+1053702||EEE||2013J      0        38            10         0.915263     0.084737
+ 105629||FFF||2013J      0        38            10         0.908295     0.091705
+1057883||CCC||2014B      0        34            10         0.895855     0.104145
+ 106383||BBB||2014J      1        21            10         0.924804     0.075196
+ 106553||DDD||2014J      0        37            10         0.873704     0.126296
+ARTIFACT | Stage 5.11.3 table_weibull_aft_tuned_test_predictions - Weibull AFT test predictions | duckdb://table_weibull_aft_tuned_test_predictions_w2
+[Stage 5.11.3 table_weibull_aft_tuned_primary_metrics - Weibull AFT primary metrics]
+table_name=table_weibull_aft_tuned_primary_metrics_w2
+rows=2, cols=4
+metric_name metric_category  metric_value                         notes
+        ibs         primary      0.121083 sksurv_integrated_brier_score
+    c_index      co_primary      0.592821          pycox_concordance_td
+ARTIFACT | Stage 5.11.3 table_weibull_aft_tuned_primary_metrics - Weibull AFT primary metrics | duckdb://table_weibull_aft_tuned_primary_metrics_w2
+[Stage 5.11.3 table_weibull_aft_tuned_brier_by_horizon - Weibull AFT Brier scores by horizon]
+table_name=table_weibull_aft_tuned_brier_by_horizon_w2
+rows=3, cols=5
+ horizon_week      metric_name metric_category  metric_value              notes
+           10 brier_at_horizon         primary      0.105065 sksurv_brier_score
+           20 brier_at_horizon         primary      0.141308 sksurv_brier_score
+           30 brier_at_horizon         primary      0.165167 sksurv_brier_score
+ARTIFACT | Stage 5.11.3 table_weibull_aft_tuned_brier_by_horizon - Weibull AFT Brier scores by horizon | duckdb://table_weibull_aft_tuned_brier_by_horizon_w2
+[Stage 5.11.3 table_weibull_aft_tuned_secondary_metrics - Weibull AFT secondary metrics]
+table_name=table_weibull_aft_tuned_secondary_metrics_w2
+rows=6, cols=5
+ horizon_week         metric_name metric_category  metric_value                                                                                  notes
+           10 risk_auc_at_horizon       secondary      0.677557                                                            roc_auc_on_evaluable_subset
+           10  time_dependent_auc       secondary      0.666348 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.666348; local_ipcw_auc
+           20 risk_auc_at_horizon       secondary      0.642095                                                            roc_auc_on_evaluable_subset
+           20  time_dependent_auc       secondary      0.630426 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.630426; local_ipcw_auc
+           30 risk_auc_at_horizon       secondary      0.625873                                                            roc_auc_on_evaluable_subset
+           30  time_dependent_auc       secondary      0.613946 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.613946; local_ipcw_auc
+ARTIFACT | Stage 5.11.3 table_weibull_aft_tuned_secondary_metrics - Weibull AFT secondary metrics | duckdb://table_weibull_aft_tuned_secondary_metrics_w2
+[Stage 5.11.3 table_weibull_aft_tuned_td_auc_support_audit - Weibull AFT IPCW support audit]
+table_name=table_weibull_aft_tuned_td_auc_support_audit_w2
+rows=3, cols=6
+ horizon_week  max_ipcw_time  n_total_test_enrollments  n_supported_test_enrollments  mean_auc                                                         notes
+           10           38.0                      9778                          6742  0.666348 IPCW-supported subset used for Weibull AFT time-dependent AUC
+           20           38.0                      9778                          6742  0.630426 IPCW-supported subset used for Weibull AFT time-dependent AUC
+           30           38.0                      9778                          6742  0.613946 IPCW-supported subset used for Weibull AFT time-dependent AUC
+ARTIFACT | Stage 5.11.3 table_weibull_aft_tuned_td_auc_support_audit - Weibull AFT IPCW support audit | duckdb://table_weibull_aft_tuned_td_auc_support_audit_w2
+[Stage 5.11.3 table_weibull_aft_tuned_row_diagnostics - Weibull AFT row-level diagnostics]
+table_name=table_weibull_aft_tuned_row_diagnostics_w2
+rows=1, cols=6
+       model_name  row_level_roc_auc  row_level_pr_auc  row_level_log_loss  row_level_brier                                                                    diagnostic_note
+weibull_aft_tuned           0.146548          0.132803             1.09273         0.223945 auxiliary enrollment-level proxy only; not a primary cross-family benchmark metric
+ARTIFACT | Stage 5.11.3 table_weibull_aft_tuned_row_diagnostics - Weibull AFT row-level diagnostics | duckdb://table_weibull_aft_tuned_row_diagnostics_w2
+[Stage 5.11.3 table_weibull_aft_tuned_support_by_horizon - Weibull AFT support by horizon]
+table_name=table_weibull_aft_tuned_support_by_horizon_w2
+rows=3, cols=4
+ horizon_week  n_evaluable_enrollments  n_events_by_horizon  event_rate_by_horizon
+           10                     9778                 1215               0.124259
+           20                     9778                 1736               0.177541
+           30                     9778                 2129               0.217734
+ARTIFACT | Stage 5.11.3 table_weibull_aft_tuned_support_by_horizon - Weibull AFT support by horizon | duckdb://table_weibull_aft_tuned_support_by_horizon_w2
+[Stage 5.11.3 table_weibull_aft_tuned_calibration_summary - Weibull AFT calibration summary]
+table_name=table_weibull_aft_tuned_calibration_summary_w2
+rows=3, cols=5
+ horizon_week            metric_name metric_category  metric_value                                         notes
+           10 calibration_at_horizon         primary      0.024988 Weighted absolute calibration gap across bins
+           20 calibration_at_horizon         primary      0.018501 Weighted absolute calibration gap across bins
+           30 calibration_at_horizon         primary      0.011991 Weighted absolute calibration gap across bins
+ARTIFACT | Stage 5.11.3 table_weibull_aft_tuned_calibration_summary - Weibull AFT calibration summary | duckdb://table_weibull_aft_tuned_calibration_summary_w2
+[Stage 5.11.3 table_weibull_aft_tuned_calibration_bins_by_horizon - Weibull AFT calibration bins]
+table_name=table_weibull_aft_tuned_calibration_bins_by_horizon_w2
+rows=30, cols=6
+ calibration_bin   n  mean_predicted_risk  observed_event_rate  horizon_week  abs_calibration_gap
+               0 978             0.051682             0.044990            10             0.006692
+               1 978             0.072244             0.050102            10             0.022142
+               2 978             0.083060             0.067485            10             0.015576
+               3 977             0.092378             0.079836            10             0.012542
+               4 978             0.101446             0.095092            10             0.006354
+               5 978             0.110469             0.125767            10             0.015298
+               6 977             0.120717             0.133060            10             0.012344
+               7 978             0.134389             0.168712            10             0.034322
+               8 978             0.152667             0.208589            10             0.055922
+               9 978             0.200251             0.268916            10             0.068665
+               0 978             0.078415             0.085890            20             0.007475
+               1 978             0.109069             0.102249            20             0.006819
+               2 978             0.125018             0.113497            20             0.011521
+               3 977             0.138675             0.120778            20             0.017897
+               4 978             0.151893             0.163599            20             0.011706
+               5 978             0.164974             0.171779            20             0.006806
+               6 977             0.179742             0.191402            20             0.011660
+               7 978             0.199300             0.232106            20             0.032807
+               8 978             0.225179             0.273006            20             0.047827
+               9 978             0.290576             0.321063            20             0.030488
+ARTIFACT | Stage 5.11.3 table_weibull_aft_tuned_calibration_bins_by_horizon - Weibull AFT calibration bins | duckdb://table_weibull_aft_tuned_calibration_bins_by_horizon_w2
+[Stage 5.11.3 table_weibull_aft_tuned_predicted_vs_observed_survival - Weibull AFT predicted versus observed survival]
+table_name=table_weibull_aft_tuned_predicted_vs_observed_survival_w2
+rows=3, cols=5
+ horizon_week  n_evaluable_enrollments  mean_predicted_survival  mean_observed_survival  abs_gap
+           10                     9778                 0.888069                0.875741 0.012327
+           20                     9778                 0.833715                0.822459 0.011256
+           30                     9778                 0.792043                0.782266 0.009777
+ARTIFACT | Stage 5.11.3 table_weibull_aft_tuned_predicted_vs_observed_survival - Weibull AFT predicted versus observed survival | duckdb://table_weibull_aft_tuned_predicted_vs_observed_survival_w2
+ARTIFACT | weibull_aft_model | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/models/weibull_aft_tuned_w2.joblib
+ARTIFACT | weibull_aft_preprocessor | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/models/weibull_aft_preprocessor_w2.joblib
+ARTIFACT | weibull_aft_tuned_model_config | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/metadata/weibull_aft_tuned_model_config_w2.json
+{
+  "model_name": "weibull_aft_tuned",
+  "selection_metric": "lowest_validation_ibs",
+  "validation_split": {
+    "method": "GroupShuffleSplit",
+    "test_size": 0.1,
+    "group_column": "enrollment_id",
+    "random_seed": 42
+  },
+  "effective_window_weeks": 2,
+  "input_train_table": "enrollment_cox_ready_train_w2",
+  "input_test_table": "enrollment_cox_ready_test_w2",
+  "search_space": [
+    {
+      "candidate_id": 1,
+      "penalizer": 0.0001,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 2,
+      "penalizer": 0.0002,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 3,
+      "penalizer": 0.0005,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 4,
+      "penalizer": 0.001,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 5,
+      "penalizer": 0.002,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 6,
+      "penalizer": 0.005,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 7,
+      "penalizer": 0.01,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 8,
+      "penalizer": 0.02,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 9,
+      "penalizer": 0.05,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 10,
+      "penalizer": 0.1,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 11,
+      "penalizer": 0.15,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 12,
+      "penalizer": 0.2,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 13,
+      "penalizer": 0.3,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 14,
+      "penalizer": 0.4,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 15,
+      "penalizer": 0.5,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 16,
+      "penalizer": 0.6,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 17,
+      "penalizer": 0.7,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 18,
+      "penalizer": 0.8,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 19,
+      "penalizer": 1.0,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 20,
+      "penalizer": 1.5,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 21,
+      "penalizer": 2.0,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 22,
+      "penalizer": 3.0,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 23,
+      "penalizer": 4.0,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 24,
+      "penalizer": 5.0,
+      "l1_ratio": 0.0
+    }
+  ],
+  "benchmark_horizons": [
+    10,
+    20,
+    30
+  ],
+  "calibration_bins": 10,
+  "calibration_contract_version": "v2_ipcw_km_observed_risk",
+  "calibration_observed_risk_method": "ipcw_km_pseudo_event_rate",
+  "variance_filter_threshold": 1e-12,
+  "duration_floor": 1.0,
+  "implementation": "lifelines_weibull_aft",
+  "best_candidate": {
+    "candidate_id": 1,
+    "params": {
+      "penalizer": 0.0001,
+      "l1_ratio": 0.0
+    },
+    "duration_floor": 1.0,
+    "val_ibs": 0.11889543098356256,
+    "val_c_index": 0.5814539165956135,
+    "implementation": "lifelines_weibull_aft"
+  },
+  "preprocessing": {
+    "categorical_features": [
+      "gender",
+      "region",
+      "highest_education",
+      "imd_band",
+      "age_band",
+      "disability"
+    ],
+    "numeric_features": [
+      "num_of_prev_attempts",
+      "studied_credits",
+      "clicks_first_2_weeks",
+      "active_weeks_first_2",
+      "mean_clicks_first_2_weeks"
+    ],
+    "numeric_prefill_values": {
+      "num_of_prev_attempts": 0.0,
+      "studied_credits": 60.0,
+      "clicks_first_2_weeks": 56.0,
+      "active_weeks_first_2": 2.0,
+      "mean_clicks_first_2_weeks": 33.0
+    },
+    "feature_names_before_filter": [
+      "num__num_of_prev_attempts",
+      "num__studied_credits",
+      "num__clicks_first_2_weeks",
+      "num__active_weeks_first_2",
+      "num__mean_clicks_first_2_weeks",
+      "cat__gender_F",
+      "cat__gender_M",
+      "cat__region_East Anglian Region",
+      "cat__region_East Midlands Region",
+      "cat__region_Ireland",
+      "cat__region_London Region",
+      "cat__region_North Region",
+      "cat__region_North Western Region",
+      "cat__region_Scotland",
+      "cat__region_South East Region",
+      "cat__region_South Region",
+      "cat__region_South West Region",
+      "cat__region_Wales",
+      "cat__region_West Midlands Region",
+      "cat__region_Yorkshire Region",
+      "cat__highest_education_A Level or Equivalent",
+      "cat__highest_education_HE Qualification",
+      "cat__highest_education_Lower Than A Level",
+      "cat__highest_education_No Formal quals",
+      "cat__highest_education_Post Graduate Qualification",
+      "cat__imd_band_0-10%",
+      "cat__imd_band_10-20",
+      "cat__imd_band_20-30%",
+      "cat__imd_band_30-40%",
+      "cat__imd_band_40-50%",
+      "cat__imd_band_50-60%",
+      "cat__imd_band_60-70%",
+      "cat__imd_band_70-80%",
+      "cat__imd_band_80-90%",
+      "cat__imd_band_90-100%",
+      "cat__imd_band_None",
+      "cat__age_band_0-35",
+      "cat__age_band_35-55",
+      "cat__age_band_55<=",
+      "cat__disability_N",
+      "cat__disability_Y"
+    ],
+    "feature_names_out": [
+      "num__num_of_prev_attempts",
+      "num__studied_credits",
+      "num__clicks_first_2_weeks",
+      "num__active_weeks_first_2",
+      "num__mean_clicks_first_2_weeks",
+      "cat__gender_F",
+      "cat__gender_M",
+      "cat__region_East Anglian Region",
+      "cat__region_East Midlands Region",
+      "cat__region_Ireland",
+      "cat__region_London Region",
+      "cat__region_North Region",
+      "cat__region_North Western Region",
+      "cat__region_Scotland",
+      "cat__region_South East Region",
+      "cat__region_South Region",
+      "cat__region_South West Region",
+      "cat__region_Wales",
+      "cat__region_West Midlands Region",
+      "cat__region_Yorkshire Region",
+      "cat__highest_education_A Level or Equivalent",
+      "cat__highest_education_HE Qualification",
+      "cat__highest_education_Lower Than A Level",
+      "cat__highest_education_No Formal quals",
+      "cat__highest_education_Post Graduate Qualification",
+      "cat__imd_band_0-10%",
+      "cat__imd_band_10-20",
+      "cat__imd_band_20-30%",
+      "cat__imd_band_30-40%",
+      "cat__imd_band_40-50%",
+      "cat__imd_band_50-60%",
+      "cat__imd_band_60-70%",
+      "cat__imd_band_70-80%",
+      "cat__imd_band_80-90%",
+      "cat__imd_band_90-100%",
+      "cat__imd_band_None",
+      "cat__age_band_0-35",
+      "cat__age_band_35-55",
+      "cat__age_band_55<=",
+      "cat__disability_N",
+      "cat__disability_Y"
+    ],
+    "dropped_low_variance_features": []
+  },
+  "design_note": "The comparable Weibull AFT arm preserves the canonical early-window contract, uses the same deterministic preprocessing as the other continuous-time baselines, and applies an explicit positive-duration floor only inside the model-local AFT training frames."
+}
+
+ candidate_id                                 params  duration_floor  val_ibs  val_c_index        implementation
+            1 {'penalizer': 0.0001, 'l1_ratio': 0.0}             1.0 0.118895     0.581454 lifelines_weibull_aft
+[END] 5.11.3 - 2026-06-19 22:15:51
+[START] 5.11 - 2026-06-19 22:15:51
+# ==============================================================
+# 5.11.4 - Close runtime resources
+# ==============================================================
+DuckDB connection closed.
+ARTIFACT | duckdb_connection | closed::/Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/benchmark_survival.duckdb
+[END] 5.11.4 - 2026-06-19 22:15:53
+[RUN_PLAN] comparable_window_weeks=4
+[START] 5.11 - 2026-06-19 22:15:53
+# ==============================================================
+# 5.11.1 - Lightweight runtime bootstrap
+# ==============================================================
+ARTIFACT | benchmark_shared_config | /Users/rafars/dropout_benchmark_desenv/benchmark_shared_config.toml
+ARTIFACT | benchmark_modeling_contract | /Users/rafars/dropout_benchmark_desenv/benchmark_modeling_contract.toml
+ARTIFACT | run_metadata | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/metadata/run_metadata.json
+ARTIFACT | duckdb_path | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/benchmark_survival.duckdb
+{
+  "run_id": "f3766e75053447a7beb7a1c4936d231f",
+  "random_seed": 42,
+  "tuning_parallel_backend": "processes",
+  "test_size": 0.3,
+  "early_window_weeks": 4,
+  "main_enrollment_window_weeks": 4,
+  "effective_window_weeks": 4,
+  "input_train_table": "enrollment_cox_ready_train",
+  "input_test_table": "enrollment_cox_ready_test"
+}
+[END] 5.11.1 - 2026-06-19 22:15:53
+[START] 5.11 - 2026-06-19 22:15:53
+# ==============================================================
+# 5.11.2 - Build comparable-window Weibull AFT treatment
+# ==============================================================
+[Stage 5.11.2 table_weibull_aft_preprocessing_summary - Weibull AFT preprocessing summary]
+table_name=table_weibull_aft_preprocessing_summary
+rows=1, cols=21
+model_family  train_rows  test_rows  n_input_features_raw  n_numeric_features  n_categorical_features  n_features_after_encoding_before_filter  n_features_after_variance_filter  n_features_dropped_by_variance_filter  n_events_train  n_events_test  mean_duration_train  mean_duration_test                              numeric_prefill_policy categorical_imputation          categorical_encoding                   numeric_scaling  variance_filter_threshold output_dtype                          aft_positioning_note  window_weeks
+ weibull_aft       22815       9778                    11                   5                       6                                       41                                41                                      0            5171           2216            30.536182           30.539476 deterministic_train_median_or_zero_when_all_missing       constant_missing one_hot_handle_unknown_ignore standard_scaler_fit_on_train_only               1.000000e-12      float64 early-window comparable Weibull AFT benchmark             4
+ARTIFACT | Stage 5.11.2 table_weibull_aft_preprocessing_summary - Weibull AFT preprocessing summary | duckdb://table_weibull_aft_preprocessing_summary
+[Stage 5.11.2 table_weibull_aft_raw_feature_manifest - Weibull AFT raw feature manifest]
+table_name=table_weibull_aft_raw_feature_manifest
+rows=11, cols=6
+ feature_name_operational feature_role  present_in_train  present_in_test  covered_by_canonical_config  numeric_prefill_value
+                   gender  categorical              True             True                        False                    NaN
+                   region  categorical              True             True                        False                    NaN
+        highest_education  categorical              True             True                        False                    NaN
+                 imd_band  categorical              True             True                        False                    NaN
+                 age_band  categorical              True             True                        False                    NaN
+               disability  categorical              True             True                        False                    NaN
+     num_of_prev_attempts      numeric              True             True                         True                   0.00
+          studied_credits      numeric              True             True                         True                  60.00
+     clicks_first_4_weeks      numeric              True             True                         True                 136.00
+     active_weeks_first_4      numeric              True             True                         True                   4.00
+mean_clicks_first_4_weeks      numeric              True             True                         True                  41.25
+ARTIFACT | Stage 5.11.2 table_weibull_aft_raw_feature_manifest - Weibull AFT raw feature manifest | duckdb://table_weibull_aft_raw_feature_manifest
+[Stage 5.11.2 table_weibull_aft_feature_names_out - Weibull AFT output feature manifest]
+table_name=table_weibull_aft_feature_names_out
+rows=41, cols=2
+                feature_name_out  transformed_variance_train
+       num__num_of_prev_attempts                    1.000000
+            num__studied_credits                    1.000000
+       num__clicks_first_4_weeks                    1.000000
+       num__active_weeks_first_4                    1.000000
+  num__mean_clicks_first_4_weeks                    1.000000
+                   cat__gender_F                    0.247988
+                   cat__gender_M                    0.247988
+ cat__region_East Anglian Region                    0.092080
+cat__region_East Midlands Region                    0.067091
+             cat__region_Ireland                    0.034283
+       cat__region_London Region                    0.088295
+        cat__region_North Region                    0.052060
+cat__region_North Western Region                    0.082139
+            cat__region_Scotland                    0.094370
+   cat__region_South East Region                    0.059974
+        cat__region_South Region                    0.087554
+   cat__region_South West Region                    0.068848
+               cat__region_Wales                    0.059707
+cat__region_West Midlands Region                    0.073261
+    cat__region_Yorkshire Region                    0.058136
+ARTIFACT | Stage 5.11.2 table_weibull_aft_feature_names_out - Weibull AFT output feature manifest | duckdb://table_weibull_aft_feature_names_out
+ARTIFACT | weibull_aft_preprocessing_config | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/metadata/weibull_aft_preprocessing_config.json
+{
+  "model_family": "weibull_aft",
+  "duration_column": "duration",
+  "event_column": "event",
+  "categorical_features": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability"
+  ],
+  "numeric_features": [
+    "num_of_prev_attempts",
+    "studied_credits",
+    "clicks_first_4_weeks",
+    "active_weeks_first_4",
+    "mean_clicks_first_4_weeks"
+  ],
+  "raw_feature_columns": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability",
+    "num_of_prev_attempts",
+    "studied_credits",
+    "clicks_first_4_weeks",
+    "active_weeks_first_4",
+    "mean_clicks_first_4_weeks"
+  ],
+  "expected_features_raw": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "studied_credits",
+    "num_of_prev_attempts",
+    "clicks_first_4_weeks",
+    "active_weeks_first_4",
+    "mean_clicks_first_4_weeks"
+  ],
+  "expected_features_resolved": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "clicks_first_4_weeks",
+    "active_weeks_first_4",
+    "mean_clicks_first_4_weeks"
+  ],
+  "numeric_prefill_policy": "deterministic_train_median_or_zero_when_all_missing",
+  "numeric_fill_values": {
+    "num_of_prev_attempts": 0.0,
+    "studied_credits": 60.0,
+    "clicks_first_4_weeks": 136.0,
+    "active_weeks_first_4": 4.0,
+    "mean_clicks_first_4_weeks": 41.25
+  },
+  "categorical_imputation": "constant_missing",
+  "categorical_encoding": "one_hot_handle_unknown_ignore",
+  "numeric_scaling": "standard_scaler_fit_on_train_only",
+  "variance_filter_threshold": 1e-12,
+  "feature_names_before_filter": [
+    "num__num_of_prev_attempts",
+    "num__studied_credits",
+    "num__clicks_first_4_weeks",
+    "num__active_weeks_first_4",
+    "num__mean_clicks_first_4_weeks",
+    "cat__gender_F",
+    "cat__gender_M",
+    "cat__region_East Anglian Region",
+    "cat__region_East Midlands Region",
+    "cat__region_Ireland",
+    "cat__region_London Region",
+    "cat__region_North Region",
+    "cat__region_North Western Region",
+    "cat__region_Scotland",
+    "cat__region_South East Region",
+    "cat__region_South Region",
+    "cat__region_South West Region",
+    "cat__region_Wales",
+    "cat__region_West Midlands Region",
+    "cat__region_Yorkshire Region",
+    "cat__highest_education_A Level or Equivalent",
+    "cat__highest_education_HE Qualification",
+    "cat__highest_education_Lower Than A Level",
+    "cat__highest_education_No Formal quals",
+    "cat__highest_education_Post Graduate Qualification",
+    "cat__imd_band_0-10%",
+    "cat__imd_band_10-20",
+    "cat__imd_band_20-30%",
+    "cat__imd_band_30-40%",
+    "cat__imd_band_40-50%",
+    "cat__imd_band_50-60%",
+    "cat__imd_band_60-70%",
+    "cat__imd_band_70-80%",
+    "cat__imd_band_80-90%",
+    "cat__imd_band_90-100%",
+    "cat__imd_band_None",
+    "cat__age_band_0-35",
+    "cat__age_band_35-55",
+    "cat__age_band_55<=",
+    "cat__disability_N",
+    "cat__disability_Y"
+  ],
+  "feature_names_out": [
+    "num__num_of_prev_attempts",
+    "num__studied_credits",
+    "num__clicks_first_4_weeks",
+    "num__active_weeks_first_4",
+    "num__mean_clicks_first_4_weeks",
+    "cat__gender_F",
+    "cat__gender_M",
+    "cat__region_East Anglian Region",
+    "cat__region_East Midlands Region",
+    "cat__region_Ireland",
+    "cat__region_London Region",
+    "cat__region_North Region",
+    "cat__region_North Western Region",
+    "cat__region_Scotland",
+    "cat__region_South East Region",
+    "cat__region_South Region",
+    "cat__region_South West Region",
+    "cat__region_Wales",
+    "cat__region_West Midlands Region",
+    "cat__region_Yorkshire Region",
+    "cat__highest_education_A Level or Equivalent",
+    "cat__highest_education_HE Qualification",
+    "cat__highest_education_Lower Than A Level",
+    "cat__highest_education_No Formal quals",
+    "cat__highest_education_Post Graduate Qualification",
+    "cat__imd_band_0-10%",
+    "cat__imd_band_10-20",
+    "cat__imd_band_20-30%",
+    "cat__imd_band_30-40%",
+    "cat__imd_band_40-50%",
+    "cat__imd_band_50-60%",
+    "cat__imd_band_60-70%",
+    "cat__imd_band_70-80%",
+    "cat__imd_band_80-90%",
+    "cat__imd_band_90-100%",
+    "cat__imd_band_None",
+    "cat__age_band_0-35",
+    "cat__age_band_35-55",
+    "cat__age_band_55<=",
+    "cat__disability_N",
+    "cat__disability_Y"
+  ],
+  "dropped_low_variance_features": [],
+  "aft_positioning_note": "early-window comparable Weibull AFT benchmark",
+  "window_weeks": 4,
+  "duration_floor": 1.0
+}
+
+[END] 5.11.2 - 2026-06-19 22:15:53
+[START] 5.11 - 2026-06-19 22:15:53
+# ==============================================================
+# 5.11.3 - Tune and evaluate the comparable-window Weibull AFT model
+# ==============================================================
+- TUNING_WORKERS: 8
+- TUNING_BACKEND: processes
+[Stage 5.11.3 table_weibull_aft_tuning_results - Weibull AFT tuning results]
+table_name=table_weibull_aft_tuning_results
+rows=24, cols=7
+ candidate_id  penalizer  l1_ratio  duration_floor  val_ibs  val_c_index        implementation
+            1     0.0001       0.0             1.0 0.116040     0.595220 lifelines_weibull_aft
+            2     0.0002       0.0             1.0 0.116051     0.595073 lifelines_weibull_aft
+            3     0.0005       0.0             1.0 0.116091     0.594589 lifelines_weibull_aft
+            4     0.0010       0.0             1.0 0.116175     0.593821 lifelines_weibull_aft
+            5     0.0020       0.0             1.0 0.116364     0.592495 lifelines_weibull_aft
+            6     0.0050       0.0             1.0 0.116781     0.590299 lifelines_weibull_aft
+            7     0.0100       0.0             1.0 0.117108     0.588672 lifelines_weibull_aft
+            8     0.0200       0.0             1.0 0.117427     0.587498 lifelines_weibull_aft
+            9     0.0500       0.0             1.0 0.117971     0.586587 lifelines_weibull_aft
+           10     0.1000       0.0             1.0 0.118595     0.585991 lifelines_weibull_aft
+           11     0.1500       0.0             1.0 0.119068     0.585558 lifelines_weibull_aft
+           12     0.2000       0.0             1.0 0.119449     0.585282 lifelines_weibull_aft
+           13     0.3000       0.0             1.0 0.120038     0.584745 lifelines_weibull_aft
+           14     0.4000       0.0             1.0 0.120479     0.584354 lifelines_weibull_aft
+           15     0.5000       0.0             1.0 0.120827     0.584023 lifelines_weibull_aft
+           16     0.6000       0.0             1.0 0.121110     0.583775 lifelines_weibull_aft
+           17     0.7000       0.0             1.0 0.121345     0.583484 lifelines_weibull_aft
+           18     0.8000       0.0             1.0 0.121546     0.583288 lifelines_weibull_aft
+           19     1.0000       0.0             1.0 0.121868     0.583022 lifelines_weibull_aft
+           20     1.5000       0.0             1.0 0.122405     0.582489 lifelines_weibull_aft
+ARTIFACT | Stage 5.11.3 table_weibull_aft_tuning_results - Weibull AFT tuning results | duckdb://table_weibull_aft_tuning_results
+[Stage 5.11.3 table_weibull_aft_tuned_test_predictions - Weibull AFT test predictions]
+table_name=table_weibull_aft_tuned_test_predictions
+rows=29334, cols=6
+      enrollment_id  event  duration  horizon_week  pred_survival_h  pred_risk_h
+ 100561||DDD||2014J      0        37            10         0.885890     0.114110
+ 100621||CCC||2014B      1         6            10         0.900991     0.099009
+ 101187||DDD||2014J      0        37            10         0.856831     0.143169
+ 101279||DDD||2014J      0        37            10         0.906494     0.093506
+ 101414||EEE||2013J      0        38            10         0.813696     0.186304
+ 101700||CCC||2014J      0        38            10         0.801390     0.198610
+ 101781||AAA||2013J      0        38            10         0.950582     0.049418
+ 102209||CCC||2014J      1        15            10         0.931527     0.068473
+ 102343||FFF||2013J      0        38            10         0.930265     0.069735
+1023623||CCC||2014J      0        38            10         0.920128     0.079872
+1033968||DDD||2014B      1        13            10         0.849822     0.150178
+ 103891||DDD||2014B      0        34            10         0.868328     0.131672
+ 104316||FFF||2014B      0        34            10         0.922928     0.077072
+1045203||AAA||2014J      0        38            10         0.959571     0.040429
+1047645||CCC||2014B      0        34            10         0.843146     0.156854
+1053702||EEE||2013J      0        38            10         0.926203     0.073797
+ 105629||FFF||2013J      0        38            10         0.931320     0.068680
+1057883||CCC||2014B      0        34            10         0.880026     0.119974
+ 106383||BBB||2014J      1        21            10         0.914634     0.085366
+ 106553||DDD||2014J      0        37            10         0.886826     0.113174
+ARTIFACT | Stage 5.11.3 table_weibull_aft_tuned_test_predictions - Weibull AFT test predictions | duckdb://table_weibull_aft_tuned_test_predictions
+[Stage 5.11.3 table_weibull_aft_tuned_primary_metrics - Weibull AFT primary metrics]
+table_name=table_weibull_aft_tuned_primary_metrics
+rows=2, cols=4
+metric_name metric_category  metric_value                         notes
+        ibs         primary      0.118021 sksurv_integrated_brier_score
+    c_index      co_primary      0.613120          pycox_concordance_td
+ARTIFACT | Stage 5.11.3 table_weibull_aft_tuned_primary_metrics - Weibull AFT primary metrics | duckdb://table_weibull_aft_tuned_primary_metrics
+[Stage 5.11.3 table_weibull_aft_tuned_brier_by_horizon - Weibull AFT Brier scores by horizon]
+table_name=table_weibull_aft_tuned_brier_by_horizon
+rows=3, cols=5
+ horizon_week      metric_name metric_category  metric_value              notes
+           10 brier_at_horizon         primary      0.101577 sksurv_brier_score
+           20 brier_at_horizon         primary      0.138000 sksurv_brier_score
+           30 brier_at_horizon         primary      0.162387 sksurv_brier_score
+ARTIFACT | Stage 5.11.3 table_weibull_aft_tuned_brier_by_horizon - Weibull AFT Brier scores by horizon | duckdb://table_weibull_aft_tuned_brier_by_horizon
+[Stage 5.11.3 table_weibull_aft_tuned_secondary_metrics - Weibull AFT secondary metrics]
+table_name=table_weibull_aft_tuned_secondary_metrics
+rows=6, cols=5
+ horizon_week         metric_name metric_category  metric_value                                                                                  notes
+           10 risk_auc_at_horizon       secondary      0.741059                                                            roc_auc_on_evaluable_subset
+           10  time_dependent_auc       secondary      0.734696 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.734696; local_ipcw_auc
+           20 risk_auc_at_horizon       secondary      0.677888                                                            roc_auc_on_evaluable_subset
+           20  time_dependent_auc       secondary      0.668852 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.668852; local_ipcw_auc
+           30 risk_auc_at_horizon       secondary      0.652707                                                            roc_auc_on_evaluable_subset
+           30  time_dependent_auc       secondary      0.642543 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.642543; local_ipcw_auc
+ARTIFACT | Stage 5.11.3 table_weibull_aft_tuned_secondary_metrics - Weibull AFT secondary metrics | duckdb://table_weibull_aft_tuned_secondary_metrics
+[Stage 5.11.3 table_weibull_aft_tuned_td_auc_support_audit - Weibull AFT IPCW support audit]
+table_name=table_weibull_aft_tuned_td_auc_support_audit
+rows=3, cols=6
+ horizon_week  max_ipcw_time  n_total_test_enrollments  n_supported_test_enrollments  mean_auc                                                         notes
+           10           38.0                      9778                          6742  0.734696 IPCW-supported subset used for Weibull AFT time-dependent AUC
+           20           38.0                      9778                          6742  0.668852 IPCW-supported subset used for Weibull AFT time-dependent AUC
+           30           38.0                      9778                          6742  0.642543 IPCW-supported subset used for Weibull AFT time-dependent AUC
+ARTIFACT | Stage 5.11.3 table_weibull_aft_tuned_td_auc_support_audit - Weibull AFT IPCW support audit | duckdb://table_weibull_aft_tuned_td_auc_support_audit
+[Stage 5.11.3 table_weibull_aft_tuned_row_diagnostics - Weibull AFT row-level diagnostics]
+table_name=table_weibull_aft_tuned_row_diagnostics
+rows=1, cols=6
+       model_name  row_level_roc_auc  row_level_pr_auc  row_level_log_loss  row_level_brier                                                                    diagnostic_note
+weibull_aft_tuned           0.162991          0.134618            1.090273         0.225754 auxiliary enrollment-level proxy only; not a primary cross-family benchmark metric
+ARTIFACT | Stage 5.11.3 table_weibull_aft_tuned_row_diagnostics - Weibull AFT row-level diagnostics | duckdb://table_weibull_aft_tuned_row_diagnostics
+[Stage 5.11.3 table_weibull_aft_tuned_support_by_horizon - Weibull AFT support by horizon]
+table_name=table_weibull_aft_tuned_support_by_horizon
+rows=3, cols=4
+ horizon_week  n_evaluable_enrollments  n_events_by_horizon  event_rate_by_horizon
+           10                     9778                 1215               0.124259
+           20                     9778                 1736               0.177541
+           30                     9778                 2129               0.217734
+ARTIFACT | Stage 5.11.3 table_weibull_aft_tuned_support_by_horizon - Weibull AFT support by horizon | duckdb://table_weibull_aft_tuned_support_by_horizon
+[Stage 5.11.3 table_weibull_aft_tuned_calibration_summary - Weibull AFT calibration summary]
+table_name=table_weibull_aft_tuned_calibration_summary
+rows=3, cols=5
+ horizon_week            metric_name metric_category  metric_value                                         notes
+           10 calibration_at_horizon         primary      0.036213 Weighted absolute calibration gap across bins
+           20 calibration_at_horizon         primary      0.020802 Weighted absolute calibration gap across bins
+           30 calibration_at_horizon         primary      0.013264 Weighted absolute calibration gap across bins
+ARTIFACT | Stage 5.11.3 table_weibull_aft_tuned_calibration_summary - Weibull AFT calibration summary | duckdb://table_weibull_aft_tuned_calibration_summary
+[Stage 5.11.3 table_weibull_aft_tuned_calibration_bins_by_horizon - Weibull AFT calibration bins]
+table_name=table_weibull_aft_tuned_calibration_bins_by_horizon
+rows=30, cols=6
+ calibration_bin   n  mean_predicted_risk  observed_event_rate  horizon_week  abs_calibration_gap
+               0 978             0.045498             0.029652            10             0.015845
+               1 978             0.063625             0.030675            10             0.032950
+               2 978             0.074449             0.048057            10             0.026392
+               3 977             0.084716             0.064483            10             0.020233
+               4 978             0.095127             0.070552            10             0.024575
+               5 978             0.106501             0.103272            10             0.003229
+               6 977             0.120470             0.122825            10             0.002355
+               7 978             0.138301             0.189162            10             0.050860
+               8 978             0.163745             0.251534            10             0.087789
+               9 978             0.234456             0.332311            10             0.097855
+               0 978             0.069483             0.078732            20             0.009249
+               1 978             0.096732             0.075665            20             0.021067
+               2 978             0.112842             0.103272            20             0.009570
+               3 977             0.128026             0.121801            20             0.006224
+               4 978             0.143327             0.126789            20             0.016538
+               5 978             0.159933             0.173824            20             0.013891
+               6 977             0.180170             0.188332            20             0.008162
+               7 978             0.205741             0.238241            20             0.032500
+               8 978             0.241722             0.304703            20             0.062981
+               9 978             0.336201             0.364008            20             0.027807
+ARTIFACT | Stage 5.11.3 table_weibull_aft_tuned_calibration_bins_by_horizon - Weibull AFT calibration bins | duckdb://table_weibull_aft_tuned_calibration_bins_by_horizon
+[Stage 5.11.3 table_weibull_aft_tuned_predicted_vs_observed_survival - Weibull AFT predicted versus observed survival]
+table_name=table_weibull_aft_tuned_predicted_vs_observed_survival
+rows=3, cols=5
+ horizon_week  n_evaluable_enrollments  mean_predicted_survival  mean_observed_survival  abs_gap
+           10                     9778                 0.887309                0.875741 0.011568
+           20                     9778                 0.832580                0.822459 0.010121
+           30                     9778                 0.790759                0.782266 0.008493
+ARTIFACT | Stage 5.11.3 table_weibull_aft_tuned_predicted_vs_observed_survival - Weibull AFT predicted versus observed survival | duckdb://table_weibull_aft_tuned_predicted_vs_observed_survival
+ARTIFACT | weibull_aft_model | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/models/weibull_aft_tuned.joblib
+ARTIFACT | weibull_aft_preprocessor | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/models/weibull_aft_preprocessor.joblib
+ARTIFACT | weibull_aft_tuned_model_config | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/metadata/weibull_aft_tuned_model_config.json
+{
+  "model_name": "weibull_aft_tuned",
+  "selection_metric": "lowest_validation_ibs",
+  "validation_split": {
+    "method": "GroupShuffleSplit",
+    "test_size": 0.1,
+    "group_column": "enrollment_id",
+    "random_seed": 42
+  },
+  "effective_window_weeks": 4,
+  "input_train_table": "enrollment_cox_ready_train",
+  "input_test_table": "enrollment_cox_ready_test",
+  "search_space": [
+    {
+      "candidate_id": 1,
+      "penalizer": 0.0001,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 2,
+      "penalizer": 0.0002,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 3,
+      "penalizer": 0.0005,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 4,
+      "penalizer": 0.001,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 5,
+      "penalizer": 0.002,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 6,
+      "penalizer": 0.005,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 7,
+      "penalizer": 0.01,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 8,
+      "penalizer": 0.02,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 9,
+      "penalizer": 0.05,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 10,
+      "penalizer": 0.1,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 11,
+      "penalizer": 0.15,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 12,
+      "penalizer": 0.2,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 13,
+      "penalizer": 0.3,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 14,
+      "penalizer": 0.4,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 15,
+      "penalizer": 0.5,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 16,
+      "penalizer": 0.6,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 17,
+      "penalizer": 0.7,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 18,
+      "penalizer": 0.8,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 19,
+      "penalizer": 1.0,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 20,
+      "penalizer": 1.5,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 21,
+      "penalizer": 2.0,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 22,
+      "penalizer": 3.0,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 23,
+      "penalizer": 4.0,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 24,
+      "penalizer": 5.0,
+      "l1_ratio": 0.0
+    }
+  ],
+  "benchmark_horizons": [
+    10,
+    20,
+    30
+  ],
+  "calibration_bins": 10,
+  "calibration_contract_version": "v2_ipcw_km_observed_risk",
+  "calibration_observed_risk_method": "ipcw_km_pseudo_event_rate",
+  "variance_filter_threshold": 1e-12,
+  "duration_floor": 1.0,
+  "implementation": "lifelines_weibull_aft",
+  "best_candidate": {
+    "candidate_id": 1,
+    "params": {
+      "penalizer": 0.0001,
+      "l1_ratio": 0.0
+    },
+    "duration_floor": 1.0,
+    "val_ibs": 0.11604000227089978,
+    "val_c_index": 0.5952199276461889,
+    "implementation": "lifelines_weibull_aft"
+  },
+  "preprocessing": {
+    "categorical_features": [
+      "gender",
+      "region",
+      "highest_education",
+      "imd_band",
+      "age_band",
+      "disability"
+    ],
+    "numeric_features": [
+      "num_of_prev_attempts",
+      "studied_credits",
+      "clicks_first_4_weeks",
+      "active_weeks_first_4",
+      "mean_clicks_first_4_weeks"
+    ],
+    "numeric_prefill_values": {
+      "num_of_prev_attempts": 0.0,
+      "studied_credits": 60.0,
+      "clicks_first_4_weeks": 136.0,
+      "active_weeks_first_4": 4.0,
+      "mean_clicks_first_4_weeks": 41.25
+    },
+    "feature_names_before_filter": [
+      "num__num_of_prev_attempts",
+      "num__studied_credits",
+      "num__clicks_first_4_weeks",
+      "num__active_weeks_first_4",
+      "num__mean_clicks_first_4_weeks",
+      "cat__gender_F",
+      "cat__gender_M",
+      "cat__region_East Anglian Region",
+      "cat__region_East Midlands Region",
+      "cat__region_Ireland",
+      "cat__region_London Region",
+      "cat__region_North Region",
+      "cat__region_North Western Region",
+      "cat__region_Scotland",
+      "cat__region_South East Region",
+      "cat__region_South Region",
+      "cat__region_South West Region",
+      "cat__region_Wales",
+      "cat__region_West Midlands Region",
+      "cat__region_Yorkshire Region",
+      "cat__highest_education_A Level or Equivalent",
+      "cat__highest_education_HE Qualification",
+      "cat__highest_education_Lower Than A Level",
+      "cat__highest_education_No Formal quals",
+      "cat__highest_education_Post Graduate Qualification",
+      "cat__imd_band_0-10%",
+      "cat__imd_band_10-20",
+      "cat__imd_band_20-30%",
+      "cat__imd_band_30-40%",
+      "cat__imd_band_40-50%",
+      "cat__imd_band_50-60%",
+      "cat__imd_band_60-70%",
+      "cat__imd_band_70-80%",
+      "cat__imd_band_80-90%",
+      "cat__imd_band_90-100%",
+      "cat__imd_band_None",
+      "cat__age_band_0-35",
+      "cat__age_band_35-55",
+      "cat__age_band_55<=",
+      "cat__disability_N",
+      "cat__disability_Y"
+    ],
+    "feature_names_out": [
+      "num__num_of_prev_attempts",
+      "num__studied_credits",
+      "num__clicks_first_4_weeks",
+      "num__active_weeks_first_4",
+      "num__mean_clicks_first_4_weeks",
+      "cat__gender_F",
+      "cat__gender_M",
+      "cat__region_East Anglian Region",
+      "cat__region_East Midlands Region",
+      "cat__region_Ireland",
+      "cat__region_London Region",
+      "cat__region_North Region",
+      "cat__region_North Western Region",
+      "cat__region_Scotland",
+      "cat__region_South East Region",
+      "cat__region_South Region",
+      "cat__region_South West Region",
+      "cat__region_Wales",
+      "cat__region_West Midlands Region",
+      "cat__region_Yorkshire Region",
+      "cat__highest_education_A Level or Equivalent",
+      "cat__highest_education_HE Qualification",
+      "cat__highest_education_Lower Than A Level",
+      "cat__highest_education_No Formal quals",
+      "cat__highest_education_Post Graduate Qualification",
+      "cat__imd_band_0-10%",
+      "cat__imd_band_10-20",
+      "cat__imd_band_20-30%",
+      "cat__imd_band_30-40%",
+      "cat__imd_band_40-50%",
+      "cat__imd_band_50-60%",
+      "cat__imd_band_60-70%",
+      "cat__imd_band_70-80%",
+      "cat__imd_band_80-90%",
+      "cat__imd_band_90-100%",
+      "cat__imd_band_None",
+      "cat__age_band_0-35",
+      "cat__age_band_35-55",
+      "cat__age_band_55<=",
+      "cat__disability_N",
+      "cat__disability_Y"
+    ],
+    "dropped_low_variance_features": []
+  },
+  "design_note": "The comparable Weibull AFT arm preserves the canonical early-window contract, uses the same deterministic preprocessing as the other continuous-time baselines, and applies an explicit positive-duration floor only inside the model-local AFT training frames."
+}
+
+ candidate_id                                 params  duration_floor  val_ibs  val_c_index        implementation
+            1 {'penalizer': 0.0001, 'l1_ratio': 0.0}             1.0  0.11604      0.59522 lifelines_weibull_aft
+[END] 5.11.3 - 2026-06-19 22:16:00
+[START] 5.11 - 2026-06-19 22:16:00
+# ==============================================================
+# 5.11.4 - Close runtime resources
+# ==============================================================
+DuckDB connection closed.
+ARTIFACT | duckdb_connection | closed::/Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/benchmark_survival.duckdb
+[END] 5.11.4 - 2026-06-19 22:16:01
+[RUN_PLAN] comparable_window_weeks=6
+[START] 5.11 - 2026-06-19 22:16:01
+# ==============================================================
+# 5.11.1 - Lightweight runtime bootstrap
+# ==============================================================
+ARTIFACT | benchmark_shared_config | /Users/rafars/dropout_benchmark_desenv/benchmark_shared_config.toml
+ARTIFACT | benchmark_modeling_contract | /Users/rafars/dropout_benchmark_desenv/benchmark_modeling_contract.toml
+ARTIFACT | run_metadata | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/metadata/run_metadata.json
+ARTIFACT | duckdb_path | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/benchmark_survival.duckdb
+{
+  "run_id": "f3766e75053447a7beb7a1c4936d231f",
+  "random_seed": 42,
+  "tuning_parallel_backend": "processes",
+  "test_size": 0.3,
+  "early_window_weeks": 4,
+  "main_enrollment_window_weeks": 4,
+  "effective_window_weeks": 6,
+  "input_train_table": "enrollment_cox_ready_train_w6",
+  "input_test_table": "enrollment_cox_ready_test_w6"
+}
+[END] 5.11.1 - 2026-06-19 22:16:02
+[START] 5.11 - 2026-06-19 22:16:02
+# ==============================================================
+# 5.11.2 - Build comparable-window Weibull AFT treatment
+# ==============================================================
+[Stage 5.11.2 table_weibull_aft_preprocessing_summary - Weibull AFT preprocessing summary]
+table_name=table_weibull_aft_preprocessing_summary_w6
+rows=1, cols=21
+model_family  train_rows  test_rows  n_input_features_raw  n_numeric_features  n_categorical_features  n_features_after_encoding_before_filter  n_features_after_variance_filter  n_features_dropped_by_variance_filter  n_events_train  n_events_test  mean_duration_train  mean_duration_test                              numeric_prefill_policy categorical_imputation          categorical_encoding                   numeric_scaling  variance_filter_threshold output_dtype                          aft_positioning_note  window_weeks
+ weibull_aft       22815       9778                    11                   5                       6                                       41                                41                                      0            5171           2216            30.536182           30.539476 deterministic_train_median_or_zero_when_all_missing       constant_missing one_hot_handle_unknown_ignore standard_scaler_fit_on_train_only               1.000000e-12      float64 early-window comparable Weibull AFT benchmark             6
+ARTIFACT | Stage 5.11.2 table_weibull_aft_preprocessing_summary - Weibull AFT preprocessing summary | duckdb://table_weibull_aft_preprocessing_summary_w6
+[Stage 5.11.2 table_weibull_aft_raw_feature_manifest - Weibull AFT raw feature manifest]
+table_name=table_weibull_aft_raw_feature_manifest_w6
+rows=11, cols=6
+ feature_name_operational feature_role  present_in_train  present_in_test  covered_by_canonical_config  numeric_prefill_value
+                   gender  categorical              True             True                        False                    NaN
+                   region  categorical              True             True                        False                    NaN
+        highest_education  categorical              True             True                        False                    NaN
+                 imd_band  categorical              True             True                        False                    NaN
+                 age_band  categorical              True             True                        False                    NaN
+               disability  categorical              True             True                        False                    NaN
+     num_of_prev_attempts      numeric              True             True                         True                    0.0
+          studied_credits      numeric              True             True                         True                   60.0
+     clicks_first_6_weeks      numeric              True             True                         True                  182.0
+     active_weeks_first_6      numeric              True             True                         True                    5.0
+mean_clicks_first_6_weeks      numeric              True             True                         True                   39.0
+ARTIFACT | Stage 5.11.2 table_weibull_aft_raw_feature_manifest - Weibull AFT raw feature manifest | duckdb://table_weibull_aft_raw_feature_manifest_w6
+[Stage 5.11.2 table_weibull_aft_feature_names_out - Weibull AFT output feature manifest]
+table_name=table_weibull_aft_feature_names_out_w6
+rows=41, cols=2
+                feature_name_out  transformed_variance_train
+       num__num_of_prev_attempts                    1.000000
+            num__studied_credits                    1.000000
+       num__clicks_first_6_weeks                    1.000000
+       num__active_weeks_first_6                    1.000000
+  num__mean_clicks_first_6_weeks                    1.000000
+                   cat__gender_F                    0.247988
+                   cat__gender_M                    0.247988
+ cat__region_East Anglian Region                    0.092080
+cat__region_East Midlands Region                    0.067091
+             cat__region_Ireland                    0.034283
+       cat__region_London Region                    0.088295
+        cat__region_North Region                    0.052060
+cat__region_North Western Region                    0.082139
+            cat__region_Scotland                    0.094370
+   cat__region_South East Region                    0.059974
+        cat__region_South Region                    0.087554
+   cat__region_South West Region                    0.068848
+               cat__region_Wales                    0.059707
+cat__region_West Midlands Region                    0.073261
+    cat__region_Yorkshire Region                    0.058136
+ARTIFACT | Stage 5.11.2 table_weibull_aft_feature_names_out - Weibull AFT output feature manifest | duckdb://table_weibull_aft_feature_names_out_w6
+ARTIFACT | weibull_aft_preprocessing_config | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/metadata/weibull_aft_preprocessing_config_w6.json
+{
+  "model_family": "weibull_aft",
+  "duration_column": "duration",
+  "event_column": "event",
+  "categorical_features": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability"
+  ],
+  "numeric_features": [
+    "num_of_prev_attempts",
+    "studied_credits",
+    "clicks_first_6_weeks",
+    "active_weeks_first_6",
+    "mean_clicks_first_6_weeks"
+  ],
+  "raw_feature_columns": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability",
+    "num_of_prev_attempts",
+    "studied_credits",
+    "clicks_first_6_weeks",
+    "active_weeks_first_6",
+    "mean_clicks_first_6_weeks"
+  ],
+  "expected_features_raw": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "num_of_prev_attempts",
+    "studied_credits",
+    "clicks_first_6_weeks",
+    "active_weeks_first_6",
+    "mean_clicks_first_6_weeks"
+  ],
+  "expected_features_resolved": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "clicks_first_6_weeks",
+    "active_weeks_first_6",
+    "mean_clicks_first_6_weeks"
+  ],
+  "numeric_prefill_policy": "deterministic_train_median_or_zero_when_all_missing",
+  "numeric_fill_values": {
+    "num_of_prev_attempts": 0.0,
+    "studied_credits": 60.0,
+    "clicks_first_6_weeks": 182.0,
+    "active_weeks_first_6": 5.0,
+    "mean_clicks_first_6_weeks": 39.0
+  },
+  "categorical_imputation": "constant_missing",
+  "categorical_encoding": "one_hot_handle_unknown_ignore",
+  "numeric_scaling": "standard_scaler_fit_on_train_only",
+  "variance_filter_threshold": 1e-12,
+  "feature_names_before_filter": [
+    "num__num_of_prev_attempts",
+    "num__studied_credits",
+    "num__clicks_first_6_weeks",
+    "num__active_weeks_first_6",
+    "num__mean_clicks_first_6_weeks",
+    "cat__gender_F",
+    "cat__gender_M",
+    "cat__region_East Anglian Region",
+    "cat__region_East Midlands Region",
+    "cat__region_Ireland",
+    "cat__region_London Region",
+    "cat__region_North Region",
+    "cat__region_North Western Region",
+    "cat__region_Scotland",
+    "cat__region_South East Region",
+    "cat__region_South Region",
+    "cat__region_South West Region",
+    "cat__region_Wales",
+    "cat__region_West Midlands Region",
+    "cat__region_Yorkshire Region",
+    "cat__highest_education_A Level or Equivalent",
+    "cat__highest_education_HE Qualification",
+    "cat__highest_education_Lower Than A Level",
+    "cat__highest_education_No Formal quals",
+    "cat__highest_education_Post Graduate Qualification",
+    "cat__imd_band_0-10%",
+    "cat__imd_band_10-20",
+    "cat__imd_band_20-30%",
+    "cat__imd_band_30-40%",
+    "cat__imd_band_40-50%",
+    "cat__imd_band_50-60%",
+    "cat__imd_band_60-70%",
+    "cat__imd_band_70-80%",
+    "cat__imd_band_80-90%",
+    "cat__imd_band_90-100%",
+    "cat__imd_band_None",
+    "cat__age_band_0-35",
+    "cat__age_band_35-55",
+    "cat__age_band_55<=",
+    "cat__disability_N",
+    "cat__disability_Y"
+  ],
+  "feature_names_out": [
+    "num__num_of_prev_attempts",
+    "num__studied_credits",
+    "num__clicks_first_6_weeks",
+    "num__active_weeks_first_6",
+    "num__mean_clicks_first_6_weeks",
+    "cat__gender_F",
+    "cat__gender_M",
+    "cat__region_East Anglian Region",
+    "cat__region_East Midlands Region",
+    "cat__region_Ireland",
+    "cat__region_London Region",
+    "cat__region_North Region",
+    "cat__region_North Western Region",
+    "cat__region_Scotland",
+    "cat__region_South East Region",
+    "cat__region_South Region",
+    "cat__region_South West Region",
+    "cat__region_Wales",
+    "cat__region_West Midlands Region",
+    "cat__region_Yorkshire Region",
+    "cat__highest_education_A Level or Equivalent",
+    "cat__highest_education_HE Qualification",
+    "cat__highest_education_Lower Than A Level",
+    "cat__highest_education_No Formal quals",
+    "cat__highest_education_Post Graduate Qualification",
+    "cat__imd_band_0-10%",
+    "cat__imd_band_10-20",
+    "cat__imd_band_20-30%",
+    "cat__imd_band_30-40%",
+    "cat__imd_band_40-50%",
+    "cat__imd_band_50-60%",
+    "cat__imd_band_60-70%",
+    "cat__imd_band_70-80%",
+    "cat__imd_band_80-90%",
+    "cat__imd_band_90-100%",
+    "cat__imd_band_None",
+    "cat__age_band_0-35",
+    "cat__age_band_35-55",
+    "cat__age_band_55<=",
+    "cat__disability_N",
+    "cat__disability_Y"
+  ],
+  "dropped_low_variance_features": [],
+  "aft_positioning_note": "early-window comparable Weibull AFT benchmark",
+  "window_weeks": 6,
+  "duration_floor": 1.0
+}
+
+[END] 5.11.2 - 2026-06-19 22:16:02
+[START] 5.11 - 2026-06-19 22:16:02
+# ==============================================================
+# 5.11.3 - Tune and evaluate the comparable-window Weibull AFT model
+# ==============================================================
+- TUNING_WORKERS: 8
+- TUNING_BACKEND: processes
+[Stage 5.11.3 table_weibull_aft_tuning_results - Weibull AFT tuning results]
+table_name=table_weibull_aft_tuning_results_w6
+rows=24, cols=7
+ candidate_id  penalizer  l1_ratio  duration_floor  val_ibs  val_c_index        implementation
+            1     0.0001       0.0             1.0 0.112950     0.616911 lifelines_weibull_aft
+            2     0.0002       0.0             1.0 0.112965     0.616822 lifelines_weibull_aft
+            3     0.0005       0.0             1.0 0.113012     0.616587 lifelines_weibull_aft
+            4     0.0010       0.0             1.0 0.113097     0.616217 lifelines_weibull_aft
+            5     0.0020       0.0             1.0 0.113286     0.615315 lifelines_weibull_aft
+            6     0.0050       0.0             1.0 0.113877     0.612456 lifelines_weibull_aft
+            7     0.0100       0.0             1.0 0.114567     0.609983 lifelines_weibull_aft
+            8     0.0200       0.0             1.0 0.115258     0.607853 lifelines_weibull_aft
+            9     0.0500       0.0             1.0 0.116215     0.605872 lifelines_weibull_aft
+           10     0.1000       0.0             1.0 0.117134     0.604707 lifelines_weibull_aft
+           11     0.1500       0.0             1.0 0.117782     0.603990 lifelines_weibull_aft
+           12     0.2000       0.0             1.0 0.118288     0.603483 lifelines_weibull_aft
+           13     0.3000       0.0             1.0 0.119053     0.602516 lifelines_weibull_aft
+           14     0.4000       0.0             1.0 0.119616     0.601964 lifelines_weibull_aft
+           15     0.5000       0.0             1.0 0.120055     0.601508 lifelines_weibull_aft
+           16     0.6000       0.0             1.0 0.120410     0.601174 lifelines_weibull_aft
+           17     0.7000       0.0             1.0 0.120704     0.600817 lifelines_weibull_aft
+           18     0.8000       0.0             1.0 0.120953     0.600571 lifelines_weibull_aft
+           19     1.0000       0.0             1.0 0.121353     0.600135 lifelines_weibull_aft
+           20     1.5000       0.0             1.0 0.122013     0.599353 lifelines_weibull_aft
+ARTIFACT | Stage 5.11.3 table_weibull_aft_tuning_results - Weibull AFT tuning results | duckdb://table_weibull_aft_tuning_results_w6
+[Stage 5.11.3 table_weibull_aft_tuned_test_predictions - Weibull AFT test predictions]
+table_name=table_weibull_aft_tuned_test_predictions_w6
+rows=29334, cols=6
+      enrollment_id  event  duration  horizon_week  pred_survival_h  pred_risk_h
+ 100561||DDD||2014J      0        37            10         0.902259     0.097741
+ 100621||CCC||2014B      1         6            10         0.884879     0.115121
+ 101187||DDD||2014J      0        37            10         0.845601     0.154399
+ 101279||DDD||2014J      0        37            10         0.919374     0.080626
+ 101414||EEE||2013J      0        38            10         0.799296     0.200704
+ 101700||CCC||2014J      0        38            10         0.794130     0.205870
+ 101781||AAA||2013J      0        38            10         0.952595     0.047405
+ 102209||CCC||2014J      1        15            10         0.944781     0.055219
+ 102343||FFF||2013J      0        38            10         0.937785     0.062215
+1023623||CCC||2014J      0        38            10         0.900504     0.099496
+1033968||DDD||2014B      1        13            10         0.837903     0.162097
+ 103891||DDD||2014B      0        34            10         0.847246     0.152754
+ 104316||FFF||2014B      0        34            10         0.930514     0.069486
+1045203||AAA||2014J      0        38            10         0.957326     0.042674
+1047645||CCC||2014B      0        34            10         0.831698     0.168302
+1053702||EEE||2013J      0        38            10         0.931886     0.068114
+ 105629||FFF||2013J      0        38            10         0.952011     0.047989
+1057883||CCC||2014B      0        34            10         0.905452     0.094548
+ 106383||BBB||2014J      1        21            10         0.901305     0.098695
+ 106553||DDD||2014J      0        37            10         0.903666     0.096334
+ARTIFACT | Stage 5.11.3 table_weibull_aft_tuned_test_predictions - Weibull AFT test predictions | duckdb://table_weibull_aft_tuned_test_predictions_w6
+[Stage 5.11.3 table_weibull_aft_tuned_primary_metrics - Weibull AFT primary metrics]
+table_name=table_weibull_aft_tuned_primary_metrics_w6
+rows=2, cols=4
+metric_name metric_category  metric_value                         notes
+        ibs         primary      0.114751 sksurv_integrated_brier_score
+    c_index      co_primary      0.632664          pycox_concordance_td
+ARTIFACT | Stage 5.11.3 table_weibull_aft_tuned_primary_metrics - Weibull AFT primary metrics | duckdb://table_weibull_aft_tuned_primary_metrics_w6
+[Stage 5.11.3 table_weibull_aft_tuned_brier_by_horizon - Weibull AFT Brier scores by horizon]
+table_name=table_weibull_aft_tuned_brier_by_horizon_w6
+rows=3, cols=5
+ horizon_week      metric_name metric_category  metric_value              notes
+           10 brier_at_horizon         primary      0.098073 sksurv_brier_score
+           20 brier_at_horizon         primary      0.134328 sksurv_brier_score
+           30 brier_at_horizon         primary      0.159065 sksurv_brier_score
+ARTIFACT | Stage 5.11.3 table_weibull_aft_tuned_brier_by_horizon - Weibull AFT Brier scores by horizon | duckdb://table_weibull_aft_tuned_brier_by_horizon_w6
+[Stage 5.11.3 table_weibull_aft_tuned_secondary_metrics - Weibull AFT secondary metrics]
+table_name=table_weibull_aft_tuned_secondary_metrics_w6
+rows=6, cols=5
+ horizon_week         metric_name metric_category  metric_value                                                                                  notes
+           10 risk_auc_at_horizon       secondary      0.786282                                                            roc_auc_on_evaluable_subset
+           10  time_dependent_auc       secondary      0.781494 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.781494; local_ipcw_auc
+           20 risk_auc_at_horizon       secondary      0.708172                                                            roc_auc_on_evaluable_subset
+           20  time_dependent_auc       secondary      0.699921 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.699921; local_ipcw_auc
+           30 risk_auc_at_horizon       secondary      0.674609                                                            roc_auc_on_evaluable_subset
+           30  time_dependent_auc       secondary      0.664451 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.664451; local_ipcw_auc
+ARTIFACT | Stage 5.11.3 table_weibull_aft_tuned_secondary_metrics - Weibull AFT secondary metrics | duckdb://table_weibull_aft_tuned_secondary_metrics_w6
+[Stage 5.11.3 table_weibull_aft_tuned_td_auc_support_audit - Weibull AFT IPCW support audit]
+table_name=table_weibull_aft_tuned_td_auc_support_audit_w6
+rows=3, cols=6
+ horizon_week  max_ipcw_time  n_total_test_enrollments  n_supported_test_enrollments  mean_auc                                                         notes
+           10           38.0                      9778                          6742  0.781494 IPCW-supported subset used for Weibull AFT time-dependent AUC
+           20           38.0                      9778                          6742  0.699921 IPCW-supported subset used for Weibull AFT time-dependent AUC
+           30           38.0                      9778                          6742  0.664451 IPCW-supported subset used for Weibull AFT time-dependent AUC
+ARTIFACT | Stage 5.11.3 table_weibull_aft_tuned_td_auc_support_audit - Weibull AFT IPCW support audit | duckdb://table_weibull_aft_tuned_td_auc_support_audit_w6
+[Stage 5.11.3 table_weibull_aft_tuned_row_diagnostics - Weibull AFT row-level diagnostics]
+table_name=table_weibull_aft_tuned_row_diagnostics_w6
+rows=1, cols=6
+       model_name  row_level_roc_auc  row_level_pr_auc  row_level_log_loss  row_level_brier                                                                    diagnostic_note
+weibull_aft_tuned           0.178006          0.136521            1.085817         0.226154 auxiliary enrollment-level proxy only; not a primary cross-family benchmark metric
+ARTIFACT | Stage 5.11.3 table_weibull_aft_tuned_row_diagnostics - Weibull AFT row-level diagnostics | duckdb://table_weibull_aft_tuned_row_diagnostics_w6
+[Stage 5.11.3 table_weibull_aft_tuned_support_by_horizon - Weibull AFT support by horizon]
+table_name=table_weibull_aft_tuned_support_by_horizon_w6
+rows=3, cols=4
+ horizon_week  n_evaluable_enrollments  n_events_by_horizon  event_rate_by_horizon
+           10                     9778                 1215               0.124259
+           20                     9778                 1736               0.177541
+           30                     9778                 2129               0.217734
+ARTIFACT | Stage 5.11.3 table_weibull_aft_tuned_support_by_horizon - Weibull AFT support by horizon | duckdb://table_weibull_aft_tuned_support_by_horizon_w6
+[Stage 5.11.3 table_weibull_aft_tuned_calibration_summary - Weibull AFT calibration summary]
+table_name=table_weibull_aft_tuned_calibration_summary_w6
+rows=3, cols=5
+ horizon_week            metric_name metric_category  metric_value                                         notes
+           10 calibration_at_horizon         primary      0.047173 Weighted absolute calibration gap across bins
+           20 calibration_at_horizon         primary      0.023825 Weighted absolute calibration gap across bins
+           30 calibration_at_horizon         primary      0.011916 Weighted absolute calibration gap across bins
+ARTIFACT | Stage 5.11.3 table_weibull_aft_tuned_calibration_summary - Weibull AFT calibration summary | duckdb://table_weibull_aft_tuned_calibration_summary_w6
+[Stage 5.11.3 table_weibull_aft_tuned_calibration_bins_by_horizon - Weibull AFT calibration bins]
+table_name=table_weibull_aft_tuned_calibration_bins_by_horizon_w6
+rows=30, cols=6
+ calibration_bin   n  mean_predicted_risk  observed_event_rate  horizon_week  abs_calibration_gap
+               0 978             0.041960             0.019427            10             0.022532
+               1 978             0.058504             0.027607            10             0.030896
+               2 978             0.068623             0.027607            10             0.041016
+               3 977             0.078710             0.041965            10             0.036745
+               4 978             0.089538             0.062372            10             0.027166
+               5 978             0.102922             0.078732            10             0.024190
+               6 977             0.120567             0.123849            10             0.003281
+               7 978             0.143637             0.201431            10             0.057795
+               8 978             0.174805             0.273006            10             0.098201
+               9 978             0.256646             0.386503            10             0.129857
+               0 978             0.064491             0.060327            20             0.004164
+               1 978             0.089545             0.078732            20             0.010813
+               2 978             0.104729             0.083845            20             0.020884
+               3 977             0.119772             0.091095            20             0.028677
+               4 978             0.135817             0.139059            20             0.003242
+               5 978             0.155502             0.144172            20             0.011331
+               6 977             0.181204             0.195496            20             0.014292
+               7 978             0.214373             0.254601            20             0.040228
+               8 978             0.258390             0.315951            20             0.057561
+               9 978             0.365013             0.412065            20             0.047052
+ARTIFACT | Stage 5.11.3 table_weibull_aft_tuned_calibration_bins_by_horizon - Weibull AFT calibration bins | duckdb://table_weibull_aft_tuned_calibration_bins_by_horizon_w6
+[Stage 5.11.3 table_weibull_aft_tuned_predicted_vs_observed_survival - Weibull AFT predicted versus observed survival]
+table_name=table_weibull_aft_tuned_predicted_vs_observed_survival_w6
+rows=3, cols=5
+ horizon_week  n_evaluable_enrollments  mean_predicted_survival  mean_observed_survival  abs_gap
+           10                     9778                 0.886406                0.875741 0.010665
+           20                     9778                 0.831112                0.822459 0.008654
+           30                     9778                 0.788925                0.782266 0.006659
+ARTIFACT | Stage 5.11.3 table_weibull_aft_tuned_predicted_vs_observed_survival - Weibull AFT predicted versus observed survival | duckdb://table_weibull_aft_tuned_predicted_vs_observed_survival_w6
+ARTIFACT | weibull_aft_model | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/models/weibull_aft_tuned_w6.joblib
+ARTIFACT | weibull_aft_preprocessor | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/models/weibull_aft_preprocessor_w6.joblib
+ARTIFACT | weibull_aft_tuned_model_config | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/metadata/weibull_aft_tuned_model_config_w6.json
+{
+  "model_name": "weibull_aft_tuned",
+  "selection_metric": "lowest_validation_ibs",
+  "validation_split": {
+    "method": "GroupShuffleSplit",
+    "test_size": 0.1,
+    "group_column": "enrollment_id",
+    "random_seed": 42
+  },
+  "effective_window_weeks": 6,
+  "input_train_table": "enrollment_cox_ready_train_w6",
+  "input_test_table": "enrollment_cox_ready_test_w6",
+  "search_space": [
+    {
+      "candidate_id": 1,
+      "penalizer": 0.0001,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 2,
+      "penalizer": 0.0002,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 3,
+      "penalizer": 0.0005,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 4,
+      "penalizer": 0.001,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 5,
+      "penalizer": 0.002,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 6,
+      "penalizer": 0.005,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 7,
+      "penalizer": 0.01,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 8,
+      "penalizer": 0.02,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 9,
+      "penalizer": 0.05,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 10,
+      "penalizer": 0.1,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 11,
+      "penalizer": 0.15,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 12,
+      "penalizer": 0.2,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 13,
+      "penalizer": 0.3,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 14,
+      "penalizer": 0.4,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 15,
+      "penalizer": 0.5,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 16,
+      "penalizer": 0.6,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 17,
+      "penalizer": 0.7,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 18,
+      "penalizer": 0.8,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 19,
+      "penalizer": 1.0,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 20,
+      "penalizer": 1.5,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 21,
+      "penalizer": 2.0,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 22,
+      "penalizer": 3.0,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 23,
+      "penalizer": 4.0,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 24,
+      "penalizer": 5.0,
+      "l1_ratio": 0.0
+    }
+  ],
+  "benchmark_horizons": [
+    10,
+    20,
+    30
+  ],
+  "calibration_bins": 10,
+  "calibration_contract_version": "v2_ipcw_km_observed_risk",
+  "calibration_observed_risk_method": "ipcw_km_pseudo_event_rate",
+  "variance_filter_threshold": 1e-12,
+  "duration_floor": 1.0,
+  "implementation": "lifelines_weibull_aft",
+  "best_candidate": {
+    "candidate_id": 1,
+    "params": {
+      "penalizer": 0.0001,
+      "l1_ratio": 0.0
+    },
+    "duration_floor": 1.0,
+    "val_ibs": 0.11295035785164437,
+    "val_c_index": 0.6169111377660881,
+    "implementation": "lifelines_weibull_aft"
+  },
+  "preprocessing": {
+    "categorical_features": [
+      "gender",
+      "region",
+      "highest_education",
+      "imd_band",
+      "age_band",
+      "disability"
+    ],
+    "numeric_features": [
+      "num_of_prev_attempts",
+      "studied_credits",
+      "clicks_first_6_weeks",
+      "active_weeks_first_6",
+      "mean_clicks_first_6_weeks"
+    ],
+    "numeric_prefill_values": {
+      "num_of_prev_attempts": 0.0,
+      "studied_credits": 60.0,
+      "clicks_first_6_weeks": 182.0,
+      "active_weeks_first_6": 5.0,
+      "mean_clicks_first_6_weeks": 39.0
+    },
+    "feature_names_before_filter": [
+      "num__num_of_prev_attempts",
+      "num__studied_credits",
+      "num__clicks_first_6_weeks",
+      "num__active_weeks_first_6",
+      "num__mean_clicks_first_6_weeks",
+      "cat__gender_F",
+      "cat__gender_M",
+      "cat__region_East Anglian Region",
+      "cat__region_East Midlands Region",
+      "cat__region_Ireland",
+      "cat__region_London Region",
+      "cat__region_North Region",
+      "cat__region_North Western Region",
+      "cat__region_Scotland",
+      "cat__region_South East Region",
+      "cat__region_South Region",
+      "cat__region_South West Region",
+      "cat__region_Wales",
+      "cat__region_West Midlands Region",
+      "cat__region_Yorkshire Region",
+      "cat__highest_education_A Level or Equivalent",
+      "cat__highest_education_HE Qualification",
+      "cat__highest_education_Lower Than A Level",
+      "cat__highest_education_No Formal quals",
+      "cat__highest_education_Post Graduate Qualification",
+      "cat__imd_band_0-10%",
+      "cat__imd_band_10-20",
+      "cat__imd_band_20-30%",
+      "cat__imd_band_30-40%",
+      "cat__imd_band_40-50%",
+      "cat__imd_band_50-60%",
+      "cat__imd_band_60-70%",
+      "cat__imd_band_70-80%",
+      "cat__imd_band_80-90%",
+      "cat__imd_band_90-100%",
+      "cat__imd_band_None",
+      "cat__age_band_0-35",
+      "cat__age_band_35-55",
+      "cat__age_band_55<=",
+      "cat__disability_N",
+      "cat__disability_Y"
+    ],
+    "feature_names_out": [
+      "num__num_of_prev_attempts",
+      "num__studied_credits",
+      "num__clicks_first_6_weeks",
+      "num__active_weeks_first_6",
+      "num__mean_clicks_first_6_weeks",
+      "cat__gender_F",
+      "cat__gender_M",
+      "cat__region_East Anglian Region",
+      "cat__region_East Midlands Region",
+      "cat__region_Ireland",
+      "cat__region_London Region",
+      "cat__region_North Region",
+      "cat__region_North Western Region",
+      "cat__region_Scotland",
+      "cat__region_South East Region",
+      "cat__region_South Region",
+      "cat__region_South West Region",
+      "cat__region_Wales",
+      "cat__region_West Midlands Region",
+      "cat__region_Yorkshire Region",
+      "cat__highest_education_A Level or Equivalent",
+      "cat__highest_education_HE Qualification",
+      "cat__highest_education_Lower Than A Level",
+      "cat__highest_education_No Formal quals",
+      "cat__highest_education_Post Graduate Qualification",
+      "cat__imd_band_0-10%",
+      "cat__imd_band_10-20",
+      "cat__imd_band_20-30%",
+      "cat__imd_band_30-40%",
+      "cat__imd_band_40-50%",
+      "cat__imd_band_50-60%",
+      "cat__imd_band_60-70%",
+      "cat__imd_band_70-80%",
+      "cat__imd_band_80-90%",
+      "cat__imd_band_90-100%",
+      "cat__imd_band_None",
+      "cat__age_band_0-35",
+      "cat__age_band_35-55",
+      "cat__age_band_55<=",
+      "cat__disability_N",
+      "cat__disability_Y"
+    ],
+    "dropped_low_variance_features": []
+  },
+  "design_note": "The comparable Weibull AFT arm preserves the canonical early-window contract, uses the same deterministic preprocessing as the other continuous-time baselines, and applies an explicit positive-duration floor only inside the model-local AFT training frames."
+}
+
+ candidate_id                                 params  duration_floor  val_ibs  val_c_index        implementation
+            1 {'penalizer': 0.0001, 'l1_ratio': 0.0}             1.0  0.11295     0.616911 lifelines_weibull_aft
+[END] 5.11.3 - 2026-06-19 22:16:09
+[START] 5.11 - 2026-06-19 22:16:09
+# ==============================================================
+# 5.11.4 - Close runtime resources
+# ==============================================================
+DuckDB connection closed.
+ARTIFACT | duckdb_connection | closed::/Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/benchmark_survival.duckdb
+[END] 5.11.4 - 2026-06-19 22:16:10
+[RUN_PLAN] comparable_window_weeks=8
+[START] 5.11 - 2026-06-19 22:16:10
+# ==============================================================
+# 5.11.1 - Lightweight runtime bootstrap
+# ==============================================================
+ARTIFACT | benchmark_shared_config | /Users/rafars/dropout_benchmark_desenv/benchmark_shared_config.toml
+ARTIFACT | benchmark_modeling_contract | /Users/rafars/dropout_benchmark_desenv/benchmark_modeling_contract.toml
+ARTIFACT | run_metadata | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/metadata/run_metadata.json
+ARTIFACT | duckdb_path | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/benchmark_survival.duckdb
+{
+  "run_id": "f3766e75053447a7beb7a1c4936d231f",
+  "random_seed": 42,
+  "tuning_parallel_backend": "processes",
+  "test_size": 0.3,
+  "early_window_weeks": 4,
+  "main_enrollment_window_weeks": 4,
+  "effective_window_weeks": 8,
+  "input_train_table": "enrollment_cox_ready_train_w8",
+  "input_test_table": "enrollment_cox_ready_test_w8"
+}
+[END] 5.11.1 - 2026-06-19 22:16:11
+[START] 5.11 - 2026-06-19 22:16:11
+# ==============================================================
+# 5.11.2 - Build comparable-window Weibull AFT treatment
+# ==============================================================
+[Stage 5.11.2 table_weibull_aft_preprocessing_summary - Weibull AFT preprocessing summary]
+table_name=table_weibull_aft_preprocessing_summary_w8
+rows=1, cols=21
+model_family  train_rows  test_rows  n_input_features_raw  n_numeric_features  n_categorical_features  n_features_after_encoding_before_filter  n_features_after_variance_filter  n_features_dropped_by_variance_filter  n_events_train  n_events_test  mean_duration_train  mean_duration_test                              numeric_prefill_policy categorical_imputation          categorical_encoding                   numeric_scaling  variance_filter_threshold output_dtype                          aft_positioning_note  window_weeks
+ weibull_aft       22815       9778                    11                   5                       6                                       41                                41                                      0            5171           2216            30.536182           30.539476 deterministic_train_median_or_zero_when_all_missing       constant_missing one_hot_handle_unknown_ignore standard_scaler_fit_on_train_only               1.000000e-12      float64 early-window comparable Weibull AFT benchmark             8
+ARTIFACT | Stage 5.11.2 table_weibull_aft_preprocessing_summary - Weibull AFT preprocessing summary | duckdb://table_weibull_aft_preprocessing_summary_w8
+[Stage 5.11.2 table_weibull_aft_raw_feature_manifest - Weibull AFT raw feature manifest]
+table_name=table_weibull_aft_raw_feature_manifest_w8
+rows=11, cols=6
+ feature_name_operational feature_role  present_in_train  present_in_test  covered_by_canonical_config  numeric_prefill_value
+                   gender  categorical              True             True                        False                    NaN
+                   region  categorical              True             True                        False                    NaN
+        highest_education  categorical              True             True                        False                    NaN
+                 imd_band  categorical              True             True                        False                    NaN
+                 age_band  categorical              True             True                        False                    NaN
+               disability  categorical              True             True                        False                    NaN
+     num_of_prev_attempts      numeric              True             True                         True               0.000000
+          studied_credits      numeric              True             True                         True              60.000000
+     clicks_first_8_weeks      numeric              True             True                         True             229.000000
+     active_weeks_first_8      numeric              True             True                         True               7.000000
+mean_clicks_first_8_weeks      numeric              True             True                         True              37.857143
+ARTIFACT | Stage 5.11.2 table_weibull_aft_raw_feature_manifest - Weibull AFT raw feature manifest | duckdb://table_weibull_aft_raw_feature_manifest_w8
+[Stage 5.11.2 table_weibull_aft_feature_names_out - Weibull AFT output feature manifest]
+table_name=table_weibull_aft_feature_names_out_w8
+rows=41, cols=2
+                feature_name_out  transformed_variance_train
+       num__num_of_prev_attempts                    1.000000
+            num__studied_credits                    1.000000
+       num__clicks_first_8_weeks                    1.000000
+       num__active_weeks_first_8                    1.000000
+  num__mean_clicks_first_8_weeks                    1.000000
+                   cat__gender_F                    0.247988
+                   cat__gender_M                    0.247988
+ cat__region_East Anglian Region                    0.092080
+cat__region_East Midlands Region                    0.067091
+             cat__region_Ireland                    0.034283
+       cat__region_London Region                    0.088295
+        cat__region_North Region                    0.052060
+cat__region_North Western Region                    0.082139
+            cat__region_Scotland                    0.094370
+   cat__region_South East Region                    0.059974
+        cat__region_South Region                    0.087554
+   cat__region_South West Region                    0.068848
+               cat__region_Wales                    0.059707
+cat__region_West Midlands Region                    0.073261
+    cat__region_Yorkshire Region                    0.058136
+ARTIFACT | Stage 5.11.2 table_weibull_aft_feature_names_out - Weibull AFT output feature manifest | duckdb://table_weibull_aft_feature_names_out_w8
+ARTIFACT | weibull_aft_preprocessing_config | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/metadata/weibull_aft_preprocessing_config_w8.json
+{
+  "model_family": "weibull_aft",
+  "duration_column": "duration",
+  "event_column": "event",
+  "categorical_features": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability"
+  ],
+  "numeric_features": [
+    "num_of_prev_attempts",
+    "studied_credits",
+    "clicks_first_8_weeks",
+    "active_weeks_first_8",
+    "mean_clicks_first_8_weeks"
+  ],
+  "raw_feature_columns": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability",
+    "num_of_prev_attempts",
+    "studied_credits",
+    "clicks_first_8_weeks",
+    "active_weeks_first_8",
+    "mean_clicks_first_8_weeks"
+  ],
+  "expected_features_raw": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "num_of_prev_attempts",
+    "studied_credits",
+    "clicks_first_8_weeks",
+    "active_weeks_first_8",
+    "mean_clicks_first_8_weeks"
+  ],
+  "expected_features_resolved": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "clicks_first_8_weeks",
+    "active_weeks_first_8",
+    "mean_clicks_first_8_weeks"
+  ],
+  "numeric_prefill_policy": "deterministic_train_median_or_zero_when_all_missing",
+  "numeric_fill_values": {
+    "num_of_prev_attempts": 0.0,
+    "studied_credits": 60.0,
+    "clicks_first_8_weeks": 229.0,
+    "active_weeks_first_8": 7.0,
+    "mean_clicks_first_8_weeks": 37.857142857142854
+  },
+  "categorical_imputation": "constant_missing",
+  "categorical_encoding": "one_hot_handle_unknown_ignore",
+  "numeric_scaling": "standard_scaler_fit_on_train_only",
+  "variance_filter_threshold": 1e-12,
+  "feature_names_before_filter": [
+    "num__num_of_prev_attempts",
+    "num__studied_credits",
+    "num__clicks_first_8_weeks",
+    "num__active_weeks_first_8",
+    "num__mean_clicks_first_8_weeks",
+    "cat__gender_F",
+    "cat__gender_M",
+    "cat__region_East Anglian Region",
+    "cat__region_East Midlands Region",
+    "cat__region_Ireland",
+    "cat__region_London Region",
+    "cat__region_North Region",
+    "cat__region_North Western Region",
+    "cat__region_Scotland",
+    "cat__region_South East Region",
+    "cat__region_South Region",
+    "cat__region_South West Region",
+    "cat__region_Wales",
+    "cat__region_West Midlands Region",
+    "cat__region_Yorkshire Region",
+    "cat__highest_education_A Level or Equivalent",
+    "cat__highest_education_HE Qualification",
+    "cat__highest_education_Lower Than A Level",
+    "cat__highest_education_No Formal quals",
+    "cat__highest_education_Post Graduate Qualification",
+    "cat__imd_band_0-10%",
+    "cat__imd_band_10-20",
+    "cat__imd_band_20-30%",
+    "cat__imd_band_30-40%",
+    "cat__imd_band_40-50%",
+    "cat__imd_band_50-60%",
+    "cat__imd_band_60-70%",
+    "cat__imd_band_70-80%",
+    "cat__imd_band_80-90%",
+    "cat__imd_band_90-100%",
+    "cat__imd_band_None",
+    "cat__age_band_0-35",
+    "cat__age_band_35-55",
+    "cat__age_band_55<=",
+    "cat__disability_N",
+    "cat__disability_Y"
+  ],
+  "feature_names_out": [
+    "num__num_of_prev_attempts",
+    "num__studied_credits",
+    "num__clicks_first_8_weeks",
+    "num__active_weeks_first_8",
+    "num__mean_clicks_first_8_weeks",
+    "cat__gender_F",
+    "cat__gender_M",
+    "cat__region_East Anglian Region",
+    "cat__region_East Midlands Region",
+    "cat__region_Ireland",
+    "cat__region_London Region",
+    "cat__region_North Region",
+    "cat__region_North Western Region",
+    "cat__region_Scotland",
+    "cat__region_South East Region",
+    "cat__region_South Region",
+    "cat__region_South West Region",
+    "cat__region_Wales",
+    "cat__region_West Midlands Region",
+    "cat__region_Yorkshire Region",
+    "cat__highest_education_A Level or Equivalent",
+    "cat__highest_education_HE Qualification",
+    "cat__highest_education_Lower Than A Level",
+    "cat__highest_education_No Formal quals",
+    "cat__highest_education_Post Graduate Qualification",
+    "cat__imd_band_0-10%",
+    "cat__imd_band_10-20",
+    "cat__imd_band_20-30%",
+    "cat__imd_band_30-40%",
+    "cat__imd_band_40-50%",
+    "cat__imd_band_50-60%",
+    "cat__imd_band_60-70%",
+    "cat__imd_band_70-80%",
+    "cat__imd_band_80-90%",
+    "cat__imd_band_90-100%",
+    "cat__imd_band_None",
+    "cat__age_band_0-35",
+    "cat__age_band_35-55",
+    "cat__age_band_55<=",
+    "cat__disability_N",
+    "cat__disability_Y"
+  ],
+  "dropped_low_variance_features": [],
+  "aft_positioning_note": "early-window comparable Weibull AFT benchmark",
+  "window_weeks": 8,
+  "duration_floor": 1.0
+}
+
+[END] 5.11.2 - 2026-06-19 22:16:11
+[START] 5.11 - 2026-06-19 22:16:11
+# ==============================================================
+# 5.11.3 - Tune and evaluate the comparable-window Weibull AFT model
+# ==============================================================
+- TUNING_WORKERS: 8
+- TUNING_BACKEND: processes
+[Stage 5.11.3 table_weibull_aft_tuning_results - Weibull AFT tuning results]
+table_name=table_weibull_aft_tuning_results_w8
+rows=24, cols=7
+ candidate_id  penalizer  l1_ratio  duration_floor  val_ibs  val_c_index        implementation
+            1     0.0001       0.0             1.0 0.109629     0.641975 lifelines_weibull_aft
+            2     0.0002       0.0             1.0 0.109645     0.641911 lifelines_weibull_aft
+            3     0.0005       0.0             1.0 0.109695     0.641814 lifelines_weibull_aft
+            4     0.0010       0.0             1.0 0.109781     0.641600 lifelines_weibull_aft
+            5     0.0020       0.0             1.0 0.109964     0.641024 lifelines_weibull_aft
+            6     0.0050       0.0             1.0 0.110551     0.639227 lifelines_weibull_aft
+            7     0.0100       0.0             1.0 0.111440     0.636596 lifelines_weibull_aft
+            8     0.0200       0.0             1.0 0.112548     0.633682 lifelines_weibull_aft
+            9     0.0500       0.0             1.0 0.114061     0.630028 lifelines_weibull_aft
+           10     0.1000       0.0             1.0 0.115365     0.627543 lifelines_weibull_aft
+           11     0.1500       0.0             1.0 0.116235     0.626075 lifelines_weibull_aft
+           12     0.2000       0.0             1.0 0.116899     0.624971 lifelines_weibull_aft
+           13     0.3000       0.0             1.0 0.117882     0.623657 lifelines_weibull_aft
+           14     0.4000       0.0             1.0 0.118596     0.622550 lifelines_weibull_aft
+           15     0.5000       0.0             1.0 0.119147     0.621872 lifelines_weibull_aft
+           16     0.6000       0.0             1.0 0.119590     0.621269 lifelines_weibull_aft
+           17     0.7000       0.0             1.0 0.119955     0.620721 lifelines_weibull_aft
+           18     0.8000       0.0             1.0 0.120263     0.620283 lifelines_weibull_aft
+           19     1.0000       0.0             1.0 0.120756     0.619662 lifelines_weibull_aft
+           20     1.5000       0.0             1.0 0.121563     0.618537 lifelines_weibull_aft
+ARTIFACT | Stage 5.11.3 table_weibull_aft_tuning_results - Weibull AFT tuning results | duckdb://table_weibull_aft_tuning_results_w8
+[Stage 5.11.3 table_weibull_aft_tuned_test_predictions - Weibull AFT test predictions]
+table_name=table_weibull_aft_tuned_test_predictions_w8
+rows=29334, cols=6
+      enrollment_id  event  duration  horizon_week  pred_survival_h  pred_risk_h
+ 100561||DDD||2014J      0        37            10         0.919248     0.080752
+ 100621||CCC||2014B      1         6            10         0.873521     0.126479
+ 101187||DDD||2014J      0        37            10         0.826333     0.173667
+ 101279||DDD||2014J      0        37            10         0.905668     0.094332
+ 101414||EEE||2013J      0        38            10         0.784090     0.215910
+ 101700||CCC||2014J      0        38            10         0.767401     0.232599
+ 101781||AAA||2013J      0        38            10         0.956188     0.043812
+ 102209||CCC||2014J      1        15            10         0.941949     0.058051
+ 102343||FFF||2013J      0        38            10         0.942708     0.057292
+1023623||CCC||2014J      0        38            10         0.891585     0.108415
+1033968||DDD||2014B      1        13            10         0.859852     0.140148
+ 103891||DDD||2014B      0        34            10         0.832269     0.167731
+ 104316||FFF||2014B      0        34            10         0.937852     0.062148
+1045203||AAA||2014J      0        38            10         0.957299     0.042701
+1047645||CCC||2014B      0        34            10         0.818765     0.181235
+1053702||EEE||2013J      0        38            10         0.939688     0.060312
+ 105629||FFF||2013J      0        38            10         0.959089     0.040911
+1057883||CCC||2014B      0        34            10         0.915654     0.084346
+ 106383||BBB||2014J      1        21            10         0.891327     0.108673
+ 106553||DDD||2014J      0        37            10         0.917759     0.082241
+ARTIFACT | Stage 5.11.3 table_weibull_aft_tuned_test_predictions - Weibull AFT test predictions | duckdb://table_weibull_aft_tuned_test_predictions_w8
+[Stage 5.11.3 table_weibull_aft_tuned_primary_metrics - Weibull AFT primary metrics]
+table_name=table_weibull_aft_tuned_primary_metrics_w8
+rows=2, cols=4
+metric_name metric_category  metric_value                         notes
+        ibs         primary      0.111299 sksurv_integrated_brier_score
+    c_index      co_primary      0.653122          pycox_concordance_td
+ARTIFACT | Stage 5.11.3 table_weibull_aft_tuned_primary_metrics - Weibull AFT primary metrics | duckdb://table_weibull_aft_tuned_primary_metrics_w8
+[Stage 5.11.3 table_weibull_aft_tuned_brier_by_horizon - Weibull AFT Brier scores by horizon]
+table_name=table_weibull_aft_tuned_brier_by_horizon_w8
+rows=3, cols=5
+ horizon_week      metric_name metric_category  metric_value              notes
+           10 brier_at_horizon         primary      0.094446 sksurv_brier_score
+           20 brier_at_horizon         primary      0.130206 sksurv_brier_score
+           30 brier_at_horizon         primary      0.155493 sksurv_brier_score
+ARTIFACT | Stage 5.11.3 table_weibull_aft_tuned_brier_by_horizon - Weibull AFT Brier scores by horizon | duckdb://table_weibull_aft_tuned_brier_by_horizon_w8
+[Stage 5.11.3 table_weibull_aft_tuned_secondary_metrics - Weibull AFT secondary metrics]
+table_name=table_weibull_aft_tuned_secondary_metrics_w8
+rows=6, cols=5
+ horizon_week         metric_name metric_category  metric_value                                                                                  notes
+           10 risk_auc_at_horizon       secondary      0.825279                                                            roc_auc_on_evaluable_subset
+           10  time_dependent_auc       secondary      0.821613 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.821613; local_ipcw_auc
+           20 risk_auc_at_horizon       secondary      0.737562                                                            roc_auc_on_evaluable_subset
+           20  time_dependent_auc       secondary      0.729851 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.729851; local_ipcw_auc
+           30 risk_auc_at_horizon       secondary      0.697584                                                            roc_auc_on_evaluable_subset
+           30  time_dependent_auc       secondary      0.687337 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.687337; local_ipcw_auc
+ARTIFACT | Stage 5.11.3 table_weibull_aft_tuned_secondary_metrics - Weibull AFT secondary metrics | duckdb://table_weibull_aft_tuned_secondary_metrics_w8
+[Stage 5.11.3 table_weibull_aft_tuned_td_auc_support_audit - Weibull AFT IPCW support audit]
+table_name=table_weibull_aft_tuned_td_auc_support_audit_w8
+rows=3, cols=6
+ horizon_week  max_ipcw_time  n_total_test_enrollments  n_supported_test_enrollments  mean_auc                                                         notes
+           10           38.0                      9778                          6742  0.821613 IPCW-supported subset used for Weibull AFT time-dependent AUC
+           20           38.0                      9778                          6742  0.729851 IPCW-supported subset used for Weibull AFT time-dependent AUC
+           30           38.0                      9778                          6742  0.687337 IPCW-supported subset used for Weibull AFT time-dependent AUC
+ARTIFACT | Stage 5.11.3 table_weibull_aft_tuned_td_auc_support_audit - Weibull AFT IPCW support audit | duckdb://table_weibull_aft_tuned_td_auc_support_audit_w8
+[Stage 5.11.3 table_weibull_aft_tuned_row_diagnostics - Weibull AFT row-level diagnostics]
+table_name=table_weibull_aft_tuned_row_diagnostics_w8
+rows=1, cols=6
+       model_name  row_level_roc_auc  row_level_pr_auc  row_level_log_loss  row_level_brier                                                                    diagnostic_note
+weibull_aft_tuned           0.204425           0.14016            1.078005         0.225896 auxiliary enrollment-level proxy only; not a primary cross-family benchmark metric
+ARTIFACT | Stage 5.11.3 table_weibull_aft_tuned_row_diagnostics - Weibull AFT row-level diagnostics | duckdb://table_weibull_aft_tuned_row_diagnostics_w8
+[Stage 5.11.3 table_weibull_aft_tuned_support_by_horizon - Weibull AFT support by horizon]
+table_name=table_weibull_aft_tuned_support_by_horizon_w8
+rows=3, cols=4
+ horizon_week  n_evaluable_enrollments  n_events_by_horizon  event_rate_by_horizon
+           10                     9778                 1215               0.124259
+           20                     9778                 1736               0.177541
+           30                     9778                 2129               0.217734
+ARTIFACT | Stage 5.11.3 table_weibull_aft_tuned_support_by_horizon - Weibull AFT support by horizon | duckdb://table_weibull_aft_tuned_support_by_horizon_w8
+[Stage 5.11.3 table_weibull_aft_tuned_calibration_summary - Weibull AFT calibration summary]
+table_name=table_weibull_aft_tuned_calibration_summary_w8
+rows=3, cols=5
+ horizon_week            metric_name metric_category  metric_value                                         notes
+           10 calibration_at_horizon         primary      0.055938 Weighted absolute calibration gap across bins
+           20 calibration_at_horizon         primary      0.028184 Weighted absolute calibration gap across bins
+           30 calibration_at_horizon         primary      0.011929 Weighted absolute calibration gap across bins
+ARTIFACT | Stage 5.11.3 table_weibull_aft_tuned_calibration_summary - Weibull AFT calibration summary | duckdb://table_weibull_aft_tuned_calibration_summary_w8
+[Stage 5.11.3 table_weibull_aft_tuned_calibration_bins_by_horizon - Weibull AFT calibration bins]
+table_name=table_weibull_aft_tuned_calibration_bins_by_horizon_w8
+rows=30, cols=6
+ calibration_bin   n  mean_predicted_risk  observed_event_rate  horizon_week  abs_calibration_gap
+               0 978             0.038467             0.008180            10             0.030287
+               1 978             0.052890             0.019427            10             0.033462
+               2 978             0.062120             0.015337            10             0.046782
+               3 977             0.071833             0.033777            10             0.038056
+               4 978             0.083167             0.044990            10             0.038177
+               5 978             0.097976             0.058282            10             0.039693
+               6 977             0.119506             0.120778            10             0.001272
+               7 978             0.148775             0.214724            10             0.065949
+               8 978             0.184832             0.307771            10             0.122939
+               9 978             0.276539             0.419223            10             0.142684
+               0 978             0.059565             0.048057            20             0.011507
+               1 978             0.081592             0.059305            20             0.022287
+               2 978             0.095573             0.078732            20             0.016841
+               3 977             0.110201             0.085977            20             0.024223
+               4 978             0.127159             0.114519            20             0.012640
+               5 978             0.149135             0.137014            20             0.012121
+               6 977             0.180718             0.204708            20             0.023990
+               7 978             0.222955             0.255624            20             0.032668
+               8 978             0.273854             0.344581            20             0.070727
+               9 978             0.392006             0.446830            20             0.054824
+ARTIFACT | Stage 5.11.3 table_weibull_aft_tuned_calibration_bins_by_horizon - Weibull AFT calibration bins | duckdb://table_weibull_aft_tuned_calibration_bins_by_horizon_w8
+[Stage 5.11.3 table_weibull_aft_tuned_predicted_vs_observed_survival - Weibull AFT predicted versus observed survival]
+table_name=table_weibull_aft_tuned_predicted_vs_observed_survival_w8
+rows=3, cols=5
+ horizon_week  n_evaluable_enrollments  mean_predicted_survival  mean_observed_survival  abs_gap
+           10                     9778                 0.886386                0.875741 0.010645
+           20                     9778                 0.830719                0.822459 0.008261
+           30                     9778                 0.788313                0.782266 0.006046
+ARTIFACT | Stage 5.11.3 table_weibull_aft_tuned_predicted_vs_observed_survival - Weibull AFT predicted versus observed survival | duckdb://table_weibull_aft_tuned_predicted_vs_observed_survival_w8
+ARTIFACT | weibull_aft_model | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/models/weibull_aft_tuned_w8.joblib
+ARTIFACT | weibull_aft_preprocessor | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/models/weibull_aft_preprocessor_w8.joblib
+ARTIFACT | weibull_aft_tuned_model_config | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/metadata/weibull_aft_tuned_model_config_w8.json
+{
+  "model_name": "weibull_aft_tuned",
+  "selection_metric": "lowest_validation_ibs",
+  "validation_split": {
+    "method": "GroupShuffleSplit",
+    "test_size": 0.1,
+    "group_column": "enrollment_id",
+    "random_seed": 42
+  },
+  "effective_window_weeks": 8,
+  "input_train_table": "enrollment_cox_ready_train_w8",
+  "input_test_table": "enrollment_cox_ready_test_w8",
+  "search_space": [
+    {
+      "candidate_id": 1,
+      "penalizer": 0.0001,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 2,
+      "penalizer": 0.0002,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 3,
+      "penalizer": 0.0005,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 4,
+      "penalizer": 0.001,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 5,
+      "penalizer": 0.002,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 6,
+      "penalizer": 0.005,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 7,
+      "penalizer": 0.01,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 8,
+      "penalizer": 0.02,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 9,
+      "penalizer": 0.05,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 10,
+      "penalizer": 0.1,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 11,
+      "penalizer": 0.15,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 12,
+      "penalizer": 0.2,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 13,
+      "penalizer": 0.3,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 14,
+      "penalizer": 0.4,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 15,
+      "penalizer": 0.5,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 16,
+      "penalizer": 0.6,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 17,
+      "penalizer": 0.7,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 18,
+      "penalizer": 0.8,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 19,
+      "penalizer": 1.0,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 20,
+      "penalizer": 1.5,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 21,
+      "penalizer": 2.0,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 22,
+      "penalizer": 3.0,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 23,
+      "penalizer": 4.0,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 24,
+      "penalizer": 5.0,
+      "l1_ratio": 0.0
+    }
+  ],
+  "benchmark_horizons": [
+    10,
+    20,
+    30
+  ],
+  "calibration_bins": 10,
+  "calibration_contract_version": "v2_ipcw_km_observed_risk",
+  "calibration_observed_risk_method": "ipcw_km_pseudo_event_rate",
+  "variance_filter_threshold": 1e-12,
+  "duration_floor": 1.0,
+  "implementation": "lifelines_weibull_aft",
+  "best_candidate": {
+    "candidate_id": 1,
+    "params": {
+      "penalizer": 0.0001,
+      "l1_ratio": 0.0
+    },
+    "duration_floor": 1.0,
+    "val_ibs": 0.10962853122747002,
+    "val_c_index": 0.6419748447668733,
+    "implementation": "lifelines_weibull_aft"
+  },
+  "preprocessing": {
+    "categorical_features": [
+      "gender",
+      "region",
+      "highest_education",
+      "imd_band",
+      "age_band",
+      "disability"
+    ],
+    "numeric_features": [
+      "num_of_prev_attempts",
+      "studied_credits",
+      "clicks_first_8_weeks",
+      "active_weeks_first_8",
+      "mean_clicks_first_8_weeks"
+    ],
+    "numeric_prefill_values": {
+      "num_of_prev_attempts": 0.0,
+      "studied_credits": 60.0,
+      "clicks_first_8_weeks": 229.0,
+      "active_weeks_first_8": 7.0,
+      "mean_clicks_first_8_weeks": 37.857142857142854
+    },
+    "feature_names_before_filter": [
+      "num__num_of_prev_attempts",
+      "num__studied_credits",
+      "num__clicks_first_8_weeks",
+      "num__active_weeks_first_8",
+      "num__mean_clicks_first_8_weeks",
+      "cat__gender_F",
+      "cat__gender_M",
+      "cat__region_East Anglian Region",
+      "cat__region_East Midlands Region",
+      "cat__region_Ireland",
+      "cat__region_London Region",
+      "cat__region_North Region",
+      "cat__region_North Western Region",
+      "cat__region_Scotland",
+      "cat__region_South East Region",
+      "cat__region_South Region",
+      "cat__region_South West Region",
+      "cat__region_Wales",
+      "cat__region_West Midlands Region",
+      "cat__region_Yorkshire Region",
+      "cat__highest_education_A Level or Equivalent",
+      "cat__highest_education_HE Qualification",
+      "cat__highest_education_Lower Than A Level",
+      "cat__highest_education_No Formal quals",
+      "cat__highest_education_Post Graduate Qualification",
+      "cat__imd_band_0-10%",
+      "cat__imd_band_10-20",
+      "cat__imd_band_20-30%",
+      "cat__imd_band_30-40%",
+      "cat__imd_band_40-50%",
+      "cat__imd_band_50-60%",
+      "cat__imd_band_60-70%",
+      "cat__imd_band_70-80%",
+      "cat__imd_band_80-90%",
+      "cat__imd_band_90-100%",
+      "cat__imd_band_None",
+      "cat__age_band_0-35",
+      "cat__age_band_35-55",
+      "cat__age_band_55<=",
+      "cat__disability_N",
+      "cat__disability_Y"
+    ],
+    "feature_names_out": [
+      "num__num_of_prev_attempts",
+      "num__studied_credits",
+      "num__clicks_first_8_weeks",
+      "num__active_weeks_first_8",
+      "num__mean_clicks_first_8_weeks",
+      "cat__gender_F",
+      "cat__gender_M",
+      "cat__region_East Anglian Region",
+      "cat__region_East Midlands Region",
+      "cat__region_Ireland",
+      "cat__region_London Region",
+      "cat__region_North Region",
+      "cat__region_North Western Region",
+      "cat__region_Scotland",
+      "cat__region_South East Region",
+      "cat__region_South Region",
+      "cat__region_South West Region",
+      "cat__region_Wales",
+      "cat__region_West Midlands Region",
+      "cat__region_Yorkshire Region",
+      "cat__highest_education_A Level or Equivalent",
+      "cat__highest_education_HE Qualification",
+      "cat__highest_education_Lower Than A Level",
+      "cat__highest_education_No Formal quals",
+      "cat__highest_education_Post Graduate Qualification",
+      "cat__imd_band_0-10%",
+      "cat__imd_band_10-20",
+      "cat__imd_band_20-30%",
+      "cat__imd_band_30-40%",
+      "cat__imd_band_40-50%",
+      "cat__imd_band_50-60%",
+      "cat__imd_band_60-70%",
+      "cat__imd_band_70-80%",
+      "cat__imd_band_80-90%",
+      "cat__imd_band_90-100%",
+      "cat__imd_band_None",
+      "cat__age_band_0-35",
+      "cat__age_band_35-55",
+      "cat__age_band_55<=",
+      "cat__disability_N",
+      "cat__disability_Y"
+    ],
+    "dropped_low_variance_features": []
+  },
+  "design_note": "The comparable Weibull AFT arm preserves the canonical early-window contract, uses the same deterministic preprocessing as the other continuous-time baselines, and applies an explicit positive-duration floor only inside the model-local AFT training frames."
+}
+
+ candidate_id                                 params  duration_floor  val_ibs  val_c_index        implementation
+            1 {'penalizer': 0.0001, 'l1_ratio': 0.0}             1.0 0.109629     0.641975 lifelines_weibull_aft
+[END] 5.11.3 - 2026-06-19 22:16:18
+[START] 5.11 - 2026-06-19 22:16:18
+# ==============================================================
+# 5.11.4 - Close runtime resources
+# ==============================================================
+DuckDB connection closed.
+ARTIFACT | duckdb_connection | closed::/Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/benchmark_survival.duckdb
+[END] 5.11.4 - 2026-06-19 22:16:19
+[RUN_PLAN] comparable_window_weeks=10
+[START] 5.11 - 2026-06-19 22:16:19
+# ==============================================================
+# 5.11.1 - Lightweight runtime bootstrap
+# ==============================================================
+ARTIFACT | benchmark_shared_config | /Users/rafars/dropout_benchmark_desenv/benchmark_shared_config.toml
+ARTIFACT | benchmark_modeling_contract | /Users/rafars/dropout_benchmark_desenv/benchmark_modeling_contract.toml
+ARTIFACT | run_metadata | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/metadata/run_metadata.json
+ARTIFACT | duckdb_path | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/benchmark_survival.duckdb
+{
+  "run_id": "f3766e75053447a7beb7a1c4936d231f",
+  "random_seed": 42,
+  "tuning_parallel_backend": "processes",
+  "test_size": 0.3,
+  "early_window_weeks": 4,
+  "main_enrollment_window_weeks": 4,
+  "effective_window_weeks": 10,
+  "input_train_table": "enrollment_cox_ready_train_w10",
+  "input_test_table": "enrollment_cox_ready_test_w10"
+}
+[END] 5.11.1 - 2026-06-19 22:16:19
+[START] 5.11 - 2026-06-19 22:16:19
+# ==============================================================
+# 5.11.2 - Build comparable-window Weibull AFT treatment
+# ==============================================================
+[Stage 5.11.2 table_weibull_aft_preprocessing_summary - Weibull AFT preprocessing summary]
+table_name=table_weibull_aft_preprocessing_summary_w10
+rows=1, cols=21
+model_family  train_rows  test_rows  n_input_features_raw  n_numeric_features  n_categorical_features  n_features_after_encoding_before_filter  n_features_after_variance_filter  n_features_dropped_by_variance_filter  n_events_train  n_events_test  mean_duration_train  mean_duration_test                              numeric_prefill_policy categorical_imputation          categorical_encoding                   numeric_scaling  variance_filter_threshold output_dtype                          aft_positioning_note  window_weeks
+ weibull_aft       22815       9778                    11                   5                       6                                       41                                41                                      0            5171           2216            30.536182           30.539476 deterministic_train_median_or_zero_when_all_missing       constant_missing one_hot_handle_unknown_ignore standard_scaler_fit_on_train_only               1.000000e-12      float64 early-window comparable Weibull AFT benchmark            10
+ARTIFACT | Stage 5.11.2 table_weibull_aft_preprocessing_summary - Weibull AFT preprocessing summary | duckdb://table_weibull_aft_preprocessing_summary_w10
+[Stage 5.11.2 table_weibull_aft_raw_feature_manifest - Weibull AFT raw feature manifest]
+table_name=table_weibull_aft_raw_feature_manifest_w10
+rows=11, cols=6
+  feature_name_operational feature_role  present_in_train  present_in_test  covered_by_canonical_config  numeric_prefill_value
+                    gender  categorical              True             True                        False                    NaN
+                    region  categorical              True             True                        False                    NaN
+         highest_education  categorical              True             True                        False                    NaN
+                  imd_band  categorical              True             True                        False                    NaN
+                  age_band  categorical              True             True                        False                    NaN
+                disability  categorical              True             True                        False                    NaN
+      num_of_prev_attempts      numeric              True             True                         True                    0.0
+           studied_credits      numeric              True             True                         True                   60.0
+     clicks_first_10_weeks      numeric              True             True                         True                  260.0
+     active_weeks_first_10      numeric              True             True                         True                    8.0
+mean_clicks_first_10_weeks      numeric              True             True                         True                   36.4
+ARTIFACT | Stage 5.11.2 table_weibull_aft_raw_feature_manifest - Weibull AFT raw feature manifest | duckdb://table_weibull_aft_raw_feature_manifest_w10
+[Stage 5.11.2 table_weibull_aft_feature_names_out - Weibull AFT output feature manifest]
+table_name=table_weibull_aft_feature_names_out_w10
+rows=41, cols=2
+                feature_name_out  transformed_variance_train
+       num__num_of_prev_attempts                    1.000000
+            num__studied_credits                    1.000000
+      num__clicks_first_10_weeks                    1.000000
+      num__active_weeks_first_10                    1.000000
+ num__mean_clicks_first_10_weeks                    1.000000
+                   cat__gender_F                    0.247988
+                   cat__gender_M                    0.247988
+ cat__region_East Anglian Region                    0.092080
+cat__region_East Midlands Region                    0.067091
+             cat__region_Ireland                    0.034283
+       cat__region_London Region                    0.088295
+        cat__region_North Region                    0.052060
+cat__region_North Western Region                    0.082139
+            cat__region_Scotland                    0.094370
+   cat__region_South East Region                    0.059974
+        cat__region_South Region                    0.087554
+   cat__region_South West Region                    0.068848
+               cat__region_Wales                    0.059707
+cat__region_West Midlands Region                    0.073261
+    cat__region_Yorkshire Region                    0.058136
+ARTIFACT | Stage 5.11.2 table_weibull_aft_feature_names_out - Weibull AFT output feature manifest | duckdb://table_weibull_aft_feature_names_out_w10
+ARTIFACT | weibull_aft_preprocessing_config | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/metadata/weibull_aft_preprocessing_config_w10.json
+{
+  "model_family": "weibull_aft",
+  "duration_column": "duration",
+  "event_column": "event",
+  "categorical_features": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability"
+  ],
+  "numeric_features": [
+    "num_of_prev_attempts",
+    "studied_credits",
+    "clicks_first_10_weeks",
+    "active_weeks_first_10",
+    "mean_clicks_first_10_weeks"
+  ],
+  "raw_feature_columns": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability",
+    "num_of_prev_attempts",
+    "studied_credits",
+    "clicks_first_10_weeks",
+    "active_weeks_first_10",
+    "mean_clicks_first_10_weeks"
+  ],
+  "expected_features_raw": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "num_of_prev_attempts",
+    "studied_credits",
+    "clicks_first_10_weeks",
+    "active_weeks_first_10",
+    "mean_clicks_first_10_weeks"
+  ],
+  "expected_features_resolved": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "clicks_first_10_weeks",
+    "active_weeks_first_10",
+    "mean_clicks_first_10_weeks"
+  ],
+  "numeric_prefill_policy": "deterministic_train_median_or_zero_when_all_missing",
+  "numeric_fill_values": {
+    "num_of_prev_attempts": 0.0,
+    "studied_credits": 60.0,
+    "clicks_first_10_weeks": 260.0,
+    "active_weeks_first_10": 8.0,
+    "mean_clicks_first_10_weeks": 36.4
+  },
+  "categorical_imputation": "constant_missing",
+  "categorical_encoding": "one_hot_handle_unknown_ignore",
+  "numeric_scaling": "standard_scaler_fit_on_train_only",
+  "variance_filter_threshold": 1e-12,
+  "feature_names_before_filter": [
+    "num__num_of_prev_attempts",
+    "num__studied_credits",
+    "num__clicks_first_10_weeks",
+    "num__active_weeks_first_10",
+    "num__mean_clicks_first_10_weeks",
+    "cat__gender_F",
+    "cat__gender_M",
+    "cat__region_East Anglian Region",
+    "cat__region_East Midlands Region",
+    "cat__region_Ireland",
+    "cat__region_London Region",
+    "cat__region_North Region",
+    "cat__region_North Western Region",
+    "cat__region_Scotland",
+    "cat__region_South East Region",
+    "cat__region_South Region",
+    "cat__region_South West Region",
+    "cat__region_Wales",
+    "cat__region_West Midlands Region",
+    "cat__region_Yorkshire Region",
+    "cat__highest_education_A Level or Equivalent",
+    "cat__highest_education_HE Qualification",
+    "cat__highest_education_Lower Than A Level",
+    "cat__highest_education_No Formal quals",
+    "cat__highest_education_Post Graduate Qualification",
+    "cat__imd_band_0-10%",
+    "cat__imd_band_10-20",
+    "cat__imd_band_20-30%",
+    "cat__imd_band_30-40%",
+    "cat__imd_band_40-50%",
+    "cat__imd_band_50-60%",
+    "cat__imd_band_60-70%",
+    "cat__imd_band_70-80%",
+    "cat__imd_band_80-90%",
+    "cat__imd_band_90-100%",
+    "cat__imd_band_None",
+    "cat__age_band_0-35",
+    "cat__age_band_35-55",
+    "cat__age_band_55<=",
+    "cat__disability_N",
+    "cat__disability_Y"
+  ],
+  "feature_names_out": [
+    "num__num_of_prev_attempts",
+    "num__studied_credits",
+    "num__clicks_first_10_weeks",
+    "num__active_weeks_first_10",
+    "num__mean_clicks_first_10_weeks",
+    "cat__gender_F",
+    "cat__gender_M",
+    "cat__region_East Anglian Region",
+    "cat__region_East Midlands Region",
+    "cat__region_Ireland",
+    "cat__region_London Region",
+    "cat__region_North Region",
+    "cat__region_North Western Region",
+    "cat__region_Scotland",
+    "cat__region_South East Region",
+    "cat__region_South Region",
+    "cat__region_South West Region",
+    "cat__region_Wales",
+    "cat__region_West Midlands Region",
+    "cat__region_Yorkshire Region",
+    "cat__highest_education_A Level or Equivalent",
+    "cat__highest_education_HE Qualification",
+    "cat__highest_education_Lower Than A Level",
+    "cat__highest_education_No Formal quals",
+    "cat__highest_education_Post Graduate Qualification",
+    "cat__imd_band_0-10%",
+    "cat__imd_band_10-20",
+    "cat__imd_band_20-30%",
+    "cat__imd_band_30-40%",
+    "cat__imd_band_40-50%",
+    "cat__imd_band_50-60%",
+    "cat__imd_band_60-70%",
+    "cat__imd_band_70-80%",
+    "cat__imd_band_80-90%",
+    "cat__imd_band_90-100%",
+    "cat__imd_band_None",
+    "cat__age_band_0-35",
+    "cat__age_band_35-55",
+    "cat__age_band_55<=",
+    "cat__disability_N",
+    "cat__disability_Y"
+  ],
+  "dropped_low_variance_features": [],
+  "aft_positioning_note": "early-window comparable Weibull AFT benchmark",
+  "window_weeks": 10,
+  "duration_floor": 1.0
+}
+
+[END] 5.11.2 - 2026-06-19 22:16:19
+[START] 5.11 - 2026-06-19 22:16:19
+# ==============================================================
+# 5.11.3 - Tune and evaluate the comparable-window Weibull AFT model
+# ==============================================================
+- TUNING_WORKERS: 8
+- TUNING_BACKEND: processes
+[Stage 5.11.3 table_weibull_aft_tuning_results - Weibull AFT tuning results]
+table_name=table_weibull_aft_tuning_results_w10
+rows=24, cols=7
+ candidate_id  penalizer  l1_ratio  duration_floor  val_ibs  val_c_index        implementation
+            1     0.0001       0.0             1.0 0.107148     0.656843 lifelines_weibull_aft
+            2     0.0002       0.0             1.0 0.107163     0.656832 lifelines_weibull_aft
+            3     0.0005       0.0             1.0 0.107209     0.656885 lifelines_weibull_aft
+            4     0.0010       0.0             1.0 0.107288     0.656896 lifelines_weibull_aft
+            5     0.0020       0.0             1.0 0.107453     0.656712 lifelines_weibull_aft
+            6     0.0050       0.0             1.0 0.107986     0.655880 lifelines_weibull_aft
+            7     0.0100       0.0             1.0 0.108878     0.653936 lifelines_weibull_aft
+            8     0.0200       0.0             1.0 0.110242     0.651033 lifelines_weibull_aft
+            9     0.0500       0.0             1.0 0.112301     0.646590 lifelines_weibull_aft
+           10     0.1000       0.0             1.0 0.113993     0.643299 lifelines_weibull_aft
+           11     0.1500       0.0             1.0 0.115069     0.641304 lifelines_weibull_aft
+           12     0.2000       0.0             1.0 0.115870     0.639997 lifelines_weibull_aft
+           13     0.3000       0.0             1.0 0.117033     0.637918 lifelines_weibull_aft
+           14     0.4000       0.0             1.0 0.117866     0.636581 lifelines_weibull_aft
+           15     0.5000       0.0             1.0 0.118503     0.635559 lifelines_weibull_aft
+           16     0.6000       0.0             1.0 0.119011     0.634837 lifelines_weibull_aft
+           17     0.7000       0.0             1.0 0.119429     0.634143 lifelines_weibull_aft
+           18     0.8000       0.0             1.0 0.119780     0.633580 lifelines_weibull_aft
+           19     1.0000       0.0             1.0 0.120338     0.632747 lifelines_weibull_aft
+           20     1.5000       0.0             1.0 0.121250     0.631313 lifelines_weibull_aft
+ARTIFACT | Stage 5.11.3 table_weibull_aft_tuning_results - Weibull AFT tuning results | duckdb://table_weibull_aft_tuning_results_w10
+[Stage 5.11.3 table_weibull_aft_tuned_test_predictions - Weibull AFT test predictions]
+table_name=table_weibull_aft_tuned_test_predictions_w10
+rows=29334, cols=6
+      enrollment_id  event  duration  horizon_week  pred_survival_h  pred_risk_h
+ 100561||DDD||2014J      0        37            10         0.930090     0.069910
+ 100621||CCC||2014B      1         6            10         0.864079     0.135921
+ 101187||DDD||2014J      0        37            10         0.816965     0.183035
+ 101279||DDD||2014J      0        37            10         0.894983     0.105017
+ 101414||EEE||2013J      0        38            10         0.777602     0.222398
+ 101700||CCC||2014J      0        38            10         0.759326     0.240674
+ 101781||AAA||2013J      0        38            10         0.957595     0.042405
+ 102209||CCC||2014J      1        15            10         0.952248     0.047752
+ 102343||FFF||2013J      0        38            10         0.947553     0.052447
+1023623||CCC||2014J      0        38            10         0.911924     0.088076
+1033968||DDD||2014B      1        13            10         0.878106     0.121894
+ 103891||DDD||2014B      0        34            10         0.820344     0.179656
+ 104316||FFF||2014B      0        34            10         0.944117     0.055883
+1045203||AAA||2014J      0        38            10         0.958692     0.041308
+1047645||CCC||2014B      0        34            10         0.810698     0.189302
+1053702||EEE||2013J      0        38            10         0.948229     0.051771
+ 105629||FFF||2013J      0        38            10         0.961959     0.038041
+1057883||CCC||2014B      0        34            10         0.914745     0.085255
+ 106383||BBB||2014J      1        21            10         0.883664     0.116336
+ 106553||DDD||2014J      0        37            10         0.929905     0.070095
+ARTIFACT | Stage 5.11.3 table_weibull_aft_tuned_test_predictions - Weibull AFT test predictions | duckdb://table_weibull_aft_tuned_test_predictions_w10
+[Stage 5.11.3 table_weibull_aft_tuned_primary_metrics - Weibull AFT primary metrics]
+table_name=table_weibull_aft_tuned_primary_metrics_w10
+rows=2, cols=4
+metric_name metric_category  metric_value                         notes
+        ibs         primary      0.108989 sksurv_integrated_brier_score
+    c_index      co_primary      0.667001          pycox_concordance_td
+ARTIFACT | Stage 5.11.3 table_weibull_aft_tuned_primary_metrics - Weibull AFT primary metrics | duckdb://table_weibull_aft_tuned_primary_metrics_w10
+[Stage 5.11.3 table_weibull_aft_tuned_brier_by_horizon - Weibull AFT Brier scores by horizon]
+table_name=table_weibull_aft_tuned_brier_by_horizon_w10
+rows=3, cols=5
+ horizon_week      metric_name metric_category  metric_value              notes
+           10 brier_at_horizon         primary      0.091985 sksurv_brier_score
+           20 brier_at_horizon         primary      0.127498 sksurv_brier_score
+           30 brier_at_horizon         primary      0.152897 sksurv_brier_score
+ARTIFACT | Stage 5.11.3 table_weibull_aft_tuned_brier_by_horizon - Weibull AFT Brier scores by horizon | duckdb://table_weibull_aft_tuned_brier_by_horizon_w10
+[Stage 5.11.3 table_weibull_aft_tuned_secondary_metrics - Weibull AFT secondary metrics]
+table_name=table_weibull_aft_tuned_secondary_metrics_w10
+rows=6, cols=5
+ horizon_week         metric_name metric_category  metric_value                                                                                  notes
+           10 risk_auc_at_horizon       secondary      0.848909                                                            roc_auc_on_evaluable_subset
+           10  time_dependent_auc       secondary      0.845228 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.845228; local_ipcw_auc
+           20 risk_auc_at_horizon       secondary      0.755185                                                            roc_auc_on_evaluable_subset
+           20  time_dependent_auc       secondary      0.747021 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.747021; local_ipcw_auc
+           30 risk_auc_at_horizon       secondary      0.712985                                                            roc_auc_on_evaluable_subset
+           30  time_dependent_auc       secondary      0.702095 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.702095; local_ipcw_auc
+ARTIFACT | Stage 5.11.3 table_weibull_aft_tuned_secondary_metrics - Weibull AFT secondary metrics | duckdb://table_weibull_aft_tuned_secondary_metrics_w10
+[Stage 5.11.3 table_weibull_aft_tuned_td_auc_support_audit - Weibull AFT IPCW support audit]
+table_name=table_weibull_aft_tuned_td_auc_support_audit_w10
+rows=3, cols=6
+ horizon_week  max_ipcw_time  n_total_test_enrollments  n_supported_test_enrollments  mean_auc                                                         notes
+           10           38.0                      9778                          6742  0.845228 IPCW-supported subset used for Weibull AFT time-dependent AUC
+           20           38.0                      9778                          6742  0.747021 IPCW-supported subset used for Weibull AFT time-dependent AUC
+           30           38.0                      9778                          6742  0.702095 IPCW-supported subset used for Weibull AFT time-dependent AUC
+ARTIFACT | Stage 5.11.3 table_weibull_aft_tuned_td_auc_support_audit - Weibull AFT IPCW support audit | duckdb://table_weibull_aft_tuned_td_auc_support_audit_w10
+[Stage 5.11.3 table_weibull_aft_tuned_row_diagnostics - Weibull AFT row-level diagnostics]
+table_name=table_weibull_aft_tuned_row_diagnostics_w10
+rows=1, cols=6
+       model_name  row_level_roc_auc  row_level_pr_auc  row_level_log_loss  row_level_brier                                                                    diagnostic_note
+weibull_aft_tuned           0.232596          0.144778            1.072423         0.225547 auxiliary enrollment-level proxy only; not a primary cross-family benchmark metric
+ARTIFACT | Stage 5.11.3 table_weibull_aft_tuned_row_diagnostics - Weibull AFT row-level diagnostics | duckdb://table_weibull_aft_tuned_row_diagnostics_w10
+[Stage 5.11.3 table_weibull_aft_tuned_support_by_horizon - Weibull AFT support by horizon]
+table_name=table_weibull_aft_tuned_support_by_horizon_w10
+rows=3, cols=4
+ horizon_week  n_evaluable_enrollments  n_events_by_horizon  event_rate_by_horizon
+           10                     9778                 1215               0.124259
+           20                     9778                 1736               0.177541
+           30                     9778                 2129               0.217734
+ARTIFACT | Stage 5.11.3 table_weibull_aft_tuned_support_by_horizon - Weibull AFT support by horizon | duckdb://table_weibull_aft_tuned_support_by_horizon_w10
+[Stage 5.11.3 table_weibull_aft_tuned_calibration_summary - Weibull AFT calibration summary]
+table_name=table_weibull_aft_tuned_calibration_summary_w10
+rows=3, cols=5
+ horizon_week            metric_name metric_category  metric_value                                         notes
+           10 calibration_at_horizon         primary      0.059672 Weighted absolute calibration gap across bins
+           20 calibration_at_horizon         primary      0.028619 Weighted absolute calibration gap across bins
+           30 calibration_at_horizon         primary      0.014349 Weighted absolute calibration gap across bins
+ARTIFACT | Stage 5.11.3 table_weibull_aft_tuned_calibration_summary - Weibull AFT calibration summary | duckdb://table_weibull_aft_tuned_calibration_summary_w10
+[Stage 5.11.3 table_weibull_aft_tuned_calibration_bins_by_horizon - Weibull AFT calibration bins]
+table_name=table_weibull_aft_tuned_calibration_bins_by_horizon_w10
+rows=30, cols=6
+ calibration_bin   n  mean_predicted_risk  observed_event_rate  horizon_week  abs_calibration_gap
+               0 978             0.035738             0.004090            10             0.031648
+               1 978             0.048621             0.010225            10             0.038396
+               2 978             0.057323             0.008180            10             0.049143
+               3 977             0.066885             0.025589            10             0.041296
+               4 978             0.078318             0.035787            10             0.042531
+               5 978             0.095001             0.052147            10             0.042854
+               6 977             0.119401             0.117707            10             0.001693
+               7 978             0.154599             0.222904            10             0.068305
+               8 978             0.193964             0.335378            10             0.141415
+               9 978             0.291111             0.430470            10             0.139359
+               0 978             0.055643             0.047035            20             0.008609
+               1 978             0.075443             0.046012            20             0.029430
+               2 978             0.088718             0.065440            20             0.023278
+               3 977             0.103222             0.082907            20             0.020315
+               4 978             0.120451             0.103272            20             0.017179
+               5 978             0.145368             0.138037            20             0.007331
+               6 977             0.181327             0.194473            20             0.013145
+               7 978             0.232212             0.269939            20             0.037727
+               8 978             0.287687             0.375256            20             0.087569
+               9 978             0.411384             0.452965            20             0.041581
+ARTIFACT | Stage 5.11.3 table_weibull_aft_tuned_calibration_bins_by_horizon - Weibull AFT calibration bins | duckdb://table_weibull_aft_tuned_calibration_bins_by_horizon_w10
+[Stage 5.11.3 table_weibull_aft_tuned_predicted_vs_observed_survival - Weibull AFT predicted versus observed survival]
+table_name=table_weibull_aft_tuned_predicted_vs_observed_survival_w10
+rows=3, cols=5
+ horizon_week  n_evaluable_enrollments  mean_predicted_survival  mean_observed_survival  abs_gap
+           10                     9778                 0.885900                0.875741 0.010158
+           20                     9778                 0.829849                0.822459 0.007390
+           30                     9778                 0.787236                0.782266 0.004970
+ARTIFACT | Stage 5.11.3 table_weibull_aft_tuned_predicted_vs_observed_survival - Weibull AFT predicted versus observed survival | duckdb://table_weibull_aft_tuned_predicted_vs_observed_survival_w10
+ARTIFACT | weibull_aft_model | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/models/weibull_aft_tuned_w10.joblib
+ARTIFACT | weibull_aft_preprocessor | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/models/weibull_aft_preprocessor_w10.joblib
+ARTIFACT | weibull_aft_tuned_model_config | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/metadata/weibull_aft_tuned_model_config_w10.json
+{
+  "model_name": "weibull_aft_tuned",
+  "selection_metric": "lowest_validation_ibs",
+  "validation_split": {
+    "method": "GroupShuffleSplit",
+    "test_size": 0.1,
+    "group_column": "enrollment_id",
+    "random_seed": 42
+  },
+  "effective_window_weeks": 10,
+  "input_train_table": "enrollment_cox_ready_train_w10",
+  "input_test_table": "enrollment_cox_ready_test_w10",
+  "search_space": [
+    {
+      "candidate_id": 1,
+      "penalizer": 0.0001,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 2,
+      "penalizer": 0.0002,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 3,
+      "penalizer": 0.0005,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 4,
+      "penalizer": 0.001,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 5,
+      "penalizer": 0.002,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 6,
+      "penalizer": 0.005,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 7,
+      "penalizer": 0.01,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 8,
+      "penalizer": 0.02,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 9,
+      "penalizer": 0.05,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 10,
+      "penalizer": 0.1,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 11,
+      "penalizer": 0.15,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 12,
+      "penalizer": 0.2,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 13,
+      "penalizer": 0.3,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 14,
+      "penalizer": 0.4,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 15,
+      "penalizer": 0.5,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 16,
+      "penalizer": 0.6,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 17,
+      "penalizer": 0.7,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 18,
+      "penalizer": 0.8,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 19,
+      "penalizer": 1.0,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 20,
+      "penalizer": 1.5,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 21,
+      "penalizer": 2.0,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 22,
+      "penalizer": 3.0,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 23,
+      "penalizer": 4.0,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 24,
+      "penalizer": 5.0,
+      "l1_ratio": 0.0
+    }
+  ],
+  "benchmark_horizons": [
+    10,
+    20,
+    30
+  ],
+  "calibration_bins": 10,
+  "calibration_contract_version": "v2_ipcw_km_observed_risk",
+  "calibration_observed_risk_method": "ipcw_km_pseudo_event_rate",
+  "variance_filter_threshold": 1e-12,
+  "duration_floor": 1.0,
+  "implementation": "lifelines_weibull_aft",
+  "best_candidate": {
+    "candidate_id": 1,
+    "params": {
+      "penalizer": 0.0001,
+      "l1_ratio": 0.0
+    },
+    "duration_floor": 1.0,
+    "val_ibs": 0.10714784243611684,
+    "val_c_index": 0.6568425413433145,
+    "implementation": "lifelines_weibull_aft"
+  },
+  "preprocessing": {
+    "categorical_features": [
+      "gender",
+      "region",
+      "highest_education",
+      "imd_band",
+      "age_band",
+      "disability"
+    ],
+    "numeric_features": [
+      "num_of_prev_attempts",
+      "studied_credits",
+      "clicks_first_10_weeks",
+      "active_weeks_first_10",
+      "mean_clicks_first_10_weeks"
+    ],
+    "numeric_prefill_values": {
+      "num_of_prev_attempts": 0.0,
+      "studied_credits": 60.0,
+      "clicks_first_10_weeks": 260.0,
+      "active_weeks_first_10": 8.0,
+      "mean_clicks_first_10_weeks": 36.4
+    },
+    "feature_names_before_filter": [
+      "num__num_of_prev_attempts",
+      "num__studied_credits",
+      "num__clicks_first_10_weeks",
+      "num__active_weeks_first_10",
+      "num__mean_clicks_first_10_weeks",
+      "cat__gender_F",
+      "cat__gender_M",
+      "cat__region_East Anglian Region",
+      "cat__region_East Midlands Region",
+      "cat__region_Ireland",
+      "cat__region_London Region",
+      "cat__region_North Region",
+      "cat__region_North Western Region",
+      "cat__region_Scotland",
+      "cat__region_South East Region",
+      "cat__region_South Region",
+      "cat__region_South West Region",
+      "cat__region_Wales",
+      "cat__region_West Midlands Region",
+      "cat__region_Yorkshire Region",
+      "cat__highest_education_A Level or Equivalent",
+      "cat__highest_education_HE Qualification",
+      "cat__highest_education_Lower Than A Level",
+      "cat__highest_education_No Formal quals",
+      "cat__highest_education_Post Graduate Qualification",
+      "cat__imd_band_0-10%",
+      "cat__imd_band_10-20",
+      "cat__imd_band_20-30%",
+      "cat__imd_band_30-40%",
+      "cat__imd_band_40-50%",
+      "cat__imd_band_50-60%",
+      "cat__imd_band_60-70%",
+      "cat__imd_band_70-80%",
+      "cat__imd_band_80-90%",
+      "cat__imd_band_90-100%",
+      "cat__imd_band_None",
+      "cat__age_band_0-35",
+      "cat__age_band_35-55",
+      "cat__age_band_55<=",
+      "cat__disability_N",
+      "cat__disability_Y"
+    ],
+    "feature_names_out": [
+      "num__num_of_prev_attempts",
+      "num__studied_credits",
+      "num__clicks_first_10_weeks",
+      "num__active_weeks_first_10",
+      "num__mean_clicks_first_10_weeks",
+      "cat__gender_F",
+      "cat__gender_M",
+      "cat__region_East Anglian Region",
+      "cat__region_East Midlands Region",
+      "cat__region_Ireland",
+      "cat__region_London Region",
+      "cat__region_North Region",
+      "cat__region_North Western Region",
+      "cat__region_Scotland",
+      "cat__region_South East Region",
+      "cat__region_South Region",
+      "cat__region_South West Region",
+      "cat__region_Wales",
+      "cat__region_West Midlands Region",
+      "cat__region_Yorkshire Region",
+      "cat__highest_education_A Level or Equivalent",
+      "cat__highest_education_HE Qualification",
+      "cat__highest_education_Lower Than A Level",
+      "cat__highest_education_No Formal quals",
+      "cat__highest_education_Post Graduate Qualification",
+      "cat__imd_band_0-10%",
+      "cat__imd_band_10-20",
+      "cat__imd_band_20-30%",
+      "cat__imd_band_30-40%",
+      "cat__imd_band_40-50%",
+      "cat__imd_band_50-60%",
+      "cat__imd_band_60-70%",
+      "cat__imd_band_70-80%",
+      "cat__imd_band_80-90%",
+      "cat__imd_band_90-100%",
+      "cat__imd_band_None",
+      "cat__age_band_0-35",
+      "cat__age_band_35-55",
+      "cat__age_band_55<=",
+      "cat__disability_N",
+      "cat__disability_Y"
+    ],
+    "dropped_low_variance_features": []
+  },
+  "design_note": "The comparable Weibull AFT arm preserves the canonical early-window contract, uses the same deterministic preprocessing as the other continuous-time baselines, and applies an explicit positive-duration floor only inside the model-local AFT training frames."
+}
+
+ candidate_id                                 params  duration_floor  val_ibs  val_c_index        implementation
+            1 {'penalizer': 0.0001, 'l1_ratio': 0.0}             1.0 0.107148     0.656843 lifelines_weibull_aft
+[END] 5.11.3 - 2026-06-19 22:16:26
+[START] 5.11 - 2026-06-19 22:16:26
+# ==============================================================
+# 5.11.4 - Close runtime resources
+# ==============================================================
+DuckDB connection closed.
+ARTIFACT | duckdb_connection | closed::/Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/benchmark_survival.duckdb
+[END] 5.11.4 - 2026-06-19 22:16:27

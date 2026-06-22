@@ -1,8 +1,8 @@
 {
   "stage_id": "5.16",
   "notebook_name": "dropout_bench_v3_D_16_benchmark_consolidation.py",
-  "run_id": "f3e86c2afbd246e2814123195c22d973",
-  "generated_at_utc": "2026-04-05T03:46:11.988234+00:00",
+  "run_id": "f3766e75053447a7beb7a1c4936d231f",
+  "generated_at_utc": "2026-06-20T01:45:41.077790+00:00",
   "predictive_model_count": 14,
   "inventory_rows": 15,
   "primary_summary_rows": 14,

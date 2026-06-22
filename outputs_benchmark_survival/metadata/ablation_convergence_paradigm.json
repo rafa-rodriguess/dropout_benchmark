@@ -1,7 +1,7 @@
 {
   "n_models_in_subset": 8,
-  "n_temporal_dominant_ibs": 4,
-  "pct_temporal_dominant_ibs": 50.0,
+  "n_temporal_dominant_ibs": 6,
+  "pct_temporal_dominant_ibs": 75.0,
   "n_temporal_dominant_cindex": 8,
   "unanimous_ibs": false,
   "unanimous_cindex": true,

@@ -3,12 +3,30 @@
   "family_name": "discrete_time_dynamic",
   "model_type": "poisson_piecewise_exponential",
   "alpha_grid": [
+    1e-05,
     2e-05,
     5e-05,
     0.0001,
+    0.0002,
+    0.0005,
     0.001,
+    0.002,
+    0.005,
     0.01,
-    0.05
+    0.02,
+    0.05,
+    0.1,
+    0.2,
+    0.3,
+    0.5,
+    0.7,
+    1.0,
+    2.0,
+    5.0,
+    10.0,
+    20.0,
+    50.0,
+    100.0
   ],
   "selection_metric": "val_log_loss_on_discrete_hazard",
   "validation_split": {
@@ -42,8 +60,8 @@
   "calibration_observed_risk_method": "ipcw_km_pseudo_event_rate",
   "active_window_weeks": 6,
   "best_candidate": {
-    "alpha": 2e-05,
-    "val_log_loss": 0.07042270692996436
+    "alpha": 1e-05,
+    "val_log_loss": 0.07034379729386604
   },
   "preprocessing": {
     "categorical_features": [

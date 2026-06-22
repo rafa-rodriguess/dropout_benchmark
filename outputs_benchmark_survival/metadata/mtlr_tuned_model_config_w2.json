@@ -17,7 +17,7 @@
         32
       ],
       "dropout": 0.1,
-      "learning_rate": 0.01,
+      "learning_rate": 0.005,
       "weight_decay": 1e-05,
       "batch_size": 512
     },
@@ -25,17 +25,17 @@
       "candidate_id": 2,
       "num_durations": 20,
       "hidden_dims": [
-        128,
-        64
+        64,
+        32
       ],
       "dropout": 0.1,
-      "learning_rate": 0.005,
+      "learning_rate": 0.01,
       "weight_decay": 1e-05,
       "batch_size": 512
     },
     {
       "candidate_id": 3,
-      "num_durations": 40,
+      "num_durations": 20,
       "hidden_dims": [
         64,
         32
@@ -47,12 +47,252 @@
     },
     {
       "candidate_id": 4,
-      "num_durations": 30,
+      "num_durations": 20,
+      "hidden_dims": [
+        64,
+        32
+      ],
+      "dropout": 0.2,
+      "learning_rate": 0.01,
+      "weight_decay": 0.0001,
+      "batch_size": 512
+    },
+    {
+      "candidate_id": 5,
+      "num_durations": 20,
+      "hidden_dims": [
+        128,
+        64
+      ],
+      "dropout": 0.1,
+      "learning_rate": 0.005,
+      "weight_decay": 1e-05,
+      "batch_size": 512
+    },
+    {
+      "candidate_id": 6,
+      "num_durations": 20,
+      "hidden_dims": [
+        128,
+        64
+      ],
+      "dropout": 0.1,
+      "learning_rate": 0.01,
+      "weight_decay": 1e-05,
+      "batch_size": 512
+    },
+    {
+      "candidate_id": 7,
+      "num_durations": 20,
       "hidden_dims": [
         128,
         64
       ],
       "dropout": 0.2,
+      "learning_rate": 0.005,
+      "weight_decay": 0.0001,
+      "batch_size": 512
+    },
+    {
+      "candidate_id": 8,
+      "num_durations": 20,
+      "hidden_dims": [
+        128,
+        64
+      ],
+      "dropout": 0.2,
+      "learning_rate": 0.01,
+      "weight_decay": 0.0001,
+      "batch_size": 512
+    },
+    {
+      "candidate_id": 9,
+      "num_durations": 20,
+      "hidden_dims": [
+        256,
+        128
+      ],
+      "dropout": 0.1,
+      "learning_rate": 0.005,
+      "weight_decay": 1e-05,
+      "batch_size": 512
+    },
+    {
+      "candidate_id": 10,
+      "num_durations": 20,
+      "hidden_dims": [
+        256,
+        128
+      ],
+      "dropout": 0.2,
+      "learning_rate": 0.005,
+      "weight_decay": 0.0001,
+      "batch_size": 512
+    },
+    {
+      "candidate_id": 11,
+      "num_durations": 20,
+      "hidden_dims": [
+        256,
+        128
+      ],
+      "dropout": 0.2,
+      "learning_rate": 0.01,
+      "weight_decay": 0.0001,
+      "batch_size": 1024
+    },
+    {
+      "candidate_id": 12,
+      "num_durations": 20,
+      "hidden_dims": [
+        256,
+        128
+      ],
+      "dropout": 0.3,
+      "learning_rate": 0.001,
+      "weight_decay": 0.0001,
+      "batch_size": 1024
+    },
+    {
+      "candidate_id": 13,
+      "num_durations": 40,
+      "hidden_dims": [
+        64,
+        32
+      ],
+      "dropout": 0.1,
+      "learning_rate": 0.005,
+      "weight_decay": 1e-05,
+      "batch_size": 512
+    },
+    {
+      "candidate_id": 14,
+      "num_durations": 40,
+      "hidden_dims": [
+        64,
+        32
+      ],
+      "dropout": 0.2,
+      "learning_rate": 0.005,
+      "weight_decay": 0.0001,
+      "batch_size": 512
+    },
+    {
+      "candidate_id": 15,
+      "num_durations": 40,
+      "hidden_dims": [
+        64,
+        32
+      ],
+      "dropout": 0.2,
+      "learning_rate": 0.01,
+      "weight_decay": 0.0001,
+      "batch_size": 512
+    },
+    {
+      "candidate_id": 16,
+      "num_durations": 40,
+      "hidden_dims": [
+        64,
+        32
+      ],
+      "dropout": 0.3,
+      "learning_rate": 0.001,
+      "weight_decay": 0.0001,
+      "batch_size": 512
+    },
+    {
+      "candidate_id": 17,
+      "num_durations": 40,
+      "hidden_dims": [
+        128,
+        64
+      ],
+      "dropout": 0.1,
+      "learning_rate": 0.005,
+      "weight_decay": 1e-05,
+      "batch_size": 512
+    },
+    {
+      "candidate_id": 18,
+      "num_durations": 40,
+      "hidden_dims": [
+        128,
+        64
+      ],
+      "dropout": 0.1,
+      "learning_rate": 0.01,
+      "weight_decay": 1e-05,
+      "batch_size": 512
+    },
+    {
+      "candidate_id": 19,
+      "num_durations": 40,
+      "hidden_dims": [
+        128,
+        64
+      ],
+      "dropout": 0.2,
+      "learning_rate": 0.005,
+      "weight_decay": 0.0001,
+      "batch_size": 512
+    },
+    {
+      "candidate_id": 20,
+      "num_durations": 40,
+      "hidden_dims": [
+        128,
+        64
+      ],
+      "dropout": 0.2,
+      "learning_rate": 0.001,
+      "weight_decay": 0.0001,
+      "batch_size": 1024
+    },
+    {
+      "candidate_id": 21,
+      "num_durations": 40,
+      "hidden_dims": [
+        256,
+        128
+      ],
+      "dropout": 0.1,
+      "learning_rate": 0.005,
+      "weight_decay": 1e-05,
+      "batch_size": 512
+    },
+    {
+      "candidate_id": 22,
+      "num_durations": 40,
+      "hidden_dims": [
+        256,
+        128
+      ],
+      "dropout": 0.2,
+      "learning_rate": 0.005,
+      "weight_decay": 0.0001,
+      "batch_size": 512
+    },
+    {
+      "candidate_id": 23,
+      "num_durations": 40,
+      "hidden_dims": [
+        256,
+        128
+      ],
+      "dropout": 0.2,
+      "learning_rate": 0.01,
+      "weight_decay": 0.0001,
+      "batch_size": 1024
+    },
+    {
+      "candidate_id": 24,
+      "num_durations": 40,
+      "hidden_dims": [
+        256,
+        128
+      ],
+      "dropout": 0.3,
       "learning_rate": 0.001,
       "weight_decay": 0.0001,
       "batch_size": 1024
@@ -75,22 +315,22 @@
   "input_train_table": "enrollment_cox_ready_train_w2",
   "input_test_table": "enrollment_cox_ready_test_w2",
   "best_candidate": {
-    "candidate_id": 4,
+    "candidate_id": 19,
     "params": {
-      "num_durations": 30,
+      "num_durations": 40,
       "hidden_dims": [
         128,
         64
       ],
       "dropout": 0.2,
-      "learning_rate": 0.001,
+      "learning_rate": 0.005,
       "weight_decay": 0.0001,
-      "batch_size": 1024
+      "batch_size": 512
     },
-    "best_epoch": 33,
-    "best_val_loss": 1.0452101230621338,
-    "val_ibs": 0.1172969812742924,
-    "val_c_index": 0.5930801431661296,
+    "best_epoch": 17,
+    "best_val_loss": 1.104814052581787,
+    "val_ibs": 0.11722633275291429,
+    "val_c_index": 0.5747691373903493,
     "implementation": "pycox_mtlr"
   },
   "guardrails": {
@@ -115,37 +355,47 @@
   },
   "duration_index": [
     0.0,
-    2.1724138259887695,
-    4.344827651977539,
-    6.517241477966309,
-    8.689655303955078,
-    10.862069129943848,
-    13.034482955932617,
-    15.206896781921387,
-    17.379310607910156,
-    19.55172348022461,
-    21.724138259887695,
-    23.89655303955078,
-    26.068965911865234,
-    28.241378784179688,
-    30.413793563842773,
-    32.58620834350586,
-    34.75862121582031,
-    36.931034088134766,
-    39.10344696044922,
-    41.27586364746094,
-    43.44827651977539,
-    45.620689392089844,
-    47.79310607910156,
-    49.965518951416016,
-    52.13793182373047,
-    54.31034469604492,
-    56.482757568359375,
-    58.655174255371094,
-    60.82758712768555,
+    1.615384578704834,
+    3.230769157409668,
+    4.846153736114502,
+    6.461538314819336,
+    8.076923370361328,
+    9.692307472229004,
+    11.30769157409668,
+    12.923076629638672,
+    14.538461685180664,
+    16.153846740722656,
+    17.769229888916016,
+    19.384614944458008,
+    21.0,
+    22.61538314819336,
+    24.23076820373535,
+    25.846153259277344,
+    27.461538314819336,
+    29.076923370361328,
+    30.692306518554688,
+    32.30769348144531,
+    33.92307662963867,
+    35.53845977783203,
+    37.153846740722656,
+    38.769229888916016,
+    40.384613037109375,
+    42.0,
+    43.61538314819336,
+    45.23076629638672,
+    46.846153259277344,
+    48.4615364074707,
+    50.07692337036133,
+    51.69230651855469,
+    53.30768966674805,
+    54.92307662963867,
+    56.53845977783203,
+    58.153846740722656,
+    59.769229888916016,
+    61.384613037109375,
     63.0
   ],
-  "out_features": 30,
+  "out_features": 40,
   "preprocessing": {
     "categorical_features": [
       "gender",

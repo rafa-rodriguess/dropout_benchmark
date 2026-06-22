@@ -1,46 +1,46 @@
 display_name,family_display,window_w,IBS,TD_Concordance,availability_status,is_canonical_window
-Cox Comparable,continuous_time_comparable,2,0.12253321006594096,0.5908912627856611,available,False
-Cox Comparable,continuous_time_comparable,4,0.12253321006594096,0.5908912627856611,available,True
-Cox Comparable,continuous_time_comparable,6,0.12253321006594096,0.5908912627856611,available,False
-Cox Comparable,continuous_time_comparable,8,0.12253321006594096,0.5908912627856611,available,False
-Cox Comparable,continuous_time_comparable,10,0.12253321006594096,0.5908912627856611,available,False
-DeepHit,continuous_time_comparable,2,0.12231674548297118,0.5625658594996308,available,False
-DeepHit,continuous_time_comparable,4,0.12231674548297118,0.5625658594996308,available,True
-DeepHit,continuous_time_comparable,6,0.12231674548297118,0.5625658594996308,available,False
-DeepHit,continuous_time_comparable,8,0.12231674548297118,0.5625658594996308,available,False
-DeepHit,continuous_time_comparable,10,0.12231674548297118,0.5625658594996308,available,False
-DeepSurv,continuous_time_comparable,2,0.12243931595889038,0.5934973061052676,available,False
-DeepSurv,continuous_time_comparable,4,0.12243931595889038,0.5934973061052676,available,True
-DeepSurv,continuous_time_comparable,6,0.12243931595889038,0.5934973061052676,available,False
-DeepSurv,continuous_time_comparable,8,0.12243931595889038,0.5934973061052676,available,False
-DeepSurv,continuous_time_comparable,10,0.12243931595889038,0.5934973061052676,available,False
-Gradient-Boosted Cox,continuous_time_comparable,2,0.12290033808777226,0.5897744830211711,available,False
-Gradient-Boosted Cox,continuous_time_comparable,4,0.12290033808777226,0.5897744830211711,available,True
-Gradient-Boosted Cox,continuous_time_comparable,6,0.12290033808777226,0.5897744830211711,available,False
-Gradient-Boosted Cox,continuous_time_comparable,8,0.12290033808777226,0.5897744830211711,available,False
-Gradient-Boosted Cox,continuous_time_comparable,10,0.12290033808777226,0.5897744830211711,available,False
-Neural-MTLR,continuous_time_comparable,2,0.12221011855165612,0.5717901028525387,available,False
-Neural-MTLR,continuous_time_comparable,4,0.12221011855165612,0.5717901028525387,available,True
-Neural-MTLR,continuous_time_comparable,6,0.12221011855165612,0.5717901028525387,available,False
-Neural-MTLR,continuous_time_comparable,8,0.12221011855165612,0.5717901028525387,available,False
-Neural-MTLR,continuous_time_comparable,10,0.12221011855165612,0.5717901028525387,available,False
-Random Survival Forest,continuous_time_comparable,2,0.12193207890792099,0.6022572879346714,available,False
-Random Survival Forest,continuous_time_comparable,4,0.12193207890792099,0.6022572879346714,available,True
-Random Survival Forest,continuous_time_comparable,6,0.12193207890792099,0.6022572879346714,available,False
-Random Survival Forest,continuous_time_comparable,8,0.12193207890792097,0.6022572879346714,available,False
-Random Survival Forest,continuous_time_comparable,10,0.12193207890792097,0.6022572879346714,available,False
-Royston-Parmar,continuous_time_comparable,2,0.12294911210757734,0.5903154627733965,available,False
-Royston-Parmar,continuous_time_comparable,4,0.12294911210757734,0.5903154627733965,available,True
-Royston-Parmar,continuous_time_comparable,6,0.12294911210757734,0.5903154627733965,available,False
-Royston-Parmar,continuous_time_comparable,8,0.12294911210757734,0.5903154627733965,available,False
-Royston-Parmar,continuous_time_comparable,10,0.12294911210757734,0.5903154627733965,available,False
-Weibull AFT,continuous_time_comparable,2,0.12276789433139224,0.5779612706749815,available,False
-Weibull AFT,continuous_time_comparable,4,0.12276789433139224,0.5779612706749815,available,True
-Weibull AFT,continuous_time_comparable,6,0.12276789433139224,0.5779612706749815,available,False
-Weibull AFT,continuous_time_comparable,8,0.12276789433139224,0.5779612706749815,available,False
-Weibull AFT,continuous_time_comparable,10,0.12276789433139224,0.5779612706749815,available,False
-XGBoost AFT,continuous_time_comparable,2,0.14966568129262742,0.5145112658781548,available,False
-XGBoost AFT,continuous_time_comparable,4,0.14966568129262742,0.5145112658781548,available,True
-XGBoost AFT,continuous_time_comparable,6,0.14966568129262742,0.5145112658781548,available,False
-XGBoost AFT,continuous_time_comparable,8,0.14966568129262742,0.5145112658781548,available,False
-XGBoost AFT,continuous_time_comparable,10,0.14966568129262742,0.5145112658781548,available,False
+Cox Comparable,continuous_time_comparable,2,0.12120773737306785,0.6214391699097985,available,False
+Cox Comparable,continuous_time_comparable,4,0.1176212457171889,0.6511595534058838,available,True
+Cox Comparable,continuous_time_comparable,6,0.11418418817975307,0.6735640142841592,available,False
+Cox Comparable,continuous_time_comparable,8,0.14934932069140852,0.6391760627554077,available,False
+Cox Comparable,continuous_time_comparable,10,0.10914077437242663,0.7081614814873748,available,False
+DeepHit,continuous_time_comparable,2,0.11923279204489592,0.5495814671904033,available,False
+DeepHit,continuous_time_comparable,4,0.11505303834630654,0.5834931715868538,available,True
+DeepHit,continuous_time_comparable,6,0.1125968289299513,0.5879096617800685,available,False
+DeepHit,continuous_time_comparable,8,0.10794904799571663,0.5878885836404603,available,False
+DeepHit,continuous_time_comparable,10,0.10578084226674853,0.6108695678004966,available,False
+DeepSurv,continuous_time_comparable,2,0.11920382212021506,0.6310284060478348,available,False
+DeepSurv,continuous_time_comparable,4,0.11451500234620159,0.6619488227936522,available,True
+DeepSurv,continuous_time_comparable,6,0.11028961371053725,0.6856745162244072,available,False
+DeepSurv,continuous_time_comparable,8,0.10587414422926947,0.7079101453373889,available,False
+DeepSurv,continuous_time_comparable,10,0.1034885341041075,0.716447876782982,available,False
+Gradient-Boosted Cox,continuous_time_comparable,2,0.11989912580743994,0.6322885223278718,available,False
+Gradient-Boosted Cox,continuous_time_comparable,4,0.11480791617904998,0.6621242931396804,available,True
+Gradient-Boosted Cox,continuous_time_comparable,6,0.11147652851587028,0.6789861848810121,available,False
+Gradient-Boosted Cox,continuous_time_comparable,8,0.10643784735635085,0.7015922571313985,available,False
+Gradient-Boosted Cox,continuous_time_comparable,10,0.10284046726673912,0.720178500845218,available,False
+Neural-MTLR,continuous_time_comparable,2,0.11857920676340315,0.5977992355764693,available,False
+Neural-MTLR,continuous_time_comparable,4,0.11313188693612165,0.6569417055634974,available,True
+Neural-MTLR,continuous_time_comparable,6,0.10904563982828883,0.6836736169937747,available,False
+Neural-MTLR,continuous_time_comparable,8,0.10576548307903397,0.6933922667095531,available,False
+Neural-MTLR,continuous_time_comparable,10,0.10234107456884652,0.7172040033793218,available,False
+Random Survival Forest,continuous_time_comparable,2,0.11817249534654276,0.6453485221305225,available,False
+Random Survival Forest,continuous_time_comparable,4,0.11183979578928346,0.6735055327791677,available,True
+Random Survival Forest,continuous_time_comparable,6,0.1069238909775135,0.6975963223192649,available,False
+Random Survival Forest,continuous_time_comparable,8,0.10216658943841939,0.7181894580681152,available,False
+Random Survival Forest,continuous_time_comparable,10,0.09944895192969389,0.7319028801986222,available,False
+Royston-Parmar,continuous_time_comparable,2,0.12196924343429953,0.603168917472729,available,False
+Royston-Parmar,continuous_time_comparable,4,0.11896356407479536,0.6430032949575148,available,True
+Royston-Parmar,continuous_time_comparable,6,0.11623932643088968,0.6562827295591512,available,False
+Royston-Parmar,continuous_time_comparable,8,0.11317032990512474,0.653087660727918,available,False
+Royston-Parmar,continuous_time_comparable,10,0.11014371918343659,0.6907225756742666,available,False
+Weibull AFT,continuous_time_comparable,2,0.12108347143790243,0.5928206874914209,available,False
+Weibull AFT,continuous_time_comparable,4,0.1180213646524382,0.6131197108657861,available,True
+Weibull AFT,continuous_time_comparable,6,0.11475078623128422,0.632664441648606,available,False
+Weibull AFT,continuous_time_comparable,8,0.1112989617164433,0.6531218610426746,available,False
+Weibull AFT,continuous_time_comparable,10,0.10898885521296744,0.6670013768468105,available,False
+XGBoost AFT,continuous_time_comparable,2,0.14966555650891725,0.5280935437503393,available,False
+XGBoost AFT,continuous_time_comparable,4,0.14949245248768,0.5771638143931354,available,True
+XGBoost AFT,continuous_time_comparable,6,0.1466180316466555,0.5879424672179392,available,False
+XGBoost AFT,continuous_time_comparable,8,0.14328783856337346,0.6006548843654811,available,False
+XGBoost AFT,continuous_time_comparable,10,0.1418029892892656,0.6229764533932628,available,False

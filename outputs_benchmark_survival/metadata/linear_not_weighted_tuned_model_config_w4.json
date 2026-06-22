@@ -6,10 +6,10 @@
       "l1",
       "l1",
       "l1",
-      "l2",
-      "l2",
-      "l2",
-      "l2"
+      "l1",
+      "l1",
+      "l1",
+      "l1"
     ],
     "C": [
       0.01,
@@ -43,14 +43,14 @@
   "calibration_contract_version": "v2_ipcw_km_observed_risk",
   "calibration_observed_risk_method": "ipcw_km_pseudo_event_rate",
   "best_candidate": {
-    "candidate_id": 4,
+    "candidate_id": 12,
     "penalty": "l1",
     "l1_ratio": 1.0,
-    "C": 10.0,
-    "val_log_loss": 0.07762208436559555,
-    "val_brier": 0.016150733702903528,
-    "val_roc_auc": 0.7576867999356196,
-    "val_pr_auc": 0.047073646503379356
+    "C": 500.0,
+    "val_log_loss": 0.07759549966611255,
+    "val_brier": 0.016150164075141582,
+    "val_roc_auc": 0.7581199038875659,
+    "val_pr_auc": 0.04713513375874356
   },
   "preprocessing": {
     "categorical_features": [

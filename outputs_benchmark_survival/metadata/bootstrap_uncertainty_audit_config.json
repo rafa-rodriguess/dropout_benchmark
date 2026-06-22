@@ -26,9 +26,9 @@
     "mtlr_tuned"
   ],
   "selected_model_display_names": [
-    "Cox Comparable (Tuned)",
-    "DeepSurv (Tuned)",
-    "Random Survival Forest (Tuned)",
-    "Neural-MTLR (Tuned)"
+    "Cox Comparable",
+    "DeepSurv",
+    "Random Survival Forest",
+    "Neural-MTLR"
   ]
 }

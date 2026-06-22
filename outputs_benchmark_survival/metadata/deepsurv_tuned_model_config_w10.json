@@ -274,8 +274,8 @@
     "dropout": 0.3,
     "learning_rate": 0.001,
     "weight_decay": 0.0001,
-    "best_val_loss": 7.961592674255371,
-    "best_epoch": 66
+    "best_val_loss": 7.952760696411133,
+    "best_epoch": 82
   },
   "preprocessing": {
     "categorical_features": [

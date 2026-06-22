@@ -26,16 +26,16 @@
   ],
   "calibration_bins": 10,
   "best_candidate": {
-    "candidate_id": 9,
+    "candidate_id": 19,
     "hidden_dims": [
       128,
       64
     ],
-    "dropout": 0.05,
-    "learning_rate": 0.001,
+    "dropout": 0.1,
+    "learning_rate": 0.0005,
     "weight_decay": 1e-05,
-    "best_val_loss": 1.0859099467595419,
-    "best_epoch": 5
+    "best_val_loss": 1.0684937159220378,
+    "best_epoch": 10
   },
   "preprocessing": {
     "categorical_features": [

@@ -90,12 +90,12 @@
   },
   "best_candidate": {
     "depth": 6,
-    "learning_rate": 0.05,
-    "iterations": 450,
-    "l2_leaf_reg": 10.0,
-    "val_log_loss": 0.4357869127598161,
-    "val_brier": 0.14593367071717203,
-    "val_roc_auc": 0.7889687634589533
+    "learning_rate": 0.06,
+    "iterations": 350,
+    "l2_leaf_reg": 3.0,
+    "val_log_loss": 0.43711763573089907,
+    "val_brier": 0.14732803612419837,
+    "val_roc_auc": 0.7900374003838645
   },
   "implementation": {
     "library": "catboost",

@@ -13,23 +13,123 @@
   "search_space": [
     {
       "candidate_id": 1,
-      "penalizer": 0.0005,
+      "penalizer": 0.0001,
       "l1_ratio": 0.0
     },
     {
       "candidate_id": 2,
-      "penalizer": 0.01,
+      "penalizer": 0.0002,
       "l1_ratio": 0.0
     },
     {
       "candidate_id": 3,
-      "penalizer": 0.05,
+      "penalizer": 0.0005,
       "l1_ratio": 0.0
     },
     {
       "candidate_id": 4,
+      "penalizer": 0.001,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 5,
+      "penalizer": 0.002,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 6,
+      "penalizer": 0.005,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 7,
       "penalizer": 0.01,
-      "l1_ratio": 0.2
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 8,
+      "penalizer": 0.02,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 9,
+      "penalizer": 0.05,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 10,
+      "penalizer": 0.1,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 11,
+      "penalizer": 0.15,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 12,
+      "penalizer": 0.2,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 13,
+      "penalizer": 0.3,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 14,
+      "penalizer": 0.4,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 15,
+      "penalizer": 0.5,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 16,
+      "penalizer": 0.6,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 17,
+      "penalizer": 0.7,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 18,
+      "penalizer": 0.8,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 19,
+      "penalizer": 1.0,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 20,
+      "penalizer": 1.5,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 21,
+      "penalizer": 2.0,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 22,
+      "penalizer": 3.0,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 23,
+      "penalizer": 4.0,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 24,
+      "penalizer": 5.0,
+      "l1_ratio": 0.0
     }
   ],
   "benchmark_horizons": [
@@ -46,12 +146,12 @@
   "best_candidate": {
     "candidate_id": 1,
     "params": {
-      "penalizer": 0.0005,
+      "penalizer": 0.0001,
       "l1_ratio": 0.0
     },
     "duration_floor": 1.0,
-    "val_ibs": 0.11301243159363278,
-    "val_c_index": 0.6165874243103024,
+    "val_ibs": 0.11295035785164437,
+    "val_c_index": 0.6169111377660881,
     "implementation": "lifelines_weibull_aft"
   },
   "preprocessing": {

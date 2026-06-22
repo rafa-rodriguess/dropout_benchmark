@@ -21,7 +21,7 @@
     "discrete_time_neural"
   ],
   "canonical_comparable_click_feature": "clicks_first_4_weeks",
-  "modeling_contract_toml": "/Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/benchmark_modeling_contract.toml",
+  "modeling_contract_toml": "/Users/rafars/dropout_benchmark_desenv/benchmark_modeling_contract.toml",
   "output_tables": [
     "table_p10_canonical_modeling_configuration",
     "table_b_feature_contract",

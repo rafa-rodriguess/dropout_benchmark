@@ -25,10 +25,6 @@
       "l1_ratio": 0.75
     },
     {
-      "penalizer": 0.001,
-      "l1_ratio": 1.0
-    },
-    {
       "penalizer": 0.01,
       "l1_ratio": 0.0
     },
@@ -43,10 +39,6 @@
     {
       "penalizer": 0.01,
       "l1_ratio": 0.75
-    },
-    {
-      "penalizer": 0.01,
-      "l1_ratio": 1.0
     },
     {
       "penalizer": 0.05,
@@ -65,10 +57,6 @@
       "l1_ratio": 0.75
     },
     {
-      "penalizer": 0.05,
-      "l1_ratio": 1.0
-    },
-    {
       "penalizer": 0.1,
       "l1_ratio": 0.0
     },
@@ -83,10 +71,6 @@
     {
       "penalizer": 0.1,
       "l1_ratio": 0.75
-    },
-    {
-      "penalizer": 0.1,
-      "l1_ratio": 1.0
     },
     {
       "penalizer": 0.2,
@@ -105,20 +89,23 @@
       "l1_ratio": 0.75
     },
     {
-      "penalizer": 0.2,
-      "l1_ratio": 1.0
+      "penalizer": 0.5,
+      "l1_ratio": 0.0
+    },
+    {
+      "penalizer": 0.5,
+      "l1_ratio": 0.25
+    },
+    {
+      "penalizer": 0.5,
+      "l1_ratio": 0.5
+    },
+    {
+      "penalizer": 0.5,
+      "l1_ratio": 0.75
     }
   ],
-  "excluded_candidates_under_strict_warnings": [
-    {
-      "penalizer": 0.001,
-      "l1_ratio": 1.0
-    },
-    {
-      "penalizer": 0.01,
-      "l1_ratio": 1.0
-    }
-  ],
+  "excluded_candidates_under_strict_warnings": [],
   "search_space": [
     {
       "candidate_id": 1,
@@ -182,58 +169,63 @@
     },
     {
       "candidate_id": 13,
-      "penalizer": 0.05,
-      "l1_ratio": 1.0
+      "penalizer": 0.1,
+      "l1_ratio": 0.0
     },
     {
       "candidate_id": 14,
       "penalizer": 0.1,
-      "l1_ratio": 0.0
+      "l1_ratio": 0.25
     },
     {
       "candidate_id": 15,
       "penalizer": 0.1,
-      "l1_ratio": 0.25
+      "l1_ratio": 0.5
     },
     {
       "candidate_id": 16,
       "penalizer": 0.1,
-      "l1_ratio": 0.5
-    },
-    {
-      "candidate_id": 17,
-      "penalizer": 0.1,
       "l1_ratio": 0.75
     },
     {
-      "candidate_id": 18,
-      "penalizer": 0.1,
-      "l1_ratio": 1.0
-    },
-    {
-      "candidate_id": 19,
+      "candidate_id": 17,
       "penalizer": 0.2,
       "l1_ratio": 0.0
     },
     {
-      "candidate_id": 20,
+      "candidate_id": 18,
       "penalizer": 0.2,
       "l1_ratio": 0.25
     },
     {
-      "candidate_id": 21,
+      "candidate_id": 19,
       "penalizer": 0.2,
       "l1_ratio": 0.5
     },
     {
-      "candidate_id": 22,
+      "candidate_id": 20,
       "penalizer": 0.2,
       "l1_ratio": 0.75
     },
     {
+      "candidate_id": 21,
+      "penalizer": 0.5,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 22,
+      "penalizer": 0.5,
+      "l1_ratio": 0.25
+    },
+    {
       "candidate_id": 23,
-      "penalizer": 0.2,
-      "l1_ratio": 1.0
+      "penalizer": 0.5,
+      "l1_ratio": 0.5
+    },
+    {
+      "candidate_id": 24,
+      "penalizer": 0.5,
+      "l1_ratio": 0.75
     }
   ],
   "benchmark_horizons": [
@@ -249,7 +241,7 @@
     "candidate_id": 4,
     "penalizer": 0.001,
     "l1_ratio": 0.75,
-    "val_cindex": 0.660005118632114
+    "val_cindex": 0.6600060954703036
   },
   "effective_window_weeks": 6,
   "input_train_table": "enrollment_cox_ready_train_w6",

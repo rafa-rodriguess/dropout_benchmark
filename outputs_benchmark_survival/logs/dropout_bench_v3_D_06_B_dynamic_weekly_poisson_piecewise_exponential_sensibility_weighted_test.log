@@ -1,0 +1,2041 @@
+[START] 5.6b - 2026-06-19 19:27:38
+# ==============================================================
+# 5.6b.1 - Lightweight runtime bootstrap for the Poisson benchmark
+# ==============================================================
+- CPU_CORES: 8
+- TUNING_BACKEND: processes
+- SCRIPT_NAME: dropout_bench_v3_D_06_B_dynamic_weekly_poisson_piecewise_exponential_sensibility_weighted_test.py
+- RUN_ID: f3766e75053447a7beb7a1c4936d231f
+- DUCKDB_PATH: /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/benchmark_survival.duckdb
+- BENCHMARK_HORIZONS: [10, 20, 30]
+- CALIBRATION_BINS: 10
+ARTIFACT | shared_config | /Users/rafars/dropout_benchmark_desenv/benchmark_shared_config.toml
+ARTIFACT | modeling_contract | /Users/rafars/dropout_benchmark_desenv/benchmark_modeling_contract.toml
+ARTIFACT | run_metadata | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/metadata/run_metadata.json
+[END] 5.6b.1 - 2026-06-19 19:27:38
+[RUN_PLAN] dynamic_window_weeks=2 script=dropout_bench_v3_D_06_B_dynamic_weekly_poisson_piecewise_exponential_sensibility_weighted_test.py
+[START] 5.6b - 2026-06-19 19:27:38
+# ==============================================================
+# 5.6b.2 - Prepare the shared dynamic weekly treatment for Poisson
+# ==============================================================
+[Stage 5.6b.2 table_poisson_pexp_weighted_preprocessing_summary_w2 — Poisson preprocessing summary]
+table_name=table_poisson_pexp_weighted_preprocessing_summary_w2
+rows=1, cols=12
+                                model_family  active_window_weeks  raw_train_rows_before_truncation  raw_test_rows_before_truncation  train_rows  test_rows  n_input_features_raw  n_numeric_features  n_categorical_features  n_output_features_after_preprocessing  train_event_rate  test_event_rate
+poisson_piecewise_exponential_weighted_tuned                    2                            719498                           308393       66712      28573                    16                  10                       6                                     46          0.021091         0.020614
+ARTIFACT | Stage 5.6b.2 table_poisson_pexp_weighted_preprocessing_summary_w2 — Poisson preprocessing summary | duckdb://table_poisson_pexp_weighted_preprocessing_summary_w2
+[Stage 5.6b.2 table_poisson_pexp_weighted_raw_feature_manifest_w2 — Poisson raw feature manifest]
+table_name=table_poisson_pexp_weighted_raw_feature_manifest_w2
+rows=16, cols=6
+feature_name_operational feature_role  present_in_train  present_in_test  covered_by_canonical_config_after_alias canonical_source_name
+                  gender  categorical              True             True                                    False                      
+                  region  categorical              True             True                                    False                      
+       highest_education  categorical              True             True                                    False                      
+                imd_band  categorical              True             True                                    False                      
+                age_band  categorical              True             True                                    False                      
+              disability  categorical              True             True                                    False                      
+    num_of_prev_attempts      numeric              True             True                                     True  num_of_prev_attempts
+         studied_credits      numeric              True             True                                     True       studied_credits
+                    week      numeric              True             True                                     True                  week
+       total_clicks_week      numeric              True             True                                     True          total_clicks
+        active_this_week      numeric              True             True                                    False                      
+         n_vle_rows_week      numeric              True             True                                    False                      
+   n_distinct_sites_week      numeric              True             True                                    False                      
+      cum_clicks_until_t      numeric              True             True                                    False                      
+                 recency      numeric              True             True                                    False                      
+                  streak      numeric              True             True                                    False                      
+ARTIFACT | Stage 5.6b.2 table_poisson_pexp_weighted_raw_feature_manifest_w2 — Poisson raw feature manifest | duckdb://table_poisson_pexp_weighted_raw_feature_manifest_w2
+[Stage 5.6b.2 table_poisson_pexp_weighted_feature_names_out_w2 — Poisson transformed feature names]
+table_name=table_poisson_pexp_weighted_feature_names_out_w2
+rows=46, cols=1
+       preprocessed_feature_name
+       num__num_of_prev_attempts
+            num__studied_credits
+                       num__week
+          num__total_clicks_week
+           num__active_this_week
+            num__n_vle_rows_week
+      num__n_distinct_sites_week
+         num__cum_clicks_until_t
+                    num__recency
+                     num__streak
+                   cat__gender_F
+                   cat__gender_M
+ cat__region_East Anglian Region
+cat__region_East Midlands Region
+             cat__region_Ireland
+       cat__region_London Region
+        cat__region_North Region
+cat__region_North Western Region
+            cat__region_Scotland
+   cat__region_South East Region
+ARTIFACT | Stage 5.6b.2 table_poisson_pexp_weighted_feature_names_out_w2 — Poisson transformed feature names | duckdb://table_poisson_pexp_weighted_feature_names_out_w2
+ARTIFACT | poisson_pexp_preprocessing_config | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/metadata/poisson_piecewise_exponential_weighted_preprocessing_config_w2.json
+{
+  "model_name": "poisson_piecewise_exponential_weighted_tuned",
+  "train_table": "pp_linear_hazard_ready_train",
+  "test_table": "pp_linear_hazard_ready_test",
+  "target_column": "event_t",
+  "categorical_features": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability"
+  ],
+  "numeric_features": [
+    "num_of_prev_attempts",
+    "studied_credits",
+    "week",
+    "total_clicks_week",
+    "active_this_week",
+    "n_vle_rows_week",
+    "n_distinct_sites_week",
+    "cum_clicks_until_t",
+    "recency",
+    "streak"
+  ],
+  "operational_feature_columns": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability",
+    "num_of_prev_attempts",
+    "studied_credits",
+    "week",
+    "total_clicks_week",
+    "active_this_week",
+    "n_vle_rows_week",
+    "n_distinct_sites_week",
+    "cum_clicks_until_t",
+    "recency",
+    "streak"
+  ],
+  "canonical_expected_features_raw": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "week",
+    "total_clicks"
+  ],
+  "canonical_expected_features_resolved": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "week",
+    "total_clicks_week"
+  ],
+  "feature_alias_map": {
+    "total_clicks": "total_clicks_week"
+  },
+  "n_train_rows": 66712,
+  "n_test_rows": 28573,
+  "active_window_weeks": 2,
+  "raw_train_rows_before_truncation": 719498,
+  "raw_test_rows_before_truncation": 308393,
+  "n_output_features_after_preprocessing": 46,
+  "train_event_rate": 0.02109065835232042,
+  "test_event_rate": 0.020613866237356945,
+  "design_note": "The Poisson piecewise-exponential benchmark reuses the same weekly dynamic treatment contract as D5.6 and only swaps the GLM family.",
+  "methodological_note": "All learned preprocessing operations were fit on training data only and then applied unchanged to test data."
+}
+
+[END] 5.6b.2 - 2026-06-19 19:27:39
+[START] 5.6b - 2026-06-19 19:27:39
+# ==============================================================
+# 5.6b.3 - Compute runtime guardrails for the Poisson GLM
+# ==============================================================
+[Stage 5.6b.3 table_poisson_pexp_weighted_guardrails_w2 — Poisson runtime guardrails]
+table_name=table_poisson_pexp_weighted_guardrails_w2
+rows=1, cols=15
+ active_window_weeks  search_row_cap  final_row_cap  search_rows_selected  final_rows_selected  subtrain_total_rows  full_total_rows  n_features  subtrain_event_rate  full_event_rate  sampled_subtrain_event_rate  sampled_full_event_rate  positive_weight_subtrain  positive_weight_full            sample_weight_strategy
+                   2           53348          66712                 53348                66712                53348            66712          46             0.021275         0.021091                     0.021275                 0.021091                 46.002643             46.414357 class-frequency frequency weights
+ARTIFACT | Stage 5.6b.3 table_poisson_pexp_weighted_guardrails_w2 — Poisson runtime guardrails | duckdb://table_poisson_pexp_weighted_guardrails_w2
+[END] 5.6b.3 - 2026-06-19 19:27:39
+[START] 5.6b - 2026-06-19 19:27:39
+# ==============================================================
+# 5.6b.4 - Tune and evaluate the Poisson piecewise-exponential model
+# ==============================================================
+- TUNING_WORKERS: 8
+- TUNING_BACKEND: processes
+[Stage 5.6b.4 table_poisson_pexp_weighted_tuning_results_w2 — Poisson tuning results]
+table_name=table_poisson_pexp_weighted_tuning_results_w2
+rows=24, cols=9
+ candidate_id   alpha  fit_rows  fit_features  positive_weight  val_log_loss  val_brier  val_roc_auc fit_status
+            1 0.00001     53348            46        46.002643      0.392533   0.116564     0.759702         ok
+            2 0.00002     53348            46        46.002643      0.392747   0.116568     0.759713         ok
+            3 0.00005     53348            46        46.002643      0.393251   0.116595     0.759563         ok
+            4 0.00010     53348            46        46.002643      0.393881   0.116654     0.759345         ok
+            5 0.00020     53348            46        46.002643      0.394869   0.116778     0.758934         ok
+            6 0.00050     53348            46        46.002643      0.397157   0.117153     0.758197         ok
+            7 0.00100     53348            46        46.002643      0.400026   0.117727     0.757192         ok
+            8 0.00200     53348            46        46.002643      0.404163   0.118713     0.755432         ok
+            9 0.00500     53348            46        46.002643      0.411515   0.120771     0.750135         ok
+           10 0.01000     53348            46        46.002643      0.418209   0.122849     0.743624         ok
+           11 0.02000     53348            46        46.002643      0.425840   0.125387     0.736156         ok
+           12 0.05000     53348            46        46.002643      0.438308   0.129889     0.726447         ok
+           13 0.10000     53348            46        46.002643      0.451033   0.134844     0.719573         ok
+           14 0.20000     53348            46        46.002643      0.468490   0.142048     0.713137         ok
+           15 0.30000     53348            46        46.002643      0.481790   0.147789     0.709044         ok
+           16 0.50000     53348            46        46.002643      0.502840   0.157226     0.703097         ok
+           17 0.70000     53348            46        46.002643      0.519957   0.165141     0.698112         ok
+           18 1.00000     53348            46        46.002643      0.541522   0.175333     0.692203         ok
+           19 2.00000     53348            46        46.002643      0.595345   0.201437     0.678554         ok
+           20 5.00000     53348            46        46.002643      0.690632   0.248740     0.663191         ok
+ARTIFACT | Stage 5.6b.4 table_poisson_pexp_weighted_tuning_results_w2 — Poisson tuning results | duckdb://table_poisson_pexp_weighted_tuning_results_w2
+[Stage 5.6b.4 table_poisson_pexp_weighted_tuned_test_predictions_w2 — Poisson test predictions]
+table_name=table_poisson_pexp_weighted_tuned_test_predictions_w2
+rows=28573, cols=30
+   enrollment_id  id_student code_module code_presentation  week  event_t  event_observed  t_event_week  t_final_week  used_zero_week_fallback_for_censoring gender               region     highest_education imd_band age_band  num_of_prev_attempts  studied_credits disability  total_clicks_week  active_this_week  n_vle_rows_week  n_distinct_sites_week  cum_clicks_until_t  recency  streak split  pred_rate  pred_hazard  pred_survival  pred_risk
+100561|DDD|2014J      100561         DDD             2014J     0        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               10.0                 1                8                      4                10.0        0       1  test   0.870472     0.581246       0.418754   0.581246
+100561|DDD|2014J      100561         DDD             2014J     1        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N                0.0                 0                0                      0                10.0        1       0  test   0.543910     0.419526       0.243076   0.756924
+100561|DDD|2014J      100561         DDD             2014J     2        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               91.0                 1               26                     11               101.0        0       2  test   0.480890     0.381767       0.150277   0.849723
+100621|CCC|2014B      100621         CCC             2014B     0        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                0.0                 0                0                      0                 0.0        1       0  test   0.636709     0.470970       0.529030   0.470970
+100621|CCC|2014B      100621         CCC             2014B     1        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                3.0                 1                2                      2                 3.0        0       2  test   0.378304     0.314978       0.362397   0.637603
+100621|CCC|2014B      100621         CCC             2014B     2        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                1.0                 1                1                      1                 4.0        0       3  test   0.212010     0.191044       0.293164   0.706836
+101187|DDD|2014J      101187         DDD             2014J     0        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        1       0  test   0.410785     0.336870       0.663130   0.336870
+101187|DDD|2014J      101187         DDD             2014J     1        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        2       0  test   0.704707     0.505747       0.327754   0.672246
+101187|DDD|2014J      101187         DDD             2014J     2        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        3       0  test   0.748599     0.526971       0.155037   0.844963
+101279|DDD|2014J      101279         DDD             2014J     0        0               0           NaN            37                                      0      F     Yorkshire Region A Level or Equivalent    0-10%    35-55                     0               60          N               79.0                 1               31                     21                79.0        0       1  test   0.512453     0.400976       0.599024   0.400976
+101279|DDD|2014J      101279         DDD             2014J     1        0               0           NaN            37                                      0      F     Yorkshire Region A Level or Equivalent    0-10%    35-55                     0               60          N                1.0                 1                1                      1                80.0        0       2  test   0.687203     0.497019       0.301298   0.698702
+101279|DDD|2014J      101279         DDD             2014J     2        0               0           NaN            37                                      0      F     Yorkshire Region A Level or Equivalent    0-10%    35-55                     0               60          N                1.0                 1                1                      1                81.0        0       3  test   0.611477     0.457451       0.163469   0.836531
+101414|EEE|2013J      101414         EEE             2013J     0        0               0           NaN            38                                      0      M     Yorkshire Region    Lower Than A Level   70-80%    35-55                     0              105          N                0.0                 0                0                      0                 0.0        1       0  test   0.544916     0.420109       0.579891   0.420109
+101414|EEE|2013J      101414         EEE             2013J     1        0               0           NaN            38                                      0      M     Yorkshire Region    Lower Than A Level   70-80%    35-55                     0              105          N                0.0                 0                0                      0                 0.0        2       0  test   1.074277     0.658455       0.198059   0.801941
+101414|EEE|2013J      101414         EEE             2013J     2        0               0           NaN            38                                      0      M     Yorkshire Region    Lower Than A Level   70-80%    35-55                     0              105          N                0.0                 0                0                      0                 0.0        3       0  test   0.201968     0.182879       0.161838   0.838162
+101700|CCC|2014J      101700         CCC             2014J     0        0               0           NaN            38                                      0      M        London Region A Level or Equivalent    10-20     0-35                     0               60          Y                0.0                 0                0                      0                 0.0        1       0  test   0.160941     0.148658       0.851342   0.148658
+101700|CCC|2014J      101700         CCC             2014J     1        0               0           NaN            38                                      0      M        London Region A Level or Equivalent    10-20     0-35                     0               60          Y                0.0                 0                0                      0                 0.0        2       0  test   0.120643     0.113649       0.754588   0.245412
+101700|CCC|2014J      101700         CCC             2014J     2        0               0           NaN            38                                      0      M        London Region A Level or Equivalent    10-20     0-35                     0               60          Y                0.0                 0                0                      0                 0.0        3       0  test   0.213405     0.192171       0.609577   0.390423
+101781|AAA|2013J      101781         AAA             2013J     0        0               0           NaN            38                                      0      M         South Region    Lower Than A Level   80-90%    35-55                     0               60          N              182.0                 1               43                     11               182.0        0       1  test   0.531817     0.412464       0.587536   0.412464
+101781|AAA|2013J      101781         AAA             2013J     1        0               0           NaN            38                                      0      M         South Region    Lower Than A Level   80-90%    35-55                     0               60          N              514.0                 1               59                     20               696.0        0       2  test   0.427265     0.347709       0.383245   0.616755
+ARTIFACT | Stage 5.6b.4 table_poisson_pexp_weighted_tuned_test_predictions_w2 — Poisson test predictions | duckdb://table_poisson_pexp_weighted_tuned_test_predictions_w2
+[Stage 5.6b.4 table_poisson_pexp_weighted_tuned_primary_metrics_w2 — Poisson primary metrics]
+table_name=table_poisson_pexp_weighted_tuned_primary_metrics_w2
+rows=2, cols=4
+metric_name metric_category  metric_value                         notes
+        ibs         primary      0.420589 sksurv_integrated_brier_score
+    c_index      co_primary      0.479590          pycox_concordance_td
+ARTIFACT | Stage 5.6b.4 table_poisson_pexp_weighted_tuned_primary_metrics_w2 — Poisson primary metrics | duckdb://table_poisson_pexp_weighted_tuned_primary_metrics_w2
+[Stage 5.6b.4 table_poisson_pexp_weighted_tuned_brier_by_horizon_w2 — Poisson Brier scores by horizon]
+table_name=table_poisson_pexp_weighted_tuned_brier_by_horizon_w2
+rows=3, cols=5
+ horizon_week      metric_name metric_category  metric_value              notes
+           10 brier_at_horizon         primary      0.430132 sksurv_brier_score
+           20 brier_at_horizon         primary      0.415287 sksurv_brier_score
+           30 brier_at_horizon         primary      0.402867 sksurv_brier_score
+ARTIFACT | Stage 5.6b.4 table_poisson_pexp_weighted_tuned_brier_by_horizon_w2 — Poisson Brier scores by horizon | duckdb://table_poisson_pexp_weighted_tuned_brier_by_horizon_w2
+[Stage 5.6b.4 table_poisson_pexp_weighted_tuned_secondary_metrics_w2 — Poisson secondary metrics]
+table_name=table_poisson_pexp_weighted_tuned_secondary_metrics_w2
+rows=6, cols=5
+ horizon_week         metric_name metric_category  metric_value                                                                                  notes
+           10 risk_auc_at_horizon       secondary      0.344781                                                            roc_auc_on_evaluable_subset
+           10  time_dependent_auc       secondary      0.345935 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.345935; local_ipcw_auc
+           20 risk_auc_at_horizon       secondary      0.378874                                                            roc_auc_on_evaluable_subset
+           20  time_dependent_auc       secondary      0.379068 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.379068; local_ipcw_auc
+           30 risk_auc_at_horizon       secondary      0.400836                                                            roc_auc_on_evaluable_subset
+           30  time_dependent_auc       secondary      0.400951 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.400951; local_ipcw_auc
+ARTIFACT | Stage 5.6b.4 table_poisson_pexp_weighted_tuned_secondary_metrics_w2 — Poisson secondary metrics | duckdb://table_poisson_pexp_weighted_tuned_secondary_metrics_w2
+[Stage 5.6b.4 table_poisson_pexp_weighted_tuned_td_auc_support_audit_w2 — Poisson IPCW support audit]
+table_name=table_poisson_pexp_weighted_tuned_td_auc_support_audit_w2
+rows=3, cols=6
+ horizon_week  max_ipcw_time  n_total_test_enrollments  n_supported_test_enrollments  mean_auc                                                                                  notes
+           10           38.0                      9778                          6742  0.345935 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.345935; local_ipcw_auc
+           20           38.0                      9778                          6742  0.379068 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.379068; local_ipcw_auc
+           30           38.0                      9778                          6742  0.400951 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.400951; local_ipcw_auc
+ARTIFACT | Stage 5.6b.4 table_poisson_pexp_weighted_tuned_td_auc_support_audit_w2 — Poisson IPCW support audit | duckdb://table_poisson_pexp_weighted_tuned_td_auc_support_audit_w2
+[Stage 5.6b.4 table_poisson_pexp_weighted_tuned_row_diagnostics_w2 — Poisson row-level diagnostics]
+table_name=table_poisson_pexp_weighted_tuned_row_diagnostics_w2
+rows=1, cols=5
+                                  model_name  row_level_roc_auc  row_level_pr_auc  row_level_log_loss  row_level_brier
+poisson_piecewise_exponential_weighted_tuned           0.778977          0.062063            0.394458         0.116985
+ARTIFACT | Stage 5.6b.4 table_poisson_pexp_weighted_tuned_row_diagnostics_w2 — Poisson row-level diagnostics | duckdb://table_poisson_pexp_weighted_tuned_row_diagnostics_w2
+[Stage 5.6b.4 table_poisson_pexp_weighted_tuned_support_by_horizon_w2 — Poisson support by horizon]
+table_name=table_poisson_pexp_weighted_tuned_support_by_horizon_w2
+rows=3, cols=4
+ horizon_week  n_evaluable_enrollments  n_events_by_horizon  event_rate_by_horizon
+           10                     9778                 1215               0.124259
+           20                     9778                 1736               0.177541
+           30                     9778                 2129               0.217734
+ARTIFACT | Stage 5.6b.4 table_poisson_pexp_weighted_tuned_support_by_horizon_w2 — Poisson support by horizon | duckdb://table_poisson_pexp_weighted_tuned_support_by_horizon_w2
+[Stage 5.6b.4 table_poisson_pexp_weighted_tuned_calibration_summary_w2 — Poisson calibration summary]
+table_name=table_poisson_pexp_weighted_tuned_calibration_summary_w2
+rows=3, cols=5
+ horizon_week            metric_name metric_category  metric_value                                         notes
+           10 calibration_at_horizon         primary      0.524884 Weighted absolute calibration gap across bins
+           20 calibration_at_horizon         primary      0.480805 Weighted absolute calibration gap across bins
+           30 calibration_at_horizon         primary      0.446954 Weighted absolute calibration gap across bins
+ARTIFACT | Stage 5.6b.4 table_poisson_pexp_weighted_tuned_calibration_summary_w2 — Poisson calibration summary | duckdb://table_poisson_pexp_weighted_tuned_calibration_summary_w2
+[Stage 5.6b.4 table_poisson_pexp_weighted_tuned_calibration_bins_by_horizon_w2 — Poisson calibration bins]
+table_name=table_poisson_pexp_weighted_tuned_calibration_bins_by_horizon_w2
+rows=30, cols=6
+ calibration_bin   n  mean_predicted_risk  observed_event_rate  horizon_week  abs_calibration_gap
+               0 978             0.274412             0.310838            10             0.036426
+               1 978             0.456800             0.186094            10             0.270706
+               2 978             0.549626             0.130879            10             0.418747
+               3 977             0.610805             0.116684            10             0.494121
+               4 978             0.659067             0.099182            10             0.559885
+               5 978             0.699331             0.106339            10             0.592991
+               6 977             0.734005             0.070624            10             0.663381
+               7 978             0.768587             0.068507            10             0.700080
+               8 978             0.806017             0.077710            10             0.728308
+               9 978             0.859968             0.075665            10             0.784303
+               0 978             0.274412             0.356851            20             0.082438
+               1 978             0.456800             0.248466            20             0.208333
+               2 978             0.549626             0.188139            20             0.361487
+               3 977             0.610805             0.182190            20             0.428615
+               4 978             0.659067             0.150307            20             0.508760
+               5 978             0.699331             0.154397            20             0.544934
+               6 977             0.734005             0.126919            20             0.607086
+               7 978             0.768587             0.122699            20             0.645888
+               8 978             0.806017             0.126789            20             0.679228
+               9 978             0.859968             0.118609            20             0.741358
+ARTIFACT | Stage 5.6b.4 table_poisson_pexp_weighted_tuned_calibration_bins_by_horizon_w2 — Poisson calibration bins | duckdb://table_poisson_pexp_weighted_tuned_calibration_bins_by_horizon_w2
+[Stage 5.6b.4 table_poisson_pexp_weighted_tuned_predicted_vs_observed_survival_w2 — Poisson predicted versus observed survival]
+table_name=table_poisson_pexp_weighted_tuned_predicted_vs_observed_survival_w2
+rows=3, cols=5
+ horizon_week  n_evaluable_enrollments  mean_predicted_survival  mean_observed_survival  abs_gap
+           10                     9778                 0.358144                0.875741 0.517597
+           20                     9778                 0.358144                0.822459 0.464314
+           30                     9778                 0.358144                0.782266 0.424122
+ARTIFACT | Stage 5.6b.4 table_poisson_pexp_weighted_tuned_predicted_vs_observed_survival_w2 — Poisson predicted versus observed survival | duckdb://table_poisson_pexp_weighted_tuned_predicted_vs_observed_survival_w2
+ARTIFACT | poisson_pexp_model | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/models/poisson_piecewise_exponential_weighted_tuned_w2.joblib
+ARTIFACT | poisson_pexp_preprocessor | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/models/poisson_piecewise_exponential_weighted_preprocessor_w2.joblib
+ARTIFACT | poisson_pexp_tuned_model_config | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/metadata/poisson_piecewise_exponential_weighted_tuned_model_config_w2.json
+{
+  "model_name": "poisson_piecewise_exponential_weighted_tuned",
+  "family_name": "discrete_time_dynamic",
+  "model_type": "poisson_piecewise_exponential",
+  "alpha_grid": [
+    1e-05,
+    2e-05,
+    5e-05,
+    0.0001,
+    0.0002,
+    0.0005,
+    0.001,
+    0.002,
+    0.005,
+    0.01,
+    0.02,
+    0.05,
+    0.1,
+    0.2,
+    0.3,
+    0.5,
+    0.7,
+    1.0,
+    2.0,
+    5.0,
+    10.0,
+    20.0,
+    50.0,
+    100.0
+  ],
+  "selection_metric": "val_log_loss_on_discrete_hazard",
+  "validation_split": {
+    "method": "GroupShuffleSplit",
+    "test_size": 0.2,
+    "group_column": "enrollment_id",
+    "random_seed": 42
+  },
+  "guardrails": {
+    "active_window_weeks": 2,
+    "search_row_cap": 53348,
+    "final_row_cap": 66712,
+    "search_rows_selected": 53348,
+    "final_rows_selected": 66712,
+    "subtrain_total_rows": 53348,
+    "full_total_rows": 66712,
+    "n_features": 46,
+    "subtrain_event_rate": 0.02127539926520207,
+    "full_event_rate": 0.02109065835232042,
+    "sampled_subtrain_event_rate": 0.02127539926520207,
+    "sampled_full_event_rate": 0.02109065835232042,
+    "positive_weight_subtrain": 46.00264317180617,
+    "positive_weight_full": 46.414356787491116,
+    "sample_weight_strategy": "class-frequency frequency weights"
+  },
+  "benchmark_horizons": [
+    10,
+    20,
+    30
+  ],
+  "calibration_bins": 10,
+  "active_window_weeks": 2,
+  "best_candidate": {
+    "alpha": 1e-05,
+    "val_log_loss": 0.39253281102723575
+  },
+  "preprocessing": {
+    "categorical_features": [
+      "gender",
+      "region",
+      "highest_education",
+      "imd_band",
+      "age_band",
+      "disability"
+    ],
+    "numeric_features": [
+      "num_of_prev_attempts",
+      "studied_credits",
+      "week",
+      "total_clicks_week",
+      "active_this_week",
+      "n_vle_rows_week",
+      "n_distinct_sites_week",
+      "cum_clicks_until_t",
+      "recency",
+      "streak"
+    ],
+    "categorical_encoder": "OneHotEncoder(handle_unknown=ignore, sparse_output=True)",
+    "numeric_scaler": "MaxAbsScaler"
+  },
+  "event_rate_to_hazard_mapping": "pred_hazard = 1 - exp(-pred_rate)",
+  "weighting_strategy": "Poisson GLM frequency weights are derived from the guarded positive-class imbalance ratio on sampled person-period rows.",
+  "design_note": "This weighted Poisson variant preserves the dynamic weekly contract and changes only the fitting weights for Item 6 sensitivity."
+}
+
+ candidate_id   alpha  fit_rows  fit_features  positive_weight  val_log_loss  val_brier  val_roc_auc fit_status
+            1 0.00001     53348            46        46.002643      0.392533   0.116564     0.759702         ok
+            2 0.00002     53348            46        46.002643      0.392747   0.116568     0.759713         ok
+            3 0.00005     53348            46        46.002643      0.393251   0.116595     0.759563         ok
+            4 0.00010     53348            46        46.002643      0.393881   0.116654     0.759345         ok
+            5 0.00020     53348            46        46.002643      0.394869   0.116778     0.758934         ok
+            6 0.00050     53348            46        46.002643      0.397157   0.117153     0.758197         ok
+            7 0.00100     53348            46        46.002643      0.400026   0.117727     0.757192         ok
+            8 0.00200     53348            46        46.002643      0.404163   0.118713     0.755432         ok
+            9 0.00500     53348            46        46.002643      0.411515   0.120771     0.750135         ok
+           10 0.01000     53348            46        46.002643      0.418209   0.122849     0.743624         ok
+           11 0.02000     53348            46        46.002643      0.425840   0.125387     0.736156         ok
+           12 0.05000     53348            46        46.002643      0.438308   0.129889     0.726447         ok
+           13 0.10000     53348            46        46.002643      0.451033   0.134844     0.719573         ok
+           14 0.20000     53348            46        46.002643      0.468490   0.142048     0.713137         ok
+           15 0.30000     53348            46        46.002643      0.481790   0.147789     0.709044         ok
+           16 0.50000     53348            46        46.002643      0.502840   0.157226     0.703097         ok
+           17 0.70000     53348            46        46.002643      0.519957   0.165141     0.698112         ok
+           18 1.00000     53348            46        46.002643      0.541522   0.175333     0.692203         ok
+           19 2.00000     53348            46        46.002643      0.595345   0.201437     0.678554         ok
+           20 5.00000     53348            46        46.002643      0.690632   0.248740     0.663191         ok
+[END] 5.6b.4 - 2026-06-19 19:27:50
+[RUN_PLAN] dynamic_window_weeks=4 script=dropout_bench_v3_D_06_B_dynamic_weekly_poisson_piecewise_exponential_sensibility_weighted_test.py
+[START] 5.6b - 2026-06-19 19:27:50
+# ==============================================================
+# 5.6b.2 - Prepare the shared dynamic weekly treatment for Poisson
+# ==============================================================
+[Stage 5.6b.2 table_poisson_pexp_weighted_preprocessing_summary_w4 — Poisson preprocessing summary]
+table_name=table_poisson_pexp_weighted_preprocessing_summary_w4
+rows=1, cols=12
+                                model_family  active_window_weeks  raw_train_rows_before_truncation  raw_test_rows_before_truncation  train_rows  test_rows  n_input_features_raw  n_numeric_features  n_categorical_features  n_output_features_after_preprocessing  train_event_rate  test_event_rate
+poisson_piecewise_exponential_weighted_tuned                    4                            719498                           308393      109284      46835                    16                  10                       6                                     46           0.01702          0.01706
+ARTIFACT | Stage 5.6b.2 table_poisson_pexp_weighted_preprocessing_summary_w4 — Poisson preprocessing summary | duckdb://table_poisson_pexp_weighted_preprocessing_summary_w4
+[Stage 5.6b.2 table_poisson_pexp_weighted_raw_feature_manifest_w4 — Poisson raw feature manifest]
+table_name=table_poisson_pexp_weighted_raw_feature_manifest_w4
+rows=16, cols=6
+feature_name_operational feature_role  present_in_train  present_in_test  covered_by_canonical_config_after_alias canonical_source_name
+                  gender  categorical              True             True                                    False                      
+                  region  categorical              True             True                                    False                      
+       highest_education  categorical              True             True                                    False                      
+                imd_band  categorical              True             True                                    False                      
+                age_band  categorical              True             True                                    False                      
+              disability  categorical              True             True                                    False                      
+    num_of_prev_attempts      numeric              True             True                                     True  num_of_prev_attempts
+         studied_credits      numeric              True             True                                     True       studied_credits
+                    week      numeric              True             True                                     True                  week
+       total_clicks_week      numeric              True             True                                     True          total_clicks
+        active_this_week      numeric              True             True                                    False                      
+         n_vle_rows_week      numeric              True             True                                    False                      
+   n_distinct_sites_week      numeric              True             True                                    False                      
+      cum_clicks_until_t      numeric              True             True                                    False                      
+                 recency      numeric              True             True                                    False                      
+                  streak      numeric              True             True                                    False                      
+ARTIFACT | Stage 5.6b.2 table_poisson_pexp_weighted_raw_feature_manifest_w4 — Poisson raw feature manifest | duckdb://table_poisson_pexp_weighted_raw_feature_manifest_w4
+[Stage 5.6b.2 table_poisson_pexp_weighted_feature_names_out_w4 — Poisson transformed feature names]
+table_name=table_poisson_pexp_weighted_feature_names_out_w4
+rows=46, cols=1
+       preprocessed_feature_name
+       num__num_of_prev_attempts
+            num__studied_credits
+                       num__week
+          num__total_clicks_week
+           num__active_this_week
+            num__n_vle_rows_week
+      num__n_distinct_sites_week
+         num__cum_clicks_until_t
+                    num__recency
+                     num__streak
+                   cat__gender_F
+                   cat__gender_M
+ cat__region_East Anglian Region
+cat__region_East Midlands Region
+             cat__region_Ireland
+       cat__region_London Region
+        cat__region_North Region
+cat__region_North Western Region
+            cat__region_Scotland
+   cat__region_South East Region
+ARTIFACT | Stage 5.6b.2 table_poisson_pexp_weighted_feature_names_out_w4 — Poisson transformed feature names | duckdb://table_poisson_pexp_weighted_feature_names_out_w4
+ARTIFACT | poisson_pexp_preprocessing_config | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/metadata/poisson_piecewise_exponential_weighted_preprocessing_config_w4.json
+{
+  "model_name": "poisson_piecewise_exponential_weighted_tuned",
+  "train_table": "pp_linear_hazard_ready_train",
+  "test_table": "pp_linear_hazard_ready_test",
+  "target_column": "event_t",
+  "categorical_features": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability"
+  ],
+  "numeric_features": [
+    "num_of_prev_attempts",
+    "studied_credits",
+    "week",
+    "total_clicks_week",
+    "active_this_week",
+    "n_vle_rows_week",
+    "n_distinct_sites_week",
+    "cum_clicks_until_t",
+    "recency",
+    "streak"
+  ],
+  "operational_feature_columns": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability",
+    "num_of_prev_attempts",
+    "studied_credits",
+    "week",
+    "total_clicks_week",
+    "active_this_week",
+    "n_vle_rows_week",
+    "n_distinct_sites_week",
+    "cum_clicks_until_t",
+    "recency",
+    "streak"
+  ],
+  "canonical_expected_features_raw": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "week",
+    "total_clicks"
+  ],
+  "canonical_expected_features_resolved": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "week",
+    "total_clicks_week"
+  ],
+  "feature_alias_map": {
+    "total_clicks": "total_clicks_week"
+  },
+  "n_train_rows": 109284,
+  "n_test_rows": 46835,
+  "active_window_weeks": 4,
+  "raw_train_rows_before_truncation": 719498,
+  "raw_test_rows_before_truncation": 308393,
+  "n_output_features_after_preprocessing": 46,
+  "train_event_rate": 0.01701987482156583,
+  "test_event_rate": 0.01705989110707804,
+  "design_note": "The Poisson piecewise-exponential benchmark reuses the same weekly dynamic treatment contract as D5.6 and only swaps the GLM family.",
+  "methodological_note": "All learned preprocessing operations were fit on training data only and then applied unchanged to test data."
+}
+
+[END] 5.6b.2 - 2026-06-19 19:27:51
+[START] 5.6b - 2026-06-19 19:27:51
+# ==============================================================
+# 5.6b.3 - Compute runtime guardrails for the Poisson GLM
+# ==============================================================
+[Stage 5.6b.3 table_poisson_pexp_weighted_guardrails_w4 — Poisson runtime guardrails]
+table_name=table_poisson_pexp_weighted_guardrails_w4
+rows=1, cols=15
+ active_window_weeks  search_row_cap  final_row_cap  search_rows_selected  final_rows_selected  subtrain_total_rows  full_total_rows  n_features  subtrain_event_rate  full_event_rate  sampled_subtrain_event_rate  sampled_full_event_rate  positive_weight_subtrain  positive_weight_full            sample_weight_strategy
+                   4           76086          76086                 76086                76086                87386           109284          46             0.017108          0.01702                     0.019649                 0.024446                 49.893645             39.906452 class-frequency frequency weights
+ARTIFACT | Stage 5.6b.3 table_poisson_pexp_weighted_guardrails_w4 — Poisson runtime guardrails | duckdb://table_poisson_pexp_weighted_guardrails_w4
+[END] 5.6b.3 - 2026-06-19 19:27:51
+[START] 5.6b - 2026-06-19 19:27:51
+# ==============================================================
+# 5.6b.4 - Tune and evaluate the Poisson piecewise-exponential model
+# ==============================================================
+- TUNING_WORKERS: 8
+- TUNING_BACKEND: processes
+[Stage 5.6b.4 table_poisson_pexp_weighted_tuning_results_w4 — Poisson tuning results]
+table_name=table_poisson_pexp_weighted_tuning_results_w4
+rows=24, cols=9
+ candidate_id   alpha  fit_rows  fit_features  positive_weight  val_log_loss  val_brier  val_roc_auc fit_status
+            1 0.00001     76086            46        49.893645      0.391639   0.115956     0.752957         ok
+            2 0.00002     76086            46        49.893645      0.391996   0.115995     0.752906         ok
+            3 0.00005     76086            46        49.893645      0.392748   0.116096     0.752595         ok
+            4 0.00010     76086            46        49.893645      0.393569   0.116220     0.752184         ok
+            5 0.00020     76086            46        49.893645      0.394742   0.116405     0.751680         ok
+            6 0.00050     76086            46        49.893645      0.397216   0.116817     0.750780         ok
+            7 0.00100     76086            46        49.893645      0.400153   0.117395     0.749455         ok
+            8 0.00200     76086            46        49.893645      0.404153   0.118345     0.746725         ok
+            9 0.00500     76086            46        49.893645      0.410787   0.120232     0.740368         ok
+           10 0.01000     76086            46        49.893645      0.416500   0.122050     0.733965         ok
+           11 0.02000     76086            46        49.893645      0.422992   0.124245     0.727833         ok
+           12 0.05000     76086            46        49.893645      0.434337   0.128311     0.721177         ok
+           13 0.10000     76086            46        49.893645      0.446915   0.133105     0.717184         ok
+           14 0.20000     76086            46        49.893645      0.464868   0.140397     0.713633         ok
+           15 0.30000     76086            46        49.893645      0.478632   0.146288     0.711482         ok
+           16 0.50000     76086            46        49.893645      0.500355   0.155997     0.708006         ok
+           17 0.70000     76086            46        49.893645      0.517948   0.164128     0.704936         ok
+           18 1.00000     76086            46        49.893645      0.540056   0.174581     0.700765         ok
+           19 2.00000     76086            46        49.893645      0.595092   0.201295     0.689206         ok
+           20 5.00000     76086            46        49.893645      0.692078   0.249462     0.673952         ok
+ARTIFACT | Stage 5.6b.4 table_poisson_pexp_weighted_tuning_results_w4 — Poisson tuning results | duckdb://table_poisson_pexp_weighted_tuning_results_w4
+[Stage 5.6b.4 table_poisson_pexp_weighted_tuned_test_predictions_w4 — Poisson test predictions]
+table_name=table_poisson_pexp_weighted_tuned_test_predictions_w4
+rows=46835, cols=30
+   enrollment_id  id_student code_module code_presentation  week  event_t  event_observed  t_event_week  t_final_week  used_zero_week_fallback_for_censoring gender               region     highest_education imd_band age_band  num_of_prev_attempts  studied_credits disability  total_clicks_week  active_this_week  n_vle_rows_week  n_distinct_sites_week  cum_clicks_until_t  recency  streak split  pred_rate  pred_hazard  pred_survival  pred_risk
+100561|DDD|2014J      100561         DDD             2014J     0        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               10.0                 1                8                      4                10.0        0       1  test   0.874256     0.582828       0.417172   0.582828
+100561|DDD|2014J      100561         DDD             2014J     1        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N                0.0                 0                0                      0                10.0        1       0  test   0.545219     0.420285       0.241841   0.758159
+100561|DDD|2014J      100561         DDD             2014J     2        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               91.0                 1               26                     11               101.0        0       2  test   0.533344     0.413360       0.141874   0.858126
+100561|DDD|2014J      100561         DDD             2014J     3        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N                6.0                 1                4                      2               107.0        0       3  test   0.653669     0.479866       0.073793   0.926207
+100561|DDD|2014J      100561         DDD             2014J     4        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               30.0                 1               17                      8               137.0        0       4  test   0.327096     0.278985       0.053206   0.946794
+100621|CCC|2014B      100621         CCC             2014B     0        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                0.0                 0                0                      0                 0.0        1       0  test   0.173270     0.159089       0.840911   0.159089
+100621|CCC|2014B      100621         CCC             2014B     1        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                3.0                 1                2                      2                 3.0        0       2  test   0.328500     0.279997       0.605458   0.394542
+100621|CCC|2014B      100621         CCC             2014B     2        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                1.0                 1                1                      1                 4.0        0       3  test   0.330647     0.281541       0.434997   0.565003
+100621|CCC|2014B      100621         CCC             2014B     3        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                1.0                 1                1                      1                 5.0        0       4  test   0.669674     0.488124       0.222664   0.777336
+100621|CCC|2014B      100621         CCC             2014B     4        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                0.0                 0                0                      0                 5.0        1       0  test   0.433130     0.351524       0.144392   0.855608
+101187|DDD|2014J      101187         DDD             2014J     0        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        1       0  test   0.526920     0.409580       0.590420   0.409580
+101187|DDD|2014J      101187         DDD             2014J     1        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        2       0  test   0.798078     0.549807       0.265803   0.734197
+101187|DDD|2014J      101187         DDD             2014J     2        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        3       0  test   0.746842     0.526139       0.125954   0.874046
+101187|DDD|2014J      101187         DDD             2014J     3        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        4       0  test   0.523360     0.407474       0.074631   0.925369
+101187|DDD|2014J      101187         DDD             2014J     4        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        5       0  test   0.430003     0.349493       0.048548   0.951452
+101279|DDD|2014J      101279         DDD             2014J     0        0               0           NaN            37                                      0      F     Yorkshire Region A Level or Equivalent    0-10%    35-55                     0               60          N               79.0                 1               31                     21                79.0        0       1  test   0.437844     0.354573       0.645427   0.354573
+101279|DDD|2014J      101279         DDD             2014J     1        0               0           NaN            37                                      0      F     Yorkshire Region A Level or Equivalent    0-10%    35-55                     0               60          N                1.0                 1                1                      1                80.0        0       2  test   0.711759     0.509220       0.316763   0.683237
+101279|DDD|2014J      101279         DDD             2014J     2        0               0           NaN            37                                      0      F     Yorkshire Region A Level or Equivalent    0-10%    35-55                     0               60          N                1.0                 1                1                      1                81.0        0       3  test   0.727028     0.516657       0.153105   0.846895
+101279|DDD|2014J      101279         DDD             2014J     3        0               0           NaN            37                                      0      F     Yorkshire Region A Level or Equivalent    0-10%    35-55                     0               60          N                0.0                 0                0                      0                81.0        1       0  test   0.492047     0.388626       0.093604   0.906396
+101279|DDD|2014J      101279         DDD             2014J     4        0               0           NaN            37                                      0      F     Yorkshire Region A Level or Equivalent    0-10%    35-55                     0               60          N                9.0                 1                5                      4                90.0        0       2  test   0.698189     0.502514       0.046567   0.953433
+ARTIFACT | Stage 5.6b.4 table_poisson_pexp_weighted_tuned_test_predictions_w4 — Poisson test predictions | duckdb://table_poisson_pexp_weighted_tuned_test_predictions_w4
+[Stage 5.6b.4 table_poisson_pexp_weighted_tuned_primary_metrics_w4 — Poisson primary metrics]
+table_name=table_poisson_pexp_weighted_tuned_primary_metrics_w4
+rows=2, cols=4
+metric_name metric_category  metric_value                         notes
+        ibs         primary      0.597058 sksurv_integrated_brier_score
+    c_index      co_primary      0.501668          pycox_concordance_td
+ARTIFACT | Stage 5.6b.4 table_poisson_pexp_weighted_tuned_primary_metrics_w4 — Poisson primary metrics | duckdb://table_poisson_pexp_weighted_tuned_primary_metrics_w4
+[Stage 5.6b.4 table_poisson_pexp_weighted_tuned_brier_by_horizon_w4 — Poisson Brier scores by horizon]
+table_name=table_poisson_pexp_weighted_tuned_brier_by_horizon_w4
+rows=3, cols=5
+ horizon_week      metric_name metric_category  metric_value              notes
+           10 brier_at_horizon         primary      0.631882 sksurv_brier_score
+           20 brier_at_horizon         primary      0.596669 sksurv_brier_score
+           30 brier_at_horizon         primary      0.570569 sksurv_brier_score
+ARTIFACT | Stage 5.6b.4 table_poisson_pexp_weighted_tuned_brier_by_horizon_w4 — Poisson Brier scores by horizon | duckdb://table_poisson_pexp_weighted_tuned_brier_by_horizon_w4
+[Stage 5.6b.4 table_poisson_pexp_weighted_tuned_secondary_metrics_w4 — Poisson secondary metrics]
+table_name=table_poisson_pexp_weighted_tuned_secondary_metrics_w4
+rows=6, cols=5
+ horizon_week         metric_name metric_category  metric_value                                                                                  notes
+           10 risk_auc_at_horizon       secondary      0.261645                                                            roc_auc_on_evaluable_subset
+           10  time_dependent_auc       secondary      0.264500 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.264500; local_ipcw_auc
+           20 risk_auc_at_horizon       secondary      0.339594                                                            roc_auc_on_evaluable_subset
+           20  time_dependent_auc       secondary      0.343575 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.343575; local_ipcw_auc
+           30 risk_auc_at_horizon       secondary      0.370958                                                            roc_auc_on_evaluable_subset
+           30  time_dependent_auc       secondary      0.375648 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.375648; local_ipcw_auc
+ARTIFACT | Stage 5.6b.4 table_poisson_pexp_weighted_tuned_secondary_metrics_w4 — Poisson secondary metrics | duckdb://table_poisson_pexp_weighted_tuned_secondary_metrics_w4
+[Stage 5.6b.4 table_poisson_pexp_weighted_tuned_td_auc_support_audit_w4 — Poisson IPCW support audit]
+table_name=table_poisson_pexp_weighted_tuned_td_auc_support_audit_w4
+rows=3, cols=6
+ horizon_week  max_ipcw_time  n_total_test_enrollments  n_supported_test_enrollments  mean_auc                                                                                  notes
+           10           38.0                      9778                          6742  0.264500 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.264500; local_ipcw_auc
+           20           38.0                      9778                          6742  0.343575 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.343575; local_ipcw_auc
+           30           38.0                      9778                          6742  0.375648 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.375648; local_ipcw_auc
+ARTIFACT | Stage 5.6b.4 table_poisson_pexp_weighted_tuned_td_auc_support_audit_w4 — Poisson IPCW support audit | duckdb://table_poisson_pexp_weighted_tuned_td_auc_support_audit_w4
+[Stage 5.6b.4 table_poisson_pexp_weighted_tuned_row_diagnostics_w4 — Poisson row-level diagnostics]
+table_name=table_poisson_pexp_weighted_tuned_row_diagnostics_w4
+rows=1, cols=5
+                                  model_name  row_level_roc_auc  row_level_pr_auc  row_level_log_loss  row_level_brier
+poisson_piecewise_exponential_weighted_tuned            0.77688          0.053686            0.393204         0.116071
+ARTIFACT | Stage 5.6b.4 table_poisson_pexp_weighted_tuned_row_diagnostics_w4 — Poisson row-level diagnostics | duckdb://table_poisson_pexp_weighted_tuned_row_diagnostics_w4
+[Stage 5.6b.4 table_poisson_pexp_weighted_tuned_support_by_horizon_w4 — Poisson support by horizon]
+table_name=table_poisson_pexp_weighted_tuned_support_by_horizon_w4
+rows=3, cols=4
+ horizon_week  n_evaluable_enrollments  n_events_by_horizon  event_rate_by_horizon
+           10                     9778                 1215               0.124259
+           20                     9778                 1736               0.177541
+           30                     9778                 2129               0.217734
+ARTIFACT | Stage 5.6b.4 table_poisson_pexp_weighted_tuned_support_by_horizon_w4 — Poisson support by horizon | duckdb://table_poisson_pexp_weighted_tuned_support_by_horizon_w4
+[Stage 5.6b.4 table_poisson_pexp_weighted_tuned_calibration_summary_w4 — Poisson calibration summary]
+table_name=table_poisson_pexp_weighted_tuned_calibration_summary_w4
+rows=3, cols=5
+ horizon_week            metric_name metric_category  metric_value                                         notes
+           10 calibration_at_horizon         primary      0.689889 Weighted absolute calibration gap across bins
+           20 calibration_at_horizon         primary      0.641515 Weighted absolute calibration gap across bins
+           30 calibration_at_horizon         primary      0.606231 Weighted absolute calibration gap across bins
+ARTIFACT | Stage 5.6b.4 table_poisson_pexp_weighted_tuned_calibration_summary_w4 — Poisson calibration summary | duckdb://table_poisson_pexp_weighted_tuned_calibration_summary_w4
+[Stage 5.6b.4 table_poisson_pexp_weighted_tuned_calibration_bins_by_horizon_w4 — Poisson calibration bins]
+table_name=table_poisson_pexp_weighted_tuned_calibration_bins_by_horizon_w4
+rows=30, cols=6
+ calibration_bin   n  mean_predicted_risk  observed_event_rate  horizon_week  abs_calibration_gap
+               0 978             0.434661             0.503067            10             0.068407
+               1 978             0.669605             0.162577            10             0.507029
+               2 978             0.745770             0.105317            10             0.640453
+               3 977             0.794669             0.082907            10             0.711762
+               4 978             0.831124             0.073620            10             0.757504
+               5 978             0.859814             0.064417            10             0.795397
+               6 977             0.883672             0.073695            10             0.809977
+               7 978             0.905487             0.063395            10             0.842092
+               8 978             0.926896             0.071575            10             0.855321
+               9 978             0.953013             0.041922            10             0.911090
+               0 978             0.434661             0.527607            20             0.092947
+               1 978             0.669605             0.217791            20             0.451814
+               2 978             0.745770             0.156442            20             0.589328
+               3 977             0.794669             0.137155            20             0.657514
+               4 978             0.831124             0.120654            20             0.710470
+               5 978             0.859814             0.118609            20             0.741204
+               6 977             0.883672             0.131013            20             0.752658
+               7 978             0.905487             0.126789            20             0.778697
+               8 978             0.926896             0.131902            20             0.794994
+               9 978             0.953013             0.107362            20             0.845651
+ARTIFACT | Stage 5.6b.4 table_poisson_pexp_weighted_tuned_calibration_bins_by_horizon_w4 — Poisson calibration bins | duckdb://table_poisson_pexp_weighted_tuned_calibration_bins_by_horizon_w4
+[Stage 5.6b.4 table_poisson_pexp_weighted_tuned_predicted_vs_observed_survival_w4 — Poisson predicted versus observed survival]
+table_name=table_poisson_pexp_weighted_tuned_predicted_vs_observed_survival_w4
+rows=3, cols=5
+ horizon_week  n_evaluable_enrollments  mean_predicted_survival  mean_observed_survival  abs_gap
+           10                     9778                 0.199537                0.875741 0.676204
+           20                     9778                 0.199537                0.822459 0.622922
+           30                     9778                 0.199537                0.782266 0.582729
+ARTIFACT | Stage 5.6b.4 table_poisson_pexp_weighted_tuned_predicted_vs_observed_survival_w4 — Poisson predicted versus observed survival | duckdb://table_poisson_pexp_weighted_tuned_predicted_vs_observed_survival_w4
+ARTIFACT | poisson_pexp_model | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/models/poisson_piecewise_exponential_weighted_tuned_w4.joblib
+ARTIFACT | poisson_pexp_preprocessor | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/models/poisson_piecewise_exponential_weighted_preprocessor_w4.joblib
+ARTIFACT | poisson_pexp_tuned_model_config | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/metadata/poisson_piecewise_exponential_weighted_tuned_model_config_w4.json
+{
+  "model_name": "poisson_piecewise_exponential_weighted_tuned",
+  "family_name": "discrete_time_dynamic",
+  "model_type": "poisson_piecewise_exponential",
+  "alpha_grid": [
+    1e-05,
+    2e-05,
+    5e-05,
+    0.0001,
+    0.0002,
+    0.0005,
+    0.001,
+    0.002,
+    0.005,
+    0.01,
+    0.02,
+    0.05,
+    0.1,
+    0.2,
+    0.3,
+    0.5,
+    0.7,
+    1.0,
+    2.0,
+    5.0,
+    10.0,
+    20.0,
+    50.0,
+    100.0
+  ],
+  "selection_metric": "val_log_loss_on_discrete_hazard",
+  "validation_split": {
+    "method": "GroupShuffleSplit",
+    "test_size": 0.2,
+    "group_column": "enrollment_id",
+    "random_seed": 42
+  },
+  "guardrails": {
+    "active_window_weeks": 4,
+    "search_row_cap": 76086,
+    "final_row_cap": 76086,
+    "search_rows_selected": 76086,
+    "final_rows_selected": 76086,
+    "subtrain_total_rows": 87386,
+    "full_total_rows": 109284,
+    "n_features": 46,
+    "subtrain_event_rate": 0.017108003570365963,
+    "full_event_rate": 0.01701987482156583,
+    "sampled_subtrain_event_rate": 0.01964881844228899,
+    "sampled_full_event_rate": 0.024446021607128776,
+    "positive_weight_subtrain": 49.893645484949836,
+    "positive_weight_full": 39.906451612903226,
+    "sample_weight_strategy": "class-frequency frequency weights"
+  },
+  "benchmark_horizons": [
+    10,
+    20,
+    30
+  ],
+  "calibration_bins": 10,
+  "active_window_weeks": 4,
+  "best_candidate": {
+    "alpha": 1e-05,
+    "val_log_loss": 0.39163881687374685
+  },
+  "preprocessing": {
+    "categorical_features": [
+      "gender",
+      "region",
+      "highest_education",
+      "imd_band",
+      "age_band",
+      "disability"
+    ],
+    "numeric_features": [
+      "num_of_prev_attempts",
+      "studied_credits",
+      "week",
+      "total_clicks_week",
+      "active_this_week",
+      "n_vle_rows_week",
+      "n_distinct_sites_week",
+      "cum_clicks_until_t",
+      "recency",
+      "streak"
+    ],
+    "categorical_encoder": "OneHotEncoder(handle_unknown=ignore, sparse_output=True)",
+    "numeric_scaler": "MaxAbsScaler"
+  },
+  "event_rate_to_hazard_mapping": "pred_hazard = 1 - exp(-pred_rate)",
+  "weighting_strategy": "Poisson GLM frequency weights are derived from the guarded positive-class imbalance ratio on sampled person-period rows.",
+  "design_note": "This weighted Poisson variant preserves the dynamic weekly contract and changes only the fitting weights for Item 6 sensitivity."
+}
+
+ candidate_id   alpha  fit_rows  fit_features  positive_weight  val_log_loss  val_brier  val_roc_auc fit_status
+            1 0.00001     76086            46        49.893645      0.391639   0.115956     0.752957         ok
+            2 0.00002     76086            46        49.893645      0.391996   0.115995     0.752906         ok
+            3 0.00005     76086            46        49.893645      0.392748   0.116096     0.752595         ok
+            4 0.00010     76086            46        49.893645      0.393569   0.116220     0.752184         ok
+            5 0.00020     76086            46        49.893645      0.394742   0.116405     0.751680         ok
+            6 0.00050     76086            46        49.893645      0.397216   0.116817     0.750780         ok
+            7 0.00100     76086            46        49.893645      0.400153   0.117395     0.749455         ok
+            8 0.00200     76086            46        49.893645      0.404153   0.118345     0.746725         ok
+            9 0.00500     76086            46        49.893645      0.410787   0.120232     0.740368         ok
+           10 0.01000     76086            46        49.893645      0.416500   0.122050     0.733965         ok
+           11 0.02000     76086            46        49.893645      0.422992   0.124245     0.727833         ok
+           12 0.05000     76086            46        49.893645      0.434337   0.128311     0.721177         ok
+           13 0.10000     76086            46        49.893645      0.446915   0.133105     0.717184         ok
+           14 0.20000     76086            46        49.893645      0.464868   0.140397     0.713633         ok
+           15 0.30000     76086            46        49.893645      0.478632   0.146288     0.711482         ok
+           16 0.50000     76086            46        49.893645      0.500355   0.155997     0.708006         ok
+           17 0.70000     76086            46        49.893645      0.517948   0.164128     0.704936         ok
+           18 1.00000     76086            46        49.893645      0.540056   0.174581     0.700765         ok
+           19 2.00000     76086            46        49.893645      0.595092   0.201295     0.689206         ok
+           20 5.00000     76086            46        49.893645      0.692078   0.249462     0.673952         ok
+[END] 5.6b.4 - 2026-06-19 19:28:00
+[RUN_PLAN] dynamic_window_weeks=6 script=dropout_bench_v3_D_06_B_dynamic_weekly_poisson_piecewise_exponential_sensibility_weighted_test.py
+[START] 5.6b - 2026-06-19 19:28:00
+# ==============================================================
+# 5.6b.2 - Prepare the shared dynamic weekly treatment for Poisson
+# ==============================================================
+[Stage 5.6b.2 table_poisson_pexp_weighted_preprocessing_summary_w6 — Poisson preprocessing summary]
+table_name=table_poisson_pexp_weighted_preprocessing_summary_w6
+rows=1, cols=12
+                                model_family  active_window_weeks  raw_train_rows_before_truncation  raw_test_rows_before_truncation  train_rows  test_rows  n_input_features_raw  n_numeric_features  n_categorical_features  n_output_features_after_preprocessing  train_event_rate  test_event_rate
+poisson_piecewise_exponential_weighted_tuned                    6                            719498                           308393      151041      64730                    16                  10                       6                                     46          0.014499         0.014383
+ARTIFACT | Stage 5.6b.2 table_poisson_pexp_weighted_preprocessing_summary_w6 — Poisson preprocessing summary | duckdb://table_poisson_pexp_weighted_preprocessing_summary_w6
+[Stage 5.6b.2 table_poisson_pexp_weighted_raw_feature_manifest_w6 — Poisson raw feature manifest]
+table_name=table_poisson_pexp_weighted_raw_feature_manifest_w6
+rows=16, cols=6
+feature_name_operational feature_role  present_in_train  present_in_test  covered_by_canonical_config_after_alias canonical_source_name
+                  gender  categorical              True             True                                    False                      
+                  region  categorical              True             True                                    False                      
+       highest_education  categorical              True             True                                    False                      
+                imd_band  categorical              True             True                                    False                      
+                age_band  categorical              True             True                                    False                      
+              disability  categorical              True             True                                    False                      
+    num_of_prev_attempts      numeric              True             True                                     True  num_of_prev_attempts
+         studied_credits      numeric              True             True                                     True       studied_credits
+                    week      numeric              True             True                                     True                  week
+       total_clicks_week      numeric              True             True                                     True          total_clicks
+        active_this_week      numeric              True             True                                    False                      
+         n_vle_rows_week      numeric              True             True                                    False                      
+   n_distinct_sites_week      numeric              True             True                                    False                      
+      cum_clicks_until_t      numeric              True             True                                    False                      
+                 recency      numeric              True             True                                    False                      
+                  streak      numeric              True             True                                    False                      
+ARTIFACT | Stage 5.6b.2 table_poisson_pexp_weighted_raw_feature_manifest_w6 — Poisson raw feature manifest | duckdb://table_poisson_pexp_weighted_raw_feature_manifest_w6
+[Stage 5.6b.2 table_poisson_pexp_weighted_feature_names_out_w6 — Poisson transformed feature names]
+table_name=table_poisson_pexp_weighted_feature_names_out_w6
+rows=46, cols=1
+       preprocessed_feature_name
+       num__num_of_prev_attempts
+            num__studied_credits
+                       num__week
+          num__total_clicks_week
+           num__active_this_week
+            num__n_vle_rows_week
+      num__n_distinct_sites_week
+         num__cum_clicks_until_t
+                    num__recency
+                     num__streak
+                   cat__gender_F
+                   cat__gender_M
+ cat__region_East Anglian Region
+cat__region_East Midlands Region
+             cat__region_Ireland
+       cat__region_London Region
+        cat__region_North Region
+cat__region_North Western Region
+            cat__region_Scotland
+   cat__region_South East Region
+ARTIFACT | Stage 5.6b.2 table_poisson_pexp_weighted_feature_names_out_w6 — Poisson transformed feature names | duckdb://table_poisson_pexp_weighted_feature_names_out_w6
+ARTIFACT | poisson_pexp_preprocessing_config | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/metadata/poisson_piecewise_exponential_weighted_preprocessing_config_w6.json
+{
+  "model_name": "poisson_piecewise_exponential_weighted_tuned",
+  "train_table": "pp_linear_hazard_ready_train",
+  "test_table": "pp_linear_hazard_ready_test",
+  "target_column": "event_t",
+  "categorical_features": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability"
+  ],
+  "numeric_features": [
+    "num_of_prev_attempts",
+    "studied_credits",
+    "week",
+    "total_clicks_week",
+    "active_this_week",
+    "n_vle_rows_week",
+    "n_distinct_sites_week",
+    "cum_clicks_until_t",
+    "recency",
+    "streak"
+  ],
+  "operational_feature_columns": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability",
+    "num_of_prev_attempts",
+    "studied_credits",
+    "week",
+    "total_clicks_week",
+    "active_this_week",
+    "n_vle_rows_week",
+    "n_distinct_sites_week",
+    "cum_clicks_until_t",
+    "recency",
+    "streak"
+  ],
+  "canonical_expected_features_raw": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "week",
+    "total_clicks"
+  ],
+  "canonical_expected_features_resolved": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "week",
+    "total_clicks_week"
+  ],
+  "feature_alias_map": {
+    "total_clicks": "total_clicks_week"
+  },
+  "n_train_rows": 151041,
+  "n_test_rows": 64730,
+  "active_window_weeks": 6,
+  "raw_train_rows_before_truncation": 719498,
+  "raw_test_rows_before_truncation": 308393,
+  "n_output_features_after_preprocessing": 46,
+  "train_event_rate": 0.014499374342066062,
+  "test_event_rate": 0.014382820948555539,
+  "design_note": "The Poisson piecewise-exponential benchmark reuses the same weekly dynamic treatment contract as D5.6 and only swaps the GLM family.",
+  "methodological_note": "All learned preprocessing operations were fit on training data only and then applied unchanged to test data."
+}
+
+[END] 5.6b.2 - 2026-06-19 19:28:01
+[START] 5.6b - 2026-06-19 19:28:01
+# ==============================================================
+# 5.6b.3 - Compute runtime guardrails for the Poisson GLM
+# ==============================================================
+[Stage 5.6b.3 table_poisson_pexp_weighted_guardrails_w6 — Poisson runtime guardrails]
+table_name=table_poisson_pexp_weighted_guardrails_w6
+rows=1, cols=15
+ active_window_weeks  search_row_cap  final_row_cap  search_rows_selected  final_rows_selected  subtrain_total_rows  full_total_rows  n_features  subtrain_event_rate  full_event_rate  sampled_subtrain_event_rate  sampled_full_event_rate  positive_weight_subtrain  positive_weight_full            sample_weight_strategy
+                   6           76086          76086                 76086                76086               120781           151041          46             0.014555         0.014499                     0.023105                 0.028783                 42.279863             33.742466 class-frequency frequency weights
+ARTIFACT | Stage 5.6b.3 table_poisson_pexp_weighted_guardrails_w6 — Poisson runtime guardrails | duckdb://table_poisson_pexp_weighted_guardrails_w6
+[END] 5.6b.3 - 2026-06-19 19:28:01
+[START] 5.6b - 2026-06-19 19:28:01
+# ==============================================================
+# 5.6b.4 - Tune and evaluate the Poisson piecewise-exponential model
+# ==============================================================
+- TUNING_WORKERS: 8
+- TUNING_BACKEND: processes
+[Stage 5.6b.4 table_poisson_pexp_weighted_tuning_results_w6 — Poisson tuning results]
+table_name=table_poisson_pexp_weighted_tuning_results_w6
+rows=24, cols=9
+ candidate_id   alpha  fit_rows  fit_features  positive_weight  val_log_loss  val_brier  val_roc_auc fit_status
+            1 0.00001     76086            46        42.279863      0.383061   0.112518     0.756513         ok
+            2 0.00002     76086            46        42.279863      0.383570   0.112582     0.756447         ok
+            3 0.00005     76086            46        42.279863      0.384604   0.112747     0.756082         ok
+            4 0.00010     76086            46        42.279863      0.385674   0.112948     0.755534         ok
+            5 0.00020     76086            46        42.279863      0.387083   0.113223     0.754807         ok
+            6 0.00050     76086            46        42.279863      0.389824   0.113764     0.753406         ok
+            7 0.00100     76086            46        42.279863      0.392916   0.114439     0.751618         ok
+            8 0.00200     76086            46        42.279863      0.397056   0.115485     0.748439         ok
+            9 0.00500     76086            46        42.279863      0.403999   0.117519     0.741576         ok
+           10 0.01000     76086            46        42.279863      0.410188   0.119505     0.734849         ok
+           11 0.02000     76086            46        42.279863      0.417432   0.121957     0.727948         ok
+           12 0.05000     76086            46        42.279863      0.430199   0.126527     0.719912         ok
+           13 0.10000     76086            46        42.279863      0.444080   0.131809     0.715237         ok
+           14 0.20000     76086            46        42.279863      0.463279   0.139604     0.711433         ok
+           15 0.30000     76086            46        42.279863      0.477650   0.145763     0.709462         ok
+           16 0.50000     76086            46        42.279863      0.500002   0.155771     0.706900         ok
+           17 0.70000     76086            46        42.279863      0.517956   0.164085     0.704706         ok
+           18 1.00000     76086            46        42.279863      0.540436   0.174732     0.701608         ok
+           19 2.00000     76086            46        42.279863      0.596218   0.201839     0.692760         ok
+           20 5.00000     76086            46        42.279863      0.694131   0.250488     0.677680         ok
+ARTIFACT | Stage 5.6b.4 table_poisson_pexp_weighted_tuning_results_w6 — Poisson tuning results | duckdb://table_poisson_pexp_weighted_tuning_results_w6
+[Stage 5.6b.4 table_poisson_pexp_weighted_tuned_test_predictions_w6 — Poisson test predictions]
+table_name=table_poisson_pexp_weighted_tuned_test_predictions_w6
+rows=64730, cols=30
+   enrollment_id  id_student code_module code_presentation  week  event_t  event_observed  t_event_week  t_final_week  used_zero_week_fallback_for_censoring gender               region     highest_education imd_band age_band  num_of_prev_attempts  studied_credits disability  total_clicks_week  active_this_week  n_vle_rows_week  n_distinct_sites_week  cum_clicks_until_t  recency  streak split  pred_rate  pred_hazard  pred_survival  pred_risk
+100561|DDD|2014J      100561         DDD             2014J     0        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               10.0                 1                8                      4                10.0        0       1  test   0.907527     0.596479       0.403521   0.596479
+100561|DDD|2014J      100561         DDD             2014J     1        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N                0.0                 0                0                      0                10.0        1       0  test   0.569821     0.434373       0.228242   0.771758
+100561|DDD|2014J      100561         DDD             2014J     2        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               91.0                 1               26                     11               101.0        0       2  test   0.518810     0.404771       0.135856   0.864144
+100561|DDD|2014J      100561         DDD             2014J     3        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N                6.0                 1                4                      2               107.0        0       3  test   0.335746     0.285196       0.097111   0.902889
+100561|DDD|2014J      100561         DDD             2014J     4        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               30.0                 1               17                      8               137.0        0       4  test   0.679709     0.493235       0.049212   0.950788
+100561|DDD|2014J      100561         DDD             2014J     5        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               65.0                 1               36                     14               202.0        0       5  test   0.333125     0.283319       0.035269   0.964731
+100561|DDD|2014J      100561         DDD             2014J     6        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               27.0                 1               15                      9               229.0        0       6  test   0.178772     0.163704       0.029496   0.970504
+100621|CCC|2014B      100621         CCC             2014B     0        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                0.0                 0                0                      0                 0.0        1       0  test   0.352642     0.297171       0.702829   0.297171
+100621|CCC|2014B      100621         CCC             2014B     1        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                3.0                 1                2                      2                 3.0        0       2  test   0.366381     0.306761       0.487228   0.512772
+100621|CCC|2014B      100621         CCC             2014B     2        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                1.0                 1                1                      1                 4.0        0       3  test   0.403396     0.331952       0.325492   0.674508
+100621|CCC|2014B      100621         CCC             2014B     3        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                1.0                 1                1                      1                 5.0        0       4  test   0.705089     0.505935       0.160814   0.839186
+100621|CCC|2014B      100621         CCC             2014B     4        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                0.0                 0                0                      0                 5.0        1       0  test   0.461502     0.369664       0.101367   0.898633
+100621|CCC|2014B      100621         CCC             2014B     5        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                0.0                 0                0                      0                 5.0        2       0  test   0.405813     0.333565       0.067554   0.932446
+100621|CCC|2014B      100621         CCC             2014B     6        1               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                0.0                 0                0                      0                 5.0        3       0  test   0.351438     0.296324       0.047536   0.952464
+101187|DDD|2014J      101187         DDD             2014J     0        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        1       0  test   0.568984     0.433900       0.566100   0.433900
+101187|DDD|2014J      101187         DDD             2014J     1        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        2       0  test   0.914183     0.599156       0.226918   0.773082
+101187|DDD|2014J      101187         DDD             2014J     2        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        3       0  test   0.795892     0.548821       0.102381   0.897619
+101187|DDD|2014J      101187         DDD             2014J     3        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        4       0  test   0.561379     0.429578       0.058400   0.941600
+101187|DDD|2014J      101187         DDD             2014J     4        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        5       0  test   0.463773     0.371094       0.036728   0.963272
+101187|DDD|2014J      101187         DDD             2014J     5        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        6       0  test   0.412228     0.337827       0.024320   0.975680
+ARTIFACT | Stage 5.6b.4 table_poisson_pexp_weighted_tuned_test_predictions_w6 — Poisson test predictions | duckdb://table_poisson_pexp_weighted_tuned_test_predictions_w6
+[Stage 5.6b.4 table_poisson_pexp_weighted_tuned_primary_metrics_w6 — Poisson primary metrics]
+table_name=table_poisson_pexp_weighted_tuned_primary_metrics_w6
+rows=2, cols=4
+metric_name metric_category  metric_value                         notes
+        ibs         primary      0.687288 sksurv_integrated_brier_score
+    c_index      co_primary      0.493055          pycox_concordance_td
+ARTIFACT | Stage 5.6b.4 table_poisson_pexp_weighted_tuned_primary_metrics_w6 — Poisson primary metrics | duckdb://table_poisson_pexp_weighted_tuned_primary_metrics_w6
+[Stage 5.6b.4 table_poisson_pexp_weighted_tuned_brier_by_horizon_w6 — Poisson Brier scores by horizon]
+table_name=table_poisson_pexp_weighted_tuned_brier_by_horizon_w6
+rows=3, cols=5
+ horizon_week      metric_name metric_category  metric_value              notes
+           10 brier_at_horizon         primary      0.743280 sksurv_brier_score
+           20 brier_at_horizon         primary      0.700833 sksurv_brier_score
+           30 brier_at_horizon         primary      0.668196 sksurv_brier_score
+ARTIFACT | Stage 5.6b.4 table_poisson_pexp_weighted_tuned_brier_by_horizon_w6 — Poisson Brier scores by horizon | duckdb://table_poisson_pexp_weighted_tuned_brier_by_horizon_w6
+[Stage 5.6b.4 table_poisson_pexp_weighted_tuned_secondary_metrics_w6 — Poisson secondary metrics]
+table_name=table_poisson_pexp_weighted_tuned_secondary_metrics_w6
+rows=6, cols=5
+ horizon_week         metric_name metric_category  metric_value                                                                                  notes
+           10 risk_auc_at_horizon       secondary      0.196087                                                            roc_auc_on_evaluable_subset
+           10  time_dependent_auc       secondary      0.196125 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.196125; local_ipcw_auc
+           20 risk_auc_at_horizon       secondary      0.280594                                                            roc_auc_on_evaluable_subset
+           20  time_dependent_auc       secondary      0.280403 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.280403; local_ipcw_auc
+           30 risk_auc_at_horizon       secondary      0.323148                                                            roc_auc_on_evaluable_subset
+           30  time_dependent_auc       secondary      0.323250 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.323250; local_ipcw_auc
+ARTIFACT | Stage 5.6b.4 table_poisson_pexp_weighted_tuned_secondary_metrics_w6 — Poisson secondary metrics | duckdb://table_poisson_pexp_weighted_tuned_secondary_metrics_w6
+[Stage 5.6b.4 table_poisson_pexp_weighted_tuned_td_auc_support_audit_w6 — Poisson IPCW support audit]
+table_name=table_poisson_pexp_weighted_tuned_td_auc_support_audit_w6
+rows=3, cols=6
+ horizon_week  max_ipcw_time  n_total_test_enrollments  n_supported_test_enrollments  mean_auc                                                                                  notes
+           10           38.0                      9778                          6742  0.196125 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.196125; local_ipcw_auc
+           20           38.0                      9778                          6742  0.280403 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.280403; local_ipcw_auc
+           30           38.0                      9778                          6742  0.323250 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.323250; local_ipcw_auc
+ARTIFACT | Stage 5.6b.4 table_poisson_pexp_weighted_tuned_td_auc_support_audit_w6 — Poisson IPCW support audit | duckdb://table_poisson_pexp_weighted_tuned_td_auc_support_audit_w6
+[Stage 5.6b.4 table_poisson_pexp_weighted_tuned_row_diagnostics_w6 — Poisson row-level diagnostics]
+table_name=table_poisson_pexp_weighted_tuned_row_diagnostics_w6
+rows=1, cols=5
+                                  model_name  row_level_roc_auc  row_level_pr_auc  row_level_log_loss  row_level_brier
+poisson_piecewise_exponential_weighted_tuned           0.788234          0.050487            0.384975         0.112637
+ARTIFACT | Stage 5.6b.4 table_poisson_pexp_weighted_tuned_row_diagnostics_w6 — Poisson row-level diagnostics | duckdb://table_poisson_pexp_weighted_tuned_row_diagnostics_w6
+[Stage 5.6b.4 table_poisson_pexp_weighted_tuned_support_by_horizon_w6 — Poisson support by horizon]
+table_name=table_poisson_pexp_weighted_tuned_support_by_horizon_w6
+rows=3, cols=4
+ horizon_week  n_evaluable_enrollments  n_events_by_horizon  event_rate_by_horizon
+           10                     9778                 1215               0.124259
+           20                     9778                 1736               0.177541
+           30                     9778                 2129               0.217734
+ARTIFACT | Stage 5.6b.4 table_poisson_pexp_weighted_tuned_support_by_horizon_w6 — Poisson support by horizon | duckdb://table_poisson_pexp_weighted_tuned_support_by_horizon_w6
+[Stage 5.6b.4 table_poisson_pexp_weighted_tuned_calibration_summary_w6 — Poisson calibration summary]
+table_name=table_poisson_pexp_weighted_tuned_calibration_summary_w6
+rows=3, cols=5
+ horizon_week            metric_name metric_category  metric_value                                         notes
+           10 calibration_at_horizon         primary      0.772938 Weighted absolute calibration gap across bins
+           20 calibration_at_horizon         primary      0.723746 Weighted absolute calibration gap across bins
+           30 calibration_at_horizon         primary      0.687440 Weighted absolute calibration gap across bins
+ARTIFACT | Stage 5.6b.4 table_poisson_pexp_weighted_tuned_calibration_summary_w6 — Poisson calibration summary | duckdb://table_poisson_pexp_weighted_tuned_calibration_summary_w6
+[Stage 5.6b.4 table_poisson_pexp_weighted_tuned_calibration_bins_by_horizon_w6 — Poisson calibration bins]
+table_name=table_poisson_pexp_weighted_tuned_calibration_bins_by_horizon_w6
+rows=30, cols=6
+ calibration_bin   n  mean_predicted_risk  observed_event_rate  horizon_week  abs_calibration_gap
+               0 978             0.502547             0.630879            10             0.128332
+               1 978             0.775491             0.152352            10             0.623139
+               2 978             0.847108             0.093047            10             0.754061
+               3 977             0.885532             0.073695            10             0.811837
+               4 978             0.912117             0.063395            10             0.848722
+               5 978             0.931696             0.057260            10             0.874436
+               6 977             0.946842             0.048106            10             0.898736
+               7 978             0.959774             0.034765            10             0.925010
+               8 978             0.970930             0.049080            10             0.921850
+               9 978             0.983303             0.039877            10             0.943426
+               0 978             0.502547             0.651329            20             0.148782
+               1 978             0.775491             0.213701            20             0.561789
+               2 978             0.847108             0.153374            20             0.693733
+               3 977             0.885532             0.134084            20             0.751448
+               4 978             0.912117             0.126789            20             0.785327
+               5 978             0.931696             0.110429            20             0.821266
+               6 977             0.946842             0.096213            20             0.850629
+               7 978             0.959774             0.087935            20             0.871840
+               8 978             0.970930             0.104294            20             0.866636
+               9 978             0.983303             0.097137            20             0.886166
+ARTIFACT | Stage 5.6b.4 table_poisson_pexp_weighted_tuned_calibration_bins_by_horizon_w6 — Poisson calibration bins | duckdb://table_poisson_pexp_weighted_tuned_calibration_bins_by_horizon_w6
+[Stage 5.6b.4 table_poisson_pexp_weighted_tuned_predicted_vs_observed_survival_w6 — Poisson predicted versus observed survival]
+table_name=table_poisson_pexp_weighted_tuned_predicted_vs_observed_survival_w6
+rows=3, cols=5
+ horizon_week  n_evaluable_enrollments  mean_predicted_survival  mean_observed_survival  abs_gap
+           10                     9778                 0.128475                0.875741 0.747266
+           20                     9778                 0.128475                0.822459 0.693983
+           30                     9778                 0.128475                0.782266 0.653791
+ARTIFACT | Stage 5.6b.4 table_poisson_pexp_weighted_tuned_predicted_vs_observed_survival_w6 — Poisson predicted versus observed survival | duckdb://table_poisson_pexp_weighted_tuned_predicted_vs_observed_survival_w6
+ARTIFACT | poisson_pexp_model | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/models/poisson_piecewise_exponential_weighted_tuned_w6.joblib
+ARTIFACT | poisson_pexp_preprocessor | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/models/poisson_piecewise_exponential_weighted_preprocessor_w6.joblib
+ARTIFACT | poisson_pexp_tuned_model_config | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/metadata/poisson_piecewise_exponential_weighted_tuned_model_config_w6.json
+{
+  "model_name": "poisson_piecewise_exponential_weighted_tuned",
+  "family_name": "discrete_time_dynamic",
+  "model_type": "poisson_piecewise_exponential",
+  "alpha_grid": [
+    1e-05,
+    2e-05,
+    5e-05,
+    0.0001,
+    0.0002,
+    0.0005,
+    0.001,
+    0.002,
+    0.005,
+    0.01,
+    0.02,
+    0.05,
+    0.1,
+    0.2,
+    0.3,
+    0.5,
+    0.7,
+    1.0,
+    2.0,
+    5.0,
+    10.0,
+    20.0,
+    50.0,
+    100.0
+  ],
+  "selection_metric": "val_log_loss_on_discrete_hazard",
+  "validation_split": {
+    "method": "GroupShuffleSplit",
+    "test_size": 0.2,
+    "group_column": "enrollment_id",
+    "random_seed": 42
+  },
+  "guardrails": {
+    "active_window_weeks": 6,
+    "search_row_cap": 76086,
+    "final_row_cap": 76086,
+    "search_rows_selected": 76086,
+    "final_rows_selected": 76086,
+    "subtrain_total_rows": 120781,
+    "full_total_rows": 151041,
+    "n_features": 46,
+    "subtrain_event_rate": 0.014555269454632765,
+    "full_event_rate": 0.014499374342066062,
+    "sampled_subtrain_event_rate": 0.02310543332544752,
+    "sampled_full_event_rate": 0.02878321898903872,
+    "positive_weight_subtrain": 42.279863481228666,
+    "positive_weight_full": 33.74246575342466,
+    "sample_weight_strategy": "class-frequency frequency weights"
+  },
+  "benchmark_horizons": [
+    10,
+    20,
+    30
+  ],
+  "calibration_bins": 10,
+  "active_window_weeks": 6,
+  "best_candidate": {
+    "alpha": 1e-05,
+    "val_log_loss": 0.3830612733331058
+  },
+  "preprocessing": {
+    "categorical_features": [
+      "gender",
+      "region",
+      "highest_education",
+      "imd_band",
+      "age_band",
+      "disability"
+    ],
+    "numeric_features": [
+      "num_of_prev_attempts",
+      "studied_credits",
+      "week",
+      "total_clicks_week",
+      "active_this_week",
+      "n_vle_rows_week",
+      "n_distinct_sites_week",
+      "cum_clicks_until_t",
+      "recency",
+      "streak"
+    ],
+    "categorical_encoder": "OneHotEncoder(handle_unknown=ignore, sparse_output=True)",
+    "numeric_scaler": "MaxAbsScaler"
+  },
+  "event_rate_to_hazard_mapping": "pred_hazard = 1 - exp(-pred_rate)",
+  "weighting_strategy": "Poisson GLM frequency weights are derived from the guarded positive-class imbalance ratio on sampled person-period rows.",
+  "design_note": "This weighted Poisson variant preserves the dynamic weekly contract and changes only the fitting weights for Item 6 sensitivity."
+}
+
+ candidate_id   alpha  fit_rows  fit_features  positive_weight  val_log_loss  val_brier  val_roc_auc fit_status
+            1 0.00001     76086            46        42.279863      0.383061   0.112518     0.756513         ok
+            2 0.00002     76086            46        42.279863      0.383570   0.112582     0.756447         ok
+            3 0.00005     76086            46        42.279863      0.384604   0.112747     0.756082         ok
+            4 0.00010     76086            46        42.279863      0.385674   0.112948     0.755534         ok
+            5 0.00020     76086            46        42.279863      0.387083   0.113223     0.754807         ok
+            6 0.00050     76086            46        42.279863      0.389824   0.113764     0.753406         ok
+            7 0.00100     76086            46        42.279863      0.392916   0.114439     0.751618         ok
+            8 0.00200     76086            46        42.279863      0.397056   0.115485     0.748439         ok
+            9 0.00500     76086            46        42.279863      0.403999   0.117519     0.741576         ok
+           10 0.01000     76086            46        42.279863      0.410188   0.119505     0.734849         ok
+           11 0.02000     76086            46        42.279863      0.417432   0.121957     0.727948         ok
+           12 0.05000     76086            46        42.279863      0.430199   0.126527     0.719912         ok
+           13 0.10000     76086            46        42.279863      0.444080   0.131809     0.715237         ok
+           14 0.20000     76086            46        42.279863      0.463279   0.139604     0.711433         ok
+           15 0.30000     76086            46        42.279863      0.477650   0.145763     0.709462         ok
+           16 0.50000     76086            46        42.279863      0.500002   0.155771     0.706900         ok
+           17 0.70000     76086            46        42.279863      0.517956   0.164085     0.704706         ok
+           18 1.00000     76086            46        42.279863      0.540436   0.174732     0.701608         ok
+           19 2.00000     76086            46        42.279863      0.596218   0.201839     0.692760         ok
+           20 5.00000     76086            46        42.279863      0.694131   0.250488     0.677680         ok
+[END] 5.6b.4 - 2026-06-19 19:28:14
+[RUN_PLAN] dynamic_window_weeks=8 script=dropout_bench_v3_D_06_B_dynamic_weekly_poisson_piecewise_exponential_sensibility_weighted_test.py
+[START] 5.6b - 2026-06-19 19:28:14
+# ==============================================================
+# 5.6b.2 - Prepare the shared dynamic weekly treatment for Poisson
+# ==============================================================
+[Stage 5.6b.2 table_poisson_pexp_weighted_preprocessing_summary_w8 — Poisson preprocessing summary]
+table_name=table_poisson_pexp_weighted_preprocessing_summary_w8
+rows=1, cols=12
+                                model_family  active_window_weeks  raw_train_rows_before_truncation  raw_test_rows_before_truncation  train_rows  test_rows  n_input_features_raw  n_numeric_features  n_categorical_features  n_output_features_after_preprocessing  train_event_rate  test_event_rate
+poisson_piecewise_exponential_weighted_tuned                    8                            719498                           308393      192111      82348                    16                  10                       6                                     46          0.013149         0.013127
+ARTIFACT | Stage 5.6b.2 table_poisson_pexp_weighted_preprocessing_summary_w8 — Poisson preprocessing summary | duckdb://table_poisson_pexp_weighted_preprocessing_summary_w8
+[Stage 5.6b.2 table_poisson_pexp_weighted_raw_feature_manifest_w8 — Poisson raw feature manifest]
+table_name=table_poisson_pexp_weighted_raw_feature_manifest_w8
+rows=16, cols=6
+feature_name_operational feature_role  present_in_train  present_in_test  covered_by_canonical_config_after_alias canonical_source_name
+                  gender  categorical              True             True                                    False                      
+                  region  categorical              True             True                                    False                      
+       highest_education  categorical              True             True                                    False                      
+                imd_band  categorical              True             True                                    False                      
+                age_band  categorical              True             True                                    False                      
+              disability  categorical              True             True                                    False                      
+    num_of_prev_attempts      numeric              True             True                                     True  num_of_prev_attempts
+         studied_credits      numeric              True             True                                     True       studied_credits
+                    week      numeric              True             True                                     True                  week
+       total_clicks_week      numeric              True             True                                     True          total_clicks
+        active_this_week      numeric              True             True                                    False                      
+         n_vle_rows_week      numeric              True             True                                    False                      
+   n_distinct_sites_week      numeric              True             True                                    False                      
+      cum_clicks_until_t      numeric              True             True                                    False                      
+                 recency      numeric              True             True                                    False                      
+                  streak      numeric              True             True                                    False                      
+ARTIFACT | Stage 5.6b.2 table_poisson_pexp_weighted_raw_feature_manifest_w8 — Poisson raw feature manifest | duckdb://table_poisson_pexp_weighted_raw_feature_manifest_w8
+[Stage 5.6b.2 table_poisson_pexp_weighted_feature_names_out_w8 — Poisson transformed feature names]
+table_name=table_poisson_pexp_weighted_feature_names_out_w8
+rows=46, cols=1
+       preprocessed_feature_name
+       num__num_of_prev_attempts
+            num__studied_credits
+                       num__week
+          num__total_clicks_week
+           num__active_this_week
+            num__n_vle_rows_week
+      num__n_distinct_sites_week
+         num__cum_clicks_until_t
+                    num__recency
+                     num__streak
+                   cat__gender_F
+                   cat__gender_M
+ cat__region_East Anglian Region
+cat__region_East Midlands Region
+             cat__region_Ireland
+       cat__region_London Region
+        cat__region_North Region
+cat__region_North Western Region
+            cat__region_Scotland
+   cat__region_South East Region
+ARTIFACT | Stage 5.6b.2 table_poisson_pexp_weighted_feature_names_out_w8 — Poisson transformed feature names | duckdb://table_poisson_pexp_weighted_feature_names_out_w8
+ARTIFACT | poisson_pexp_preprocessing_config | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/metadata/poisson_piecewise_exponential_weighted_preprocessing_config_w8.json
+{
+  "model_name": "poisson_piecewise_exponential_weighted_tuned",
+  "train_table": "pp_linear_hazard_ready_train",
+  "test_table": "pp_linear_hazard_ready_test",
+  "target_column": "event_t",
+  "categorical_features": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability"
+  ],
+  "numeric_features": [
+    "num_of_prev_attempts",
+    "studied_credits",
+    "week",
+    "total_clicks_week",
+    "active_this_week",
+    "n_vle_rows_week",
+    "n_distinct_sites_week",
+    "cum_clicks_until_t",
+    "recency",
+    "streak"
+  ],
+  "operational_feature_columns": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability",
+    "num_of_prev_attempts",
+    "studied_credits",
+    "week",
+    "total_clicks_week",
+    "active_this_week",
+    "n_vle_rows_week",
+    "n_distinct_sites_week",
+    "cum_clicks_until_t",
+    "recency",
+    "streak"
+  ],
+  "canonical_expected_features_raw": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "week",
+    "total_clicks"
+  ],
+  "canonical_expected_features_resolved": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "week",
+    "total_clicks_week"
+  ],
+  "feature_alias_map": {
+    "total_clicks": "total_clicks_week"
+  },
+  "n_train_rows": 192111,
+  "n_test_rows": 82348,
+  "active_window_weeks": 8,
+  "raw_train_rows_before_truncation": 719498,
+  "raw_test_rows_before_truncation": 308393,
+  "n_output_features_after_preprocessing": 46,
+  "train_event_rate": 0.013148648437622,
+  "test_event_rate": 0.013127216204400835,
+  "design_note": "The Poisson piecewise-exponential benchmark reuses the same weekly dynamic treatment contract as D5.6 and only swaps the GLM family.",
+  "methodological_note": "All learned preprocessing operations were fit on training data only and then applied unchanged to test data."
+}
+
+[END] 5.6b.2 - 2026-06-19 19:28:15
+[START] 5.6b - 2026-06-19 19:28:15
+# ==============================================================
+# 5.6b.3 - Compute runtime guardrails for the Poisson GLM
+# ==============================================================
+[Stage 5.6b.3 table_poisson_pexp_weighted_guardrails_w8 — Poisson runtime guardrails]
+table_name=table_poisson_pexp_weighted_guardrails_w8
+rows=1, cols=15
+ active_window_weeks  search_row_cap  final_row_cap  search_rows_selected  final_rows_selected  subtrain_total_rows  full_total_rows  n_features  subtrain_event_rate  full_event_rate  sampled_subtrain_event_rate  sampled_full_event_rate  positive_weight_subtrain  positive_weight_full            sample_weight_strategy
+                   8           76086          76086                 76086                76086               153632           192111          46             0.013142         0.013149                     0.026536                 0.033199                 36.684993              29.12114 class-frequency frequency weights
+ARTIFACT | Stage 5.6b.3 table_poisson_pexp_weighted_guardrails_w8 — Poisson runtime guardrails | duckdb://table_poisson_pexp_weighted_guardrails_w8
+[END] 5.6b.3 - 2026-06-19 19:28:16
+[START] 5.6b - 2026-06-19 19:28:16
+# ==============================================================
+# 5.6b.4 - Tune and evaluate the Poisson piecewise-exponential model
+# ==============================================================
+- TUNING_WORKERS: 8
+- TUNING_BACKEND: processes
+[Stage 5.6b.4 table_poisson_pexp_weighted_tuning_results_w8 — Poisson tuning results]
+table_name=table_poisson_pexp_weighted_tuning_results_w8
+rows=24, cols=9
+ candidate_id   alpha  fit_rows  fit_features  positive_weight  val_log_loss  val_brier  val_roc_auc fit_status
+            1 0.00001     76086            46        36.684993      0.385450   0.113540     0.753938         ok
+            2 0.00002     76086            46        36.684993      0.386001   0.113594     0.754039         ok
+            3 0.00005     76086            46        36.684993      0.387121   0.113756     0.753921         ok
+            4 0.00010     76086            46        36.684993      0.388282   0.113975     0.753428         ok
+            5 0.00020     76086            46        36.684993      0.389817   0.114299     0.752601         ok
+            6 0.00050     76086            46        36.684993      0.392731   0.114937     0.750910         ok
+            7 0.00100     76086            46        36.684993      0.395930   0.115691     0.748704         ok
+            8 0.00200     76086            46        36.684993      0.400132   0.116790     0.745090         ok
+            9 0.00500     76086            46        36.684993      0.407146   0.118837     0.737552         ok
+           10 0.01000     76086            46        36.684993      0.413402   0.120801     0.730302         ok
+           11 0.02000     76086            46        36.684993      0.420721   0.123231     0.723014         ok
+           12 0.05000     76086            46        36.684993      0.433553   0.127805     0.715106         ok
+           13 0.10000     76086            46        36.684993      0.447396   0.133102     0.710748         ok
+           14 0.20000     76086            46        36.684993      0.466403   0.140882     0.707453         ok
+           15 0.30000     76086            46        36.684993      0.480593   0.147009     0.705771         ok
+           16 0.50000     76086            46        36.684993      0.502685   0.156960     0.703500         ok
+           17 0.70000     76086            46        36.684993      0.520484   0.165238     0.701460         ok
+           18 1.00000     76086            46        36.684993      0.542839   0.175859     0.698414         ok
+           19 2.00000     76086            46        36.684993      0.598518   0.202963     0.689540         ok
+           20 5.00000     76086            46        36.684993      0.696432   0.251637     0.674907         ok
+ARTIFACT | Stage 5.6b.4 table_poisson_pexp_weighted_tuning_results_w8 — Poisson tuning results | duckdb://table_poisson_pexp_weighted_tuning_results_w8
+[Stage 5.6b.4 table_poisson_pexp_weighted_tuned_test_predictions_w8 — Poisson test predictions]
+table_name=table_poisson_pexp_weighted_tuned_test_predictions_w8
+rows=82348, cols=30
+   enrollment_id  id_student code_module code_presentation  week  event_t  event_observed  t_event_week  t_final_week  used_zero_week_fallback_for_censoring gender               region     highest_education imd_band age_band  num_of_prev_attempts  studied_credits disability  total_clicks_week  active_this_week  n_vle_rows_week  n_distinct_sites_week  cum_clicks_until_t  recency  streak split  pred_rate  pred_hazard  pred_survival  pred_risk
+100561|DDD|2014J      100561         DDD             2014J     0        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               10.0                 1                8                      4                10.0        0       1  test   0.897811     0.592539       0.407461   0.592539
+100561|DDD|2014J      100561         DDD             2014J     1        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N                0.0                 0                0                      0                10.0        1       0  test   0.599931     0.451151       0.223635   0.776365
+100561|DDD|2014J      100561         DDD             2014J     2        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               91.0                 1               26                     11               101.0        0       2  test   0.576409     0.438087       0.125663   0.874337
+100561|DDD|2014J      100561         DDD             2014J     3        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N                6.0                 1                4                      2               107.0        0       3  test   0.414878     0.339579       0.082991   0.917009
+100561|DDD|2014J      100561         DDD             2014J     4        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               30.0                 1               17                      8               137.0        0       4  test   0.703646     0.505222       0.041062   0.958938
+100561|DDD|2014J      100561         DDD             2014J     5        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               65.0                 1               36                     14               202.0        0       5  test   0.345461     0.292106       0.029067   0.970933
+100561|DDD|2014J      100561         DDD             2014J     6        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               27.0                 1               15                      9               229.0        0       6  test   0.182627     0.166921       0.024215   0.975785
+100561|DDD|2014J      100561         DDD             2014J     7        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               59.0                 1               14                      5               288.0        0       7  test   0.364137     0.305204       0.016825   0.983175
+100561|DDD|2014J      100561         DDD             2014J     8        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               62.0                 1               22                      7               350.0        0       8  test   0.385385     0.319811       0.011444   0.988556
+100621|CCC|2014B      100621         CCC             2014B     0        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                0.0                 0                0                      0                 0.0        1       0  test   0.427358     0.347770       0.652230   0.347770
+100621|CCC|2014B      100621         CCC             2014B     1        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                3.0                 1                2                      2                 3.0        0       2  test   0.716053     0.511323       0.318730   0.681270
+100621|CCC|2014B      100621         CCC             2014B     2        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                1.0                 1                1                      1                 4.0        0       3  test   0.499908     0.393414       0.193337   0.806663
+100621|CCC|2014B      100621         CCC             2014B     3        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                1.0                 1                1                      1                 5.0        0       4  test   0.441807     0.357127       0.124291   0.875709
+100621|CCC|2014B      100621         CCC             2014B     4        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                0.0                 0                0                      0                 5.0        1       0  test   0.385936     0.320186       0.084495   0.915505
+100621|CCC|2014B      100621         CCC             2014B     5        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                0.0                 0                0                      0                 5.0        2       0  test   0.306305     0.263838       0.062202   0.937798
+100621|CCC|2014B      100621         CCC             2014B     6        1               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                0.0                 0                0                      0                 5.0        3       0  test   0.602554     0.452588       0.034050   0.965950
+101187|DDD|2014J      101187         DDD             2014J     0        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        1       0  test   0.578344     0.439174       0.560826   0.439174
+101187|DDD|2014J      101187         DDD             2014J     1        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        2       0  test   0.434439     0.352372       0.363207   0.636793
+101187|DDD|2014J      101187         DDD             2014J     2        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        3       0  test   0.914046     0.599101       0.145609   0.854391
+101187|DDD|2014J      101187         DDD             2014J     3        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        4       0  test   0.769127     0.536583       0.067478   0.932522
+ARTIFACT | Stage 5.6b.4 table_poisson_pexp_weighted_tuned_test_predictions_w8 — Poisson test predictions | duckdb://table_poisson_pexp_weighted_tuned_test_predictions_w8
+[Stage 5.6b.4 table_poisson_pexp_weighted_tuned_primary_metrics_w8 — Poisson primary metrics]
+table_name=table_poisson_pexp_weighted_tuned_primary_metrics_w8
+rows=2, cols=4
+metric_name metric_category  metric_value                         notes
+        ibs         primary      0.736476 sksurv_integrated_brier_score
+    c_index      co_primary      0.494359          pycox_concordance_td
+ARTIFACT | Stage 5.6b.4 table_poisson_pexp_weighted_tuned_primary_metrics_w8 — Poisson primary metrics | duckdb://table_poisson_pexp_weighted_tuned_primary_metrics_w8
+[Stage 5.6b.4 table_poisson_pexp_weighted_tuned_brier_by_horizon_w8 — Poisson Brier scores by horizon]
+table_name=table_poisson_pexp_weighted_tuned_brier_by_horizon_w8
+rows=3, cols=5
+ horizon_week      metric_name metric_category  metric_value              notes
+           10 brier_at_horizon         primary      0.809206 sksurv_brier_score
+           20 brier_at_horizon         primary      0.762584 sksurv_brier_score
+           30 brier_at_horizon         primary      0.726611 sksurv_brier_score
+ARTIFACT | Stage 5.6b.4 table_poisson_pexp_weighted_tuned_brier_by_horizon_w8 — Poisson Brier scores by horizon | duckdb://table_poisson_pexp_weighted_tuned_brier_by_horizon_w8
+[Stage 5.6b.4 table_poisson_pexp_weighted_tuned_secondary_metrics_w8 — Poisson secondary metrics]
+table_name=table_poisson_pexp_weighted_tuned_secondary_metrics_w8
+rows=6, cols=5
+ horizon_week         metric_name metric_category  metric_value                                                                                  notes
+           10 risk_auc_at_horizon       secondary      0.156205                                                            roc_auc_on_evaluable_subset
+           10  time_dependent_auc       secondary      0.158229 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.158229; local_ipcw_auc
+           20 risk_auc_at_horizon       secondary      0.247822                                                            roc_auc_on_evaluable_subset
+           20  time_dependent_auc       secondary      0.249847 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.249847; local_ipcw_auc
+           30 risk_auc_at_horizon       secondary      0.296629                                                            roc_auc_on_evaluable_subset
+           30  time_dependent_auc       secondary      0.299280 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.299280; local_ipcw_auc
+ARTIFACT | Stage 5.6b.4 table_poisson_pexp_weighted_tuned_secondary_metrics_w8 — Poisson secondary metrics | duckdb://table_poisson_pexp_weighted_tuned_secondary_metrics_w8
+[Stage 5.6b.4 table_poisson_pexp_weighted_tuned_td_auc_support_audit_w8 — Poisson IPCW support audit]
+table_name=table_poisson_pexp_weighted_tuned_td_auc_support_audit_w8
+rows=3, cols=6
+ horizon_week  max_ipcw_time  n_total_test_enrollments  n_supported_test_enrollments  mean_auc                                                                                  notes
+           10           38.0                      9778                          6742  0.158229 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.158229; local_ipcw_auc
+           20           38.0                      9778                          6742  0.249847 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.249847; local_ipcw_auc
+           30           38.0                      9778                          6742  0.299280 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.299280; local_ipcw_auc
+ARTIFACT | Stage 5.6b.4 table_poisson_pexp_weighted_tuned_td_auc_support_audit_w8 — Poisson IPCW support audit | duckdb://table_poisson_pexp_weighted_tuned_td_auc_support_audit_w8
+[Stage 5.6b.4 table_poisson_pexp_weighted_tuned_row_diagnostics_w8 — Poisson row-level diagnostics]
+table_name=table_poisson_pexp_weighted_tuned_row_diagnostics_w8
+rows=1, cols=5
+                                  model_name  row_level_roc_auc  row_level_pr_auc  row_level_log_loss  row_level_brier
+poisson_piecewise_exponential_weighted_tuned           0.780007          0.045137            0.387442         0.113902
+ARTIFACT | Stage 5.6b.4 table_poisson_pexp_weighted_tuned_row_diagnostics_w8 — Poisson row-level diagnostics | duckdb://table_poisson_pexp_weighted_tuned_row_diagnostics_w8
+[Stage 5.6b.4 table_poisson_pexp_weighted_tuned_support_by_horizon_w8 — Poisson support by horizon]
+table_name=table_poisson_pexp_weighted_tuned_support_by_horizon_w8
+rows=3, cols=4
+ horizon_week  n_evaluable_enrollments  n_events_by_horizon  event_rate_by_horizon
+           10                     9778                 1215               0.124259
+           20                     9778                 1736               0.177541
+           30                     9778                 2129               0.217734
+ARTIFACT | Stage 5.6b.4 table_poisson_pexp_weighted_tuned_support_by_horizon_w8 — Poisson support by horizon | duckdb://table_poisson_pexp_weighted_tuned_support_by_horizon_w8
+[Stage 5.6b.4 table_poisson_pexp_weighted_tuned_calibration_summary_w8 — Poisson calibration summary]
+table_name=table_poisson_pexp_weighted_tuned_calibration_summary_w8
+rows=3, cols=5
+ horizon_week            metric_name metric_category  metric_value                                         notes
+           10 calibration_at_horizon         primary      0.820939 Weighted absolute calibration gap across bins
+           20 calibration_at_horizon         primary      0.771747 Weighted absolute calibration gap across bins
+           30 calibration_at_horizon         primary      0.734009 Weighted absolute calibration gap across bins
+ARTIFACT | Stage 5.6b.4 table_poisson_pexp_weighted_tuned_calibration_summary_w8 — Poisson calibration summary | duckdb://table_poisson_pexp_weighted_tuned_calibration_summary_w8
+[Stage 5.6b.4 table_poisson_pexp_weighted_tuned_calibration_bins_by_horizon_w8 — Poisson calibration bins]
+table_name=table_poisson_pexp_weighted_tuned_calibration_bins_by_horizon_w8
+rows=30, cols=6
+ calibration_bin   n  mean_predicted_risk  observed_event_rate  horizon_week  abs_calibration_gap
+               0 978             0.532688             0.709611            10             0.176923
+               1 978             0.848852             0.140082            10             0.708770
+               2 978             0.907356             0.088957            10             0.818399
+               3 977             0.936697             0.066530            10             0.870167
+               4 978             0.956384             0.067485            10             0.888899
+               5 978             0.969407             0.038855            10             0.930552
+               6 977             0.978194             0.045036            10             0.933159
+               7 978             0.984481             0.030675            10             0.953806
+               8 978             0.989657             0.034765            10             0.954892
+               9 978             0.994434             0.020450            10             0.973984
+               0 978             0.532688             0.730061            20             0.197373
+               1 978             0.848852             0.206544            20             0.642308
+               2 978             0.907356             0.147239            20             0.760117
+               3 977             0.936697             0.120778            20             0.815919
+               4 978             0.956384             0.133947            20             0.822437
+               5 978             0.969407             0.095092            20             0.874315
+               6 977             0.978194             0.101331            20             0.876864
+               7 978             0.984481             0.083845            20             0.900636
+               8 978             0.989657             0.089980            20             0.899677
+               9 978             0.994434             0.066462            20             0.927972
+ARTIFACT | Stage 5.6b.4 table_poisson_pexp_weighted_tuned_calibration_bins_by_horizon_w8 — Poisson calibration bins | duckdb://table_poisson_pexp_weighted_tuned_calibration_bins_by_horizon_w8
+[Stage 5.6b.4 table_poisson_pexp_weighted_tuned_predicted_vs_observed_survival_w8 — Poisson predicted versus observed survival]
+table_name=table_poisson_pexp_weighted_tuned_predicted_vs_observed_survival_w8
+rows=3, cols=5
+ horizon_week  n_evaluable_enrollments  mean_predicted_survival  mean_observed_survival  abs_gap
+           10                     9778                 0.090195                0.875741 0.785547
+           20                     9778                 0.090195                0.822459 0.732264
+           30                     9778                 0.090195                0.782266 0.692072
+ARTIFACT | Stage 5.6b.4 table_poisson_pexp_weighted_tuned_predicted_vs_observed_survival_w8 — Poisson predicted versus observed survival | duckdb://table_poisson_pexp_weighted_tuned_predicted_vs_observed_survival_w8
+ARTIFACT | poisson_pexp_model | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/models/poisson_piecewise_exponential_weighted_tuned_w8.joblib
+ARTIFACT | poisson_pexp_preprocessor | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/models/poisson_piecewise_exponential_weighted_preprocessor_w8.joblib
+ARTIFACT | poisson_pexp_tuned_model_config | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/metadata/poisson_piecewise_exponential_weighted_tuned_model_config_w8.json
+{
+  "model_name": "poisson_piecewise_exponential_weighted_tuned",
+  "family_name": "discrete_time_dynamic",
+  "model_type": "poisson_piecewise_exponential",
+  "alpha_grid": [
+    1e-05,
+    2e-05,
+    5e-05,
+    0.0001,
+    0.0002,
+    0.0005,
+    0.001,
+    0.002,
+    0.005,
+    0.01,
+    0.02,
+    0.05,
+    0.1,
+    0.2,
+    0.3,
+    0.5,
+    0.7,
+    1.0,
+    2.0,
+    5.0,
+    10.0,
+    20.0,
+    50.0,
+    100.0
+  ],
+  "selection_metric": "val_log_loss_on_discrete_hazard",
+  "validation_split": {
+    "method": "GroupShuffleSplit",
+    "test_size": 0.2,
+    "group_column": "enrollment_id",
+    "random_seed": 42
+  },
+  "guardrails": {
+    "active_window_weeks": 8,
+    "search_row_cap": 76086,
+    "final_row_cap": 76086,
+    "search_rows_selected": 76086,
+    "final_rows_selected": 76086,
+    "subtrain_total_rows": 153632,
+    "full_total_rows": 192111,
+    "n_features": 46,
+    "subtrain_event_rate": 0.01314179337637992,
+    "full_event_rate": 0.013148648437622,
+    "sampled_subtrain_event_rate": 0.026535762163867202,
+    "sampled_full_event_rate": 0.03319927450516521,
+    "positive_weight_subtrain": 36.684992570579496,
+    "positive_weight_full": 29.121140142517813,
+    "sample_weight_strategy": "class-frequency frequency weights"
+  },
+  "benchmark_horizons": [
+    10,
+    20,
+    30
+  ],
+  "calibration_bins": 10,
+  "active_window_weeks": 8,
+  "best_candidate": {
+    "alpha": 1e-05,
+    "val_log_loss": 0.38545034580874593
+  },
+  "preprocessing": {
+    "categorical_features": [
+      "gender",
+      "region",
+      "highest_education",
+      "imd_band",
+      "age_band",
+      "disability"
+    ],
+    "numeric_features": [
+      "num_of_prev_attempts",
+      "studied_credits",
+      "week",
+      "total_clicks_week",
+      "active_this_week",
+      "n_vle_rows_week",
+      "n_distinct_sites_week",
+      "cum_clicks_until_t",
+      "recency",
+      "streak"
+    ],
+    "categorical_encoder": "OneHotEncoder(handle_unknown=ignore, sparse_output=True)",
+    "numeric_scaler": "MaxAbsScaler"
+  },
+  "event_rate_to_hazard_mapping": "pred_hazard = 1 - exp(-pred_rate)",
+  "weighting_strategy": "Poisson GLM frequency weights are derived from the guarded positive-class imbalance ratio on sampled person-period rows.",
+  "design_note": "This weighted Poisson variant preserves the dynamic weekly contract and changes only the fitting weights for Item 6 sensitivity."
+}
+
+ candidate_id   alpha  fit_rows  fit_features  positive_weight  val_log_loss  val_brier  val_roc_auc fit_status
+            1 0.00001     76086            46        36.684993      0.385450   0.113540     0.753938         ok
+            2 0.00002     76086            46        36.684993      0.386001   0.113594     0.754039         ok
+            3 0.00005     76086            46        36.684993      0.387121   0.113756     0.753921         ok
+            4 0.00010     76086            46        36.684993      0.388282   0.113975     0.753428         ok
+            5 0.00020     76086            46        36.684993      0.389817   0.114299     0.752601         ok
+            6 0.00050     76086            46        36.684993      0.392731   0.114937     0.750910         ok
+            7 0.00100     76086            46        36.684993      0.395930   0.115691     0.748704         ok
+            8 0.00200     76086            46        36.684993      0.400132   0.116790     0.745090         ok
+            9 0.00500     76086            46        36.684993      0.407146   0.118837     0.737552         ok
+           10 0.01000     76086            46        36.684993      0.413402   0.120801     0.730302         ok
+           11 0.02000     76086            46        36.684993      0.420721   0.123231     0.723014         ok
+           12 0.05000     76086            46        36.684993      0.433553   0.127805     0.715106         ok
+           13 0.10000     76086            46        36.684993      0.447396   0.133102     0.710748         ok
+           14 0.20000     76086            46        36.684993      0.466403   0.140882     0.707453         ok
+           15 0.30000     76086            46        36.684993      0.480593   0.147009     0.705771         ok
+           16 0.50000     76086            46        36.684993      0.502685   0.156960     0.703500         ok
+           17 0.70000     76086            46        36.684993      0.520484   0.165238     0.701460         ok
+           18 1.00000     76086            46        36.684993      0.542839   0.175859     0.698414         ok
+           19 2.00000     76086            46        36.684993      0.598518   0.202963     0.689540         ok
+           20 5.00000     76086            46        36.684993      0.696432   0.251637     0.674907         ok
+[END] 5.6b.4 - 2026-06-19 19:28:30
+[RUN_PLAN] dynamic_window_weeks=10 script=dropout_bench_v3_D_06_B_dynamic_weekly_poisson_piecewise_exponential_sensibility_weighted_test.py
+[START] 5.6b - 2026-06-19 19:28:30
+# ==============================================================
+# 5.6b.2 - Prepare the shared dynamic weekly treatment for Poisson
+# ==============================================================
+[Stage 5.6b.2 table_poisson_pexp_weighted_preprocessing_summary_w10 — Poisson preprocessing summary]
+table_name=table_poisson_pexp_weighted_preprocessing_summary_w10
+rows=1, cols=12
+                                model_family  active_window_weeks  raw_train_rows_before_truncation  raw_test_rows_before_truncation  train_rows  test_rows  n_input_features_raw  n_numeric_features  n_categorical_features  n_output_features_after_preprocessing  train_event_rate  test_event_rate
+poisson_piecewise_exponential_weighted_tuned                   10                            719498                           308393      232541      99670                    16                  10                       6                                     46          0.012105          0.01219
+ARTIFACT | Stage 5.6b.2 table_poisson_pexp_weighted_preprocessing_summary_w10 — Poisson preprocessing summary | duckdb://table_poisson_pexp_weighted_preprocessing_summary_w10
+[Stage 5.6b.2 table_poisson_pexp_weighted_raw_feature_manifest_w10 — Poisson raw feature manifest]
+table_name=table_poisson_pexp_weighted_raw_feature_manifest_w10
+rows=16, cols=6
+feature_name_operational feature_role  present_in_train  present_in_test  covered_by_canonical_config_after_alias canonical_source_name
+                  gender  categorical              True             True                                    False                      
+                  region  categorical              True             True                                    False                      
+       highest_education  categorical              True             True                                    False                      
+                imd_band  categorical              True             True                                    False                      
+                age_band  categorical              True             True                                    False                      
+              disability  categorical              True             True                                    False                      
+    num_of_prev_attempts      numeric              True             True                                     True  num_of_prev_attempts
+         studied_credits      numeric              True             True                                     True       studied_credits
+                    week      numeric              True             True                                     True                  week
+       total_clicks_week      numeric              True             True                                     True          total_clicks
+        active_this_week      numeric              True             True                                    False                      
+         n_vle_rows_week      numeric              True             True                                    False                      
+   n_distinct_sites_week      numeric              True             True                                    False                      
+      cum_clicks_until_t      numeric              True             True                                    False                      
+                 recency      numeric              True             True                                    False                      
+                  streak      numeric              True             True                                    False                      
+ARTIFACT | Stage 5.6b.2 table_poisson_pexp_weighted_raw_feature_manifest_w10 — Poisson raw feature manifest | duckdb://table_poisson_pexp_weighted_raw_feature_manifest_w10
+[Stage 5.6b.2 table_poisson_pexp_weighted_feature_names_out_w10 — Poisson transformed feature names]
+table_name=table_poisson_pexp_weighted_feature_names_out_w10
+rows=46, cols=1
+       preprocessed_feature_name
+       num__num_of_prev_attempts
+            num__studied_credits
+                       num__week
+          num__total_clicks_week
+           num__active_this_week
+            num__n_vle_rows_week
+      num__n_distinct_sites_week
+         num__cum_clicks_until_t
+                    num__recency
+                     num__streak
+                   cat__gender_F
+                   cat__gender_M
+ cat__region_East Anglian Region
+cat__region_East Midlands Region
+             cat__region_Ireland
+       cat__region_London Region
+        cat__region_North Region
+cat__region_North Western Region
+            cat__region_Scotland
+   cat__region_South East Region
+ARTIFACT | Stage 5.6b.2 table_poisson_pexp_weighted_feature_names_out_w10 — Poisson transformed feature names | duckdb://table_poisson_pexp_weighted_feature_names_out_w10
+ARTIFACT | poisson_pexp_preprocessing_config | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/metadata/poisson_piecewise_exponential_weighted_preprocessing_config_w10.json
+{
+  "model_name": "poisson_piecewise_exponential_weighted_tuned",
+  "train_table": "pp_linear_hazard_ready_train",
+  "test_table": "pp_linear_hazard_ready_test",
+  "target_column": "event_t",
+  "categorical_features": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability"
+  ],
+  "numeric_features": [
+    "num_of_prev_attempts",
+    "studied_credits",
+    "week",
+    "total_clicks_week",
+    "active_this_week",
+    "n_vle_rows_week",
+    "n_distinct_sites_week",
+    "cum_clicks_until_t",
+    "recency",
+    "streak"
+  ],
+  "operational_feature_columns": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability",
+    "num_of_prev_attempts",
+    "studied_credits",
+    "week",
+    "total_clicks_week",
+    "active_this_week",
+    "n_vle_rows_week",
+    "n_distinct_sites_week",
+    "cum_clicks_until_t",
+    "recency",
+    "streak"
+  ],
+  "canonical_expected_features_raw": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "week",
+    "total_clicks"
+  ],
+  "canonical_expected_features_resolved": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "week",
+    "total_clicks_week"
+  ],
+  "feature_alias_map": {
+    "total_clicks": "total_clicks_week"
+  },
+  "n_train_rows": 232541,
+  "n_test_rows": 99670,
+  "active_window_weeks": 10,
+  "raw_train_rows_before_truncation": 719498,
+  "raw_test_rows_before_truncation": 308393,
+  "n_output_features_after_preprocessing": 46,
+  "train_event_rate": 0.012105392167402737,
+  "test_event_rate": 0.012190227751580214,
+  "design_note": "The Poisson piecewise-exponential benchmark reuses the same weekly dynamic treatment contract as D5.6 and only swaps the GLM family.",
+  "methodological_note": "All learned preprocessing operations were fit on training data only and then applied unchanged to test data."
+}
+
+[END] 5.6b.2 - 2026-06-19 19:28:31
+[START] 5.6b - 2026-06-19 19:28:31
+# ==============================================================
+# 5.6b.3 - Compute runtime guardrails for the Poisson GLM
+# ==============================================================
+[Stage 5.6b.3 table_poisson_pexp_weighted_guardrails_w10 — Poisson runtime guardrails]
+table_name=table_poisson_pexp_weighted_guardrails_w10
+rows=1, cols=15
+ active_window_weeks  search_row_cap  final_row_cap  search_rows_selected  final_rows_selected  subtrain_total_rows  full_total_rows  n_features  subtrain_event_rate  full_event_rate  sampled_subtrain_event_rate  sampled_full_event_rate  positive_weight_subtrain  positive_weight_full            sample_weight_strategy
+                  10           76086          76086                 76086                76086               185979           232541          46             0.012136         0.012105                     0.029664                 0.036998                 32.711121             26.028774 class-frequency frequency weights
+ARTIFACT | Stage 5.6b.3 table_poisson_pexp_weighted_guardrails_w10 — Poisson runtime guardrails | duckdb://table_poisson_pexp_weighted_guardrails_w10
+[END] 5.6b.3 - 2026-06-19 19:28:32
+[START] 5.6b - 2026-06-19 19:28:32
+# ==============================================================
+# 5.6b.4 - Tune and evaluate the Poisson piecewise-exponential model
+# ==============================================================
+- TUNING_WORKERS: 8
+- TUNING_BACKEND: processes
+[Stage 5.6b.4 table_poisson_pexp_weighted_tuning_results_w10 — Poisson tuning results]
+table_name=table_poisson_pexp_weighted_tuning_results_w10
+rows=24, cols=9
+ candidate_id   alpha  fit_rows  fit_features  positive_weight  val_log_loss  val_brier  val_roc_auc fit_status
+            1 0.00001     76086            46        32.711121      0.390847   0.115208     0.754203         ok
+            2 0.00002     76086            46        32.711121      0.391358   0.115264     0.754267         ok
+            3 0.00005     76086            46        32.711121      0.392420   0.115431     0.754028         ok
+            4 0.00010     76086            46        32.711121      0.393570   0.115657     0.753454         ok
+            5 0.00020     76086            46        32.711121      0.395141   0.115995     0.752578         ok
+            6 0.00050     76086            46        32.711121      0.398199   0.116685     0.750807         ok
+            7 0.00100     76086            46        32.711121      0.401510   0.117491     0.748564         ok
+            8 0.00200     76086            46        32.711121      0.405763   0.118639     0.744998         ok
+            9 0.00500     76086            46        32.711121      0.412666   0.120702     0.737613         ok
+           10 0.01000     76086            46        32.711121      0.418753   0.122654     0.730639         ok
+           11 0.02000     76086            46        32.711121      0.425905   0.125079     0.723551         ok
+           12 0.05000     76086            46        32.711121      0.438568   0.129686     0.715464         ok
+           13 0.10000     76086            46        32.711121      0.452227   0.135005     0.710463         ok
+           14 0.20000     76086            46        32.711121      0.470875   0.142744     0.706494         ok
+           15 0.30000     76086            46        32.711121      0.484770   0.148808     0.704613         ok
+           16 0.50000     76086            46        32.711121      0.506464   0.158658     0.702289         ok
+           17 0.70000     76086            46        32.711121      0.524027   0.166871     0.700398         ok
+           18 1.00000     76086            46        32.711121      0.546180   0.177437     0.697694         ok
+           19 2.00000     76086            46        32.711121      0.601628   0.204486     0.689124         ok
+           20 5.00000     76086            46        32.711121      0.699366   0.253104     0.674916         ok
+ARTIFACT | Stage 5.6b.4 table_poisson_pexp_weighted_tuning_results_w10 — Poisson tuning results | duckdb://table_poisson_pexp_weighted_tuning_results_w10
+[Stage 5.6b.4 table_poisson_pexp_weighted_tuned_test_predictions_w10 — Poisson test predictions]
+table_name=table_poisson_pexp_weighted_tuned_test_predictions_w10
+rows=99670, cols=30
+   enrollment_id  id_student code_module code_presentation  week  event_t  event_observed  t_event_week  t_final_week  used_zero_week_fallback_for_censoring gender               region     highest_education imd_band age_band  num_of_prev_attempts  studied_credits disability  total_clicks_week  active_this_week  n_vle_rows_week  n_distinct_sites_week  cum_clicks_until_t  recency  streak split  pred_rate  pred_hazard  pred_survival  pred_risk
+100561|DDD|2014J      100561         DDD             2014J     0        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               10.0                 1                8                      4                10.0        0       1  test   0.595931     0.448951       0.551049   0.448951
+100561|DDD|2014J      100561         DDD             2014J     1        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N                0.0                 0                0                      0                10.0        1       0  test   0.890824     0.589683       0.226105   0.773895
+100561|DDD|2014J      100561         DDD             2014J     2        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               91.0                 1               26                     11               101.0        0       2  test   0.607493     0.455285       0.123163   0.876837
+100561|DDD|2014J      100561         DDD             2014J     3        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N                6.0                 1                4                      2               107.0        0       3  test   0.590491     0.445945       0.068239   0.931761
+100561|DDD|2014J      100561         DDD             2014J     4        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               30.0                 1               17                      8               137.0        0       4  test   0.437151     0.354126       0.044074   0.955926
+100561|DDD|2014J      100561         DDD             2014J     5        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               65.0                 1               36                     14               202.0        0       5  test   0.271901     0.238070       0.033581   0.966419
+100561|DDD|2014J      100561         DDD             2014J     6        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               27.0                 1               15                      9               229.0        0       6  test   0.375436     0.313011       0.023070   0.976930
+100561|DDD|2014J      100561         DDD             2014J     7        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               59.0                 1               14                      5               288.0        0       7  test   0.686203     0.496516       0.011615   0.988385
+100561|DDD|2014J      100561         DDD             2014J     8        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               62.0                 1               22                      7               350.0        0       8  test   0.341965     0.289627       0.008251   0.991749
+100561|DDD|2014J      100561         DDD             2014J     9        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N                4.0                 1                3                      2               354.0        0       9  test   0.183949     0.168022       0.006865   0.993135
+100561|DDD|2014J      100561         DDD             2014J    10        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N                3.0                 1                3                      3               357.0        0      10  test   0.384072     0.318917       0.004676   0.995324
+100621|CCC|2014B      100621         CCC             2014B     0        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                0.0                 0                0                      0                 0.0        1       0  test   0.418667     0.342077       0.657923   0.342077
+100621|CCC|2014B      100621         CCC             2014B     1        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                3.0                 1                2                      2                 3.0        0       2  test   0.484305     0.383875       0.405363   0.594637
+100621|CCC|2014B      100621         CCC             2014B     2        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                1.0                 1                1                      1                 4.0        0       3  test   0.716189     0.511389       0.198065   0.801935
+100621|CCC|2014B      100621         CCC             2014B     3        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                1.0                 1                1                      1                 5.0        0       4  test   0.510089     0.399558       0.118927   0.881073
+100621|CCC|2014B      100621         CCC             2014B     4        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                0.0                 0                0                      0                 5.0        1       0  test   0.467883     0.373673       0.074487   0.925513
+100621|CCC|2014B      100621         CCC             2014B     5        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                0.0                 0                0                      0                 5.0        2       0  test   0.423050     0.344954       0.048792   0.951208
+100621|CCC|2014B      100621         CCC             2014B     6        1               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                0.0                 0                0                      0                 5.0        3       0  test   0.346106     0.292562       0.034518   0.965482
+101187|DDD|2014J      101187         DDD             2014J     0        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        1       0  test   0.643514     0.474557       0.525443   0.474557
+101187|DDD|2014J      101187         DDD             2014J     1        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        2       0  test   0.584051     0.442365       0.293005   0.706995
+ARTIFACT | Stage 5.6b.4 table_poisson_pexp_weighted_tuned_test_predictions_w10 — Poisson test predictions | duckdb://table_poisson_pexp_weighted_tuned_test_predictions_w10
+[Stage 5.6b.4 table_poisson_pexp_weighted_tuned_primary_metrics_w10 — Poisson primary metrics]
+table_name=table_poisson_pexp_weighted_tuned_primary_metrics_w10
+rows=2, cols=4
+metric_name metric_category  metric_value                         notes
+        ibs         primary      0.764102 sksurv_integrated_brier_score
+    c_index      co_primary      0.490867          pycox_concordance_td
+ARTIFACT | Stage 5.6b.4 table_poisson_pexp_weighted_tuned_primary_metrics_w10 — Poisson primary metrics | duckdb://table_poisson_pexp_weighted_tuned_primary_metrics_w10
+[Stage 5.6b.4 table_poisson_pexp_weighted_tuned_brier_by_horizon_w10 — Poisson Brier scores by horizon]
+table_name=table_poisson_pexp_weighted_tuned_brier_by_horizon_w10
+rows=3, cols=5
+ horizon_week      metric_name metric_category  metric_value              notes
+           10 brier_at_horizon         primary      0.848924 sksurv_brier_score
+           20 brier_at_horizon         primary      0.798854 sksurv_brier_score
+           30 brier_at_horizon         primary      0.761138 sksurv_brier_score
+ARTIFACT | Stage 5.6b.4 table_poisson_pexp_weighted_tuned_brier_by_horizon_w10 — Poisson Brier scores by horizon | duckdb://table_poisson_pexp_weighted_tuned_brier_by_horizon_w10
+[Stage 5.6b.4 table_poisson_pexp_weighted_tuned_secondary_metrics_w10 — Poisson secondary metrics]
+table_name=table_poisson_pexp_weighted_tuned_secondary_metrics_w10
+rows=6, cols=5
+ horizon_week         metric_name metric_category  metric_value                                                                                  notes
+           10 risk_auc_at_horizon       secondary      0.105369                                                            roc_auc_on_evaluable_subset
+           10  time_dependent_auc       secondary      0.106117 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.106117; local_ipcw_auc
+           20 risk_auc_at_horizon       secondary      0.222493                                                            roc_auc_on_evaluable_subset
+           20  time_dependent_auc       secondary      0.224326 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.224326; local_ipcw_auc
+           30 risk_auc_at_horizon       secondary      0.270892                                                            roc_auc_on_evaluable_subset
+           30  time_dependent_auc       secondary      0.273113 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.273113; local_ipcw_auc
+ARTIFACT | Stage 5.6b.4 table_poisson_pexp_weighted_tuned_secondary_metrics_w10 — Poisson secondary metrics | duckdb://table_poisson_pexp_weighted_tuned_secondary_metrics_w10
+[Stage 5.6b.4 table_poisson_pexp_weighted_tuned_td_auc_support_audit_w10 — Poisson IPCW support audit]
+table_name=table_poisson_pexp_weighted_tuned_td_auc_support_audit_w10
+rows=3, cols=6
+ horizon_week  max_ipcw_time  n_total_test_enrollments  n_supported_test_enrollments  mean_auc                                                                                  notes
+           10           38.0                      9778                          6742  0.106117 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.106117; local_ipcw_auc
+           20           38.0                      9778                          6742  0.224326 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.224326; local_ipcw_auc
+           30           38.0                      9778                          6742  0.273113 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.273113; local_ipcw_auc
+ARTIFACT | Stage 5.6b.4 table_poisson_pexp_weighted_tuned_td_auc_support_audit_w10 — Poisson IPCW support audit | duckdb://table_poisson_pexp_weighted_tuned_td_auc_support_audit_w10
+[Stage 5.6b.4 table_poisson_pexp_weighted_tuned_row_diagnostics_w10 — Poisson row-level diagnostics]
+table_name=table_poisson_pexp_weighted_tuned_row_diagnostics_w10
+rows=1, cols=5
+                                  model_name  row_level_roc_auc  row_level_pr_auc  row_level_log_loss  row_level_brier
+poisson_piecewise_exponential_weighted_tuned           0.770393          0.042206            0.392026         0.115253
+ARTIFACT | Stage 5.6b.4 table_poisson_pexp_weighted_tuned_row_diagnostics_w10 — Poisson row-level diagnostics | duckdb://table_poisson_pexp_weighted_tuned_row_diagnostics_w10
+[Stage 5.6b.4 table_poisson_pexp_weighted_tuned_support_by_horizon_w10 — Poisson support by horizon]
+table_name=table_poisson_pexp_weighted_tuned_support_by_horizon_w10
+rows=3, cols=4
+ horizon_week  n_evaluable_enrollments  n_events_by_horizon  event_rate_by_horizon
+           10                     9778                 1215               0.124259
+           20                     9778                 1736               0.177541
+           30                     9778                 2129               0.217734
+ARTIFACT | Stage 5.6b.4 table_poisson_pexp_weighted_tuned_support_by_horizon_w10 — Poisson support by horizon | duckdb://table_poisson_pexp_weighted_tuned_support_by_horizon_w10
+[Stage 5.6b.4 table_poisson_pexp_weighted_tuned_calibration_summary_w10 — Poisson calibration summary]
+table_name=table_poisson_pexp_weighted_tuned_calibration_summary_w10
+rows=3, cols=5
+ horizon_week            metric_name metric_category  metric_value                                         notes
+           10 calibration_at_horizon         primary      0.851385 Weighted absolute calibration gap across bins
+           20 calibration_at_horizon         primary      0.800557 Weighted absolute calibration gap across bins
+           30 calibration_at_horizon         primary      0.762410 Weighted absolute calibration gap across bins
+ARTIFACT | Stage 5.6b.4 table_poisson_pexp_weighted_tuned_calibration_summary_w10 — Poisson calibration summary | duckdb://table_poisson_pexp_weighted_tuned_calibration_summary_w10
+[Stage 5.6b.4 table_poisson_pexp_weighted_tuned_calibration_bins_by_horizon_w10 — Poisson calibration bins]
+table_name=table_poisson_pexp_weighted_tuned_calibration_bins_by_horizon_w10
+rows=30, cols=6
+ calibration_bin   n  mean_predicted_risk  observed_event_rate  horizon_week  abs_calibration_gap
+               0 978             0.555864             0.775051            10             0.219187
+               1 978             0.898540             0.170757            10             0.727783
+               2 978             0.948676             0.079755            10             0.868921
+               3 977             0.968935             0.071648            10             0.897287
+               4 978             0.980084             0.030675            10             0.949409
+               5 978             0.986746             0.038855            10             0.947891
+               6 977             0.991211             0.026612            10             0.964599
+               7 978             0.994007             0.031697            10             0.962310
+               8 978             0.996048             0.009202            10             0.986845
+               9 978             0.997959             0.008180            10             0.989779
+               0 978             0.555864             0.787321            20             0.231457
+               1 978             0.898540             0.219836            20             0.678703
+               2 978             0.948676             0.135992            20             0.812684
+               3 977             0.968935             0.128966            20             0.839968
+               4 978             0.980084             0.104294            20             0.875790
+               5 978             0.986746             0.087935            20             0.898811
+               6 977             0.991211             0.084954            20             0.906257
+               7 978             0.994007             0.088957            20             0.905050
+               8 978             0.996048             0.072597            20             0.923451
+               9 978             0.997959             0.064417            20             0.933542
+ARTIFACT | Stage 5.6b.4 table_poisson_pexp_weighted_tuned_calibration_bins_by_horizon_w10 — Poisson calibration bins | duckdb://table_poisson_pexp_weighted_tuned_calibration_bins_by_horizon_w10
+[Stage 5.6b.4 table_poisson_pexp_weighted_tuned_predicted_vs_observed_survival_w10 — Poisson predicted versus observed survival]
+table_name=table_poisson_pexp_weighted_tuned_predicted_vs_observed_survival_w10
+rows=3, cols=5
+ horizon_week  n_evaluable_enrollments  mean_predicted_survival  mean_observed_survival  abs_gap
+           10                     9778                 0.068203                0.875741 0.807539
+           20                     9778                 0.068203                0.822459 0.754256
+           30                     9778                 0.068203                0.782266 0.714063
+ARTIFACT | Stage 5.6b.4 table_poisson_pexp_weighted_tuned_predicted_vs_observed_survival_w10 — Poisson predicted versus observed survival | duckdb://table_poisson_pexp_weighted_tuned_predicted_vs_observed_survival_w10
+ARTIFACT | poisson_pexp_model | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/models/poisson_piecewise_exponential_weighted_tuned_w10.joblib
+ARTIFACT | poisson_pexp_preprocessor | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/models/poisson_piecewise_exponential_weighted_preprocessor_w10.joblib
+ARTIFACT | poisson_pexp_tuned_model_config | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/metadata/poisson_piecewise_exponential_weighted_tuned_model_config_w10.json
+{
+  "model_name": "poisson_piecewise_exponential_weighted_tuned",
+  "family_name": "discrete_time_dynamic",
+  "model_type": "poisson_piecewise_exponential",
+  "alpha_grid": [
+    1e-05,
+    2e-05,
+    5e-05,
+    0.0001,
+    0.0002,
+    0.0005,
+    0.001,
+    0.002,
+    0.005,
+    0.01,
+    0.02,
+    0.05,
+    0.1,
+    0.2,
+    0.3,
+    0.5,
+    0.7,
+    1.0,
+    2.0,
+    5.0,
+    10.0,
+    20.0,
+    50.0,
+    100.0
+  ],
+  "selection_metric": "val_log_loss_on_discrete_hazard",
+  "validation_split": {
+    "method": "GroupShuffleSplit",
+    "test_size": 0.2,
+    "group_column": "enrollment_id",
+    "random_seed": 42
+  },
+  "guardrails": {
+    "active_window_weeks": 10,
+    "search_row_cap": 76086,
+    "final_row_cap": 76086,
+    "search_rows_selected": 76086,
+    "final_rows_selected": 76086,
+    "subtrain_total_rows": 185979,
+    "full_total_rows": 232541,
+    "n_features": 46,
+    "subtrain_event_rate": 0.012135778770721426,
+    "full_event_rate": 0.012105392167402737,
+    "sampled_subtrain_event_rate": 0.02966380148779013,
+    "sampled_full_event_rate": 0.036997607969928764,
+    "positive_weight_subtrain": 32.711120957022594,
+    "positive_weight_full": 26.028774422735346,
+    "sample_weight_strategy": "class-frequency frequency weights"
+  },
+  "benchmark_horizons": [
+    10,
+    20,
+    30
+  ],
+  "calibration_bins": 10,
+  "active_window_weeks": 10,
+  "best_candidate": {
+    "alpha": 1e-05,
+    "val_log_loss": 0.3908465526346619
+  },
+  "preprocessing": {
+    "categorical_features": [
+      "gender",
+      "region",
+      "highest_education",
+      "imd_band",
+      "age_band",
+      "disability"
+    ],
+    "numeric_features": [
+      "num_of_prev_attempts",
+      "studied_credits",
+      "week",
+      "total_clicks_week",
+      "active_this_week",
+      "n_vle_rows_week",
+      "n_distinct_sites_week",
+      "cum_clicks_until_t",
+      "recency",
+      "streak"
+    ],
+    "categorical_encoder": "OneHotEncoder(handle_unknown=ignore, sparse_output=True)",
+    "numeric_scaler": "MaxAbsScaler"
+  },
+  "event_rate_to_hazard_mapping": "pred_hazard = 1 - exp(-pred_rate)",
+  "weighting_strategy": "Poisson GLM frequency weights are derived from the guarded positive-class imbalance ratio on sampled person-period rows.",
+  "design_note": "This weighted Poisson variant preserves the dynamic weekly contract and changes only the fitting weights for Item 6 sensitivity."
+}
+
+ candidate_id   alpha  fit_rows  fit_features  positive_weight  val_log_loss  val_brier  val_roc_auc fit_status
+            1 0.00001     76086            46        32.711121      0.390847   0.115208     0.754203         ok
+            2 0.00002     76086            46        32.711121      0.391358   0.115264     0.754267         ok
+            3 0.00005     76086            46        32.711121      0.392420   0.115431     0.754028         ok
+            4 0.00010     76086            46        32.711121      0.393570   0.115657     0.753454         ok
+            5 0.00020     76086            46        32.711121      0.395141   0.115995     0.752578         ok
+            6 0.00050     76086            46        32.711121      0.398199   0.116685     0.750807         ok
+            7 0.00100     76086            46        32.711121      0.401510   0.117491     0.748564         ok
+            8 0.00200     76086            46        32.711121      0.405763   0.118639     0.744998         ok
+            9 0.00500     76086            46        32.711121      0.412666   0.120702     0.737613         ok
+           10 0.01000     76086            46        32.711121      0.418753   0.122654     0.730639         ok
+           11 0.02000     76086            46        32.711121      0.425905   0.125079     0.723551         ok
+           12 0.05000     76086            46        32.711121      0.438568   0.129686     0.715464         ok
+           13 0.10000     76086            46        32.711121      0.452227   0.135005     0.710463         ok
+           14 0.20000     76086            46        32.711121      0.470875   0.142744     0.706494         ok
+           15 0.30000     76086            46        32.711121      0.484770   0.148808     0.704613         ok
+           16 0.50000     76086            46        32.711121      0.506464   0.158658     0.702289         ok
+           17 0.70000     76086            46        32.711121      0.524027   0.166871     0.700398         ok
+           18 1.00000     76086            46        32.711121      0.546180   0.177437     0.697694         ok
+           19 2.00000     76086            46        32.711121      0.601628   0.204486     0.689124         ok
+           20 5.00000     76086            46        32.711121      0.699366   0.253104     0.674916         ok
+[END] 5.6b.4 - 2026-06-19 19:28:48
+[START] 5.6b - 2026-06-19 19:28:48
+# ==============================================================
+# 5.6b.5 - Close the DuckDB runtime cleanly
+# ==============================================================
+DuckDB connection closed.
+[END] 5.6b.5 - 2026-06-19 19:28:49

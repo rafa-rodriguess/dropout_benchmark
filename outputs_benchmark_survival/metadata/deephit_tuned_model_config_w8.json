@@ -19,7 +19,7 @@
       "dropout": 0.1,
       "alpha": 0.2,
       "sigma": 0.1,
-      "learning_rate": 0.01,
+      "learning_rate": 0.005,
       "weight_decay": 1e-05,
       "batch_size": 512
     },
@@ -27,19 +27,19 @@
       "candidate_id": 2,
       "num_durations": 20,
       "hidden_dims": [
-        128,
-        64
+        64,
+        32
       ],
       "dropout": 0.1,
       "alpha": 0.2,
-      "sigma": 0.2,
-      "learning_rate": 0.005,
+      "sigma": 0.1,
+      "learning_rate": 0.01,
       "weight_decay": 1e-05,
       "batch_size": 512
     },
     {
       "candidate_id": 3,
-      "num_durations": 30,
+      "num_durations": 20,
       "hidden_dims": [
         64,
         32
@@ -53,14 +53,294 @@
     },
     {
       "candidate_id": 4,
+      "num_durations": 20,
+      "hidden_dims": [
+        64,
+        32
+      ],
+      "dropout": 0.2,
+      "alpha": 0.3,
+      "sigma": 0.2,
+      "learning_rate": 0.01,
+      "weight_decay": 0.0001,
+      "batch_size": 512
+    },
+    {
+      "candidate_id": 5,
+      "num_durations": 20,
+      "hidden_dims": [
+        128,
+        64
+      ],
+      "dropout": 0.1,
+      "alpha": 0.2,
+      "sigma": 0.1,
+      "learning_rate": 0.005,
+      "weight_decay": 1e-05,
+      "batch_size": 512
+    },
+    {
+      "candidate_id": 6,
+      "num_durations": 20,
+      "hidden_dims": [
+        128,
+        64
+      ],
+      "dropout": 0.1,
+      "alpha": 0.2,
+      "sigma": 0.2,
+      "learning_rate": 0.01,
+      "weight_decay": 1e-05,
+      "batch_size": 512
+    },
+    {
+      "candidate_id": 7,
+      "num_durations": 20,
+      "hidden_dims": [
+        128,
+        64
+      ],
+      "dropout": 0.2,
+      "alpha": 0.3,
+      "sigma": 0.1,
+      "learning_rate": 0.005,
+      "weight_decay": 0.0001,
+      "batch_size": 512
+    },
+    {
+      "candidate_id": 8,
+      "num_durations": 20,
+      "hidden_dims": [
+        128,
+        64
+      ],
+      "dropout": 0.2,
+      "alpha": 0.3,
+      "sigma": 0.2,
+      "learning_rate": 0.001,
+      "weight_decay": 0.0001,
+      "batch_size": 1024
+    },
+    {
+      "candidate_id": 9,
+      "num_durations": 20,
+      "hidden_dims": [
+        256,
+        128
+      ],
+      "dropout": 0.1,
+      "alpha": 0.2,
+      "sigma": 0.1,
+      "learning_rate": 0.005,
+      "weight_decay": 1e-05,
+      "batch_size": 512
+    },
+    {
+      "candidate_id": 10,
+      "num_durations": 20,
+      "hidden_dims": [
+        256,
+        128
+      ],
+      "dropout": 0.2,
+      "alpha": 0.3,
+      "sigma": 0.2,
+      "learning_rate": 0.001,
+      "weight_decay": 0.0001,
+      "batch_size": 1024
+    },
+    {
+      "candidate_id": 11,
+      "num_durations": 20,
+      "hidden_dims": [
+        256,
+        128
+      ],
+      "dropout": 0.2,
+      "alpha": 0.3,
+      "sigma": 0.1,
+      "learning_rate": 0.005,
+      "weight_decay": 0.0001,
+      "batch_size": 512
+    },
+    {
+      "candidate_id": 12,
+      "num_durations": 20,
+      "hidden_dims": [
+        256,
+        128
+      ],
+      "dropout": 0.3,
+      "alpha": 0.2,
+      "sigma": 0.1,
+      "learning_rate": 0.001,
+      "weight_decay": 0.0001,
+      "batch_size": 1024
+    },
+    {
+      "candidate_id": 13,
+      "num_durations": 40,
+      "hidden_dims": [
+        64,
+        32
+      ],
+      "dropout": 0.1,
+      "alpha": 0.2,
+      "sigma": 0.1,
+      "learning_rate": 0.005,
+      "weight_decay": 1e-05,
+      "batch_size": 512
+    },
+    {
+      "candidate_id": 14,
+      "num_durations": 40,
+      "hidden_dims": [
+        64,
+        32
+      ],
+      "dropout": 0.1,
+      "alpha": 0.2,
+      "sigma": 0.2,
+      "learning_rate": 0.01,
+      "weight_decay": 1e-05,
+      "batch_size": 512
+    },
+    {
+      "candidate_id": 15,
+      "num_durations": 40,
+      "hidden_dims": [
+        64,
+        32
+      ],
+      "dropout": 0.2,
+      "alpha": 0.3,
+      "sigma": 0.1,
+      "learning_rate": 0.005,
+      "weight_decay": 0.0001,
+      "batch_size": 512
+    },
+    {
+      "candidate_id": 16,
+      "num_durations": 40,
+      "hidden_dims": [
+        64,
+        32
+      ],
+      "dropout": 0.2,
+      "alpha": 0.3,
+      "sigma": 0.2,
+      "learning_rate": 0.01,
+      "weight_decay": 0.0001,
+      "batch_size": 512
+    },
+    {
+      "candidate_id": 17,
       "num_durations": 40,
       "hidden_dims": [
         128,
         64
       ],
-      "dropout": 0.15,
+      "dropout": 0.1,
+      "alpha": 0.2,
+      "sigma": 0.1,
+      "learning_rate": 0.005,
+      "weight_decay": 1e-05,
+      "batch_size": 512
+    },
+    {
+      "candidate_id": 18,
+      "num_durations": 40,
+      "hidden_dims": [
+        128,
+        64
+      ],
+      "dropout": 0.1,
+      "alpha": 0.2,
+      "sigma": 0.2,
+      "learning_rate": 0.01,
+      "weight_decay": 1e-05,
+      "batch_size": 512
+    },
+    {
+      "candidate_id": 19,
+      "num_durations": 40,
+      "hidden_dims": [
+        128,
+        64
+      ],
+      "dropout": 0.2,
+      "alpha": 0.3,
+      "sigma": 0.1,
+      "learning_rate": 0.005,
+      "weight_decay": 0.0001,
+      "batch_size": 512
+    },
+    {
+      "candidate_id": 20,
+      "num_durations": 40,
+      "hidden_dims": [
+        128,
+        64
+      ],
+      "dropout": 0.2,
       "alpha": 0.3,
       "sigma": 0.2,
+      "learning_rate": 0.001,
+      "weight_decay": 0.0001,
+      "batch_size": 1024
+    },
+    {
+      "candidate_id": 21,
+      "num_durations": 40,
+      "hidden_dims": [
+        256,
+        128
+      ],
+      "dropout": 0.1,
+      "alpha": 0.2,
+      "sigma": 0.1,
+      "learning_rate": 0.005,
+      "weight_decay": 1e-05,
+      "batch_size": 512
+    },
+    {
+      "candidate_id": 22,
+      "num_durations": 40,
+      "hidden_dims": [
+        256,
+        128
+      ],
+      "dropout": 0.2,
+      "alpha": 0.3,
+      "sigma": 0.1,
+      "learning_rate": 0.005,
+      "weight_decay": 0.0001,
+      "batch_size": 512
+    },
+    {
+      "candidate_id": 23,
+      "num_durations": 40,
+      "hidden_dims": [
+        256,
+        128
+      ],
+      "dropout": 0.2,
+      "alpha": 0.3,
+      "sigma": 0.2,
+      "learning_rate": 0.01,
+      "weight_decay": 0.0001,
+      "batch_size": 1024
+    },
+    {
+      "candidate_id": 24,
+      "num_durations": 40,
+      "hidden_dims": [
+        256,
+        128
+      ],
+      "dropout": 0.3,
+      "alpha": 0.2,
+      "sigma": 0.1,
       "learning_rate": 0.001,
       "weight_decay": 0.0001,
       "batch_size": 1024
@@ -83,24 +363,24 @@
   "input_train_table": "enrollment_cox_ready_train_w8",
   "input_test_table": "enrollment_cox_ready_test_w8",
   "best_candidate": {
-    "candidate_id": 4,
+    "candidate_id": 20,
     "params": {
       "num_durations": 40,
       "hidden_dims": [
         128,
         64
       ],
-      "dropout": 0.15,
+      "dropout": 0.2,
       "alpha": 0.3,
       "sigma": 0.2,
       "learning_rate": 0.001,
       "weight_decay": 0.0001,
       "batch_size": 1024
     },
-    "best_epoch": 36,
-    "best_val_loss": 0.41900530457496643,
-    "val_ibs": 0.10596446779435352,
-    "val_c_index": 0.5999735055951366,
+    "best_epoch": 51,
+    "best_val_loss": 0.4182809293270111,
+    "val_ibs": 0.10597083833848839,
+    "val_c_index": 0.605416419786985,
     "implementation": "pycox_deephit_single"
   },
   "guardrails": {

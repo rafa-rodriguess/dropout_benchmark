@@ -14,37 +14,145 @@
     {
       "candidate_id": 1,
       "n_baseline_knots": 2,
-      "penalizer": 0.025,
+      "penalizer": 0.01,
       "l1_ratio": 0.0
     },
     {
       "candidate_id": 2,
       "n_baseline_knots": 2,
-      "penalizer": 0.1,
+      "penalizer": 0.025,
       "l1_ratio": 0.0
     },
     {
       "candidate_id": 3,
       "n_baseline_knots": 2,
-      "penalizer": 0.2,
+      "penalizer": 0.05,
       "l1_ratio": 0.0
     },
     {
       "candidate_id": 4,
+      "n_baseline_knots": 2,
+      "penalizer": 0.1,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 5,
+      "n_baseline_knots": 2,
+      "penalizer": 0.15,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 6,
+      "n_baseline_knots": 2,
+      "penalizer": 0.2,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 7,
+      "n_baseline_knots": 2,
+      "penalizer": 0.3,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 8,
+      "n_baseline_knots": 2,
+      "penalizer": 0.5,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 9,
+      "n_baseline_knots": 2,
+      "penalizer": 0.7,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 10,
+      "n_baseline_knots": 2,
+      "penalizer": 1.0,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 11,
+      "n_baseline_knots": 2,
+      "penalizer": 2.0,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 12,
+      "n_baseline_knots": 2,
+      "penalizer": 5.0,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 13,
+      "n_baseline_knots": 3,
+      "penalizer": 0.01,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 14,
+      "n_baseline_knots": 3,
+      "penalizer": 0.025,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 15,
       "n_baseline_knots": 3,
       "penalizer": 0.05,
       "l1_ratio": 0.0
     },
     {
-      "candidate_id": 5,
+      "candidate_id": 16,
       "n_baseline_knots": 3,
       "penalizer": 0.1,
       "l1_ratio": 0.0
     },
     {
-      "candidate_id": 6,
+      "candidate_id": 17,
+      "n_baseline_knots": 3,
+      "penalizer": 0.15,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 18,
       "n_baseline_knots": 3,
       "penalizer": 0.2,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 19,
+      "n_baseline_knots": 3,
+      "penalizer": 0.3,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 20,
+      "n_baseline_knots": 3,
+      "penalizer": 0.5,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 21,
+      "n_baseline_knots": 3,
+      "penalizer": 0.7,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 22,
+      "n_baseline_knots": 3,
+      "penalizer": 1.0,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 23,
+      "n_baseline_knots": 3,
+      "penalizer": 2.0,
+      "l1_ratio": 0.0
+    },
+    {
+      "candidate_id": 24,
+      "n_baseline_knots": 3,
+      "penalizer": 5.0,
       "l1_ratio": 0.0
     }
   ],
@@ -60,20 +168,21 @@
   "duration_floor": 1.0,
   "implementation": "lifelines_crc_spline_aft",
   "best_candidate": {
-    "candidate_id": 1,
+    "candidate_id": 13,
     "params": {
-      "n_baseline_knots": 2,
-      "penalizer": 0.025,
+      "n_baseline_knots": 3,
+      "penalizer": 0.01,
       "l1_ratio": 0.0
     },
     "duration_floor": 1.0,
     "regressors": {
       "beta_": "num_num_of_prev_attempts + num_studied_credits + num_clicks_first_4_weeks + num_active_weeks_first_4 + num_mean_clicks_first_4_weeks + cat_gender_M + cat_region_East_Midlands_Region + cat_region_Ireland + cat_region_London_Region + cat_region_North_Region + cat_region_North_Western_Region + cat_region_Scotland + cat_region_South_East_Region + cat_region_South_Region + cat_region_South_West_Region + cat_region_Wales + cat_region_West_Midlands_Region + cat_region_Yorkshire_Region + cat_highest_education_HE_Qualification + cat_highest_education_Lower_Than_A_Level + cat_highest_education_No_Formal_quals + cat_highest_education_Post_Graduate_Qualification + cat_imd_band_10_20 + cat_imd_band_20_30 + cat_imd_band_30_40 + cat_imd_band_40_50 + cat_imd_band_50_60 + cat_imd_band_60_70 + cat_imd_band_70_80 + cat_imd_band_80_90 + cat_imd_band_90_100 + cat_imd_band_None + cat_age_band_35_55 + cat_age_band_55 + cat_disability_Y",
       "gamma0_": "1",
-      "gamma1_": "1"
+      "gamma1_": "1",
+      "gamma2_": "1"
     },
-    "val_ibs": 0.11747734796508809,
-    "val_c_index": 0.6287551001729362,
+    "val_ibs": 0.11704526879762366,
+    "val_c_index": 0.624005375955605,
     "implementation": "lifelines_crc_spline_aft"
   },
   "preprocessing": {

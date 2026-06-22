@@ -37,7 +37,7 @@
     "dynamic_temporal_behavioral": "dynamic_behavioral_signal",
     "discrete_time_index": "temporal_covariate"
   },
-  "recurring_top_drivers_count": 13,
+  "recurring_top_drivers_count": 14,
   "top_driver_by_model": {
     "cox_tuned": "num__clicks_first_4_weeks",
     "deepsurv_tuned": "active_weeks_first_4",

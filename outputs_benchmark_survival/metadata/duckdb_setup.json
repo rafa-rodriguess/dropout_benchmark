@@ -1,6 +1,6 @@
 {
-  "run_id": "f3e86c2afbd246e2814123195c22d973",
-  "duckdb_path": "/Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/outputs_benchmark_survival/benchmark_survival.duckdb",
+  "run_id": "f3766e75053447a7beb7a1c4936d231f",
+  "duckdb_path": "/Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/benchmark_survival.duckdb",
   "registered_views": [
     "assessments",
     "courses",
@@ -11,13 +11,13 @@
     "vle"
   ],
   "source_files": {
-    "studentInfo": "/Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/content/studentInfo.csv",
-    "studentRegistration": "/Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/content/studentRegistration.csv",
-    "studentVle": "/Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/content/studentVle.csv",
-    "courses": "/Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/content/courses.csv",
-    "vle": "/Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/content/vle.csv",
-    "studentAssessment": "/Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/content/studentAssessment.csv",
-    "assessments": "/Users/rafars/rafael.dasilva@eastern.edu - Google Drive/My Drive/DOUTORADO/Eastern/dropout_test-1/content/assessments.csv"
+    "studentInfo": "/Users/rafars/dropout_benchmark_desenv/content/studentInfo.csv",
+    "studentRegistration": "/Users/rafars/dropout_benchmark_desenv/content/studentRegistration.csv",
+    "studentVle": "/Users/rafars/dropout_benchmark_desenv/content/studentVle.csv",
+    "courses": "/Users/rafars/dropout_benchmark_desenv/content/courses.csv",
+    "vle": "/Users/rafars/dropout_benchmark_desenv/content/vle.csv",
+    "studentAssessment": "/Users/rafars/dropout_benchmark_desenv/content/studentAssessment.csv",
+    "assessments": "/Users/rafars/dropout_benchmark_desenv/content/assessments.csv"
   },
   "catalog_table": "pipeline_table_catalog",
   "catalog_view": "vw_pipeline_table_catalog_schema"

@@ -11,21 +11,53 @@
     {
       "candidate_id": 1,
       "loss": "coxph",
-      "learning_rate": 0.05,
-      "n_estimators": 150,
+      "learning_rate": 0.02,
+      "n_estimators": 100,
       "max_depth": 1,
       "subsample": 1.0
     },
     {
       "candidate_id": 2,
       "loss": "coxph",
-      "learning_rate": 0.05,
-      "n_estimators": 250,
-      "max_depth": 2,
+      "learning_rate": 0.03,
+      "n_estimators": 150,
+      "max_depth": 1,
       "subsample": 1.0
     },
     {
       "candidate_id": 3,
+      "loss": "coxph",
+      "learning_rate": 0.05,
+      "n_estimators": 150,
+      "max_depth": 1,
+      "subsample": 1.0
+    },
+    {
+      "candidate_id": 4,
+      "loss": "coxph",
+      "learning_rate": 0.05,
+      "n_estimators": 250,
+      "max_depth": 1,
+      "subsample": 0.8
+    },
+    {
+      "candidate_id": 5,
+      "loss": "coxph",
+      "learning_rate": 0.08,
+      "n_estimators": 150,
+      "max_depth": 1,
+      "subsample": 0.8
+    },
+    {
+      "candidate_id": 6,
+      "loss": "coxph",
+      "learning_rate": 0.1,
+      "n_estimators": 100,
+      "max_depth": 1,
+      "subsample": 1.0
+    },
+    {
+      "candidate_id": 7,
       "loss": "coxph",
       "learning_rate": 0.1,
       "n_estimators": 150,
@@ -33,11 +65,139 @@
       "subsample": 0.8
     },
     {
-      "candidate_id": 4,
+      "candidate_id": 8,
+      "loss": "coxph",
+      "learning_rate": 0.1,
+      "n_estimators": 300,
+      "max_depth": 1,
+      "subsample": 0.8
+    },
+    {
+      "candidate_id": 9,
+      "loss": "coxph",
+      "learning_rate": 0.02,
+      "n_estimators": 200,
+      "max_depth": 2,
+      "subsample": 1.0
+    },
+    {
+      "candidate_id": 10,
+      "loss": "coxph",
+      "learning_rate": 0.03,
+      "n_estimators": 200,
+      "max_depth": 2,
+      "subsample": 1.0
+    },
+    {
+      "candidate_id": 11,
+      "loss": "coxph",
+      "learning_rate": 0.05,
+      "n_estimators": 200,
+      "max_depth": 2,
+      "subsample": 1.0
+    },
+    {
+      "candidate_id": 12,
+      "loss": "coxph",
+      "learning_rate": 0.05,
+      "n_estimators": 250,
+      "max_depth": 2,
+      "subsample": 0.8
+    },
+    {
+      "candidate_id": 13,
+      "loss": "coxph",
+      "learning_rate": 0.08,
+      "n_estimators": 200,
+      "max_depth": 2,
+      "subsample": 0.8
+    },
+    {
+      "candidate_id": 14,
       "loss": "coxph",
       "learning_rate": 0.08,
       "n_estimators": 250,
       "max_depth": 2,
+      "subsample": 0.8
+    },
+    {
+      "candidate_id": 15,
+      "loss": "coxph",
+      "learning_rate": 0.1,
+      "n_estimators": 150,
+      "max_depth": 2,
+      "subsample": 1.0
+    },
+    {
+      "candidate_id": 16,
+      "loss": "coxph",
+      "learning_rate": 0.1,
+      "n_estimators": 300,
+      "max_depth": 2,
+      "subsample": 0.8
+    },
+    {
+      "candidate_id": 17,
+      "loss": "coxph",
+      "learning_rate": 0.02,
+      "n_estimators": 300,
+      "max_depth": 3,
+      "subsample": 1.0
+    },
+    {
+      "candidate_id": 18,
+      "loss": "coxph",
+      "learning_rate": 0.03,
+      "n_estimators": 250,
+      "max_depth": 3,
+      "subsample": 1.0
+    },
+    {
+      "candidate_id": 19,
+      "loss": "coxph",
+      "learning_rate": 0.05,
+      "n_estimators": 200,
+      "max_depth": 3,
+      "subsample": 0.8
+    },
+    {
+      "candidate_id": 20,
+      "loss": "coxph",
+      "learning_rate": 0.05,
+      "n_estimators": 300,
+      "max_depth": 3,
+      "subsample": 1.0
+    },
+    {
+      "candidate_id": 21,
+      "loss": "coxph",
+      "learning_rate": 0.08,
+      "n_estimators": 150,
+      "max_depth": 3,
+      "subsample": 0.8
+    },
+    {
+      "candidate_id": 22,
+      "loss": "coxph",
+      "learning_rate": 0.08,
+      "n_estimators": 300,
+      "max_depth": 3,
+      "subsample": 0.8
+    },
+    {
+      "candidate_id": 23,
+      "loss": "coxph",
+      "learning_rate": 0.1,
+      "n_estimators": 100,
+      "max_depth": 3,
+      "subsample": 0.8
+    },
+    {
+      "candidate_id": 24,
+      "loss": "coxph",
+      "learning_rate": 0.1,
+      "n_estimators": 200,
+      "max_depth": 3,
       "subsample": 0.8
     }
   ],
@@ -54,16 +214,16 @@
   "input_train_table": "enrollment_cox_ready_train",
   "input_test_table": "enrollment_cox_ready_test",
   "best_candidate": {
-    "candidate_id": 4,
+    "candidate_id": 24,
     "params": {
       "loss": "coxph",
-      "learning_rate": 0.08,
-      "n_estimators": 250,
-      "max_depth": 2,
+      "learning_rate": 0.1,
+      "n_estimators": 200,
+      "max_depth": 3,
       "subsample": 0.8
     },
-    "val_ibs": 0.11505718671902315,
-    "val_c_index": 0.6427822015405292
+    "val_ibs": 0.11443994972882622,
+    "val_c_index": 0.6446189863722416
   },
   "guardrails": {
     "validation_test_size": 0.1,

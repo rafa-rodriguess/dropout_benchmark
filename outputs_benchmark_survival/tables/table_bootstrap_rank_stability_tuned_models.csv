@@ -1,31 +1,30 @@
 model,metric,rank,frequency,proportion
-Cox Comparable (Tuned),ibs,1,1,0.005
-DeepSurv (Tuned),ibs,1,31,0.155
-Neural-MTLR (Tuned),ibs,1,17,0.085
-Random Survival Forest (Tuned),ibs,1,151,0.755
-Cox Comparable (Tuned),ibs,2,15,0.075
-DeepSurv (Tuned),ibs,2,90,0.45
-Neural-MTLR (Tuned),ibs,2,63,0.315
-Random Survival Forest (Tuned),ibs,2,32,0.16
-Cox Comparable (Tuned),ibs,3,44,0.22
-DeepSurv (Tuned),ibs,3,56,0.28
-Neural-MTLR (Tuned),ibs,3,86,0.43
-Random Survival Forest (Tuned),ibs,3,14,0.07
-Cox Comparable (Tuned),ibs,4,140,0.7
-DeepSurv (Tuned),ibs,4,23,0.115
-Neural-MTLR (Tuned),ibs,4,34,0.17
-Random Survival Forest (Tuned),ibs,4,3,0.015
-Cox Comparable (Tuned),c_index_td,1,1,0.005
-DeepSurv (Tuned),c_index_td,1,21,0.105
-Random Survival Forest (Tuned),c_index_td,1,178,0.89
-Cox Comparable (Tuned),c_index_td,2,20,0.1
-DeepSurv (Tuned),c_index_td,2,154,0.77
-Neural-MTLR (Tuned),c_index_td,2,5,0.025
-Random Survival Forest (Tuned),c_index_td,2,21,0.105
-Cox Comparable (Tuned),c_index_td,3,132,0.66
-DeepSurv (Tuned),c_index_td,3,22,0.11
-Neural-MTLR (Tuned),c_index_td,3,45,0.225
+DeepSurv (Tuned),ibs,1,18,0.09
+Neural-MTLR (Tuned),ibs,1,54,0.27
+Random Survival Forest (Tuned),ibs,1,128,0.64
+Cox Comparable (Tuned),ibs,2,10,0.05
+DeepSurv (Tuned),ibs,2,50,0.25
+Neural-MTLR (Tuned),ibs,2,89,0.445
+Random Survival Forest (Tuned),ibs,2,51,0.255
+Cox Comparable (Tuned),ibs,3,25,0.125
+DeepSurv (Tuned),ibs,3,108,0.54
+Neural-MTLR (Tuned),ibs,3,51,0.255
+Random Survival Forest (Tuned),ibs,3,16,0.08
+Cox Comparable (Tuned),ibs,4,165,0.825
+DeepSurv (Tuned),ibs,4,24,0.12
+Neural-MTLR (Tuned),ibs,4,6,0.03
+Random Survival Forest (Tuned),ibs,4,5,0.025
+DeepSurv (Tuned),c_index_td,1,18,0.09
+Neural-MTLR (Tuned),c_index_td,1,2,0.01
+Random Survival Forest (Tuned),c_index_td,1,180,0.9
+Cox Comparable (Tuned),c_index_td,2,13,0.065
+DeepSurv (Tuned),c_index_td,2,108,0.54
+Neural-MTLR (Tuned),c_index_td,2,60,0.3
+Random Survival Forest (Tuned),c_index_td,2,19,0.095
+Cox Comparable (Tuned),c_index_td,3,53,0.265
+DeepSurv (Tuned),c_index_td,3,58,0.29
+Neural-MTLR (Tuned),c_index_td,3,88,0.44
 Random Survival Forest (Tuned),c_index_td,3,1,0.005
-Cox Comparable (Tuned),c_index_td,4,47,0.235
-DeepSurv (Tuned),c_index_td,4,3,0.015
-Neural-MTLR (Tuned),c_index_td,4,150,0.75
+Cox Comparable (Tuned),c_index_td,4,134,0.67
+DeepSurv (Tuned),c_index_td,4,16,0.08
+Neural-MTLR (Tuned),c_index_td,4,50,0.25

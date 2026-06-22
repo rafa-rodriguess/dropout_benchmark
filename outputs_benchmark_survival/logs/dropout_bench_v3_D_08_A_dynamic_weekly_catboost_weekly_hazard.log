@@ -1,0 +1,1935 @@
+[START] 5.6b - 2026-06-18 23:08:43
+# ==============================================================
+# 5.8.1 - Lightweight runtime bootstrap
+# ==============================================================
+- SCRIPT_NAME: dropout_bench_v3_D_08_A_dynamic_weekly_catboost_weekly_hazard.py
+- RUN_ID: f3766e75053447a7beb7a1c4936d231f
+- CPU_CORES: 8
+- DUCKDB_PATH: /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/benchmark_survival.duckdb
+- BENCHMARK_HORIZONS: [10, 20, 30]
+- CALIBRATION_BINS: 10
+ARTIFACT | shared_config | /Users/rafars/dropout_benchmark_desenv/benchmark_shared_config.toml
+ARTIFACT | modeling_contract | /Users/rafars/dropout_benchmark_desenv/benchmark_modeling_contract.toml
+ARTIFACT | run_metadata | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/metadata/run_metadata.json
+[END] 5.8.1 - 2026-06-18 23:08:43
+[RUN_PLAN] dynamic_window_weeks=2 script=dropout_bench_v3_D_08_A_dynamic_weekly_catboost_weekly_hazard.py
+[START] 5.6b - 2026-06-18 23:08:43
+# ==============================================================
+# 5.8.2 - Prepare the shared dynamic weekly treatment for CatBoost
+# ==============================================================
+[Stage 5.8.2 table_catboost_weekly_hazard_not_weighted_preprocessing_summary_w2 — CatBoost preprocessing summary]
+table_name=table_catboost_weekly_hazard_not_weighted_preprocessing_summary_w2
+rows=1, cols=12
+                             model_family  active_window_weeks  raw_train_rows_before_truncation  raw_test_rows_before_truncation  train_rows  test_rows  n_input_features_raw  n_categorical_features  n_numeric_features  n_output_features_after_preprocessing  train_event_rate  test_event_rate
+catboost_weekly_hazard_not_weighted_tuned                    2                            719498                           308393       66712      28573                    16                       6                  10                                     16          0.021091         0.020614
+ARTIFACT | Stage 5.8.2 table_catboost_weekly_hazard_not_weighted_preprocessing_summary_w2 — CatBoost preprocessing summary | duckdb://table_catboost_weekly_hazard_not_weighted_preprocessing_summary_w2
+[Stage 5.8.2 table_catboost_weekly_hazard_not_weighted_raw_feature_manifest_w2 — CatBoost raw feature manifest]
+table_name=table_catboost_weekly_hazard_not_weighted_raw_feature_manifest_w2
+rows=16, cols=6
+feature_name_operational feature_role  present_in_train  present_in_test  covered_by_canonical_config_after_alias canonical_source_name
+                  gender  categorical              True             True                                    False                      
+                  region  categorical              True             True                                    False                      
+       highest_education  categorical              True             True                                    False                      
+                imd_band  categorical              True             True                                    False                      
+                age_band  categorical              True             True                                    False                      
+              disability  categorical              True             True                                    False                      
+    num_of_prev_attempts      numeric              True             True                                     True  num_of_prev_attempts
+         studied_credits      numeric              True             True                                     True       studied_credits
+                    week      numeric              True             True                                     True                  week
+       total_clicks_week      numeric              True             True                                     True          total_clicks
+        active_this_week      numeric              True             True                                    False                      
+         n_vle_rows_week      numeric              True             True                                    False                      
+   n_distinct_sites_week      numeric              True             True                                    False                      
+      cum_clicks_until_t      numeric              True             True                                    False                      
+                 recency      numeric              True             True                                    False                      
+                  streak      numeric              True             True                                    False                      
+ARTIFACT | Stage 5.8.2 table_catboost_weekly_hazard_not_weighted_raw_feature_manifest_w2 — CatBoost raw feature manifest | duckdb://table_catboost_weekly_hazard_not_weighted_raw_feature_manifest_w2
+[Stage 5.8.2 table_catboost_weekly_hazard_not_weighted_feature_names_out_w2 — CatBoost model feature names]
+table_name=table_catboost_weekly_hazard_not_weighted_feature_names_out_w2
+rows=16, cols=4
+   model_feature_name feature_role  catboost_feature_index  is_categorical
+               gender  categorical                       0            True
+               region  categorical                       1            True
+    highest_education  categorical                       2            True
+             imd_band  categorical                       3            True
+             age_band  categorical                       4            True
+           disability  categorical                       5            True
+ num_of_prev_attempts      numeric                       6           False
+      studied_credits      numeric                       7           False
+                 week      numeric                       8           False
+    total_clicks_week      numeric                       9           False
+     active_this_week      numeric                      10           False
+      n_vle_rows_week      numeric                      11           False
+n_distinct_sites_week      numeric                      12           False
+   cum_clicks_until_t      numeric                      13           False
+              recency      numeric                      14           False
+               streak      numeric                      15           False
+ARTIFACT | Stage 5.8.2 table_catboost_weekly_hazard_not_weighted_feature_names_out_w2 — CatBoost model feature names | duckdb://table_catboost_weekly_hazard_not_weighted_feature_names_out_w2
+ARTIFACT | catboost_weekly_hazard_preprocessing_config | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/metadata/catboost_weekly_hazard_not_weighted_preprocessing_config_w2.json
+{
+  "model_name": "catboost_weekly_hazard_not_weighted_tuned",
+  "model_type": "catboost_weekly_hazard",
+  "train_table": "pp_linear_hazard_ready_train",
+  "test_table": "pp_linear_hazard_ready_test",
+  "target_column": "event_t",
+  "categorical_features": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability"
+  ],
+  "numeric_features": [
+    "num_of_prev_attempts",
+    "studied_credits",
+    "week",
+    "total_clicks_week",
+    "active_this_week",
+    "n_vle_rows_week",
+    "n_distinct_sites_week",
+    "cum_clicks_until_t",
+    "recency",
+    "streak"
+  ],
+  "operational_feature_columns": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability",
+    "num_of_prev_attempts",
+    "studied_credits",
+    "week",
+    "total_clicks_week",
+    "active_this_week",
+    "n_vle_rows_week",
+    "n_distinct_sites_week",
+    "cum_clicks_until_t",
+    "recency",
+    "streak"
+  ],
+  "canonical_expected_features_raw": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "week",
+    "total_clicks"
+  ],
+  "canonical_expected_features_resolved": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "week",
+    "total_clicks_week"
+  ],
+  "feature_alias_map": {
+    "total_clicks": "total_clicks_week"
+  },
+  "n_train_rows": 66712,
+  "n_test_rows": 28573,
+  "active_window_weeks": 2,
+  "raw_train_rows_before_truncation": 719498,
+  "raw_test_rows_before_truncation": 308393,
+  "n_output_features_after_preprocessing": 16,
+  "train_event_rate": 0.02109065835232042,
+  "test_event_rate": 0.020613866237356945,
+  "design_note": "The CatBoost benchmark keeps the same weekly dynamic feature contract as the linear discrete-time arm while preserving categorical columns as native string-valued features.",
+  "methodological_note": "No learned preprocessing transform is applied because CatBoost consumes the validated raw feature columns directly after deterministic type sanitization."
+}
+
+[END] 5.8.2 - 2026-06-18 23:08:44
+[START] 5.6b - 2026-06-18 23:08:44
+# ==============================================================
+# 5.8.3 - Compute grouped CatBoost validation guardrails
+# ==============================================================
+[Stage 5.8.3 table_catboost_weekly_hazard_not_weighted_guardrails_w2 — CatBoost validation guardrails]
+table_name=table_catboost_weekly_hazard_not_weighted_guardrails_w2
+rows=1, cols=22
+ active_window_weeks  validation_test_size  search_row_cap  final_row_cap  search_rows_selected  final_rows_selected  subtrain_rows  validation_rows  full_train_rows  subtrain_enrollments  validation_enrollments  full_train_enrollments  n_features  n_categorical_features  n_numeric_features  subtrain_event_rate  sampled_subtrain_event_rate  validation_event_rate  full_train_event_rate  sampled_full_train_event_rate sample_weight_strategy  random_seed
+                   2                   0.2           53348          66712                 53348                66712          53348            13364            66712                 18252                    4563                   22815          16                       6                  10             0.021275                     0.021275               0.020353               0.021091                       0.021091                   none           42
+ARTIFACT | Stage 5.8.3 table_catboost_weekly_hazard_not_weighted_guardrails_w2 — CatBoost validation guardrails | duckdb://table_catboost_weekly_hazard_not_weighted_guardrails_w2
+[END] 5.8.3 - 2026-06-18 23:08:44
+[START] 5.6b - 2026-06-18 23:08:44
+# ==============================================================
+# 5.8.5 - Tune, fit, and evaluate the CatBoost weekly hazard model
+# ==============================================================
+[Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuning_results_w2 — CatBoost tuning results]
+table_name=table_catboost_weekly_hazard_not_weighted_tuning_results_w2
+rows=4, cols=10
+ candidate_id  depth  learning_rate  iterations  l2_leaf_reg  fit_rows  fit_features  val_log_loss  val_brier  val_roc_auc
+            2      6           0.06         350          3.0     53348            16      0.086877   0.019300     0.800758
+            3      4           0.10         250         10.0     53348            16      0.087155   0.019306     0.796085
+            4      6           0.05         450         10.0     53348            16      0.087170   0.019305     0.797012
+            1      4           0.05         250          3.0     53348            16      0.087416   0.019316     0.793682
+ARTIFACT | Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuning_results_w2 — CatBoost tuning results | duckdb://table_catboost_weekly_hazard_not_weighted_tuning_results_w2
+[Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_test_predictions_w2 — CatBoost test predictions]
+table_name=table_catboost_weekly_hazard_not_weighted_tuned_test_predictions_w2
+rows=28573, cols=29
+   enrollment_id  id_student code_module code_presentation  week  event_t  event_observed  t_event_week  t_final_week  used_zero_week_fallback_for_censoring gender               region     highest_education imd_band age_band  num_of_prev_attempts  studied_credits disability  total_clicks_week  active_this_week  n_vle_rows_week  n_distinct_sites_week  cum_clicks_until_t  recency  streak split  pred_hazard  pred_survival  pred_risk
+100561|DDD|2014J      100561         DDD             2014J     0        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               10.0                 1                8                      4                10.0        0       1  test     0.052726       0.947274   0.052726
+100561|DDD|2014J      100561         DDD             2014J     1        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N                0.0                 0                0                      0                10.0        1       0  test     0.045746       0.903939   0.096061
+100561|DDD|2014J      100561         DDD             2014J     2        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               91.0                 1               26                     11               101.0        0       2  test     0.012365       0.892762   0.107238
+100621|CCC|2014B      100621         CCC             2014B     0        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                0.0                 0                0                      0                 0.0        1       0  test     0.029769       0.970231   0.029769
+100621|CCC|2014B      100621         CCC             2014B     1        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                3.0                 1                2                      2                 3.0        0       2  test     0.037922       0.933438   0.066562
+100621|CCC|2014B      100621         CCC             2014B     2        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                1.0                 1                1                      1                 4.0        0       3  test     0.003807       0.929884   0.070116
+101187|DDD|2014J      101187         DDD             2014J     0        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        1       0  test     0.014261       0.985739   0.014261
+101187|DDD|2014J      101187         DDD             2014J     1        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        2       0  test     0.019791       0.966230   0.033770
+101187|DDD|2014J      101187         DDD             2014J     2        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        3       0  test     0.124915       0.845534   0.154466
+101279|DDD|2014J      101279         DDD             2014J     0        0               0           NaN            37                                      0      F     Yorkshire Region A Level or Equivalent    0-10%    35-55                     0               60          N               79.0                 1               31                     21                79.0        0       1  test     0.016685       0.983315   0.016685
+101279|DDD|2014J      101279         DDD             2014J     1        0               0           NaN            37                                      0      F     Yorkshire Region A Level or Equivalent    0-10%    35-55                     0               60          N                1.0                 1                1                      1                80.0        0       2  test     0.045664       0.938413   0.061587
+101279|DDD|2014J      101279         DDD             2014J     2        0               0           NaN            37                                      0      F     Yorkshire Region A Level or Equivalent    0-10%    35-55                     0               60          N                1.0                 1                1                      1                81.0        0       3  test     0.016708       0.922734   0.077266
+101414|EEE|2013J      101414         EEE             2013J     0        0               0           NaN            38                                      0      M     Yorkshire Region    Lower Than A Level   70-80%    35-55                     0              105          N                0.0                 0                0                      0                 0.0        1       0  test     0.027381       0.972619   0.027381
+101414|EEE|2013J      101414         EEE             2013J     1        0               0           NaN            38                                      0      M     Yorkshire Region    Lower Than A Level   70-80%    35-55                     0              105          N                0.0                 0                0                      0                 0.0        2       0  test     0.117062       0.858762   0.141238
+101414|EEE|2013J      101414         EEE             2013J     2        0               0           NaN            38                                      0      M     Yorkshire Region    Lower Than A Level   70-80%    35-55                     0              105          N                0.0                 0                0                      0                 0.0        3       0  test     0.006918       0.852821   0.147179
+101700|CCC|2014J      101700         CCC             2014J     0        0               0           NaN            38                                      0      M        London Region A Level or Equivalent    10-20     0-35                     0               60          Y                0.0                 0                0                      0                 0.0        1       0  test     0.002805       0.997195   0.002805
+101700|CCC|2014J      101700         CCC             2014J     1        0               0           NaN            38                                      0      M        London Region A Level or Equivalent    10-20     0-35                     0               60          Y                0.0                 0                0                      0                 0.0        2       0  test     0.006842       0.990371   0.009629
+101700|CCC|2014J      101700         CCC             2014J     2        0               0           NaN            38                                      0      M        London Region A Level or Equivalent    10-20     0-35                     0               60          Y                0.0                 0                0                      0                 0.0        3       0  test     0.002884       0.987515   0.012485
+101781|AAA|2013J      101781         AAA             2013J     0        0               0           NaN            38                                      0      M         South Region    Lower Than A Level   80-90%    35-55                     0               60          N              182.0                 1               43                     11               182.0        0       1  test     0.054668       0.945332   0.054668
+101781|AAA|2013J      101781         AAA             2013J     1        0               0           NaN            38                                      0      M         South Region    Lower Than A Level   80-90%    35-55                     0               60          N              514.0                 1               59                     20               696.0        0       2  test     0.031321       0.915723   0.084277
+ARTIFACT | Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_test_predictions_w2 — CatBoost test predictions | duckdb://table_catboost_weekly_hazard_not_weighted_tuned_test_predictions_w2
+[Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_primary_metrics_w2 — CatBoost primary metrics]
+table_name=table_catboost_weekly_hazard_not_weighted_tuned_primary_metrics_w2
+rows=2, cols=4
+metric_name metric_category  metric_value                         notes
+        ibs         primary      0.141121 sksurv_integrated_brier_score
+    c_index      co_primary      0.480456          pycox_concordance_td
+ARTIFACT | Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_primary_metrics_w2 — CatBoost primary metrics | duckdb://table_catboost_weekly_hazard_not_weighted_tuned_primary_metrics_w2
+[Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_brier_by_horizon_w2 — CatBoost Brier scores by horizon]
+table_name=table_catboost_weekly_hazard_not_weighted_tuned_brier_by_horizon_w2
+rows=3, cols=5
+ horizon_week      metric_name metric_category  metric_value              notes
+           10 brier_at_horizon         primary      0.118520 sksurv_brier_score
+           20 brier_at_horizon         primary      0.165829 sksurv_brier_score
+           30 brier_at_horizon         primary      0.201035 sksurv_brier_score
+ARTIFACT | Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_brier_by_horizon_w2 — CatBoost Brier scores by horizon | duckdb://table_catboost_weekly_hazard_not_weighted_tuned_brier_by_horizon_w2
+[Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_secondary_metrics_w2 — CatBoost secondary metrics]
+table_name=table_catboost_weekly_hazard_not_weighted_tuned_secondary_metrics_w2
+rows=6, cols=5
+ horizon_week         metric_name metric_category  metric_value                                                                                  notes
+           10 risk_auc_at_horizon       secondary      0.388581                                                            roc_auc_on_evaluable_subset
+           10  time_dependent_auc       secondary      0.388828 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.388828; local_ipcw_auc
+           20 risk_auc_at_horizon       secondary      0.408512                                                            roc_auc_on_evaluable_subset
+           20  time_dependent_auc       secondary      0.407511 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.407511; local_ipcw_auc
+           30 risk_auc_at_horizon       secondary      0.424030                                                            roc_auc_on_evaluable_subset
+           30  time_dependent_auc       secondary      0.422748 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.422748; local_ipcw_auc
+ARTIFACT | Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_secondary_metrics_w2 — CatBoost secondary metrics | duckdb://table_catboost_weekly_hazard_not_weighted_tuned_secondary_metrics_w2
+[Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_td_auc_support_audit_w2 — CatBoost IPCW support audit]
+table_name=table_catboost_weekly_hazard_not_weighted_tuned_td_auc_support_audit_w2
+rows=3, cols=6
+ horizon_week  max_ipcw_time  n_total_test_enrollments  n_supported_test_enrollments  mean_auc                                                                                  notes
+           10           38.0                      9778                          6742  0.388828 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.388828; local_ipcw_auc
+           20           38.0                      9778                          6742  0.407511 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.407511; local_ipcw_auc
+           30           38.0                      9778                          6742  0.422748 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.422748; local_ipcw_auc
+ARTIFACT | Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_td_auc_support_audit_w2 — CatBoost IPCW support audit | duckdb://table_catboost_weekly_hazard_not_weighted_tuned_td_auc_support_audit_w2
+[Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_row_diagnostics_w2 — CatBoost row-level diagnostics]
+table_name=table_catboost_weekly_hazard_not_weighted_tuned_row_diagnostics_w2
+rows=1, cols=5
+                               model_name  row_level_roc_auc  row_level_pr_auc  row_level_log_loss  row_level_brier
+catboost_weekly_hazard_not_weighted_tuned           0.817652          0.093674            0.085843         0.019352
+ARTIFACT | Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_row_diagnostics_w2 — CatBoost row-level diagnostics | duckdb://table_catboost_weekly_hazard_not_weighted_tuned_row_diagnostics_w2
+[Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_support_by_horizon_w2 — CatBoost support by horizon]
+table_name=table_catboost_weekly_hazard_not_weighted_tuned_support_by_horizon_w2
+rows=3, cols=4
+ horizon_week  n_evaluable_enrollments  n_events_by_horizon  event_rate_by_horizon
+           10                     9778                 1215               0.124259
+           20                     9778                 1736               0.177541
+           30                     9778                 2129               0.217734
+ARTIFACT | Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_support_by_horizon_w2 — CatBoost support by horizon | duckdb://table_catboost_weekly_hazard_not_weighted_tuned_support_by_horizon_w2
+[Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_calibration_summary_w2 — CatBoost calibration summary]
+table_name=table_catboost_weekly_hazard_not_weighted_tuned_calibration_summary_w2
+rows=3, cols=5
+ horizon_week            metric_name metric_category  metric_value                                         notes
+           10 calibration_at_horizon         primary      0.085214 Weighted absolute calibration gap across bins
+           20 calibration_at_horizon         primary      0.125090 Weighted absolute calibration gap across bins
+           30 calibration_at_horizon         primary      0.157727 Weighted absolute calibration gap across bins
+ARTIFACT | Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_calibration_summary_w2 — CatBoost calibration summary | duckdb://table_catboost_weekly_hazard_not_weighted_tuned_calibration_summary_w2
+[Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_calibration_bins_by_horizon_w2 — CatBoost calibration bins]
+table_name=table_catboost_weekly_hazard_not_weighted_tuned_calibration_bins_by_horizon_w2
+rows=30, cols=6
+ calibration_bin   n  mean_predicted_risk  observed_event_rate  horizon_week  abs_calibration_gap
+               0 978             0.007149             0.280164            10             0.273014
+               1 978             0.015603             0.150307            10             0.134704
+               2 978             0.022721             0.127812            10             0.105091
+               3 977             0.030147             0.125896            10             0.095749
+               4 978             0.038877             0.094070            10             0.055192
+               5 978             0.050606             0.097137            10             0.046531
+               6 977             0.066055             0.091095            10             0.025040
+               7 978             0.085159             0.097137            10             0.011978
+               8 978             0.112008             0.091002            10             0.021005
+               9 978             0.171718             0.087935            10             0.083783
+               0 978             0.007149             0.327198            20             0.320049
+               1 978             0.015603             0.210634            20             0.195031
+               2 978             0.022721             0.196319            20             0.173598
+               3 977             0.030147             0.186285            20             0.156138
+               4 978             0.038877             0.150307            20             0.111430
+               5 978             0.050606             0.144172            20             0.093565
+               6 977             0.066055             0.137155            20             0.071099
+               7 978             0.085159             0.149284            20             0.064125
+               8 978             0.112008             0.140082            20             0.028074
+               9 978             0.171718             0.133947            20             0.037771
+ARTIFACT | Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_calibration_bins_by_horizon_w2 — CatBoost calibration bins | duckdb://table_catboost_weekly_hazard_not_weighted_tuned_calibration_bins_by_horizon_w2
+[Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_predicted_vs_observed_survival_w2 — CatBoost predicted versus observed survival]
+table_name=table_catboost_weekly_hazard_not_weighted_tuned_predicted_vs_observed_survival_w2
+rows=3, cols=5
+ horizon_week  n_evaluable_enrollments  mean_predicted_survival  mean_observed_survival  abs_gap
+           10                     9778                 0.939993                0.875741 0.064252
+           20                     9778                 0.939993                0.822459 0.117535
+           30                     9778                 0.939993                0.782266 0.157727
+ARTIFACT | Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_predicted_vs_observed_survival_w2 — CatBoost predicted versus observed survival | duckdb://table_catboost_weekly_hazard_not_weighted_tuned_predicted_vs_observed_survival_w2
+ARTIFACT | catboost_weekly_hazard_model | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/models/catboost_weekly_hazard_not_weighted_tuned_w2.cbm
+ARTIFACT | catboost_weekly_hazard_not_weighted_tuned_model_config | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/metadata/catboost_weekly_hazard_not_weighted_tuned_model_config_w2.json
+{
+  "model_name": "catboost_weekly_hazard_not_weighted_tuned",
+  "family_name": "discrete_time_dynamic",
+  "model_type": "catboost_weekly_hazard",
+  "selection_metric": "val_log_loss",
+  "candidate_grid": [
+    {
+      "depth": 4,
+      "learning_rate": 0.05,
+      "iterations": 250,
+      "l2_leaf_reg": 3.0
+    },
+    {
+      "depth": 6,
+      "learning_rate": 0.06,
+      "iterations": 350,
+      "l2_leaf_reg": 3.0
+    },
+    {
+      "depth": 4,
+      "learning_rate": 0.1,
+      "iterations": 250,
+      "l2_leaf_reg": 10.0
+    },
+    {
+      "depth": 6,
+      "learning_rate": 0.05,
+      "iterations": 450,
+      "l2_leaf_reg": 10.0
+    }
+  ],
+  "validation_split": {
+    "method": "GroupShuffleSplit",
+    "test_size": 0.2,
+    "group_column": "enrollment_id",
+    "random_seed": 42
+  },
+  "benchmark_horizons": [
+    10,
+    20,
+    30
+  ],
+  "calibration_bins": 10,
+  "calibration_contract_version": "v2_ipcw_km_observed_risk",
+  "calibration_observed_risk_method": "ipcw_km_pseudo_event_rate",
+  "active_window_weeks": 2,
+  "categorical_features": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability"
+  ],
+  "numeric_features": [
+    "num_of_prev_attempts",
+    "studied_credits",
+    "week",
+    "total_clicks_week",
+    "active_this_week",
+    "n_vle_rows_week",
+    "n_distinct_sites_week",
+    "cum_clicks_until_t",
+    "recency",
+    "streak"
+  ],
+  "guardrails": {
+    "active_window_weeks": 2,
+    "validation_test_size": 0.2,
+    "search_row_cap": 53348,
+    "final_row_cap": 66712,
+    "search_rows_selected": 53348,
+    "final_rows_selected": 66712,
+    "subtrain_rows": 53348,
+    "validation_rows": 13364,
+    "full_train_rows": 66712,
+    "subtrain_enrollments": 18252,
+    "validation_enrollments": 4563,
+    "full_train_enrollments": 22815,
+    "n_features": 16,
+    "n_categorical_features": 6,
+    "n_numeric_features": 10,
+    "subtrain_event_rate": 0.02127539926520207,
+    "sampled_subtrain_event_rate": 0.02127539926520207,
+    "validation_event_rate": 0.020353187668362766,
+    "full_train_event_rate": 0.02109065835232042,
+    "sampled_full_train_event_rate": 0.02109065835232042,
+    "sample_weight_strategy": "none",
+    "random_seed": 42
+  },
+  "best_candidate": {
+    "depth": 6,
+    "learning_rate": 0.06,
+    "iterations": 350,
+    "l2_leaf_reg": 3.0,
+    "val_log_loss": 0.0868773368865895,
+    "val_brier": 0.019300046485720087,
+    "val_roc_auc": 0.8007575910749267
+  },
+  "implementation": {
+    "library": "catboost",
+    "class_name": "CatBoostClassifier",
+    "loss_function": "Logloss",
+    "eval_metric": "Logloss",
+    "thread_count": 1,
+    "allow_writing_files": false
+  },
+  "weighting_strategy": "none; this official D5.8 variant preserves native categorical handling and the same dynamic feature contract without class weights.",
+  "design_note": "The not-weighted CatBoost benchmark preserves native categorical columns, grouped validation, and the shared evaluation stack so the weighted script remains a pure Item 6 sensitivity counterpart."
+}
+
+ candidate_id  depth  learning_rate  iterations  l2_leaf_reg  fit_rows  fit_features  val_log_loss  val_brier  val_roc_auc
+            2      6           0.06         350          3.0     53348            16      0.086877   0.019300     0.800758
+            3      4           0.10         250         10.0     53348            16      0.087155   0.019306     0.796085
+            4      6           0.05         450         10.0     53348            16      0.087170   0.019305     0.797012
+            1      4           0.05         250          3.0     53348            16      0.087416   0.019316     0.793682
+[END] 5.8.5 - 2026-06-18 23:09:13
+[RUN_PLAN] dynamic_window_weeks=4 script=dropout_bench_v3_D_08_A_dynamic_weekly_catboost_weekly_hazard.py
+[START] 5.6b - 2026-06-18 23:09:13
+# ==============================================================
+# 5.8.2 - Prepare the shared dynamic weekly treatment for CatBoost
+# ==============================================================
+[Stage 5.8.2 table_catboost_weekly_hazard_not_weighted_preprocessing_summary_w4 — CatBoost preprocessing summary]
+table_name=table_catboost_weekly_hazard_not_weighted_preprocessing_summary_w4
+rows=1, cols=12
+                             model_family  active_window_weeks  raw_train_rows_before_truncation  raw_test_rows_before_truncation  train_rows  test_rows  n_input_features_raw  n_categorical_features  n_numeric_features  n_output_features_after_preprocessing  train_event_rate  test_event_rate
+catboost_weekly_hazard_not_weighted_tuned                    4                            719498                           308393      109284      46835                    16                       6                  10                                     16           0.01702          0.01706
+ARTIFACT | Stage 5.8.2 table_catboost_weekly_hazard_not_weighted_preprocessing_summary_w4 — CatBoost preprocessing summary | duckdb://table_catboost_weekly_hazard_not_weighted_preprocessing_summary_w4
+[Stage 5.8.2 table_catboost_weekly_hazard_not_weighted_raw_feature_manifest_w4 — CatBoost raw feature manifest]
+table_name=table_catboost_weekly_hazard_not_weighted_raw_feature_manifest_w4
+rows=16, cols=6
+feature_name_operational feature_role  present_in_train  present_in_test  covered_by_canonical_config_after_alias canonical_source_name
+                  gender  categorical              True             True                                    False                      
+                  region  categorical              True             True                                    False                      
+       highest_education  categorical              True             True                                    False                      
+                imd_band  categorical              True             True                                    False                      
+                age_band  categorical              True             True                                    False                      
+              disability  categorical              True             True                                    False                      
+    num_of_prev_attempts      numeric              True             True                                     True  num_of_prev_attempts
+         studied_credits      numeric              True             True                                     True       studied_credits
+                    week      numeric              True             True                                     True                  week
+       total_clicks_week      numeric              True             True                                     True          total_clicks
+        active_this_week      numeric              True             True                                    False                      
+         n_vle_rows_week      numeric              True             True                                    False                      
+   n_distinct_sites_week      numeric              True             True                                    False                      
+      cum_clicks_until_t      numeric              True             True                                    False                      
+                 recency      numeric              True             True                                    False                      
+                  streak      numeric              True             True                                    False                      
+ARTIFACT | Stage 5.8.2 table_catboost_weekly_hazard_not_weighted_raw_feature_manifest_w4 — CatBoost raw feature manifest | duckdb://table_catboost_weekly_hazard_not_weighted_raw_feature_manifest_w4
+[Stage 5.8.2 table_catboost_weekly_hazard_not_weighted_feature_names_out_w4 — CatBoost model feature names]
+table_name=table_catboost_weekly_hazard_not_weighted_feature_names_out_w4
+rows=16, cols=4
+   model_feature_name feature_role  catboost_feature_index  is_categorical
+               gender  categorical                       0            True
+               region  categorical                       1            True
+    highest_education  categorical                       2            True
+             imd_band  categorical                       3            True
+             age_band  categorical                       4            True
+           disability  categorical                       5            True
+ num_of_prev_attempts      numeric                       6           False
+      studied_credits      numeric                       7           False
+                 week      numeric                       8           False
+    total_clicks_week      numeric                       9           False
+     active_this_week      numeric                      10           False
+      n_vle_rows_week      numeric                      11           False
+n_distinct_sites_week      numeric                      12           False
+   cum_clicks_until_t      numeric                      13           False
+              recency      numeric                      14           False
+               streak      numeric                      15           False
+ARTIFACT | Stage 5.8.2 table_catboost_weekly_hazard_not_weighted_feature_names_out_w4 — CatBoost model feature names | duckdb://table_catboost_weekly_hazard_not_weighted_feature_names_out_w4
+ARTIFACT | catboost_weekly_hazard_preprocessing_config | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/metadata/catboost_weekly_hazard_not_weighted_preprocessing_config_w4.json
+{
+  "model_name": "catboost_weekly_hazard_not_weighted_tuned",
+  "model_type": "catboost_weekly_hazard",
+  "train_table": "pp_linear_hazard_ready_train",
+  "test_table": "pp_linear_hazard_ready_test",
+  "target_column": "event_t",
+  "categorical_features": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability"
+  ],
+  "numeric_features": [
+    "num_of_prev_attempts",
+    "studied_credits",
+    "week",
+    "total_clicks_week",
+    "active_this_week",
+    "n_vle_rows_week",
+    "n_distinct_sites_week",
+    "cum_clicks_until_t",
+    "recency",
+    "streak"
+  ],
+  "operational_feature_columns": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability",
+    "num_of_prev_attempts",
+    "studied_credits",
+    "week",
+    "total_clicks_week",
+    "active_this_week",
+    "n_vle_rows_week",
+    "n_distinct_sites_week",
+    "cum_clicks_until_t",
+    "recency",
+    "streak"
+  ],
+  "canonical_expected_features_raw": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "week",
+    "total_clicks"
+  ],
+  "canonical_expected_features_resolved": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "week",
+    "total_clicks_week"
+  ],
+  "feature_alias_map": {
+    "total_clicks": "total_clicks_week"
+  },
+  "n_train_rows": 109284,
+  "n_test_rows": 46835,
+  "active_window_weeks": 4,
+  "raw_train_rows_before_truncation": 719498,
+  "raw_test_rows_before_truncation": 308393,
+  "n_output_features_after_preprocessing": 16,
+  "train_event_rate": 0.01701987482156583,
+  "test_event_rate": 0.01705989110707804,
+  "design_note": "The CatBoost benchmark keeps the same weekly dynamic feature contract as the linear discrete-time arm while preserving categorical columns as native string-valued features.",
+  "methodological_note": "No learned preprocessing transform is applied because CatBoost consumes the validated raw feature columns directly after deterministic type sanitization."
+}
+
+[END] 5.8.2 - 2026-06-18 23:09:14
+[START] 5.6b - 2026-06-18 23:09:14
+# ==============================================================
+# 5.8.3 - Compute grouped CatBoost validation guardrails
+# ==============================================================
+[Stage 5.8.3 table_catboost_weekly_hazard_not_weighted_guardrails_w4 — CatBoost validation guardrails]
+table_name=table_catboost_weekly_hazard_not_weighted_guardrails_w4
+rows=1, cols=22
+ active_window_weeks  validation_test_size  search_row_cap  final_row_cap  search_rows_selected  final_rows_selected  subtrain_rows  validation_rows  full_train_rows  subtrain_enrollments  validation_enrollments  full_train_enrollments  n_features  n_categorical_features  n_numeric_features  subtrain_event_rate  sampled_subtrain_event_rate  validation_event_rate  full_train_event_rate  sampled_full_train_event_rate sample_weight_strategy  random_seed
+                   4                   0.2           87386         109284                 87386               109284          87386            21898           109284                 18252                    4563                   22815          16                       6                  10             0.017108                     0.017108               0.016668                0.01702                        0.01702                   none           42
+ARTIFACT | Stage 5.8.3 table_catboost_weekly_hazard_not_weighted_guardrails_w4 — CatBoost validation guardrails | duckdb://table_catboost_weekly_hazard_not_weighted_guardrails_w4
+[END] 5.8.3 - 2026-06-18 23:09:14
+[START] 5.6b - 2026-06-18 23:09:14
+# ==============================================================
+# 5.8.5 - Tune, fit, and evaluate the CatBoost weekly hazard model
+# ==============================================================
+[Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuning_results_w4 — CatBoost tuning results]
+table_name=table_catboost_weekly_hazard_not_weighted_tuning_results_w4
+rows=4, cols=10
+ candidate_id  depth  learning_rate  iterations  l2_leaf_reg  fit_rows  fit_features  val_log_loss  val_brier  val_roc_auc
+            4      6           0.05         450         10.0     87386            16      0.074654   0.015948     0.794612
+            2      6           0.06         350          3.0     87386            16      0.074671   0.015919     0.792400
+            3      4           0.10         250         10.0     87386            16      0.075017   0.015948     0.788024
+            1      4           0.05         250          3.0     87386            16      0.075084   0.015943     0.787082
+ARTIFACT | Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuning_results_w4 — CatBoost tuning results | duckdb://table_catboost_weekly_hazard_not_weighted_tuning_results_w4
+[Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_test_predictions_w4 — CatBoost test predictions]
+table_name=table_catboost_weekly_hazard_not_weighted_tuned_test_predictions_w4
+rows=46835, cols=29
+   enrollment_id  id_student code_module code_presentation  week  event_t  event_observed  t_event_week  t_final_week  used_zero_week_fallback_for_censoring gender               region     highest_education imd_band age_band  num_of_prev_attempts  studied_credits disability  total_clicks_week  active_this_week  n_vle_rows_week  n_distinct_sites_week  cum_clicks_until_t  recency  streak split  pred_hazard  pred_survival  pred_risk
+100561|DDD|2014J      100561         DDD             2014J     0        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               10.0                 1                8                      4                10.0        0       1  test     0.052186       0.947814   0.052186
+100561|DDD|2014J      100561         DDD             2014J     1        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N                0.0                 0                0                      0                10.0        1       0  test     0.053220       0.897371   0.102629
+100561|DDD|2014J      100561         DDD             2014J     2        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               91.0                 1               26                     11               101.0        0       2  test     0.022118       0.877522   0.122478
+100561|DDD|2014J      100561         DDD             2014J     3        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N                6.0                 1                4                      2               107.0        0       3  test     0.027964       0.852984   0.147016
+100561|DDD|2014J      100561         DDD             2014J     4        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               30.0                 1               17                      8               137.0        0       4  test     0.035736       0.822502   0.177498
+100621|CCC|2014B      100621         CCC             2014B     0        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                0.0                 0                0                      0                 0.0        1       0  test     0.003240       0.996760   0.003240
+100621|CCC|2014B      100621         CCC             2014B     1        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                3.0                 1                2                      2                 3.0        0       2  test     0.008063       0.988723   0.011277
+100621|CCC|2014B      100621         CCC             2014B     2        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                1.0                 1                1                      1                 4.0        0       3  test     0.012710       0.976156   0.023844
+100621|CCC|2014B      100621         CCC             2014B     3        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                1.0                 1                1                      1                 5.0        0       4  test     0.041170       0.935968   0.064032
+100621|CCC|2014B      100621         CCC             2014B     4        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                0.0                 0                0                      0                 5.0        1       0  test     0.007926       0.928549   0.071451
+101187|DDD|2014J      101187         DDD             2014J     0        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        1       0  test     0.015846       0.984154   0.015846
+101187|DDD|2014J      101187         DDD             2014J     1        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        2       0  test     0.027574       0.957016   0.042984
+101187|DDD|2014J      101187         DDD             2014J     2        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        3       0  test     0.113783       0.848124   0.151876
+101187|DDD|2014J      101187         DDD             2014J     3        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        4       0  test     0.018371       0.832543   0.167457
+101187|DDD|2014J      101187         DDD             2014J     4        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        5       0  test     0.016451       0.818847   0.181153
+101279|DDD|2014J      101279         DDD             2014J     0        0               0           NaN            37                                      0      F     Yorkshire Region A Level or Equivalent    0-10%    35-55                     0               60          N               79.0                 1               31                     21                79.0        0       1  test     0.005364       0.994636   0.005364
+101279|DDD|2014J      101279         DDD             2014J     1        0               0           NaN            37                                      0      F     Yorkshire Region A Level or Equivalent    0-10%    35-55                     0               60          N                1.0                 1                1                      1                80.0        0       2  test     0.045863       0.949019   0.050981
+101279|DDD|2014J      101279         DDD             2014J     2        0               0           NaN            37                                      0      F     Yorkshire Region A Level or Equivalent    0-10%    35-55                     0               60          N                1.0                 1                1                      1                81.0        0       3  test     0.030884       0.919710   0.080290
+101279|DDD|2014J      101279         DDD             2014J     3        0               0           NaN            37                                      0      F     Yorkshire Region A Level or Equivalent    0-10%    35-55                     0               60          N                0.0                 0                0                      0                81.0        1       0  test     0.013455       0.907335   0.092665
+101279|DDD|2014J      101279         DDD             2014J     4        0               0           NaN            37                                      0      F     Yorkshire Region A Level or Equivalent    0-10%    35-55                     0               60          N                9.0                 1                5                      4                90.0        0       2  test     0.010761       0.897571   0.102429
+ARTIFACT | Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_test_predictions_w4 — CatBoost test predictions | duckdb://table_catboost_weekly_hazard_not_weighted_tuned_test_predictions_w4
+[Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_primary_metrics_w4 — CatBoost primary metrics]
+table_name=table_catboost_weekly_hazard_not_weighted_tuned_primary_metrics_w4
+rows=2, cols=4
+metric_name metric_category  metric_value                         notes
+        ibs         primary       0.14081 sksurv_integrated_brier_score
+    c_index      co_primary       0.50106          pycox_concordance_td
+ARTIFACT | Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_primary_metrics_w4 — CatBoost primary metrics | duckdb://table_catboost_weekly_hazard_not_weighted_tuned_primary_metrics_w4
+[Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_brier_by_horizon_w4 — CatBoost Brier scores by horizon]
+table_name=table_catboost_weekly_hazard_not_weighted_tuned_brier_by_horizon_w4
+rows=3, cols=5
+ horizon_week      metric_name metric_category  metric_value              notes
+           10 brier_at_horizon         primary      0.120310 sksurv_brier_score
+           20 brier_at_horizon         primary      0.164434 sksurv_brier_score
+           30 brier_at_horizon         primary      0.197988 sksurv_brier_score
+ARTIFACT | Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_brier_by_horizon_w4 — CatBoost Brier scores by horizon | duckdb://table_catboost_weekly_hazard_not_weighted_tuned_brier_by_horizon_w4
+[Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_secondary_metrics_w4 — CatBoost secondary metrics]
+table_name=table_catboost_weekly_hazard_not_weighted_tuned_secondary_metrics_w4
+rows=6, cols=5
+ horizon_week         metric_name metric_category  metric_value                                                                                  notes
+           10 risk_auc_at_horizon       secondary      0.321708                                                            roc_auc_on_evaluable_subset
+           10  time_dependent_auc       secondary      0.324800 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.324800; local_ipcw_auc
+           20 risk_auc_at_horizon       secondary      0.382342                                                            roc_auc_on_evaluable_subset
+           20  time_dependent_auc       secondary      0.386402 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.386402; local_ipcw_auc
+           30 risk_auc_at_horizon       secondary      0.405708                                                            roc_auc_on_evaluable_subset
+           30  time_dependent_auc       secondary      0.410390 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.410390; local_ipcw_auc
+ARTIFACT | Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_secondary_metrics_w4 — CatBoost secondary metrics | duckdb://table_catboost_weekly_hazard_not_weighted_tuned_secondary_metrics_w4
+[Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_td_auc_support_audit_w4 — CatBoost IPCW support audit]
+table_name=table_catboost_weekly_hazard_not_weighted_tuned_td_auc_support_audit_w4
+rows=3, cols=6
+ horizon_week  max_ipcw_time  n_total_test_enrollments  n_supported_test_enrollments  mean_auc                                                                                  notes
+           10           38.0                      9778                          6742  0.324800 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.324800; local_ipcw_auc
+           20           38.0                      9778                          6742  0.386402 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.386402; local_ipcw_auc
+           30           38.0                      9778                          6742  0.410390 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.410390; local_ipcw_auc
+ARTIFACT | Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_td_auc_support_audit_w4 — CatBoost IPCW support audit | duckdb://table_catboost_weekly_hazard_not_weighted_tuned_td_auc_support_audit_w4
+[Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_row_diagnostics_w4 — CatBoost row-level diagnostics]
+table_name=table_catboost_weekly_hazard_not_weighted_tuned_row_diagnostics_w4
+rows=1, cols=5
+                               model_name  row_level_roc_auc  row_level_pr_auc  row_level_log_loss  row_level_brier
+catboost_weekly_hazard_not_weighted_tuned           0.813256          0.077871            0.074514         0.016197
+ARTIFACT | Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_row_diagnostics_w4 — CatBoost row-level diagnostics | duckdb://table_catboost_weekly_hazard_not_weighted_tuned_row_diagnostics_w4
+[Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_support_by_horizon_w4 — CatBoost support by horizon]
+table_name=table_catboost_weekly_hazard_not_weighted_tuned_support_by_horizon_w4
+rows=3, cols=4
+ horizon_week  n_evaluable_enrollments  n_events_by_horizon  event_rate_by_horizon
+           10                     9778                 1215               0.124259
+           20                     9778                 1736               0.177541
+           30                     9778                 2129               0.217734
+ARTIFACT | Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_support_by_horizon_w4 — CatBoost support by horizon | duckdb://table_catboost_weekly_hazard_not_weighted_tuned_support_by_horizon_w4
+[Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_calibration_summary_w4 — CatBoost calibration summary]
+table_name=table_catboost_weekly_hazard_not_weighted_tuned_calibration_summary_w4
+rows=3, cols=5
+ horizon_week            metric_name metric_category  metric_value                                         notes
+           10 calibration_at_horizon         primary      0.091933 Weighted absolute calibration gap across bins
+           20 calibration_at_horizon         primary      0.116058 Weighted absolute calibration gap across bins
+           30 calibration_at_horizon         primary      0.147455 Weighted absolute calibration gap across bins
+ARTIFACT | Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_calibration_summary_w4 — CatBoost calibration summary | duckdb://table_catboost_weekly_hazard_not_weighted_tuned_calibration_summary_w4
+[Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_calibration_bins_by_horizon_w4 — CatBoost calibration bins]
+table_name=table_catboost_weekly_hazard_not_weighted_tuned_calibration_bins_by_horizon_w4
+rows=30, cols=6
+ calibration_bin   n  mean_predicted_risk  observed_event_rate  horizon_week  abs_calibration_gap
+               0 978             0.011931             0.389571            10             0.377639
+               1 978             0.025786             0.160532            10             0.134746
+               2 978             0.036108             0.109407            10             0.073299
+               3 977             0.046532             0.096213            10             0.049681
+               4 978             0.057991             0.082822            10             0.024831
+               5 978             0.071363             0.098160            10             0.026797
+               6 977             0.088099             0.091095            10             0.002996
+               7 978             0.108550             0.082822            10             0.025728
+               8 978             0.136392             0.076687            10             0.059705
+               9 978             0.198991             0.055215            10             0.143776
+               0 978             0.011931             0.426380            20             0.414449
+               1 978             0.025786             0.218814            20             0.193028
+               2 978             0.036108             0.161554            20             0.125446
+               3 977             0.046532             0.129990            20             0.083458
+               4 978             0.057991             0.128834            20             0.070843
+               5 978             0.071363             0.158487            20             0.087124
+               6 977             0.088099             0.143296            20             0.055197
+               7 978             0.108550             0.146217            20             0.037666
+               8 978             0.136392             0.146217            20             0.009824
+               9 978             0.198991             0.115542            20             0.083449
+ARTIFACT | Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_calibration_bins_by_horizon_w4 — CatBoost calibration bins | duckdb://table_catboost_weekly_hazard_not_weighted_tuned_calibration_bins_by_horizon_w4
+[Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_predicted_vs_observed_survival_w4 — CatBoost predicted versus observed survival]
+table_name=table_catboost_weekly_hazard_not_weighted_tuned_predicted_vs_observed_survival_w4
+rows=3, cols=5
+ horizon_week  n_evaluable_enrollments  mean_predicted_survival  mean_observed_survival  abs_gap
+           10                     9778                 0.921823                0.875741 0.046082
+           20                     9778                 0.921823                0.822459 0.099365
+           30                     9778                 0.921823                0.782266 0.139557
+ARTIFACT | Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_predicted_vs_observed_survival_w4 — CatBoost predicted versus observed survival | duckdb://table_catboost_weekly_hazard_not_weighted_tuned_predicted_vs_observed_survival_w4
+ARTIFACT | catboost_weekly_hazard_model | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/models/catboost_weekly_hazard_not_weighted_tuned_w4.cbm
+ARTIFACT | catboost_weekly_hazard_not_weighted_tuned_model_config | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/metadata/catboost_weekly_hazard_not_weighted_tuned_model_config_w4.json
+{
+  "model_name": "catboost_weekly_hazard_not_weighted_tuned",
+  "family_name": "discrete_time_dynamic",
+  "model_type": "catboost_weekly_hazard",
+  "selection_metric": "val_log_loss",
+  "candidate_grid": [
+    {
+      "depth": 4,
+      "learning_rate": 0.05,
+      "iterations": 250,
+      "l2_leaf_reg": 3.0
+    },
+    {
+      "depth": 6,
+      "learning_rate": 0.06,
+      "iterations": 350,
+      "l2_leaf_reg": 3.0
+    },
+    {
+      "depth": 4,
+      "learning_rate": 0.1,
+      "iterations": 250,
+      "l2_leaf_reg": 10.0
+    },
+    {
+      "depth": 6,
+      "learning_rate": 0.05,
+      "iterations": 450,
+      "l2_leaf_reg": 10.0
+    }
+  ],
+  "validation_split": {
+    "method": "GroupShuffleSplit",
+    "test_size": 0.2,
+    "group_column": "enrollment_id",
+    "random_seed": 42
+  },
+  "benchmark_horizons": [
+    10,
+    20,
+    30
+  ],
+  "calibration_bins": 10,
+  "calibration_contract_version": "v2_ipcw_km_observed_risk",
+  "calibration_observed_risk_method": "ipcw_km_pseudo_event_rate",
+  "active_window_weeks": 4,
+  "categorical_features": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability"
+  ],
+  "numeric_features": [
+    "num_of_prev_attempts",
+    "studied_credits",
+    "week",
+    "total_clicks_week",
+    "active_this_week",
+    "n_vle_rows_week",
+    "n_distinct_sites_week",
+    "cum_clicks_until_t",
+    "recency",
+    "streak"
+  ],
+  "guardrails": {
+    "active_window_weeks": 4,
+    "validation_test_size": 0.2,
+    "search_row_cap": 87386,
+    "final_row_cap": 109284,
+    "search_rows_selected": 87386,
+    "final_rows_selected": 109284,
+    "subtrain_rows": 87386,
+    "validation_rows": 21898,
+    "full_train_rows": 109284,
+    "subtrain_enrollments": 18252,
+    "validation_enrollments": 4563,
+    "full_train_enrollments": 22815,
+    "n_features": 16,
+    "n_categorical_features": 6,
+    "n_numeric_features": 10,
+    "subtrain_event_rate": 0.017108003570365963,
+    "sampled_subtrain_event_rate": 0.017108003570365963,
+    "validation_event_rate": 0.01666818887569641,
+    "full_train_event_rate": 0.01701987482156583,
+    "sampled_full_train_event_rate": 0.01701987482156583,
+    "sample_weight_strategy": "none",
+    "random_seed": 42
+  },
+  "best_candidate": {
+    "depth": 6,
+    "learning_rate": 0.05,
+    "iterations": 450,
+    "l2_leaf_reg": 10.0,
+    "val_log_loss": 0.07465428615311238,
+    "val_brier": 0.015947559497639704,
+    "val_roc_auc": 0.7946122199185832
+  },
+  "implementation": {
+    "library": "catboost",
+    "class_name": "CatBoostClassifier",
+    "loss_function": "Logloss",
+    "eval_metric": "Logloss",
+    "thread_count": 1,
+    "allow_writing_files": false
+  },
+  "weighting_strategy": "none; this official D5.8 variant preserves native categorical handling and the same dynamic feature contract without class weights.",
+  "design_note": "The not-weighted CatBoost benchmark preserves native categorical columns, grouped validation, and the shared evaluation stack so the weighted script remains a pure Item 6 sensitivity counterpart."
+}
+
+ candidate_id  depth  learning_rate  iterations  l2_leaf_reg  fit_rows  fit_features  val_log_loss  val_brier  val_roc_auc
+            4      6           0.05         450         10.0     87386            16      0.074654   0.015948     0.794612
+            2      6           0.06         350          3.0     87386            16      0.074671   0.015919     0.792400
+            3      4           0.10         250         10.0     87386            16      0.075017   0.015948     0.788024
+            1      4           0.05         250          3.0     87386            16      0.075084   0.015943     0.787082
+[END] 5.8.5 - 2026-06-18 23:09:58
+[RUN_PLAN] dynamic_window_weeks=6 script=dropout_bench_v3_D_08_A_dynamic_weekly_catboost_weekly_hazard.py
+[START] 5.6b - 2026-06-18 23:09:58
+# ==============================================================
+# 5.8.2 - Prepare the shared dynamic weekly treatment for CatBoost
+# ==============================================================
+[Stage 5.8.2 table_catboost_weekly_hazard_not_weighted_preprocessing_summary_w6 — CatBoost preprocessing summary]
+table_name=table_catboost_weekly_hazard_not_weighted_preprocessing_summary_w6
+rows=1, cols=12
+                             model_family  active_window_weeks  raw_train_rows_before_truncation  raw_test_rows_before_truncation  train_rows  test_rows  n_input_features_raw  n_categorical_features  n_numeric_features  n_output_features_after_preprocessing  train_event_rate  test_event_rate
+catboost_weekly_hazard_not_weighted_tuned                    6                            719498                           308393      151041      64730                    16                       6                  10                                     16          0.014499         0.014383
+ARTIFACT | Stage 5.8.2 table_catboost_weekly_hazard_not_weighted_preprocessing_summary_w6 — CatBoost preprocessing summary | duckdb://table_catboost_weekly_hazard_not_weighted_preprocessing_summary_w6
+[Stage 5.8.2 table_catboost_weekly_hazard_not_weighted_raw_feature_manifest_w6 — CatBoost raw feature manifest]
+table_name=table_catboost_weekly_hazard_not_weighted_raw_feature_manifest_w6
+rows=16, cols=6
+feature_name_operational feature_role  present_in_train  present_in_test  covered_by_canonical_config_after_alias canonical_source_name
+                  gender  categorical              True             True                                    False                      
+                  region  categorical              True             True                                    False                      
+       highest_education  categorical              True             True                                    False                      
+                imd_band  categorical              True             True                                    False                      
+                age_band  categorical              True             True                                    False                      
+              disability  categorical              True             True                                    False                      
+    num_of_prev_attempts      numeric              True             True                                     True  num_of_prev_attempts
+         studied_credits      numeric              True             True                                     True       studied_credits
+                    week      numeric              True             True                                     True                  week
+       total_clicks_week      numeric              True             True                                     True          total_clicks
+        active_this_week      numeric              True             True                                    False                      
+         n_vle_rows_week      numeric              True             True                                    False                      
+   n_distinct_sites_week      numeric              True             True                                    False                      
+      cum_clicks_until_t      numeric              True             True                                    False                      
+                 recency      numeric              True             True                                    False                      
+                  streak      numeric              True             True                                    False                      
+ARTIFACT | Stage 5.8.2 table_catboost_weekly_hazard_not_weighted_raw_feature_manifest_w6 — CatBoost raw feature manifest | duckdb://table_catboost_weekly_hazard_not_weighted_raw_feature_manifest_w6
+[Stage 5.8.2 table_catboost_weekly_hazard_not_weighted_feature_names_out_w6 — CatBoost model feature names]
+table_name=table_catboost_weekly_hazard_not_weighted_feature_names_out_w6
+rows=16, cols=4
+   model_feature_name feature_role  catboost_feature_index  is_categorical
+               gender  categorical                       0            True
+               region  categorical                       1            True
+    highest_education  categorical                       2            True
+             imd_band  categorical                       3            True
+             age_band  categorical                       4            True
+           disability  categorical                       5            True
+ num_of_prev_attempts      numeric                       6           False
+      studied_credits      numeric                       7           False
+                 week      numeric                       8           False
+    total_clicks_week      numeric                       9           False
+     active_this_week      numeric                      10           False
+      n_vle_rows_week      numeric                      11           False
+n_distinct_sites_week      numeric                      12           False
+   cum_clicks_until_t      numeric                      13           False
+              recency      numeric                      14           False
+               streak      numeric                      15           False
+ARTIFACT | Stage 5.8.2 table_catboost_weekly_hazard_not_weighted_feature_names_out_w6 — CatBoost model feature names | duckdb://table_catboost_weekly_hazard_not_weighted_feature_names_out_w6
+ARTIFACT | catboost_weekly_hazard_preprocessing_config | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/metadata/catboost_weekly_hazard_not_weighted_preprocessing_config_w6.json
+{
+  "model_name": "catboost_weekly_hazard_not_weighted_tuned",
+  "model_type": "catboost_weekly_hazard",
+  "train_table": "pp_linear_hazard_ready_train",
+  "test_table": "pp_linear_hazard_ready_test",
+  "target_column": "event_t",
+  "categorical_features": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability"
+  ],
+  "numeric_features": [
+    "num_of_prev_attempts",
+    "studied_credits",
+    "week",
+    "total_clicks_week",
+    "active_this_week",
+    "n_vle_rows_week",
+    "n_distinct_sites_week",
+    "cum_clicks_until_t",
+    "recency",
+    "streak"
+  ],
+  "operational_feature_columns": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability",
+    "num_of_prev_attempts",
+    "studied_credits",
+    "week",
+    "total_clicks_week",
+    "active_this_week",
+    "n_vle_rows_week",
+    "n_distinct_sites_week",
+    "cum_clicks_until_t",
+    "recency",
+    "streak"
+  ],
+  "canonical_expected_features_raw": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "week",
+    "total_clicks"
+  ],
+  "canonical_expected_features_resolved": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "week",
+    "total_clicks_week"
+  ],
+  "feature_alias_map": {
+    "total_clicks": "total_clicks_week"
+  },
+  "n_train_rows": 151041,
+  "n_test_rows": 64730,
+  "active_window_weeks": 6,
+  "raw_train_rows_before_truncation": 719498,
+  "raw_test_rows_before_truncation": 308393,
+  "n_output_features_after_preprocessing": 16,
+  "train_event_rate": 0.014499374342066062,
+  "test_event_rate": 0.014382820948555539,
+  "design_note": "The CatBoost benchmark keeps the same weekly dynamic feature contract as the linear discrete-time arm while preserving categorical columns as native string-valued features.",
+  "methodological_note": "No learned preprocessing transform is applied because CatBoost consumes the validated raw feature columns directly after deterministic type sanitization."
+}
+
+[END] 5.8.2 - 2026-06-18 23:09:59
+[START] 5.6b - 2026-06-18 23:09:59
+# ==============================================================
+# 5.8.3 - Compute grouped CatBoost validation guardrails
+# ==============================================================
+[Stage 5.8.3 table_catboost_weekly_hazard_not_weighted_guardrails_w6 — CatBoost validation guardrails]
+table_name=table_catboost_weekly_hazard_not_weighted_guardrails_w6
+rows=1, cols=22
+ active_window_weeks  validation_test_size  search_row_cap  final_row_cap  search_rows_selected  final_rows_selected  subtrain_rows  validation_rows  full_train_rows  subtrain_enrollments  validation_enrollments  full_train_enrollments  n_features  n_categorical_features  n_numeric_features  subtrain_event_rate  sampled_subtrain_event_rate  validation_event_rate  full_train_event_rate  sampled_full_train_event_rate sample_weight_strategy  random_seed
+                   6                   0.2          120000         151041                120000               151041         120781            30260           151041                 18252                    4563                   22815          16                       6                  10             0.014555                      0.01465               0.014276               0.014499                       0.014499                   none           42
+ARTIFACT | Stage 5.8.3 table_catboost_weekly_hazard_not_weighted_guardrails_w6 — CatBoost validation guardrails | duckdb://table_catboost_weekly_hazard_not_weighted_guardrails_w6
+[END] 5.8.3 - 2026-06-18 23:09:59
+[START] 5.6b - 2026-06-18 23:09:59
+# ==============================================================
+# 5.8.5 - Tune, fit, and evaluate the CatBoost weekly hazard model
+# ==============================================================
+[Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuning_results_w6 — CatBoost tuning results]
+table_name=table_catboost_weekly_hazard_not_weighted_tuning_results_w6
+rows=4, cols=10
+ candidate_id  depth  learning_rate  iterations  l2_leaf_reg  fit_rows  fit_features  val_log_loss  val_brier  val_roc_auc
+            2      6           0.06         350          3.0    120000            16      0.065943   0.013695     0.794721
+            4      6           0.05         450         10.0    120000            16      0.066040   0.013706     0.794526
+            3      4           0.10         250         10.0    120000            16      0.066154   0.013708     0.791901
+            1      4           0.05         250          3.0    120000            16      0.066388   0.013723     0.788308
+ARTIFACT | Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuning_results_w6 — CatBoost tuning results | duckdb://table_catboost_weekly_hazard_not_weighted_tuning_results_w6
+[Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_test_predictions_w6 — CatBoost test predictions]
+table_name=table_catboost_weekly_hazard_not_weighted_tuned_test_predictions_w6
+rows=64730, cols=29
+   enrollment_id  id_student code_module code_presentation  week  event_t  event_observed  t_event_week  t_final_week  used_zero_week_fallback_for_censoring gender               region     highest_education imd_band age_band  num_of_prev_attempts  studied_credits disability  total_clicks_week  active_this_week  n_vle_rows_week  n_distinct_sites_week  cum_clicks_until_t  recency  streak split  pred_hazard  pred_survival  pred_risk
+100561|DDD|2014J      100561         DDD             2014J     0        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               10.0                 1                8                      4                10.0        0       1  test     0.068804       0.931196   0.068804
+100561|DDD|2014J      100561         DDD             2014J     1        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N                0.0                 0                0                      0                10.0        1       0  test     0.053683       0.881207   0.118793
+100561|DDD|2014J      100561         DDD             2014J     2        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               91.0                 1               26                     11               101.0        0       2  test     0.019989       0.863593   0.136407
+100561|DDD|2014J      100561         DDD             2014J     3        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N                6.0                 1                4                      2               107.0        0       3  test     0.006405       0.858061   0.141939
+100561|DDD|2014J      100561         DDD             2014J     4        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               30.0                 1               17                      8               137.0        0       4  test     0.025767       0.835952   0.164048
+100561|DDD|2014J      100561         DDD             2014J     5        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               65.0                 1               36                     14               202.0        0       5  test     0.039310       0.803090   0.196910
+100561|DDD|2014J      100561         DDD             2014J     6        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               27.0                 1               15                      9               229.0        0       6  test     0.003652       0.800157   0.199843
+100621|CCC|2014B      100621         CCC             2014B     0        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                0.0                 0                0                      0                 0.0        1       0  test     0.010528       0.989472   0.010528
+100621|CCC|2014B      100621         CCC             2014B     1        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                3.0                 1                2                      2                 3.0        0       2  test     0.008898       0.980668   0.019332
+100621|CCC|2014B      100621         CCC             2014B     2        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                1.0                 1                1                      1                 4.0        0       3  test     0.031322       0.949952   0.050048
+100621|CCC|2014B      100621         CCC             2014B     3        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                1.0                 1                1                      1                 5.0        0       4  test     0.041143       0.910868   0.089132
+100621|CCC|2014B      100621         CCC             2014B     4        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                0.0                 0                0                      0                 5.0        1       0  test     0.007894       0.903677   0.096323
+100621|CCC|2014B      100621         CCC             2014B     5        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                0.0                 0                0                      0                 5.0        2       0  test     0.008047       0.896405   0.103595
+100621|CCC|2014B      100621         CCC             2014B     6        1               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                0.0                 0                0                      0                 5.0        3       0  test     0.012056       0.885598   0.114402
+101187|DDD|2014J      101187         DDD             2014J     0        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        1       0  test     0.013515       0.986485   0.013515
+101187|DDD|2014J      101187         DDD             2014J     1        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        2       0  test     0.038107       0.948893   0.051107
+101187|DDD|2014J      101187         DDD             2014J     2        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        3       0  test     0.118951       0.836021   0.163979
+101187|DDD|2014J      101187         DDD             2014J     3        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        4       0  test     0.025889       0.814377   0.185623
+101187|DDD|2014J      101187         DDD             2014J     4        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        5       0  test     0.016348       0.801064   0.198936
+101187|DDD|2014J      101187         DDD             2014J     5        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        6       0  test     0.007064       0.795405   0.204595
+ARTIFACT | Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_test_predictions_w6 — CatBoost test predictions | duckdb://table_catboost_weekly_hazard_not_weighted_tuned_test_predictions_w6
+[Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_primary_metrics_w6 — CatBoost primary metrics]
+table_name=table_catboost_weekly_hazard_not_weighted_tuned_primary_metrics_w6
+rows=2, cols=4
+metric_name metric_category  metric_value                         notes
+        ibs         primary      0.142408 sksurv_integrated_brier_score
+    c_index      co_primary      0.500836          pycox_concordance_td
+ARTIFACT | Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_primary_metrics_w6 — CatBoost primary metrics | duckdb://table_catboost_weekly_hazard_not_weighted_tuned_primary_metrics_w6
+[Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_brier_by_horizon_w6 — CatBoost Brier scores by horizon]
+table_name=table_catboost_weekly_hazard_not_weighted_tuned_brier_by_horizon_w6
+rows=3, cols=5
+ horizon_week      metric_name metric_category  metric_value              notes
+           10 brier_at_horizon         primary      0.123004 sksurv_brier_score
+           20 brier_at_horizon         primary      0.166201 sksurv_brier_score
+           30 brier_at_horizon         primary      0.198353 sksurv_brier_score
+ARTIFACT | Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_brier_by_horizon_w6 — CatBoost Brier scores by horizon | duckdb://table_catboost_weekly_hazard_not_weighted_tuned_brier_by_horizon_w6
+[Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_secondary_metrics_w6 — CatBoost secondary metrics]
+table_name=table_catboost_weekly_hazard_not_weighted_tuned_secondary_metrics_w6
+rows=6, cols=5
+ horizon_week         metric_name metric_category  metric_value                                                                                  notes
+           10 risk_auc_at_horizon       secondary      0.271102                                                            roc_auc_on_evaluable_subset
+           10  time_dependent_auc       secondary      0.270765 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.270765; local_ipcw_auc
+           20 risk_auc_at_horizon       secondary      0.336522                                                            roc_auc_on_evaluable_subset
+           20  time_dependent_auc       secondary      0.335916 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.335916; local_ipcw_auc
+           30 risk_auc_at_horizon       secondary      0.371376                                                            roc_auc_on_evaluable_subset
+           30  time_dependent_auc       secondary      0.371332 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.371332; local_ipcw_auc
+ARTIFACT | Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_secondary_metrics_w6 — CatBoost secondary metrics | duckdb://table_catboost_weekly_hazard_not_weighted_tuned_secondary_metrics_w6
+[Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_td_auc_support_audit_w6 — CatBoost IPCW support audit]
+table_name=table_catboost_weekly_hazard_not_weighted_tuned_td_auc_support_audit_w6
+rows=3, cols=6
+ horizon_week  max_ipcw_time  n_total_test_enrollments  n_supported_test_enrollments  mean_auc                                                                                  notes
+           10           38.0                      9778                          6742  0.270765 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.270765; local_ipcw_auc
+           20           38.0                      9778                          6742  0.335916 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.335916; local_ipcw_auc
+           30           38.0                      9778                          6742  0.371332 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.371332; local_ipcw_auc
+ARTIFACT | Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_td_auc_support_audit_w6 — CatBoost IPCW support audit | duckdb://table_catboost_weekly_hazard_not_weighted_tuned_td_auc_support_audit_w6
+[Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_row_diagnostics_w6 — CatBoost row-level diagnostics]
+table_name=table_catboost_weekly_hazard_not_weighted_tuned_row_diagnostics_w6
+rows=1, cols=5
+                               model_name  row_level_roc_auc  row_level_pr_auc  row_level_log_loss  row_level_brier
+catboost_weekly_hazard_not_weighted_tuned           0.821136          0.075139            0.064463         0.013697
+ARTIFACT | Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_row_diagnostics_w6 — CatBoost row-level diagnostics | duckdb://table_catboost_weekly_hazard_not_weighted_tuned_row_diagnostics_w6
+[Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_support_by_horizon_w6 — CatBoost support by horizon]
+table_name=table_catboost_weekly_hazard_not_weighted_tuned_support_by_horizon_w6
+rows=3, cols=4
+ horizon_week  n_evaluable_enrollments  n_events_by_horizon  event_rate_by_horizon
+           10                     9778                 1215               0.124259
+           20                     9778                 1736               0.177541
+           30                     9778                 2129               0.217734
+ARTIFACT | Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_support_by_horizon_w6 — CatBoost support by horizon | duckdb://table_catboost_weekly_hazard_not_weighted_tuned_support_by_horizon_w6
+[Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_calibration_summary_w6 — CatBoost calibration summary]
+table_name=table_catboost_weekly_hazard_not_weighted_tuned_calibration_summary_w6
+rows=3, cols=5
+ horizon_week            metric_name metric_category  metric_value                                         notes
+           10 calibration_at_horizon         primary      0.109636 Weighted absolute calibration gap across bins
+           20 calibration_at_horizon         primary      0.119533 Weighted absolute calibration gap across bins
+           30 calibration_at_horizon         primary      0.141742 Weighted absolute calibration gap across bins
+ARTIFACT | Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_calibration_summary_w6 — CatBoost calibration summary | duckdb://table_catboost_weekly_hazard_not_weighted_tuned_calibration_summary_w6
+[Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_calibration_bins_by_horizon_w6 — CatBoost calibration bins]
+table_name=table_catboost_weekly_hazard_not_weighted_tuned_calibration_bins_by_horizon_w6
+rows=30, cols=6
+ calibration_bin   n  mean_predicted_risk  observed_event_rate  horizon_week  abs_calibration_gap
+               0 978             0.012964             0.476483            10             0.463519
+               1 978             0.029946             0.158487            10             0.128541
+               2 978             0.043292             0.112474            10             0.069182
+               3 977             0.056391             0.084954            10             0.028563
+               4 978             0.070313             0.093047            10             0.022734
+               5 978             0.085423             0.076687            10             0.008736
+               6 977             0.103961             0.070624            10             0.033337
+               7 978             0.126572             0.055215            10             0.071358
+               8 978             0.158623             0.064417            10             0.094206
+               9 978             0.226124             0.050102            10             0.176022
+               0 978             0.012964             0.516360            20             0.503396
+               1 978             0.029946             0.203476            20             0.173531
+               2 978             0.043292             0.165644            20             0.122352
+               3 977             0.056391             0.161720            20             0.105328
+               4 978             0.070313             0.141104            20             0.070791
+               5 978             0.085423             0.122699            20             0.037277
+               6 977             0.103961             0.119754            20             0.015793
+               7 978             0.126572             0.110429            20             0.016143
+               8 978             0.158623             0.128834            20             0.029788
+               9 978             0.226124             0.105317            20             0.120807
+ARTIFACT | Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_calibration_bins_by_horizon_w6 — CatBoost calibration bins | duckdb://table_catboost_weekly_hazard_not_weighted_tuned_calibration_bins_by_horizon_w6
+[Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_predicted_vs_observed_survival_w6 — CatBoost predicted versus observed survival]
+table_name=table_catboost_weekly_hazard_not_weighted_tuned_predicted_vs_observed_survival_w6
+rows=3, cols=5
+ horizon_week  n_evaluable_enrollments  mean_predicted_survival  mean_observed_survival  abs_gap
+           10                     9778                 0.908637                0.875741 0.032895
+           20                     9778                 0.908637                0.822459 0.086178
+           30                     9778                 0.908637                0.782266 0.126370
+ARTIFACT | Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_predicted_vs_observed_survival_w6 — CatBoost predicted versus observed survival | duckdb://table_catboost_weekly_hazard_not_weighted_tuned_predicted_vs_observed_survival_w6
+ARTIFACT | catboost_weekly_hazard_model | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/models/catboost_weekly_hazard_not_weighted_tuned_w6.cbm
+ARTIFACT | catboost_weekly_hazard_not_weighted_tuned_model_config | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/metadata/catboost_weekly_hazard_not_weighted_tuned_model_config_w6.json
+{
+  "model_name": "catboost_weekly_hazard_not_weighted_tuned",
+  "family_name": "discrete_time_dynamic",
+  "model_type": "catboost_weekly_hazard",
+  "selection_metric": "val_log_loss",
+  "candidate_grid": [
+    {
+      "depth": 4,
+      "learning_rate": 0.05,
+      "iterations": 250,
+      "l2_leaf_reg": 3.0
+    },
+    {
+      "depth": 6,
+      "learning_rate": 0.06,
+      "iterations": 350,
+      "l2_leaf_reg": 3.0
+    },
+    {
+      "depth": 4,
+      "learning_rate": 0.1,
+      "iterations": 250,
+      "l2_leaf_reg": 10.0
+    },
+    {
+      "depth": 6,
+      "learning_rate": 0.05,
+      "iterations": 450,
+      "l2_leaf_reg": 10.0
+    }
+  ],
+  "validation_split": {
+    "method": "GroupShuffleSplit",
+    "test_size": 0.2,
+    "group_column": "enrollment_id",
+    "random_seed": 42
+  },
+  "benchmark_horizons": [
+    10,
+    20,
+    30
+  ],
+  "calibration_bins": 10,
+  "calibration_contract_version": "v2_ipcw_km_observed_risk",
+  "calibration_observed_risk_method": "ipcw_km_pseudo_event_rate",
+  "active_window_weeks": 6,
+  "categorical_features": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability"
+  ],
+  "numeric_features": [
+    "num_of_prev_attempts",
+    "studied_credits",
+    "week",
+    "total_clicks_week",
+    "active_this_week",
+    "n_vle_rows_week",
+    "n_distinct_sites_week",
+    "cum_clicks_until_t",
+    "recency",
+    "streak"
+  ],
+  "guardrails": {
+    "active_window_weeks": 6,
+    "validation_test_size": 0.2,
+    "search_row_cap": 120000,
+    "final_row_cap": 151041,
+    "search_rows_selected": 120000,
+    "final_rows_selected": 151041,
+    "subtrain_rows": 120781,
+    "validation_rows": 30260,
+    "full_train_rows": 151041,
+    "subtrain_enrollments": 18252,
+    "validation_enrollments": 4563,
+    "full_train_enrollments": 22815,
+    "n_features": 16,
+    "n_categorical_features": 6,
+    "n_numeric_features": 10,
+    "subtrain_event_rate": 0.014555269454632765,
+    "sampled_subtrain_event_rate": 0.01465,
+    "validation_event_rate": 0.01427627230667548,
+    "full_train_event_rate": 0.014499374342066062,
+    "sampled_full_train_event_rate": 0.014499374342066062,
+    "sample_weight_strategy": "none",
+    "random_seed": 42
+  },
+  "best_candidate": {
+    "depth": 6,
+    "learning_rate": 0.06,
+    "iterations": 350,
+    "l2_leaf_reg": 3.0,
+    "val_log_loss": 0.06594302403871456,
+    "val_brier": 0.013694908749702387,
+    "val_roc_auc": 0.7947206732178068
+  },
+  "implementation": {
+    "library": "catboost",
+    "class_name": "CatBoostClassifier",
+    "loss_function": "Logloss",
+    "eval_metric": "Logloss",
+    "thread_count": 1,
+    "allow_writing_files": false
+  },
+  "weighting_strategy": "none; this official D5.8 variant preserves native categorical handling and the same dynamic feature contract without class weights.",
+  "design_note": "The not-weighted CatBoost benchmark preserves native categorical columns, grouped validation, and the shared evaluation stack so the weighted script remains a pure Item 6 sensitivity counterpart."
+}
+
+ candidate_id  depth  learning_rate  iterations  l2_leaf_reg  fit_rows  fit_features  val_log_loss  val_brier  val_roc_auc
+            2      6           0.06         350          3.0    120000            16      0.065943   0.013695     0.794721
+            4      6           0.05         450         10.0    120000            16      0.066040   0.013706     0.794526
+            3      4           0.10         250         10.0    120000            16      0.066154   0.013708     0.791901
+            1      4           0.05         250          3.0    120000            16      0.066388   0.013723     0.788308
+[END] 5.8.5 - 2026-06-18 23:10:49
+[RUN_PLAN] dynamic_window_weeks=8 script=dropout_bench_v3_D_08_A_dynamic_weekly_catboost_weekly_hazard.py
+[START] 5.6b - 2026-06-18 23:10:49
+# ==============================================================
+# 5.8.2 - Prepare the shared dynamic weekly treatment for CatBoost
+# ==============================================================
+[Stage 5.8.2 table_catboost_weekly_hazard_not_weighted_preprocessing_summary_w8 — CatBoost preprocessing summary]
+table_name=table_catboost_weekly_hazard_not_weighted_preprocessing_summary_w8
+rows=1, cols=12
+                             model_family  active_window_weeks  raw_train_rows_before_truncation  raw_test_rows_before_truncation  train_rows  test_rows  n_input_features_raw  n_categorical_features  n_numeric_features  n_output_features_after_preprocessing  train_event_rate  test_event_rate
+catboost_weekly_hazard_not_weighted_tuned                    8                            719498                           308393      192111      82348                    16                       6                  10                                     16          0.013149         0.013127
+ARTIFACT | Stage 5.8.2 table_catboost_weekly_hazard_not_weighted_preprocessing_summary_w8 — CatBoost preprocessing summary | duckdb://table_catboost_weekly_hazard_not_weighted_preprocessing_summary_w8
+[Stage 5.8.2 table_catboost_weekly_hazard_not_weighted_raw_feature_manifest_w8 — CatBoost raw feature manifest]
+table_name=table_catboost_weekly_hazard_not_weighted_raw_feature_manifest_w8
+rows=16, cols=6
+feature_name_operational feature_role  present_in_train  present_in_test  covered_by_canonical_config_after_alias canonical_source_name
+                  gender  categorical              True             True                                    False                      
+                  region  categorical              True             True                                    False                      
+       highest_education  categorical              True             True                                    False                      
+                imd_band  categorical              True             True                                    False                      
+                age_band  categorical              True             True                                    False                      
+              disability  categorical              True             True                                    False                      
+    num_of_prev_attempts      numeric              True             True                                     True  num_of_prev_attempts
+         studied_credits      numeric              True             True                                     True       studied_credits
+                    week      numeric              True             True                                     True                  week
+       total_clicks_week      numeric              True             True                                     True          total_clicks
+        active_this_week      numeric              True             True                                    False                      
+         n_vle_rows_week      numeric              True             True                                    False                      
+   n_distinct_sites_week      numeric              True             True                                    False                      
+      cum_clicks_until_t      numeric              True             True                                    False                      
+                 recency      numeric              True             True                                    False                      
+                  streak      numeric              True             True                                    False                      
+ARTIFACT | Stage 5.8.2 table_catboost_weekly_hazard_not_weighted_raw_feature_manifest_w8 — CatBoost raw feature manifest | duckdb://table_catboost_weekly_hazard_not_weighted_raw_feature_manifest_w8
+[Stage 5.8.2 table_catboost_weekly_hazard_not_weighted_feature_names_out_w8 — CatBoost model feature names]
+table_name=table_catboost_weekly_hazard_not_weighted_feature_names_out_w8
+rows=16, cols=4
+   model_feature_name feature_role  catboost_feature_index  is_categorical
+               gender  categorical                       0            True
+               region  categorical                       1            True
+    highest_education  categorical                       2            True
+             imd_band  categorical                       3            True
+             age_band  categorical                       4            True
+           disability  categorical                       5            True
+ num_of_prev_attempts      numeric                       6           False
+      studied_credits      numeric                       7           False
+                 week      numeric                       8           False
+    total_clicks_week      numeric                       9           False
+     active_this_week      numeric                      10           False
+      n_vle_rows_week      numeric                      11           False
+n_distinct_sites_week      numeric                      12           False
+   cum_clicks_until_t      numeric                      13           False
+              recency      numeric                      14           False
+               streak      numeric                      15           False
+ARTIFACT | Stage 5.8.2 table_catboost_weekly_hazard_not_weighted_feature_names_out_w8 — CatBoost model feature names | duckdb://table_catboost_weekly_hazard_not_weighted_feature_names_out_w8
+ARTIFACT | catboost_weekly_hazard_preprocessing_config | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/metadata/catboost_weekly_hazard_not_weighted_preprocessing_config_w8.json
+{
+  "model_name": "catboost_weekly_hazard_not_weighted_tuned",
+  "model_type": "catboost_weekly_hazard",
+  "train_table": "pp_linear_hazard_ready_train",
+  "test_table": "pp_linear_hazard_ready_test",
+  "target_column": "event_t",
+  "categorical_features": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability"
+  ],
+  "numeric_features": [
+    "num_of_prev_attempts",
+    "studied_credits",
+    "week",
+    "total_clicks_week",
+    "active_this_week",
+    "n_vle_rows_week",
+    "n_distinct_sites_week",
+    "cum_clicks_until_t",
+    "recency",
+    "streak"
+  ],
+  "operational_feature_columns": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability",
+    "num_of_prev_attempts",
+    "studied_credits",
+    "week",
+    "total_clicks_week",
+    "active_this_week",
+    "n_vle_rows_week",
+    "n_distinct_sites_week",
+    "cum_clicks_until_t",
+    "recency",
+    "streak"
+  ],
+  "canonical_expected_features_raw": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "week",
+    "total_clicks"
+  ],
+  "canonical_expected_features_resolved": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "week",
+    "total_clicks_week"
+  ],
+  "feature_alias_map": {
+    "total_clicks": "total_clicks_week"
+  },
+  "n_train_rows": 192111,
+  "n_test_rows": 82348,
+  "active_window_weeks": 8,
+  "raw_train_rows_before_truncation": 719498,
+  "raw_test_rows_before_truncation": 308393,
+  "n_output_features_after_preprocessing": 16,
+  "train_event_rate": 0.013148648437622,
+  "test_event_rate": 0.013127216204400835,
+  "design_note": "The CatBoost benchmark keeps the same weekly dynamic feature contract as the linear discrete-time arm while preserving categorical columns as native string-valued features.",
+  "methodological_note": "No learned preprocessing transform is applied because CatBoost consumes the validated raw feature columns directly after deterministic type sanitization."
+}
+
+[END] 5.8.2 - 2026-06-18 23:10:50
+[START] 5.6b - 2026-06-18 23:10:50
+# ==============================================================
+# 5.8.3 - Compute grouped CatBoost validation guardrails
+# ==============================================================
+[Stage 5.8.3 table_catboost_weekly_hazard_not_weighted_guardrails_w8 — CatBoost validation guardrails]
+table_name=table_catboost_weekly_hazard_not_weighted_guardrails_w8
+rows=1, cols=22
+ active_window_weeks  validation_test_size  search_row_cap  final_row_cap  search_rows_selected  final_rows_selected  subtrain_rows  validation_rows  full_train_rows  subtrain_enrollments  validation_enrollments  full_train_enrollments  n_features  n_categorical_features  n_numeric_features  subtrain_event_rate  sampled_subtrain_event_rate  validation_event_rate  full_train_event_rate  sampled_full_train_event_rate sample_weight_strategy  random_seed
+                   8                   0.2          120000         180000                120000               180000         153632            38479           192111                 18252                    4563                   22815          16                       6                  10             0.013142                     0.016825               0.013176               0.013149                       0.014033                   none           42
+ARTIFACT | Stage 5.8.3 table_catboost_weekly_hazard_not_weighted_guardrails_w8 — CatBoost validation guardrails | duckdb://table_catboost_weekly_hazard_not_weighted_guardrails_w8
+[END] 5.8.3 - 2026-06-18 23:10:50
+[START] 5.6b - 2026-06-18 23:10:50
+# ==============================================================
+# 5.8.5 - Tune, fit, and evaluate the CatBoost weekly hazard model
+# ==============================================================
+[Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuning_results_w8 — CatBoost tuning results]
+table_name=table_catboost_weekly_hazard_not_weighted_tuning_results_w8
+rows=4, cols=10
+ candidate_id  depth  learning_rate  iterations  l2_leaf_reg  fit_rows  fit_features  val_log_loss  val_brier  val_roc_auc
+            4      6           0.05         450         10.0    120000            16      0.062057   0.012705     0.797792
+            2      6           0.06         350          3.0    120000            16      0.062159   0.012727     0.797269
+            3      4           0.10         250         10.0    120000            16      0.062332   0.012713     0.793759
+            1      4           0.05         250          3.0    120000            16      0.062666   0.012728     0.789132
+ARTIFACT | Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuning_results_w8 — CatBoost tuning results | duckdb://table_catboost_weekly_hazard_not_weighted_tuning_results_w8
+[Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_test_predictions_w8 — CatBoost test predictions]
+table_name=table_catboost_weekly_hazard_not_weighted_tuned_test_predictions_w8
+rows=82348, cols=29
+   enrollment_id  id_student code_module code_presentation  week  event_t  event_observed  t_event_week  t_final_week  used_zero_week_fallback_for_censoring gender               region     highest_education imd_band age_band  num_of_prev_attempts  studied_credits disability  total_clicks_week  active_this_week  n_vle_rows_week  n_distinct_sites_week  cum_clicks_until_t  recency  streak split  pred_hazard  pred_survival  pred_risk
+100561|DDD|2014J      100561         DDD             2014J     0        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               10.0                 1                8                      4                10.0        0       1  test     0.073879       0.926121   0.073879
+100561|DDD|2014J      100561         DDD             2014J     1        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N                0.0                 0                0                      0                10.0        1       0  test     0.053251       0.876804   0.123196
+100561|DDD|2014J      100561         DDD             2014J     2        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               91.0                 1               26                     11               101.0        0       2  test     0.019546       0.859666   0.140334
+100561|DDD|2014J      100561         DDD             2014J     3        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N                6.0                 1                4                      2               107.0        0       3  test     0.006793       0.853826   0.146174
+100561|DDD|2014J      100561         DDD             2014J     4        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               30.0                 1               17                      8               137.0        0       4  test     0.026467       0.831228   0.168772
+100561|DDD|2014J      100561         DDD             2014J     5        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               65.0                 1               36                     14               202.0        0       5  test     0.039478       0.798413   0.201587
+100561|DDD|2014J      100561         DDD             2014J     6        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               27.0                 1               15                      9               229.0        0       6  test     0.003248       0.795819   0.204181
+100561|DDD|2014J      100561         DDD             2014J     7        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               59.0                 1               14                      5               288.0        0       7  test     0.007588       0.789780   0.210220
+100561|DDD|2014J      100561         DDD             2014J     8        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               62.0                 1               22                      7               350.0        0       8  test     0.008036       0.783434   0.216566
+100621|CCC|2014B      100621         CCC             2014B     0        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                0.0                 0                0                      0                 0.0        1       0  test     0.028988       0.971012   0.028988
+100621|CCC|2014B      100621         CCC             2014B     1        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                3.0                 1                2                      2                 3.0        0       2  test     0.040396       0.931787   0.068213
+100621|CCC|2014B      100621         CCC             2014B     2        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                1.0                 1                1                      1                 4.0        0       3  test     0.007599       0.924706   0.075294
+100621|CCC|2014B      100621         CCC             2014B     3        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                1.0                 1                1                      1                 5.0        0       4  test     0.009436       0.915980   0.084020
+100621|CCC|2014B      100621         CCC             2014B     4        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                0.0                 0                0                      0                 5.0        1       0  test     0.010486       0.906376   0.093624
+100621|CCC|2014B      100621         CCC             2014B     5        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                0.0                 0                0                      0                 5.0        2       0  test     0.007396       0.899672   0.100328
+100621|CCC|2014B      100621         CCC             2014B     6        1               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                0.0                 0                0                      0                 5.0        3       0  test     0.005963       0.894307   0.105693
+101187|DDD|2014J      101187         DDD             2014J     0        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        1       0  test     0.015243       0.984757   0.015243
+101187|DDD|2014J      101187         DDD             2014J     1        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        2       0  test     0.019026       0.966021   0.033979
+101187|DDD|2014J      101187         DDD             2014J     2        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        3       0  test     0.044404       0.923126   0.076874
+101187|DDD|2014J      101187         DDD             2014J     3        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        4       0  test     0.110994       0.820664   0.179336
+ARTIFACT | Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_test_predictions_w8 — CatBoost test predictions | duckdb://table_catboost_weekly_hazard_not_weighted_tuned_test_predictions_w8
+[Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_primary_metrics_w8 — CatBoost primary metrics]
+table_name=table_catboost_weekly_hazard_not_weighted_tuned_primary_metrics_w8
+rows=2, cols=4
+metric_name metric_category  metric_value                         notes
+        ibs         primary      0.144111 sksurv_integrated_brier_score
+    c_index      co_primary      0.498270          pycox_concordance_td
+ARTIFACT | Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_primary_metrics_w8 — CatBoost primary metrics | duckdb://table_catboost_weekly_hazard_not_weighted_tuned_primary_metrics_w8
+[Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_brier_by_horizon_w8 — CatBoost Brier scores by horizon]
+table_name=table_catboost_weekly_hazard_not_weighted_tuned_brier_by_horizon_w8
+rows=3, cols=5
+ horizon_week      metric_name metric_category  metric_value              notes
+           10 brier_at_horizon         primary      0.126838 sksurv_brier_score
+           20 brier_at_horizon         primary      0.168264 sksurv_brier_score
+           30 brier_at_horizon         primary      0.198715 sksurv_brier_score
+ARTIFACT | Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_brier_by_horizon_w8 — CatBoost Brier scores by horizon | duckdb://table_catboost_weekly_hazard_not_weighted_tuned_brier_by_horizon_w8
+[Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_secondary_metrics_w8 — CatBoost secondary metrics]
+table_name=table_catboost_weekly_hazard_not_weighted_tuned_secondary_metrics_w8
+rows=6, cols=5
+ horizon_week         metric_name metric_category  metric_value                                                                                  notes
+           10 risk_auc_at_horizon       secondary      0.227880                                                            roc_auc_on_evaluable_subset
+           10  time_dependent_auc       secondary      0.230519 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.230519; local_ipcw_auc
+           20 risk_auc_at_horizon       secondary      0.299889                                                            roc_auc_on_evaluable_subset
+           20  time_dependent_auc       secondary      0.302723 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.302723; local_ipcw_auc
+           30 risk_auc_at_horizon       secondary      0.340679                                                            roc_auc_on_evaluable_subset
+           30  time_dependent_auc       secondary      0.344548 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.344548; local_ipcw_auc
+ARTIFACT | Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_secondary_metrics_w8 — CatBoost secondary metrics | duckdb://table_catboost_weekly_hazard_not_weighted_tuned_secondary_metrics_w8
+[Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_td_auc_support_audit_w8 — CatBoost IPCW support audit]
+table_name=table_catboost_weekly_hazard_not_weighted_tuned_td_auc_support_audit_w8
+rows=3, cols=6
+ horizon_week  max_ipcw_time  n_total_test_enrollments  n_supported_test_enrollments  mean_auc                                                                                  notes
+           10           38.0                      9778                          6742  0.230519 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.230519; local_ipcw_auc
+           20           38.0                      9778                          6742  0.302723 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.302723; local_ipcw_auc
+           30           38.0                      9778                          6742  0.344548 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.344548; local_ipcw_auc
+ARTIFACT | Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_td_auc_support_audit_w8 — CatBoost IPCW support audit | duckdb://table_catboost_weekly_hazard_not_weighted_tuned_td_auc_support_audit_w8
+[Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_row_diagnostics_w8 — CatBoost row-level diagnostics]
+table_name=table_catboost_weekly_hazard_not_weighted_tuned_row_diagnostics_w8
+rows=1, cols=5
+                               model_name  row_level_roc_auc  row_level_pr_auc  row_level_log_loss  row_level_brier
+catboost_weekly_hazard_not_weighted_tuned           0.817395          0.069161            0.060261         0.012556
+ARTIFACT | Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_row_diagnostics_w8 — CatBoost row-level diagnostics | duckdb://table_catboost_weekly_hazard_not_weighted_tuned_row_diagnostics_w8
+[Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_support_by_horizon_w8 — CatBoost support by horizon]
+table_name=table_catboost_weekly_hazard_not_weighted_tuned_support_by_horizon_w8
+rows=3, cols=4
+ horizon_week  n_evaluable_enrollments  n_events_by_horizon  event_rate_by_horizon
+           10                     9778                 1215               0.124259
+           20                     9778                 1736               0.177541
+           30                     9778                 2129               0.217734
+ARTIFACT | Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_support_by_horizon_w8 — CatBoost support by horizon | duckdb://table_catboost_weekly_hazard_not_weighted_tuned_support_by_horizon_w8
+[Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_calibration_summary_w8 — CatBoost calibration summary]
+table_name=table_catboost_weekly_hazard_not_weighted_tuned_calibration_summary_w8
+rows=3, cols=5
+ horizon_week            metric_name metric_category  metric_value                                         notes
+           10 calibration_at_horizon         primary      0.128939 Weighted absolute calibration gap across bins
+           20 calibration_at_horizon         primary      0.132104 Weighted absolute calibration gap across bins
+           30 calibration_at_horizon         primary      0.138678 Weighted absolute calibration gap across bins
+ARTIFACT | Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_calibration_summary_w8 — CatBoost calibration summary | duckdb://table_catboost_weekly_hazard_not_weighted_tuned_calibration_summary_w8
+[Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_calibration_bins_by_horizon_w8 — CatBoost calibration bins]
+table_name=table_catboost_weekly_hazard_not_weighted_tuned_calibration_bins_by_horizon_w8
+rows=30, cols=6
+ calibration_bin   n  mean_predicted_risk  observed_event_rate  horizon_week  abs_calibration_gap
+               0 978             0.015896             0.558282            10             0.542386
+               1 978             0.038367             0.155419            10             0.117052
+               2 978             0.055495             0.106339            10             0.050845
+               3 977             0.072275             0.077789            10             0.005514
+               4 978             0.089413             0.082822            10             0.006591
+               5 978             0.107952             0.066462            10             0.041490
+               6 977             0.128313             0.054248            10             0.074065
+               7 978             0.152230             0.050102            10             0.102128
+               8 978             0.185048             0.044990            10             0.140059
+               9 978             0.255087             0.046012            10             0.209075
+               0 978             0.015896             0.589980            20             0.574083
+               1 978             0.038367             0.217791            20             0.179424
+               2 978             0.055495             0.156442            20             0.100947
+               3 977             0.072275             0.147390            20             0.075115
+               4 978             0.089413             0.137014            20             0.047601
+               5 978             0.107952             0.128834            20             0.020882
+               6 977             0.128313             0.094166            20             0.034147
+               7 978             0.152230             0.105317            20             0.046913
+               8 978             0.185048             0.105317            20             0.079731
+               9 978             0.255087             0.093047            20             0.162040
+ARTIFACT | Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_calibration_bins_by_horizon_w8 — CatBoost calibration bins | duckdb://table_catboost_weekly_hazard_not_weighted_tuned_calibration_bins_by_horizon_w8
+[Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_predicted_vs_observed_survival_w8 — CatBoost predicted versus observed survival]
+table_name=table_catboost_weekly_hazard_not_weighted_tuned_predicted_vs_observed_survival_w8
+rows=3, cols=5
+ horizon_week  n_evaluable_enrollments  mean_predicted_survival  mean_observed_survival  abs_gap
+           10                     9778                  0.88999                0.875741 0.014249
+           20                     9778                  0.88999                0.822459 0.067532
+           30                     9778                  0.88999                0.782266 0.107724
+ARTIFACT | Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_predicted_vs_observed_survival_w8 — CatBoost predicted versus observed survival | duckdb://table_catboost_weekly_hazard_not_weighted_tuned_predicted_vs_observed_survival_w8
+ARTIFACT | catboost_weekly_hazard_model | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/models/catboost_weekly_hazard_not_weighted_tuned_w8.cbm
+ARTIFACT | catboost_weekly_hazard_not_weighted_tuned_model_config | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/metadata/catboost_weekly_hazard_not_weighted_tuned_model_config_w8.json
+{
+  "model_name": "catboost_weekly_hazard_not_weighted_tuned",
+  "family_name": "discrete_time_dynamic",
+  "model_type": "catboost_weekly_hazard",
+  "selection_metric": "val_log_loss",
+  "candidate_grid": [
+    {
+      "depth": 4,
+      "learning_rate": 0.05,
+      "iterations": 250,
+      "l2_leaf_reg": 3.0
+    },
+    {
+      "depth": 6,
+      "learning_rate": 0.06,
+      "iterations": 350,
+      "l2_leaf_reg": 3.0
+    },
+    {
+      "depth": 4,
+      "learning_rate": 0.1,
+      "iterations": 250,
+      "l2_leaf_reg": 10.0
+    },
+    {
+      "depth": 6,
+      "learning_rate": 0.05,
+      "iterations": 450,
+      "l2_leaf_reg": 10.0
+    }
+  ],
+  "validation_split": {
+    "method": "GroupShuffleSplit",
+    "test_size": 0.2,
+    "group_column": "enrollment_id",
+    "random_seed": 42
+  },
+  "benchmark_horizons": [
+    10,
+    20,
+    30
+  ],
+  "calibration_bins": 10,
+  "calibration_contract_version": "v2_ipcw_km_observed_risk",
+  "calibration_observed_risk_method": "ipcw_km_pseudo_event_rate",
+  "active_window_weeks": 8,
+  "categorical_features": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability"
+  ],
+  "numeric_features": [
+    "num_of_prev_attempts",
+    "studied_credits",
+    "week",
+    "total_clicks_week",
+    "active_this_week",
+    "n_vle_rows_week",
+    "n_distinct_sites_week",
+    "cum_clicks_until_t",
+    "recency",
+    "streak"
+  ],
+  "guardrails": {
+    "active_window_weeks": 8,
+    "validation_test_size": 0.2,
+    "search_row_cap": 120000,
+    "final_row_cap": 180000,
+    "search_rows_selected": 120000,
+    "final_rows_selected": 180000,
+    "subtrain_rows": 153632,
+    "validation_rows": 38479,
+    "full_train_rows": 192111,
+    "subtrain_enrollments": 18252,
+    "validation_enrollments": 4563,
+    "full_train_enrollments": 22815,
+    "n_features": 16,
+    "n_categorical_features": 6,
+    "n_numeric_features": 10,
+    "subtrain_event_rate": 0.01314179337637992,
+    "sampled_subtrain_event_rate": 0.016825,
+    "validation_event_rate": 0.013176018087788144,
+    "full_train_event_rate": 0.013148648437622,
+    "sampled_full_train_event_rate": 0.014033333333333333,
+    "sample_weight_strategy": "none",
+    "random_seed": 42
+  },
+  "best_candidate": {
+    "depth": 6,
+    "learning_rate": 0.05,
+    "iterations": 450,
+    "l2_leaf_reg": 10.0,
+    "val_log_loss": 0.062056577039148235,
+    "val_brier": 0.012704983022296033,
+    "val_roc_auc": 0.7977919367971957
+  },
+  "implementation": {
+    "library": "catboost",
+    "class_name": "CatBoostClassifier",
+    "loss_function": "Logloss",
+    "eval_metric": "Logloss",
+    "thread_count": 1,
+    "allow_writing_files": false
+  },
+  "weighting_strategy": "none; this official D5.8 variant preserves native categorical handling and the same dynamic feature contract without class weights.",
+  "design_note": "The not-weighted CatBoost benchmark preserves native categorical columns, grouped validation, and the shared evaluation stack so the weighted script remains a pure Item 6 sensitivity counterpart."
+}
+
+ candidate_id  depth  learning_rate  iterations  l2_leaf_reg  fit_rows  fit_features  val_log_loss  val_brier  val_roc_auc
+            4      6           0.05         450         10.0    120000            16      0.062057   0.012705     0.797792
+            2      6           0.06         350          3.0    120000            16      0.062159   0.012727     0.797269
+            3      4           0.10         250         10.0    120000            16      0.062332   0.012713     0.793759
+            1      4           0.05         250          3.0    120000            16      0.062666   0.012728     0.789132
+[END] 5.8.5 - 2026-06-18 23:11:47
+[RUN_PLAN] dynamic_window_weeks=10 script=dropout_bench_v3_D_08_A_dynamic_weekly_catboost_weekly_hazard.py
+[START] 5.6b - 2026-06-18 23:11:47
+# ==============================================================
+# 5.8.2 - Prepare the shared dynamic weekly treatment for CatBoost
+# ==============================================================
+[Stage 5.8.2 table_catboost_weekly_hazard_not_weighted_preprocessing_summary_w10 — CatBoost preprocessing summary]
+table_name=table_catboost_weekly_hazard_not_weighted_preprocessing_summary_w10
+rows=1, cols=12
+                             model_family  active_window_weeks  raw_train_rows_before_truncation  raw_test_rows_before_truncation  train_rows  test_rows  n_input_features_raw  n_categorical_features  n_numeric_features  n_output_features_after_preprocessing  train_event_rate  test_event_rate
+catboost_weekly_hazard_not_weighted_tuned                   10                            719498                           308393      232541      99670                    16                       6                  10                                     16          0.012105          0.01219
+ARTIFACT | Stage 5.8.2 table_catboost_weekly_hazard_not_weighted_preprocessing_summary_w10 — CatBoost preprocessing summary | duckdb://table_catboost_weekly_hazard_not_weighted_preprocessing_summary_w10
+[Stage 5.8.2 table_catboost_weekly_hazard_not_weighted_raw_feature_manifest_w10 — CatBoost raw feature manifest]
+table_name=table_catboost_weekly_hazard_not_weighted_raw_feature_manifest_w10
+rows=16, cols=6
+feature_name_operational feature_role  present_in_train  present_in_test  covered_by_canonical_config_after_alias canonical_source_name
+                  gender  categorical              True             True                                    False                      
+                  region  categorical              True             True                                    False                      
+       highest_education  categorical              True             True                                    False                      
+                imd_band  categorical              True             True                                    False                      
+                age_band  categorical              True             True                                    False                      
+              disability  categorical              True             True                                    False                      
+    num_of_prev_attempts      numeric              True             True                                     True  num_of_prev_attempts
+         studied_credits      numeric              True             True                                     True       studied_credits
+                    week      numeric              True             True                                     True                  week
+       total_clicks_week      numeric              True             True                                     True          total_clicks
+        active_this_week      numeric              True             True                                    False                      
+         n_vle_rows_week      numeric              True             True                                    False                      
+   n_distinct_sites_week      numeric              True             True                                    False                      
+      cum_clicks_until_t      numeric              True             True                                    False                      
+                 recency      numeric              True             True                                    False                      
+                  streak      numeric              True             True                                    False                      
+ARTIFACT | Stage 5.8.2 table_catboost_weekly_hazard_not_weighted_raw_feature_manifest_w10 — CatBoost raw feature manifest | duckdb://table_catboost_weekly_hazard_not_weighted_raw_feature_manifest_w10
+[Stage 5.8.2 table_catboost_weekly_hazard_not_weighted_feature_names_out_w10 — CatBoost model feature names]
+table_name=table_catboost_weekly_hazard_not_weighted_feature_names_out_w10
+rows=16, cols=4
+   model_feature_name feature_role  catboost_feature_index  is_categorical
+               gender  categorical                       0            True
+               region  categorical                       1            True
+    highest_education  categorical                       2            True
+             imd_band  categorical                       3            True
+             age_band  categorical                       4            True
+           disability  categorical                       5            True
+ num_of_prev_attempts      numeric                       6           False
+      studied_credits      numeric                       7           False
+                 week      numeric                       8           False
+    total_clicks_week      numeric                       9           False
+     active_this_week      numeric                      10           False
+      n_vle_rows_week      numeric                      11           False
+n_distinct_sites_week      numeric                      12           False
+   cum_clicks_until_t      numeric                      13           False
+              recency      numeric                      14           False
+               streak      numeric                      15           False
+ARTIFACT | Stage 5.8.2 table_catboost_weekly_hazard_not_weighted_feature_names_out_w10 — CatBoost model feature names | duckdb://table_catboost_weekly_hazard_not_weighted_feature_names_out_w10
+ARTIFACT | catboost_weekly_hazard_preprocessing_config | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/metadata/catboost_weekly_hazard_not_weighted_preprocessing_config_w10.json
+{
+  "model_name": "catboost_weekly_hazard_not_weighted_tuned",
+  "model_type": "catboost_weekly_hazard",
+  "train_table": "pp_linear_hazard_ready_train",
+  "test_table": "pp_linear_hazard_ready_test",
+  "target_column": "event_t",
+  "categorical_features": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability"
+  ],
+  "numeric_features": [
+    "num_of_prev_attempts",
+    "studied_credits",
+    "week",
+    "total_clicks_week",
+    "active_this_week",
+    "n_vle_rows_week",
+    "n_distinct_sites_week",
+    "cum_clicks_until_t",
+    "recency",
+    "streak"
+  ],
+  "operational_feature_columns": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability",
+    "num_of_prev_attempts",
+    "studied_credits",
+    "week",
+    "total_clicks_week",
+    "active_this_week",
+    "n_vle_rows_week",
+    "n_distinct_sites_week",
+    "cum_clicks_until_t",
+    "recency",
+    "streak"
+  ],
+  "canonical_expected_features_raw": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "week",
+    "total_clicks"
+  ],
+  "canonical_expected_features_resolved": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "week",
+    "total_clicks_week"
+  ],
+  "feature_alias_map": {
+    "total_clicks": "total_clicks_week"
+  },
+  "n_train_rows": 232541,
+  "n_test_rows": 99670,
+  "active_window_weeks": 10,
+  "raw_train_rows_before_truncation": 719498,
+  "raw_test_rows_before_truncation": 308393,
+  "n_output_features_after_preprocessing": 16,
+  "train_event_rate": 0.012105392167402737,
+  "test_event_rate": 0.012190227751580214,
+  "design_note": "The CatBoost benchmark keeps the same weekly dynamic feature contract as the linear discrete-time arm while preserving categorical columns as native string-valued features.",
+  "methodological_note": "No learned preprocessing transform is applied because CatBoost consumes the validated raw feature columns directly after deterministic type sanitization."
+}
+
+[END] 5.8.2 - 2026-06-18 23:11:48
+[START] 5.6b - 2026-06-18 23:11:48
+# ==============================================================
+# 5.8.3 - Compute grouped CatBoost validation guardrails
+# ==============================================================
+[Stage 5.8.3 table_catboost_weekly_hazard_not_weighted_guardrails_w10 — CatBoost validation guardrails]
+table_name=table_catboost_weekly_hazard_not_weighted_guardrails_w10
+rows=1, cols=22
+ active_window_weeks  validation_test_size  search_row_cap  final_row_cap  search_rows_selected  final_rows_selected  subtrain_rows  validation_rows  full_train_rows  subtrain_enrollments  validation_enrollments  full_train_enrollments  n_features  n_categorical_features  n_numeric_features  subtrain_event_rate  sampled_subtrain_event_rate  validation_event_rate  full_train_event_rate  sampled_full_train_event_rate sample_weight_strategy  random_seed
+                  10                   0.2          120000         180000                120000               180000         185979            46562           232541                 18252                    4563                   22815          16                       6                  10             0.012136                     0.018808               0.011984               0.012105                       0.015639                   none           42
+ARTIFACT | Stage 5.8.3 table_catboost_weekly_hazard_not_weighted_guardrails_w10 — CatBoost validation guardrails | duckdb://table_catboost_weekly_hazard_not_weighted_guardrails_w10
+[END] 5.8.3 - 2026-06-18 23:11:49
+[START] 5.6b - 2026-06-18 23:11:49
+# ==============================================================
+# 5.8.5 - Tune, fit, and evaluate the CatBoost weekly hazard model
+# ==============================================================
+[Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuning_results_w10 — CatBoost tuning results]
+table_name=table_catboost_weekly_hazard_not_weighted_tuning_results_w10
+rows=4, cols=10
+ candidate_id  depth  learning_rate  iterations  l2_leaf_reg  fit_rows  fit_features  val_log_loss  val_brier  val_roc_auc
+            4      6           0.05         450         10.0    120000            16      0.058585   0.011685     0.798348
+            2      6           0.06         350          3.0    120000            16      0.058680   0.011711     0.797596
+            3      4           0.10         250         10.0    120000            16      0.058730   0.011680     0.795274
+            1      4           0.05         250          3.0    120000            16      0.059046   0.011685     0.790656
+ARTIFACT | Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuning_results_w10 — CatBoost tuning results | duckdb://table_catboost_weekly_hazard_not_weighted_tuning_results_w10
+[Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_test_predictions_w10 — CatBoost test predictions]
+table_name=table_catboost_weekly_hazard_not_weighted_tuned_test_predictions_w10
+rows=99670, cols=29
+   enrollment_id  id_student code_module code_presentation  week  event_t  event_observed  t_event_week  t_final_week  used_zero_week_fallback_for_censoring gender               region     highest_education imd_band age_band  num_of_prev_attempts  studied_credits disability  total_clicks_week  active_this_week  n_vle_rows_week  n_distinct_sites_week  cum_clicks_until_t  recency  streak split  pred_hazard  pred_survival  pred_risk
+100561|DDD|2014J      100561         DDD             2014J     0        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               10.0                 1                8                      4                10.0        0       1  test     0.017940       0.982060   0.017940
+100561|DDD|2014J      100561         DDD             2014J     1        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N                0.0                 0                0                      0                10.0        1       0  test     0.085322       0.898268   0.101732
+100561|DDD|2014J      100561         DDD             2014J     2        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               91.0                 1               26                     11               101.0        0       2  test     0.065437       0.839489   0.160511
+100561|DDD|2014J      100561         DDD             2014J     3        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N                6.0                 1                4                      2               107.0        0       3  test     0.021713       0.821261   0.178739
+100561|DDD|2014J      100561         DDD             2014J     4        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               30.0                 1               17                      8               137.0        0       4  test     0.006858       0.815628   0.184372
+100561|DDD|2014J      100561         DDD             2014J     5        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               65.0                 1               36                     14               202.0        0       5  test     0.004255       0.812158   0.187842
+100561|DDD|2014J      100561         DDD             2014J     6        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               27.0                 1               15                      9               229.0        0       6  test     0.011386       0.802911   0.197089
+100561|DDD|2014J      100561         DDD             2014J     7        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               59.0                 1               14                      5               288.0        0       7  test     0.031765       0.777407   0.222593
+100561|DDD|2014J      100561         DDD             2014J     8        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               62.0                 1               22                      7               350.0        0       8  test     0.044516       0.742800   0.257200
+100561|DDD|2014J      100561         DDD             2014J     9        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N                4.0                 1                3                      2               354.0        0       9  test     0.003545       0.740166   0.259834
+100561|DDD|2014J      100561         DDD             2014J    10        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N                3.0                 1                3                      3               357.0        0      10  test     0.009028       0.733484   0.266516
+100621|CCC|2014B      100621         CCC             2014B     0        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                0.0                 0                0                      0                 0.0        1       0  test     0.010053       0.989947   0.010053
+100621|CCC|2014B      100621         CCC             2014B     1        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                3.0                 1                2                      2                 3.0        0       2  test     0.029470       0.960773   0.039227
+100621|CCC|2014B      100621         CCC             2014B     2        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                1.0                 1                1                      1                 4.0        0       3  test     0.047893       0.914759   0.085241
+100621|CCC|2014B      100621         CCC             2014B     3        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                1.0                 1                1                      1                 5.0        0       4  test     0.012109       0.903682   0.096318
+100621|CCC|2014B      100621         CCC             2014B     4        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                0.0                 0                0                      0                 5.0        1       0  test     0.009132       0.895430   0.104570
+100621|CCC|2014B      100621         CCC             2014B     5        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                0.0                 0                0                      0                 5.0        2       0  test     0.014383       0.882551   0.117449
+100621|CCC|2014B      100621         CCC             2014B     6        1               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                0.0                 0                0                      0                 5.0        3       0  test     0.010797       0.873022   0.126978
+101187|DDD|2014J      101187         DDD             2014J     0        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        1       0  test     0.008578       0.991422   0.008578
+101187|DDD|2014J      101187         DDD             2014J     1        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        2       0  test     0.016909       0.974658   0.025342
+ARTIFACT | Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_test_predictions_w10 — CatBoost test predictions | duckdb://table_catboost_weekly_hazard_not_weighted_tuned_test_predictions_w10
+[Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_primary_metrics_w10 — CatBoost primary metrics]
+table_name=table_catboost_weekly_hazard_not_weighted_tuned_primary_metrics_w10
+rows=2, cols=4
+metric_name metric_category  metric_value                         notes
+        ibs         primary      0.148549 sksurv_integrated_brier_score
+    c_index      co_primary      0.492907          pycox_concordance_td
+ARTIFACT | Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_primary_metrics_w10 — CatBoost primary metrics | duckdb://table_catboost_weekly_hazard_not_weighted_tuned_primary_metrics_w10
+[Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_brier_by_horizon_w10 — CatBoost Brier scores by horizon]
+table_name=table_catboost_weekly_hazard_not_weighted_tuned_brier_by_horizon_w10
+rows=3, cols=5
+ horizon_week      metric_name metric_category  metric_value              notes
+           10 brier_at_horizon         primary      0.136344 sksurv_brier_score
+           20 brier_at_horizon         primary      0.172906 sksurv_brier_score
+           30 brier_at_horizon         primary      0.201045 sksurv_brier_score
+ARTIFACT | Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_brier_by_horizon_w10 — CatBoost Brier scores by horizon | duckdb://table_catboost_weekly_hazard_not_weighted_tuned_brier_by_horizon_w10
+[Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_secondary_metrics_w10 — CatBoost secondary metrics]
+table_name=table_catboost_weekly_hazard_not_weighted_tuned_secondary_metrics_w10
+rows=6, cols=5
+ horizon_week         metric_name metric_category  metric_value                                                                                  notes
+           10 risk_auc_at_horizon       secondary      0.176630                                                            roc_auc_on_evaluable_subset
+           10  time_dependent_auc       secondary      0.177828 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.177828; local_ipcw_auc
+           20 risk_auc_at_horizon       secondary      0.273528                                                            roc_auc_on_evaluable_subset
+           20  time_dependent_auc       secondary      0.275503 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.275503; local_ipcw_auc
+           30 risk_auc_at_horizon       secondary      0.311605                                                            roc_auc_on_evaluable_subset
+           30  time_dependent_auc       secondary      0.313738 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.313738; local_ipcw_auc
+ARTIFACT | Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_secondary_metrics_w10 — CatBoost secondary metrics | duckdb://table_catboost_weekly_hazard_not_weighted_tuned_secondary_metrics_w10
+[Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_td_auc_support_audit_w10 — CatBoost IPCW support audit]
+table_name=table_catboost_weekly_hazard_not_weighted_tuned_td_auc_support_audit_w10
+rows=3, cols=6
+ horizon_week  max_ipcw_time  n_total_test_enrollments  n_supported_test_enrollments  mean_auc                                                                                  notes
+           10           38.0                      9778                          6742  0.177828 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.177828; local_ipcw_auc
+           20           38.0                      9778                          6742  0.275503 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.275503; local_ipcw_auc
+           30           38.0                      9778                          6742  0.313738 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.313738; local_ipcw_auc
+ARTIFACT | Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_td_auc_support_audit_w10 — CatBoost IPCW support audit | duckdb://table_catboost_weekly_hazard_not_weighted_tuned_td_auc_support_audit_w10
+[Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_row_diagnostics_w10 — CatBoost row-level diagnostics]
+table_name=table_catboost_weekly_hazard_not_weighted_tuned_row_diagnostics_w10
+rows=1, cols=5
+                               model_name  row_level_roc_auc  row_level_pr_auc  row_level_log_loss  row_level_brier
+catboost_weekly_hazard_not_weighted_tuned           0.810078          0.064585            0.057527         0.011719
+ARTIFACT | Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_row_diagnostics_w10 — CatBoost row-level diagnostics | duckdb://table_catboost_weekly_hazard_not_weighted_tuned_row_diagnostics_w10
+[Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_support_by_horizon_w10 — CatBoost support by horizon]
+table_name=table_catboost_weekly_hazard_not_weighted_tuned_support_by_horizon_w10
+rows=3, cols=4
+ horizon_week  n_evaluable_enrollments  n_events_by_horizon  event_rate_by_horizon
+           10                     9778                 1215               0.124259
+           20                     9778                 1736               0.177541
+           30                     9778                 2129               0.217734
+ARTIFACT | Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_support_by_horizon_w10 — CatBoost support by horizon | duckdb://table_catboost_weekly_hazard_not_weighted_tuned_support_by_horizon_w10
+[Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_calibration_summary_w10 — CatBoost calibration summary]
+table_name=table_catboost_weekly_hazard_not_weighted_tuned_calibration_summary_w10
+rows=3, cols=5
+ horizon_week            metric_name metric_category  metric_value                                         notes
+           10 calibration_at_horizon         primary      0.170270 Weighted absolute calibration gap across bins
+           20 calibration_at_horizon         primary      0.152654 Weighted absolute calibration gap across bins
+           30 calibration_at_horizon         primary      0.147771 Weighted absolute calibration gap across bins
+ARTIFACT | Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_calibration_summary_w10 — CatBoost calibration summary | duckdb://table_catboost_weekly_hazard_not_weighted_tuned_calibration_summary_w10
+[Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_calibration_bins_by_horizon_w10 — CatBoost calibration bins]
+table_name=table_catboost_weekly_hazard_not_weighted_tuned_calibration_bins_by_horizon_w10
+rows=30, cols=6
+ calibration_bin   n  mean_predicted_risk  observed_event_rate  horizon_week  abs_calibration_gap
+               0 978             0.020552             0.625767            10             0.605214
+               1 978             0.054080             0.166667            10             0.112587
+               2 978             0.078766             0.111452            10             0.032686
+               3 977             0.100946             0.085977            10             0.014969
+               4 978             0.122944             0.056237            10             0.066707
+               5 978             0.145329             0.053170            10             0.092159
+               6 977             0.170462             0.045036            10             0.125426
+               7 978             0.198880             0.037832            10             0.161048
+               8 978             0.236140             0.040900            10             0.195240
+               9 978             0.315885             0.019427            10             0.296458
+               0 978             0.020552             0.648262            20             0.627709
+               1 978             0.054080             0.218814            20             0.164734
+               2 978             0.078766             0.164622            20             0.085856
+               3 977             0.100946             0.151484            20             0.050538
+               4 978             0.122944             0.110429            20             0.012515
+               5 978             0.145329             0.107362            20             0.037967
+               6 977             0.170462             0.097236            20             0.073226
+               7 978             0.198880             0.095092            20             0.103788
+               8 978             0.236140             0.095092            20             0.141048
+               9 978             0.315885             0.086912            20             0.228973
+ARTIFACT | Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_calibration_bins_by_horizon_w10 — CatBoost calibration bins | duckdb://table_catboost_weekly_hazard_not_weighted_tuned_calibration_bins_by_horizon_w10
+[Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_predicted_vs_observed_survival_w10 — CatBoost predicted versus observed survival]
+table_name=table_catboost_weekly_hazard_not_weighted_tuned_predicted_vs_observed_survival_w10
+rows=3, cols=5
+ horizon_week  n_evaluable_enrollments  mean_predicted_survival  mean_observed_survival  abs_gap
+           10                     9778                   0.8556                0.875741 0.020142
+           20                     9778                   0.8556                0.822459 0.033141
+           30                     9778                   0.8556                0.782266 0.073333
+ARTIFACT | Stage 5.8.5 table_catboost_weekly_hazard_not_weighted_tuned_predicted_vs_observed_survival_w10 — CatBoost predicted versus observed survival | duckdb://table_catboost_weekly_hazard_not_weighted_tuned_predicted_vs_observed_survival_w10
+ARTIFACT | catboost_weekly_hazard_model | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/models/catboost_weekly_hazard_not_weighted_tuned_w10.cbm
+ARTIFACT | catboost_weekly_hazard_not_weighted_tuned_model_config | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/metadata/catboost_weekly_hazard_not_weighted_tuned_model_config_w10.json
+{
+  "model_name": "catboost_weekly_hazard_not_weighted_tuned",
+  "family_name": "discrete_time_dynamic",
+  "model_type": "catboost_weekly_hazard",
+  "selection_metric": "val_log_loss",
+  "candidate_grid": [
+    {
+      "depth": 4,
+      "learning_rate": 0.05,
+      "iterations": 250,
+      "l2_leaf_reg": 3.0
+    },
+    {
+      "depth": 6,
+      "learning_rate": 0.06,
+      "iterations": 350,
+      "l2_leaf_reg": 3.0
+    },
+    {
+      "depth": 4,
+      "learning_rate": 0.1,
+      "iterations": 250,
+      "l2_leaf_reg": 10.0
+    },
+    {
+      "depth": 6,
+      "learning_rate": 0.05,
+      "iterations": 450,
+      "l2_leaf_reg": 10.0
+    }
+  ],
+  "validation_split": {
+    "method": "GroupShuffleSplit",
+    "test_size": 0.2,
+    "group_column": "enrollment_id",
+    "random_seed": 42
+  },
+  "benchmark_horizons": [
+    10,
+    20,
+    30
+  ],
+  "calibration_bins": 10,
+  "calibration_contract_version": "v2_ipcw_km_observed_risk",
+  "calibration_observed_risk_method": "ipcw_km_pseudo_event_rate",
+  "active_window_weeks": 10,
+  "categorical_features": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability"
+  ],
+  "numeric_features": [
+    "num_of_prev_attempts",
+    "studied_credits",
+    "week",
+    "total_clicks_week",
+    "active_this_week",
+    "n_vle_rows_week",
+    "n_distinct_sites_week",
+    "cum_clicks_until_t",
+    "recency",
+    "streak"
+  ],
+  "guardrails": {
+    "active_window_weeks": 10,
+    "validation_test_size": 0.2,
+    "search_row_cap": 120000,
+    "final_row_cap": 180000,
+    "search_rows_selected": 120000,
+    "final_rows_selected": 180000,
+    "subtrain_rows": 185979,
+    "validation_rows": 46562,
+    "full_train_rows": 232541,
+    "subtrain_enrollments": 18252,
+    "validation_enrollments": 4563,
+    "full_train_enrollments": 22815,
+    "n_features": 16,
+    "n_categorical_features": 6,
+    "n_numeric_features": 10,
+    "subtrain_event_rate": 0.012135778770721426,
+    "sampled_subtrain_event_rate": 0.018808333333333333,
+    "validation_event_rate": 0.011984021304926764,
+    "full_train_event_rate": 0.012105392167402737,
+    "sampled_full_train_event_rate": 0.01563888888888889,
+    "sample_weight_strategy": "none",
+    "random_seed": 42
+  },
+  "best_candidate": {
+    "depth": 6,
+    "learning_rate": 0.05,
+    "iterations": 450,
+    "l2_leaf_reg": 10.0,
+    "val_log_loss": 0.05858458639273928,
+    "val_brier": 0.01168520267221772,
+    "val_roc_auc": 0.7983479074127573
+  },
+  "implementation": {
+    "library": "catboost",
+    "class_name": "CatBoostClassifier",
+    "loss_function": "Logloss",
+    "eval_metric": "Logloss",
+    "thread_count": 1,
+    "allow_writing_files": false
+  },
+  "weighting_strategy": "none; this official D5.8 variant preserves native categorical handling and the same dynamic feature contract without class weights.",
+  "design_note": "The not-weighted CatBoost benchmark preserves native categorical columns, grouped validation, and the shared evaluation stack so the weighted script remains a pure Item 6 sensitivity counterpart."
+}
+
+ candidate_id  depth  learning_rate  iterations  l2_leaf_reg  fit_rows  fit_features  val_log_loss  val_brier  val_roc_auc
+            4      6           0.05         450         10.0    120000            16      0.058585   0.011685     0.798348
+            2      6           0.06         350          3.0    120000            16      0.058680   0.011711     0.797596
+            3      4           0.10         250         10.0    120000            16      0.058730   0.011680     0.795274
+            1      4           0.05         250          3.0    120000            16      0.059046   0.011685     0.790656
+[END] 5.8.5 - 2026-06-18 23:12:50
+[START] 5.6b - 2026-06-18 23:12:50
+# ==============================================================
+# 5.8.6 - Close the DuckDB runtime cleanly
+# ==============================================================
+[util] DuckDB connection closed.
+[END] 5.8.6 - 2026-06-18 23:12:50

@@ -8,16 +8,16 @@
 seed = 42
 # Main train/test split proportion. Paper-aligned and locked.
 test_size = 0.3
-# Benchmark reporting horizons in weeks for survival metrics and calibration.
-benchmark_horizons = [10, 20, 30]
-# Number of quantile bins used by horizon-wise calibration summaries.
-calibration_bins = 10
 # Canonical early-window framing in weeks. Paper-aligned and locked.
 early_window_weeks = 4
 # Canonical comparable enrollment window in weeks. Paper-aligned and locked.
 main_enrollment_window_weeks = 4
 # Sensitivity grid for comparable early-window analyses.
 early_window_sensitivity_weeks = [2, 4, 6, 8, 10]
+# Evaluation horizons in weeks used for calibration and IBS. Paper-aligned and locked.
+benchmark_horizons = [10, 20, 30]
+# Number of bins for calibration curves. Paper-aligned and locked.
+calibration_bins = 10
 
 [modeling]
 # Canonical clicks feature for comparable enrollment-level models.

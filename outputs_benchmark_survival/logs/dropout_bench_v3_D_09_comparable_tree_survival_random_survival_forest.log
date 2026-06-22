@@ -1,0 +1,3485 @@
+[RUN_PLAN] comparable_window_weeks=2
+[START] 5.9 - 2026-06-19 20:36:03
+# ==============================================================
+# 5.9.1 - Lightweight runtime bootstrap
+# ==============================================================
+ARTIFACT | benchmark_shared_config | /Users/rafars/dropout_benchmark_desenv/benchmark_shared_config.toml
+ARTIFACT | benchmark_modeling_contract | /Users/rafars/dropout_benchmark_desenv/benchmark_modeling_contract.toml
+ARTIFACT | run_metadata | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/metadata/run_metadata.json
+ARTIFACT | duckdb_path | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/benchmark_survival.duckdb
+{
+  "run_id": "f3766e75053447a7beb7a1c4936d231f",
+  "random_seed": 42,
+  "test_size": 0.3,
+  "early_window_weeks": 4,
+  "main_enrollment_window_weeks": 4,
+  "effective_window_weeks": 2,
+  "input_train_table": "enrollment_cox_ready_train_w2",
+  "input_test_table": "enrollment_cox_ready_test_w2"
+}
+[END] 5.9.1 - 2026-06-19 20:36:03
+[START] 5.9 - 2026-06-19 20:36:03
+# ==============================================================
+# 5.9.2 - Build comparable-window RSF treatment
+# ==============================================================
+[Stage 5.9.2 table_rsf_preprocessing_summary - RSF preprocessing summary]
+table_name=table_rsf_preprocessing_summary_w2
+rows=1, cols=21
+          model_family  train_rows  test_rows  n_input_features_raw  n_numeric_features  n_categorical_features  n_features_after_encoding_before_filter  n_features_after_variance_filter  n_features_dropped_by_variance_filter  n_events_train  n_events_test  mean_duration_train  mean_duration_test                              numeric_prefill_policy categorical_imputation          categorical_encoding                   numeric_scaling  variance_filter_threshold output_dtype                                     rsf_positioning_note  window_weeks
+random_survival_forest       22815       9778                    11                   5                       6                                       41                                41                                      0            5171           2216            30.536182           30.539476 deterministic_train_median_or_zero_when_all_missing       constant_missing one_hot_handle_unknown_ignore standard_scaler_fit_on_train_only               1.000000e-12      float32 early-window comparable random survival forest benchmark             2
+ARTIFACT | Stage 5.9.2 table_rsf_preprocessing_summary - RSF preprocessing summary | duckdb://table_rsf_preprocessing_summary_w2
+[Stage 5.9.2 table_rsf_raw_feature_manifest - RSF raw feature manifest]
+table_name=table_rsf_raw_feature_manifest_w2
+rows=11, cols=6
+ feature_name_operational feature_role  present_in_train  present_in_test  covered_by_canonical_config  numeric_prefill_value
+                   gender  categorical              True             True                        False                    NaN
+                   region  categorical              True             True                        False                    NaN
+        highest_education  categorical              True             True                        False                    NaN
+                 imd_band  categorical              True             True                        False                    NaN
+                 age_band  categorical              True             True                        False                    NaN
+               disability  categorical              True             True                        False                    NaN
+     num_of_prev_attempts      numeric              True             True                         True                    0.0
+          studied_credits      numeric              True             True                         True                   60.0
+     clicks_first_2_weeks      numeric              True             True                         True                   56.0
+     active_weeks_first_2      numeric              True             True                         True                    2.0
+mean_clicks_first_2_weeks      numeric              True             True                         True                   33.0
+ARTIFACT | Stage 5.9.2 table_rsf_raw_feature_manifest - RSF raw feature manifest | duckdb://table_rsf_raw_feature_manifest_w2
+[Stage 5.9.2 table_rsf_feature_names_out - RSF output feature manifest]
+table_name=table_rsf_feature_names_out_w2
+rows=41, cols=2
+                feature_name_out  transformed_variance_train
+       num__num_of_prev_attempts                    1.000000
+            num__studied_credits                    1.000000
+       num__clicks_first_2_weeks                    1.000000
+       num__active_weeks_first_2                    1.000000
+  num__mean_clicks_first_2_weeks                    1.000000
+                   cat__gender_F                    0.247988
+                   cat__gender_M                    0.247988
+ cat__region_East Anglian Region                    0.092080
+cat__region_East Midlands Region                    0.067091
+             cat__region_Ireland                    0.034283
+       cat__region_London Region                    0.088295
+        cat__region_North Region                    0.052060
+cat__region_North Western Region                    0.082139
+            cat__region_Scotland                    0.094370
+   cat__region_South East Region                    0.059974
+        cat__region_South Region                    0.087554
+   cat__region_South West Region                    0.068848
+               cat__region_Wales                    0.059707
+cat__region_West Midlands Region                    0.073261
+    cat__region_Yorkshire Region                    0.058136
+ARTIFACT | Stage 5.9.2 table_rsf_feature_names_out - RSF output feature manifest | duckdb://table_rsf_feature_names_out_w2
+ARTIFACT | rsf_preprocessing_config | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/metadata/rsf_preprocessing_config_w2.json
+{
+  "model_family": "random_survival_forest",
+  "duration_column": "duration",
+  "event_column": "event",
+  "categorical_features": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability"
+  ],
+  "numeric_features": [
+    "num_of_prev_attempts",
+    "studied_credits",
+    "clicks_first_2_weeks",
+    "active_weeks_first_2",
+    "mean_clicks_first_2_weeks"
+  ],
+  "raw_feature_columns": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability",
+    "num_of_prev_attempts",
+    "studied_credits",
+    "clicks_first_2_weeks",
+    "active_weeks_first_2",
+    "mean_clicks_first_2_weeks"
+  ],
+  "expected_features_raw": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "num_of_prev_attempts",
+    "studied_credits",
+    "clicks_first_2_weeks",
+    "active_weeks_first_2",
+    "mean_clicks_first_2_weeks"
+  ],
+  "expected_features_resolved": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "clicks_first_2_weeks",
+    "active_weeks_first_2",
+    "mean_clicks_first_2_weeks"
+  ],
+  "numeric_prefill_policy": "deterministic_train_median_or_zero_when_all_missing",
+  "numeric_fill_values": {
+    "num_of_prev_attempts": 0.0,
+    "studied_credits": 60.0,
+    "clicks_first_2_weeks": 56.0,
+    "active_weeks_first_2": 2.0,
+    "mean_clicks_first_2_weeks": 33.0
+  },
+  "categorical_imputation": "constant_missing",
+  "categorical_encoding": "one_hot_handle_unknown_ignore",
+  "numeric_scaling": "standard_scaler_fit_on_train_only",
+  "variance_filter_threshold": 1e-12,
+  "feature_names_before_filter": [
+    "num__num_of_prev_attempts",
+    "num__studied_credits",
+    "num__clicks_first_2_weeks",
+    "num__active_weeks_first_2",
+    "num__mean_clicks_first_2_weeks",
+    "cat__gender_F",
+    "cat__gender_M",
+    "cat__region_East Anglian Region",
+    "cat__region_East Midlands Region",
+    "cat__region_Ireland",
+    "cat__region_London Region",
+    "cat__region_North Region",
+    "cat__region_North Western Region",
+    "cat__region_Scotland",
+    "cat__region_South East Region",
+    "cat__region_South Region",
+    "cat__region_South West Region",
+    "cat__region_Wales",
+    "cat__region_West Midlands Region",
+    "cat__region_Yorkshire Region",
+    "cat__highest_education_A Level or Equivalent",
+    "cat__highest_education_HE Qualification",
+    "cat__highest_education_Lower Than A Level",
+    "cat__highest_education_No Formal quals",
+    "cat__highest_education_Post Graduate Qualification",
+    "cat__imd_band_0-10%",
+    "cat__imd_band_10-20",
+    "cat__imd_band_20-30%",
+    "cat__imd_band_30-40%",
+    "cat__imd_band_40-50%",
+    "cat__imd_band_50-60%",
+    "cat__imd_band_60-70%",
+    "cat__imd_band_70-80%",
+    "cat__imd_band_80-90%",
+    "cat__imd_band_90-100%",
+    "cat__imd_band_None",
+    "cat__age_band_0-35",
+    "cat__age_band_35-55",
+    "cat__age_band_55<=",
+    "cat__disability_N",
+    "cat__disability_Y"
+  ],
+  "feature_names_out": [
+    "num__num_of_prev_attempts",
+    "num__studied_credits",
+    "num__clicks_first_2_weeks",
+    "num__active_weeks_first_2",
+    "num__mean_clicks_first_2_weeks",
+    "cat__gender_F",
+    "cat__gender_M",
+    "cat__region_East Anglian Region",
+    "cat__region_East Midlands Region",
+    "cat__region_Ireland",
+    "cat__region_London Region",
+    "cat__region_North Region",
+    "cat__region_North Western Region",
+    "cat__region_Scotland",
+    "cat__region_South East Region",
+    "cat__region_South Region",
+    "cat__region_South West Region",
+    "cat__region_Wales",
+    "cat__region_West Midlands Region",
+    "cat__region_Yorkshire Region",
+    "cat__highest_education_A Level or Equivalent",
+    "cat__highest_education_HE Qualification",
+    "cat__highest_education_Lower Than A Level",
+    "cat__highest_education_No Formal quals",
+    "cat__highest_education_Post Graduate Qualification",
+    "cat__imd_band_0-10%",
+    "cat__imd_band_10-20",
+    "cat__imd_band_20-30%",
+    "cat__imd_band_30-40%",
+    "cat__imd_band_40-50%",
+    "cat__imd_band_50-60%",
+    "cat__imd_band_60-70%",
+    "cat__imd_band_70-80%",
+    "cat__imd_band_80-90%",
+    "cat__imd_band_90-100%",
+    "cat__imd_band_None",
+    "cat__age_band_0-35",
+    "cat__age_band_35-55",
+    "cat__age_band_55<=",
+    "cat__disability_N",
+    "cat__disability_Y"
+  ],
+  "dropped_low_variance_features": [],
+  "rsf_positioning_note": "early-window comparable random survival forest benchmark",
+  "window_weeks": 2
+}
+
+[END] 5.9.2 - 2026-06-19 20:36:03
+[START] 5.9 - 2026-06-19 20:36:03
+# ==============================================================
+# 5.9.3 - Tune and evaluate the comparable-window Random Survival Forest
+# ==============================================================
+[Stage 5.9.3 table_rsf_tuning_results - RSF tuning results]
+table_name=table_rsf_tuning_results_w2
+rows=24, cols=7
+ candidate_id  n_estimators  min_samples_leaf  max_depth max_features  val_ibs  val_c_index
+           21           300                20         15          0.8 0.116625     0.641118
+           12           200                10          8          0.8 0.116639     0.632788
+           13           300                20          8          0.8 0.116652     0.633323
+           16           300                10          8          0.7 0.116672     0.631959
+           14           400                 5          8          0.7 0.116711     0.631275
+           15           200                 3          8          0.7 0.116742     0.631325
+            4           200                10         -1         sqrt 0.116830     0.634415
+           18           300                 5         15         sqrt 0.116860     0.631402
+           17           200                 3         15         sqrt 0.116938     0.629643
+           19           400                 3         15         sqrt 0.116938     0.629989
+            5           300                20         -1         sqrt 0.116973     0.629062
+           20           200                10         15          0.8 0.117059     0.640372
+           24           300                10         15          0.7 0.117063     0.638886
+            2           300                 5         -1         sqrt 0.117166     0.632895
+           10           300                 5          8         sqrt 0.117307     0.620801
+           11           400                 3          8         sqrt 0.117346     0.621654
+            9           200                 3          8         sqrt 0.117443     0.620050
+            8           300                10         -1          0.8 0.117486     0.641905
+           22           400                 5         15          0.7 0.117550     0.639455
+            3           400                 3         -1         sqrt 0.117863     0.632760
+ARTIFACT | Stage 5.9.3 table_rsf_tuning_results - RSF tuning results | duckdb://table_rsf_tuning_results_w2
+[Stage 5.9.3 table_rsf_tuned_test_predictions - RSF test predictions]
+table_name=table_rsf_tuned_test_predictions_w2
+rows=29334, cols=6
+      enrollment_id  event  duration  horizon_week  pred_survival_h  pred_risk_h
+ 100561||DDD||2014J      0        37            10         0.773554     0.226446
+ 100621||CCC||2014B      1         6            10         0.781622     0.218378
+ 101187||DDD||2014J      0        37            10         0.797021     0.202979
+ 101279||DDD||2014J      0        37            10         0.936814     0.063186
+ 101414||EEE||2013J      0        38            10         0.797570     0.202430
+ 101700||CCC||2014J      0        38            10         0.625090     0.374910
+ 101781||AAA||2013J      0        38            10         0.962553     0.037447
+ 102209||CCC||2014J      1        15            10         0.940061     0.059939
+ 102343||FFF||2013J      0        38            10         0.949828     0.050172
+1023623||CCC||2014J      0        38            10         0.909034     0.090966
+1033968||DDD||2014B      1        13            10         0.752285     0.247715
+ 103891||DDD||2014B      0        34            10         0.802669     0.197331
+ 104316||FFF||2014B      0        34            10         0.905301     0.094699
+1045203||AAA||2014J      0        38            10         0.949732     0.050268
+1047645||CCC||2014B      0        34            10         0.901983     0.098017
+1053702||EEE||2013J      0        38            10         0.903970     0.096030
+ 105629||FFF||2013J      0        38            10         0.936785     0.063215
+1057883||CCC||2014B      0        34            10         0.749755     0.250245
+ 106383||BBB||2014J      1        21            10         0.942183     0.057817
+ 106553||DDD||2014J      0        37            10         0.813066     0.186934
+ARTIFACT | Stage 5.9.3 table_rsf_tuned_test_predictions - RSF test predictions | duckdb://table_rsf_tuned_test_predictions_w2
+[Stage 5.9.3 table_rsf_tuned_primary_metrics - RSF primary metrics]
+table_name=table_rsf_tuned_primary_metrics_w2
+rows=2, cols=4
+metric_name metric_category  metric_value                         notes
+        ibs         primary      0.118172 sksurv_integrated_brier_score
+    c_index      co_primary      0.645349          pycox_concordance_td
+ARTIFACT | Stage 5.9.3 table_rsf_tuned_primary_metrics - RSF primary metrics | duckdb://table_rsf_tuned_primary_metrics_w2
+[Stage 5.9.3 table_rsf_tuned_brier_by_horizon - RSF Brier scores by horizon]
+table_name=table_rsf_tuned_brier_by_horizon_w2
+rows=3, cols=5
+ horizon_week      metric_name metric_category  metric_value              notes
+           10 brier_at_horizon         primary      0.101566 sksurv_brier_score
+           20 brier_at_horizon         primary      0.139121 sksurv_brier_score
+           30 brier_at_horizon         primary      0.163014 sksurv_brier_score
+ARTIFACT | Stage 5.9.3 table_rsf_tuned_brier_by_horizon - RSF Brier scores by horizon | duckdb://table_rsf_tuned_brier_by_horizon_w2
+[Stage 5.9.3 table_rsf_tuned_secondary_metrics - RSF secondary metrics]
+table_name=table_rsf_tuned_secondary_metrics_w2
+rows=6, cols=5
+ horizon_week         metric_name metric_category  metric_value                                                                                  notes
+           10 risk_auc_at_horizon       secondary      0.712224                                                            roc_auc_on_evaluable_subset
+           10  time_dependent_auc       secondary      0.702685 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.702685; local_ipcw_auc
+           20 risk_auc_at_horizon       secondary      0.657000                                                            roc_auc_on_evaluable_subset
+           20  time_dependent_auc       secondary      0.645914 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.645914; local_ipcw_auc
+           30 risk_auc_at_horizon       secondary      0.641197                                                            roc_auc_on_evaluable_subset
+           30  time_dependent_auc       secondary      0.629291 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.629291; local_ipcw_auc
+ARTIFACT | Stage 5.9.3 table_rsf_tuned_secondary_metrics - RSF secondary metrics | duckdb://table_rsf_tuned_secondary_metrics_w2
+[Stage 5.9.3 table_rsf_tuned_td_auc_support_audit - RSF IPCW support audit]
+table_name=table_rsf_tuned_td_auc_support_audit_w2
+rows=3, cols=6
+ horizon_week  max_ipcw_time  n_total_test_enrollments  n_supported_test_enrollments  mean_auc                                                 notes
+           10           38.0                      9778                          6742  0.702685 IPCW-supported subset used for RSF time-dependent AUC
+           20           38.0                      9778                          6742  0.645914 IPCW-supported subset used for RSF time-dependent AUC
+           30           38.0                      9778                          6742  0.629291 IPCW-supported subset used for RSF time-dependent AUC
+ARTIFACT | Stage 5.9.3 table_rsf_tuned_td_auc_support_audit - RSF IPCW support audit | duckdb://table_rsf_tuned_td_auc_support_audit_w2
+[Stage 5.9.3 table_rsf_tuned_row_diagnostics - RSF row-level diagnostics]
+table_name=table_rsf_tuned_row_diagnostics_w2
+rows=1, cols=6
+model_name  row_level_roc_auc  row_level_pr_auc  row_level_log_loss  row_level_brier                                                                    diagnostic_note
+ rsf_tuned           0.281443          0.153337             0.69467         0.211325 auxiliary enrollment-level proxy only; not a primary cross-family benchmark metric
+ARTIFACT | Stage 5.9.3 table_rsf_tuned_row_diagnostics - RSF row-level diagnostics | duckdb://table_rsf_tuned_row_diagnostics_w2
+[Stage 5.9.3 table_rsf_tuned_support_by_horizon - RSF support by horizon]
+table_name=table_rsf_tuned_support_by_horizon_w2
+rows=3, cols=4
+ horizon_week  n_evaluable_enrollments  n_events_by_horizon  event_rate_by_horizon
+           10                     9778                 1215               0.124259
+           20                     9778                 1736               0.177541
+           30                     9778                 2129               0.217734
+ARTIFACT | Stage 5.9.3 table_rsf_tuned_support_by_horizon - RSF support by horizon | duckdb://table_rsf_tuned_support_by_horizon_w2
+[Stage 5.9.3 table_rsf_tuned_calibration_summary - RSF calibration summary]
+table_name=table_rsf_tuned_calibration_summary_w2
+rows=3, cols=5
+ horizon_week            metric_name metric_category  metric_value                                         notes
+           10 calibration_at_horizon         primary      0.009257 Weighted absolute calibration gap across bins
+           20 calibration_at_horizon         primary      0.013848 Weighted absolute calibration gap across bins
+           30 calibration_at_horizon         primary      0.011675 Weighted absolute calibration gap across bins
+ARTIFACT | Stage 5.9.3 table_rsf_tuned_calibration_summary - RSF calibration summary | duckdb://table_rsf_tuned_calibration_summary_w2
+[Stage 5.9.3 table_rsf_tuned_calibration_bins_by_horizon - RSF calibration bins]
+table_name=table_rsf_tuned_calibration_bins_by_horizon_w2
+rows=30, cols=6
+ calibration_bin   n  mean_predicted_risk  observed_event_rate  horizon_week  abs_calibration_gap
+               0 978             0.024494             0.035787            10             0.011294
+               1 978             0.041052             0.039877            10             0.001174
+               2 978             0.056870             0.058282            10             0.001412
+               3 977             0.071710             0.077789            10             0.006079
+               4 978             0.089658             0.087935            10             0.001723
+               5 978             0.113031             0.094070            10             0.018961
+               6 977             0.145565             0.126919            10             0.018646
+               7 978             0.181586             0.182004            10             0.000418
+               8 978             0.219751             0.237219            10             0.017468
+               9 978             0.287258             0.302658            10             0.015401
+               0 978             0.055343             0.085890            20             0.030547
+               1 978             0.082227             0.103272            20             0.021045
+               2 978             0.104094             0.101227            20             0.002867
+               3 977             0.125610             0.131013            20             0.005403
+               4 978             0.148259             0.137014            20             0.011244
+               5 978             0.173774             0.155419            20             0.018355
+               6 977             0.205613             0.193449            20             0.012163
+               7 978             0.240846             0.225971            20             0.014874
+               8 978             0.278564             0.296524            20             0.017960
+               9 978             0.349616             0.345603            20             0.004012
+ARTIFACT | Stage 5.9.3 table_rsf_tuned_calibration_bins_by_horizon - RSF calibration bins | duckdb://table_rsf_tuned_calibration_bins_by_horizon_w2
+[Stage 5.9.3 table_rsf_tuned_predicted_vs_observed_survival - RSF predicted versus observed survival]
+table_name=table_rsf_tuned_predicted_vs_observed_survival_w2
+rows=3, cols=5
+ horizon_week  n_evaluable_enrollments  mean_predicted_survival  mean_observed_survival  abs_gap
+           10                     9778                 0.876900                0.875741 0.001158
+           20                     9778                 0.823603                0.822459 0.001145
+           30                     9778                 0.782462                0.782266 0.000195
+ARTIFACT | Stage 5.9.3 table_rsf_tuned_predicted_vs_observed_survival - RSF predicted versus observed survival | duckdb://table_rsf_tuned_predicted_vs_observed_survival_w2
+ARTIFACT | rsf_model | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/models/rsf_tuned_w2.joblib
+ARTIFACT | rsf_preprocessor | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/models/rsf_preprocessor_w2.joblib
+ARTIFACT | rsf_tuned_model_config | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/metadata/rsf_tuned_model_config_w2.json
+{
+  "model_name": "rsf_tuned",
+  "selection_metric": "lowest_validation_ibs",
+  "validation_split": {
+    "method": "GroupShuffleSplit",
+    "test_size": 0.1,
+    "group_column": "enrollment_id",
+    "random_seed": 42
+  },
+  "search_space": [
+    {
+      "candidate_id": 1,
+      "n_estimators": 200,
+      "min_samples_leaf": 3,
+      "max_depth": null,
+      "max_features": "sqrt"
+    },
+    {
+      "candidate_id": 2,
+      "n_estimators": 300,
+      "min_samples_leaf": 5,
+      "max_depth": null,
+      "max_features": "sqrt"
+    },
+    {
+      "candidate_id": 3,
+      "n_estimators": 400,
+      "min_samples_leaf": 3,
+      "max_depth": null,
+      "max_features": "sqrt"
+    },
+    {
+      "candidate_id": 4,
+      "n_estimators": 200,
+      "min_samples_leaf": 10,
+      "max_depth": null,
+      "max_features": "sqrt"
+    },
+    {
+      "candidate_id": 5,
+      "n_estimators": 300,
+      "min_samples_leaf": 20,
+      "max_depth": null,
+      "max_features": "sqrt"
+    },
+    {
+      "candidate_id": 6,
+      "n_estimators": 400,
+      "min_samples_leaf": 5,
+      "max_depth": null,
+      "max_features": 0.8
+    },
+    {
+      "candidate_id": 7,
+      "n_estimators": 200,
+      "min_samples_leaf": 3,
+      "max_depth": null,
+      "max_features": 0.7
+    },
+    {
+      "candidate_id": 8,
+      "n_estimators": 300,
+      "min_samples_leaf": 10,
+      "max_depth": null,
+      "max_features": 0.8
+    },
+    {
+      "candidate_id": 9,
+      "n_estimators": 200,
+      "min_samples_leaf": 3,
+      "max_depth": 8,
+      "max_features": "sqrt"
+    },
+    {
+      "candidate_id": 10,
+      "n_estimators": 300,
+      "min_samples_leaf": 5,
+      "max_depth": 8,
+      "max_features": "sqrt"
+    },
+    {
+      "candidate_id": 11,
+      "n_estimators": 400,
+      "min_samples_leaf": 3,
+      "max_depth": 8,
+      "max_features": "sqrt"
+    },
+    {
+      "candidate_id": 12,
+      "n_estimators": 200,
+      "min_samples_leaf": 10,
+      "max_depth": 8,
+      "max_features": 0.8
+    },
+    {
+      "candidate_id": 13,
+      "n_estimators": 300,
+      "min_samples_leaf": 20,
+      "max_depth": 8,
+      "max_features": 0.8
+    },
+    {
+      "candidate_id": 14,
+      "n_estimators": 400,
+      "min_samples_leaf": 5,
+      "max_depth": 8,
+      "max_features": 0.7
+    },
+    {
+      "candidate_id": 15,
+      "n_estimators": 200,
+      "min_samples_leaf": 3,
+      "max_depth": 8,
+      "max_features": 0.7
+    },
+    {
+      "candidate_id": 16,
+      "n_estimators": 300,
+      "min_samples_leaf": 10,
+      "max_depth": 8,
+      "max_features": 0.7
+    },
+    {
+      "candidate_id": 17,
+      "n_estimators": 200,
+      "min_samples_leaf": 3,
+      "max_depth": 15,
+      "max_features": "sqrt"
+    },
+    {
+      "candidate_id": 18,
+      "n_estimators": 300,
+      "min_samples_leaf": 5,
+      "max_depth": 15,
+      "max_features": "sqrt"
+    },
+    {
+      "candidate_id": 19,
+      "n_estimators": 400,
+      "min_samples_leaf": 3,
+      "max_depth": 15,
+      "max_features": "sqrt"
+    },
+    {
+      "candidate_id": 20,
+      "n_estimators": 200,
+      "min_samples_leaf": 10,
+      "max_depth": 15,
+      "max_features": 0.8
+    },
+    {
+      "candidate_id": 21,
+      "n_estimators": 300,
+      "min_samples_leaf": 20,
+      "max_depth": 15,
+      "max_features": 0.8
+    },
+    {
+      "candidate_id": 22,
+      "n_estimators": 400,
+      "min_samples_leaf": 5,
+      "max_depth": 15,
+      "max_features": 0.7
+    },
+    {
+      "candidate_id": 23,
+      "n_estimators": 200,
+      "min_samples_leaf": 3,
+      "max_depth": 15,
+      "max_features": 0.7
+    },
+    {
+      "candidate_id": 24,
+      "n_estimators": 300,
+      "min_samples_leaf": 10,
+      "max_depth": 15,
+      "max_features": 0.7
+    }
+  ],
+  "benchmark_horizons": [
+    10,
+    20,
+    30
+  ],
+  "calibration_bins": 10,
+  "calibration_contract_version": "v2_ipcw_km_observed_risk",
+  "calibration_observed_risk_method": "ipcw_km_pseudo_event_rate",
+  "variance_filter_threshold": 1e-12,
+  "n_jobs": 8,
+  "effective_window_weeks": 2,
+  "input_train_table": "enrollment_cox_ready_train_w2",
+  "input_test_table": "enrollment_cox_ready_test_w2",
+  "best_candidate": {
+    "candidate_id": 21,
+    "params": {
+      "n_estimators": 300,
+      "min_samples_leaf": 20,
+      "max_depth": 15,
+      "max_features": 0.8
+    },
+    "val_ibs": 0.11662485285608339,
+    "val_c_index": 0.641117871198655
+  },
+  "preprocessing": {
+    "categorical_features": [
+      "gender",
+      "region",
+      "highest_education",
+      "imd_band",
+      "age_band",
+      "disability"
+    ],
+    "numeric_features": [
+      "num_of_prev_attempts",
+      "studied_credits",
+      "clicks_first_2_weeks",
+      "active_weeks_first_2",
+      "mean_clicks_first_2_weeks"
+    ],
+    "numeric_prefill_values": {
+      "num_of_prev_attempts": 0.0,
+      "studied_credits": 60.0,
+      "clicks_first_2_weeks": 56.0,
+      "active_weeks_first_2": 2.0,
+      "mean_clicks_first_2_weeks": 33.0
+    },
+    "feature_names_before_filter": [
+      "num__num_of_prev_attempts",
+      "num__studied_credits",
+      "num__clicks_first_2_weeks",
+      "num__active_weeks_first_2",
+      "num__mean_clicks_first_2_weeks",
+      "cat__gender_F",
+      "cat__gender_M",
+      "cat__region_East Anglian Region",
+      "cat__region_East Midlands Region",
+      "cat__region_Ireland",
+      "cat__region_London Region",
+      "cat__region_North Region",
+      "cat__region_North Western Region",
+      "cat__region_Scotland",
+      "cat__region_South East Region",
+      "cat__region_South Region",
+      "cat__region_South West Region",
+      "cat__region_Wales",
+      "cat__region_West Midlands Region",
+      "cat__region_Yorkshire Region",
+      "cat__highest_education_A Level or Equivalent",
+      "cat__highest_education_HE Qualification",
+      "cat__highest_education_Lower Than A Level",
+      "cat__highest_education_No Formal quals",
+      "cat__highest_education_Post Graduate Qualification",
+      "cat__imd_band_0-10%",
+      "cat__imd_band_10-20",
+      "cat__imd_band_20-30%",
+      "cat__imd_band_30-40%",
+      "cat__imd_band_40-50%",
+      "cat__imd_band_50-60%",
+      "cat__imd_band_60-70%",
+      "cat__imd_band_70-80%",
+      "cat__imd_band_80-90%",
+      "cat__imd_band_90-100%",
+      "cat__imd_band_None",
+      "cat__age_band_0-35",
+      "cat__age_band_35-55",
+      "cat__age_band_55<=",
+      "cat__disability_N",
+      "cat__disability_Y"
+    ],
+    "feature_names_out": [
+      "num__num_of_prev_attempts",
+      "num__studied_credits",
+      "num__clicks_first_2_weeks",
+      "num__active_weeks_first_2",
+      "num__mean_clicks_first_2_weeks",
+      "cat__gender_F",
+      "cat__gender_M",
+      "cat__region_East Anglian Region",
+      "cat__region_East Midlands Region",
+      "cat__region_Ireland",
+      "cat__region_London Region",
+      "cat__region_North Region",
+      "cat__region_North Western Region",
+      "cat__region_Scotland",
+      "cat__region_South East Region",
+      "cat__region_South Region",
+      "cat__region_South West Region",
+      "cat__region_Wales",
+      "cat__region_West Midlands Region",
+      "cat__region_Yorkshire Region",
+      "cat__highest_education_A Level or Equivalent",
+      "cat__highest_education_HE Qualification",
+      "cat__highest_education_Lower Than A Level",
+      "cat__highest_education_No Formal quals",
+      "cat__highest_education_Post Graduate Qualification",
+      "cat__imd_band_0-10%",
+      "cat__imd_band_10-20",
+      "cat__imd_band_20-30%",
+      "cat__imd_band_30-40%",
+      "cat__imd_band_40-50%",
+      "cat__imd_band_50-60%",
+      "cat__imd_band_60-70%",
+      "cat__imd_band_70-80%",
+      "cat__imd_band_80-90%",
+      "cat__imd_band_90-100%",
+      "cat__imd_band_None",
+      "cat__age_band_0-35",
+      "cat__age_band_35-55",
+      "cat__age_band_55<=",
+      "cat__disability_N",
+      "cat__disability_Y"
+    ],
+    "dropped_low_variance_features": []
+  },
+  "design_note": "The comparable Random Survival Forest arm preserves the canonical early-window contract, uses the same deterministic preprocessing as the linear continuous-time baselines, and tunes only a compact notebook-traceable forest grid under validation IBS."
+}
+
+ candidate_id                                                                              params  val_ibs  val_c_index
+           21 {'n_estimators': 300, 'min_samples_leaf': 20, 'max_depth': 15, 'max_features': 0.8} 0.116625     0.641118
+[END] 5.9.3 - 2026-06-19 20:38:40
+[START] 5.9 - 2026-06-19 20:38:40
+# ==============================================================
+# 5.9.4 - Close runtime resources
+# ==============================================================
+DuckDB connection closed.
+ARTIFACT | duckdb_connection | closed::/Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/benchmark_survival.duckdb
+[END] 5.9.4 - 2026-06-19 20:38:41
+[RUN_PLAN] comparable_window_weeks=4
+[START] 5.9 - 2026-06-19 20:38:41
+# ==============================================================
+# 5.9.1 - Lightweight runtime bootstrap
+# ==============================================================
+ARTIFACT | benchmark_shared_config | /Users/rafars/dropout_benchmark_desenv/benchmark_shared_config.toml
+ARTIFACT | benchmark_modeling_contract | /Users/rafars/dropout_benchmark_desenv/benchmark_modeling_contract.toml
+ARTIFACT | run_metadata | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/metadata/run_metadata.json
+ARTIFACT | duckdb_path | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/benchmark_survival.duckdb
+{
+  "run_id": "f3766e75053447a7beb7a1c4936d231f",
+  "random_seed": 42,
+  "test_size": 0.3,
+  "early_window_weeks": 4,
+  "main_enrollment_window_weeks": 4,
+  "effective_window_weeks": 4,
+  "input_train_table": "enrollment_cox_ready_train",
+  "input_test_table": "enrollment_cox_ready_test"
+}
+[END] 5.9.1 - 2026-06-19 20:38:41
+[START] 5.9 - 2026-06-19 20:38:41
+# ==============================================================
+# 5.9.2 - Build comparable-window RSF treatment
+# ==============================================================
+[Stage 5.9.2 table_rsf_preprocessing_summary - RSF preprocessing summary]
+table_name=table_rsf_preprocessing_summary
+rows=1, cols=21
+          model_family  train_rows  test_rows  n_input_features_raw  n_numeric_features  n_categorical_features  n_features_after_encoding_before_filter  n_features_after_variance_filter  n_features_dropped_by_variance_filter  n_events_train  n_events_test  mean_duration_train  mean_duration_test                              numeric_prefill_policy categorical_imputation          categorical_encoding                   numeric_scaling  variance_filter_threshold output_dtype                                     rsf_positioning_note  window_weeks
+random_survival_forest       22815       9778                    11                   5                       6                                       41                                41                                      0            5171           2216            30.536182           30.539476 deterministic_train_median_or_zero_when_all_missing       constant_missing one_hot_handle_unknown_ignore standard_scaler_fit_on_train_only               1.000000e-12      float32 early-window comparable random survival forest benchmark             4
+ARTIFACT | Stage 5.9.2 table_rsf_preprocessing_summary - RSF preprocessing summary | duckdb://table_rsf_preprocessing_summary
+[Stage 5.9.2 table_rsf_raw_feature_manifest - RSF raw feature manifest]
+table_name=table_rsf_raw_feature_manifest
+rows=11, cols=6
+ feature_name_operational feature_role  present_in_train  present_in_test  covered_by_canonical_config  numeric_prefill_value
+                   gender  categorical              True             True                        False                    NaN
+                   region  categorical              True             True                        False                    NaN
+        highest_education  categorical              True             True                        False                    NaN
+                 imd_band  categorical              True             True                        False                    NaN
+                 age_band  categorical              True             True                        False                    NaN
+               disability  categorical              True             True                        False                    NaN
+     num_of_prev_attempts      numeric              True             True                         True                   0.00
+          studied_credits      numeric              True             True                         True                  60.00
+     clicks_first_4_weeks      numeric              True             True                         True                 136.00
+     active_weeks_first_4      numeric              True             True                         True                   4.00
+mean_clicks_first_4_weeks      numeric              True             True                         True                  41.25
+ARTIFACT | Stage 5.9.2 table_rsf_raw_feature_manifest - RSF raw feature manifest | duckdb://table_rsf_raw_feature_manifest
+[Stage 5.9.2 table_rsf_feature_names_out - RSF output feature manifest]
+table_name=table_rsf_feature_names_out
+rows=41, cols=2
+                feature_name_out  transformed_variance_train
+       num__num_of_prev_attempts                    1.000000
+            num__studied_credits                    1.000000
+       num__clicks_first_4_weeks                    1.000000
+       num__active_weeks_first_4                    1.000000
+  num__mean_clicks_first_4_weeks                    1.000000
+                   cat__gender_F                    0.247988
+                   cat__gender_M                    0.247988
+ cat__region_East Anglian Region                    0.092080
+cat__region_East Midlands Region                    0.067091
+             cat__region_Ireland                    0.034283
+       cat__region_London Region                    0.088295
+        cat__region_North Region                    0.052060
+cat__region_North Western Region                    0.082139
+            cat__region_Scotland                    0.094370
+   cat__region_South East Region                    0.059974
+        cat__region_South Region                    0.087554
+   cat__region_South West Region                    0.068848
+               cat__region_Wales                    0.059707
+cat__region_West Midlands Region                    0.073261
+    cat__region_Yorkshire Region                    0.058136
+ARTIFACT | Stage 5.9.2 table_rsf_feature_names_out - RSF output feature manifest | duckdb://table_rsf_feature_names_out
+ARTIFACT | rsf_preprocessing_config | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/metadata/rsf_preprocessing_config.json
+{
+  "model_family": "random_survival_forest",
+  "duration_column": "duration",
+  "event_column": "event",
+  "categorical_features": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability"
+  ],
+  "numeric_features": [
+    "num_of_prev_attempts",
+    "studied_credits",
+    "clicks_first_4_weeks",
+    "active_weeks_first_4",
+    "mean_clicks_first_4_weeks"
+  ],
+  "raw_feature_columns": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability",
+    "num_of_prev_attempts",
+    "studied_credits",
+    "clicks_first_4_weeks",
+    "active_weeks_first_4",
+    "mean_clicks_first_4_weeks"
+  ],
+  "expected_features_raw": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "studied_credits",
+    "num_of_prev_attempts",
+    "clicks_first_4_weeks",
+    "active_weeks_first_4",
+    "mean_clicks_first_4_weeks"
+  ],
+  "expected_features_resolved": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "clicks_first_4_weeks",
+    "active_weeks_first_4",
+    "mean_clicks_first_4_weeks"
+  ],
+  "numeric_prefill_policy": "deterministic_train_median_or_zero_when_all_missing",
+  "numeric_fill_values": {
+    "num_of_prev_attempts": 0.0,
+    "studied_credits": 60.0,
+    "clicks_first_4_weeks": 136.0,
+    "active_weeks_first_4": 4.0,
+    "mean_clicks_first_4_weeks": 41.25
+  },
+  "categorical_imputation": "constant_missing",
+  "categorical_encoding": "one_hot_handle_unknown_ignore",
+  "numeric_scaling": "standard_scaler_fit_on_train_only",
+  "variance_filter_threshold": 1e-12,
+  "feature_names_before_filter": [
+    "num__num_of_prev_attempts",
+    "num__studied_credits",
+    "num__clicks_first_4_weeks",
+    "num__active_weeks_first_4",
+    "num__mean_clicks_first_4_weeks",
+    "cat__gender_F",
+    "cat__gender_M",
+    "cat__region_East Anglian Region",
+    "cat__region_East Midlands Region",
+    "cat__region_Ireland",
+    "cat__region_London Region",
+    "cat__region_North Region",
+    "cat__region_North Western Region",
+    "cat__region_Scotland",
+    "cat__region_South East Region",
+    "cat__region_South Region",
+    "cat__region_South West Region",
+    "cat__region_Wales",
+    "cat__region_West Midlands Region",
+    "cat__region_Yorkshire Region",
+    "cat__highest_education_A Level or Equivalent",
+    "cat__highest_education_HE Qualification",
+    "cat__highest_education_Lower Than A Level",
+    "cat__highest_education_No Formal quals",
+    "cat__highest_education_Post Graduate Qualification",
+    "cat__imd_band_0-10%",
+    "cat__imd_band_10-20",
+    "cat__imd_band_20-30%",
+    "cat__imd_band_30-40%",
+    "cat__imd_band_40-50%",
+    "cat__imd_band_50-60%",
+    "cat__imd_band_60-70%",
+    "cat__imd_band_70-80%",
+    "cat__imd_band_80-90%",
+    "cat__imd_band_90-100%",
+    "cat__imd_band_None",
+    "cat__age_band_0-35",
+    "cat__age_band_35-55",
+    "cat__age_band_55<=",
+    "cat__disability_N",
+    "cat__disability_Y"
+  ],
+  "feature_names_out": [
+    "num__num_of_prev_attempts",
+    "num__studied_credits",
+    "num__clicks_first_4_weeks",
+    "num__active_weeks_first_4",
+    "num__mean_clicks_first_4_weeks",
+    "cat__gender_F",
+    "cat__gender_M",
+    "cat__region_East Anglian Region",
+    "cat__region_East Midlands Region",
+    "cat__region_Ireland",
+    "cat__region_London Region",
+    "cat__region_North Region",
+    "cat__region_North Western Region",
+    "cat__region_Scotland",
+    "cat__region_South East Region",
+    "cat__region_South Region",
+    "cat__region_South West Region",
+    "cat__region_Wales",
+    "cat__region_West Midlands Region",
+    "cat__region_Yorkshire Region",
+    "cat__highest_education_A Level or Equivalent",
+    "cat__highest_education_HE Qualification",
+    "cat__highest_education_Lower Than A Level",
+    "cat__highest_education_No Formal quals",
+    "cat__highest_education_Post Graduate Qualification",
+    "cat__imd_band_0-10%",
+    "cat__imd_band_10-20",
+    "cat__imd_band_20-30%",
+    "cat__imd_band_30-40%",
+    "cat__imd_band_40-50%",
+    "cat__imd_band_50-60%",
+    "cat__imd_band_60-70%",
+    "cat__imd_band_70-80%",
+    "cat__imd_band_80-90%",
+    "cat__imd_band_90-100%",
+    "cat__imd_band_None",
+    "cat__age_band_0-35",
+    "cat__age_band_35-55",
+    "cat__age_band_55<=",
+    "cat__disability_N",
+    "cat__disability_Y"
+  ],
+  "dropped_low_variance_features": [],
+  "rsf_positioning_note": "early-window comparable random survival forest benchmark",
+  "window_weeks": 4
+}
+
+[END] 5.9.2 - 2026-06-19 20:38:41
+[START] 5.9 - 2026-06-19 20:38:41
+# ==============================================================
+# 5.9.3 - Tune and evaluate the comparable-window Random Survival Forest
+# ==============================================================
+[Stage 5.9.3 table_rsf_tuning_results - RSF tuning results]
+table_name=table_rsf_tuning_results
+rows=24, cols=7
+ candidate_id  n_estimators  min_samples_leaf  max_depth max_features  val_ibs  val_c_index
+           19           400                 3         15         sqrt 0.111375     0.652694
+           17           200                 3         15         sqrt 0.111515     0.652970
+           18           300                 5         15         sqrt 0.111520     0.653296
+            4           200                10         -1         sqrt 0.111817     0.655957
+            2           300                 5         -1         sqrt 0.111827     0.655442
+            1           200                 3         -1         sqrt 0.112005     0.656172
+           16           300                10          8          0.7 0.112065     0.654673
+            3           400                 3         -1         sqrt 0.112104     0.654694
+           15           200                 3          8          0.7 0.112137     0.650927
+           14           400                 5          8          0.7 0.112154     0.652835
+           13           300                20          8          0.8 0.112214     0.655228
+            5           300                20         -1         sqrt 0.112220     0.651213
+           12           200                10          8          0.8 0.112220     0.654006
+           24           300                10         15          0.7 0.112599     0.654708
+           21           300                20         15          0.8 0.112608     0.657056
+            9           200                 3          8         sqrt 0.112802     0.643354
+           11           400                 3          8         sqrt 0.112826     0.643004
+           20           200                10         15          0.8 0.112864     0.655828
+           22           400                 5         15          0.7 0.112872     0.653702
+           10           300                 5          8         sqrt 0.113010     0.641753
+ARTIFACT | Stage 5.9.3 table_rsf_tuning_results - RSF tuning results | duckdb://table_rsf_tuning_results
+[Stage 5.9.3 table_rsf_tuned_test_predictions - RSF test predictions]
+table_name=table_rsf_tuned_test_predictions
+rows=29334, cols=6
+      enrollment_id  event  duration  horizon_week  pred_survival_h  pred_risk_h
+ 100561||DDD||2014J      0        37            10         0.897021     0.102979
+ 100621||CCC||2014B      1         6            10         0.776145     0.223855
+ 101187||DDD||2014J      0        37            10         0.754610     0.245390
+ 101279||DDD||2014J      0        37            10         0.952566     0.047434
+ 101414||EEE||2013J      0        38            10         0.738645     0.261355
+ 101700||CCC||2014J      0        38            10         0.646890     0.353110
+ 101781||AAA||2013J      0        38            10         0.973036     0.026964
+ 102209||CCC||2014J      1        15            10         0.971203     0.028797
+ 102343||FFF||2013J      0        38            10         0.976926     0.023074
+1023623||CCC||2014J      0        38            10         0.940714     0.059286
+1033968||DDD||2014B      1        13            10         0.812335     0.187665
+ 103891||DDD||2014B      0        34            10         0.761677     0.238323
+ 104316||FFF||2014B      0        34            10         0.958823     0.041177
+1045203||AAA||2014J      0        38            10         0.970187     0.029813
+1047645||CCC||2014B      0        34            10         0.890389     0.109611
+1053702||EEE||2013J      0        38            10         0.937592     0.062408
+ 105629||FFF||2013J      0        38            10         0.960810     0.039190
+1057883||CCC||2014B      0        34            10         0.830842     0.169158
+ 106383||BBB||2014J      1        21            10         0.904825     0.095175
+ 106553||DDD||2014J      0        37            10         0.928674     0.071326
+ARTIFACT | Stage 5.9.3 table_rsf_tuned_test_predictions - RSF test predictions | duckdb://table_rsf_tuned_test_predictions
+[Stage 5.9.3 table_rsf_tuned_primary_metrics - RSF primary metrics]
+table_name=table_rsf_tuned_primary_metrics
+rows=2, cols=4
+metric_name metric_category  metric_value                         notes
+        ibs         primary      0.111840 sksurv_integrated_brier_score
+    c_index      co_primary      0.673506          pycox_concordance_td
+ARTIFACT | Stage 5.9.3 table_rsf_tuned_primary_metrics - RSF primary metrics | duckdb://table_rsf_tuned_primary_metrics
+[Stage 5.9.3 table_rsf_tuned_brier_by_horizon - RSF Brier scores by horizon]
+table_name=table_rsf_tuned_brier_by_horizon
+rows=3, cols=5
+ horizon_week      metric_name metric_category  metric_value              notes
+           10 brier_at_horizon         primary      0.094668 sksurv_brier_score
+           20 brier_at_horizon         primary      0.132948 sksurv_brier_score
+           30 brier_at_horizon         primary      0.157386 sksurv_brier_score
+ARTIFACT | Stage 5.9.3 table_rsf_tuned_brier_by_horizon - RSF Brier scores by horizon | duckdb://table_rsf_tuned_brier_by_horizon
+[Stage 5.9.3 table_rsf_tuned_secondary_metrics - RSF secondary metrics]
+table_name=table_rsf_tuned_secondary_metrics
+rows=6, cols=5
+ horizon_week         metric_name metric_category  metric_value                                                                                  notes
+           10 risk_auc_at_horizon       secondary      0.768249                                                            roc_auc_on_evaluable_subset
+           10  time_dependent_auc       secondary      0.760678 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.760678; local_ipcw_auc
+           20 risk_auc_at_horizon       secondary      0.697370                                                            roc_auc_on_evaluable_subset
+           20  time_dependent_auc       secondary      0.686212 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.686212; local_ipcw_auc
+           30 risk_auc_at_horizon       secondary      0.674660                                                            roc_auc_on_evaluable_subset
+           30  time_dependent_auc       secondary      0.661670 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.661670; local_ipcw_auc
+ARTIFACT | Stage 5.9.3 table_rsf_tuned_secondary_metrics - RSF secondary metrics | duckdb://table_rsf_tuned_secondary_metrics
+[Stage 5.9.3 table_rsf_tuned_td_auc_support_audit - RSF IPCW support audit]
+table_name=table_rsf_tuned_td_auc_support_audit
+rows=3, cols=6
+ horizon_week  max_ipcw_time  n_total_test_enrollments  n_supported_test_enrollments  mean_auc                                                 notes
+           10           38.0                      9778                          6742  0.760678 IPCW-supported subset used for RSF time-dependent AUC
+           20           38.0                      9778                          6742  0.686212 IPCW-supported subset used for RSF time-dependent AUC
+           30           38.0                      9778                          6742  0.661670 IPCW-supported subset used for RSF time-dependent AUC
+ARTIFACT | Stage 5.9.3 table_rsf_tuned_td_auc_support_audit - RSF IPCW support audit | duckdb://table_rsf_tuned_td_auc_support_audit
+[Stage 5.9.3 table_rsf_tuned_row_diagnostics - RSF row-level diagnostics]
+table_name=table_rsf_tuned_row_diagnostics
+rows=1, cols=6
+model_name  row_level_roc_auc  row_level_pr_auc  row_level_log_loss  row_level_brier                                                                    diagnostic_note
+ rsf_tuned            0.32668          0.171044             0.66993         0.205057 auxiliary enrollment-level proxy only; not a primary cross-family benchmark metric
+ARTIFACT | Stage 5.9.3 table_rsf_tuned_row_diagnostics - RSF row-level diagnostics | duckdb://table_rsf_tuned_row_diagnostics
+[Stage 5.9.3 table_rsf_tuned_support_by_horizon - RSF support by horizon]
+table_name=table_rsf_tuned_support_by_horizon
+rows=3, cols=4
+ horizon_week  n_evaluable_enrollments  n_events_by_horizon  event_rate_by_horizon
+           10                     9778                 1215               0.124259
+           20                     9778                 1736               0.177541
+           30                     9778                 2129               0.217734
+ARTIFACT | Stage 5.9.3 table_rsf_tuned_support_by_horizon - RSF support by horizon | duckdb://table_rsf_tuned_support_by_horizon
+[Stage 5.9.3 table_rsf_tuned_calibration_summary - RSF calibration summary]
+table_name=table_rsf_tuned_calibration_summary
+rows=3, cols=5
+ horizon_week            metric_name metric_category  metric_value                                         notes
+           10 calibration_at_horizon         primary      0.011127 Weighted absolute calibration gap across bins
+           20 calibration_at_horizon         primary      0.010236 Weighted absolute calibration gap across bins
+           30 calibration_at_horizon         primary      0.010467 Weighted absolute calibration gap across bins
+ARTIFACT | Stage 5.9.3 table_rsf_tuned_calibration_summary - RSF calibration summary | duckdb://table_rsf_tuned_calibration_summary
+[Stage 5.9.3 table_rsf_tuned_calibration_bins_by_horizon - RSF calibration bins]
+table_name=table_rsf_tuned_calibration_bins_by_horizon
+rows=30, cols=6
+ calibration_bin   n  mean_predicted_risk  observed_event_rate  horizon_week  abs_calibration_gap
+               0 978             0.025965             0.024540            10             0.001425
+               1 978             0.037833             0.036810            10             0.001023
+               2 978             0.047819             0.051125            10             0.003306
+               3 977             0.058040             0.044012            10             0.014027
+               4 978             0.070908             0.064417            10             0.006490
+               5 978             0.088750             0.094070            10             0.005320
+               6 977             0.118188             0.098260            10             0.019928
+               7 978             0.172903             0.169734            10             0.003169
+               8 978             0.247279             0.244376            10             0.002902
+               9 978             0.361440             0.415133            10             0.053693
+               0 978             0.063036             0.068507            20             0.005471
+               1 978             0.084784             0.096115            20             0.011331
+               2 978             0.100037             0.095092            20             0.004945
+               3 977             0.114970             0.102354            20             0.012616
+               4 978             0.132261             0.127812            20             0.004449
+               5 978             0.154780             0.149284            20             0.005496
+               6 977             0.185984             0.176049            20             0.009935
+               7 978             0.230683             0.223926            20             0.006757
+               8 978             0.288154             0.286299            20             0.001855
+               9 978             0.410386             0.449898            20             0.039512
+ARTIFACT | Stage 5.9.3 table_rsf_tuned_calibration_bins_by_horizon - RSF calibration bins | duckdb://table_rsf_tuned_calibration_bins_by_horizon
+[Stage 5.9.3 table_rsf_tuned_predicted_vs_observed_survival - RSF predicted versus observed survival]
+table_name=table_rsf_tuned_predicted_vs_observed_survival
+rows=3, cols=5
+ horizon_week  n_evaluable_enrollments  mean_predicted_survival  mean_observed_survival  abs_gap
+           10                     9778                 0.877081                0.875741 0.001339
+           20                     9778                 0.823487                0.822459 0.001029
+           30                     9778                 0.782704                0.782266 0.000438
+ARTIFACT | Stage 5.9.3 table_rsf_tuned_predicted_vs_observed_survival - RSF predicted versus observed survival | duckdb://table_rsf_tuned_predicted_vs_observed_survival
+ARTIFACT | rsf_model | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/models/rsf_tuned.joblib
+ARTIFACT | rsf_preprocessor | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/models/rsf_preprocessor.joblib
+ARTIFACT | rsf_tuned_model_config | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/metadata/rsf_tuned_model_config.json
+{
+  "model_name": "rsf_tuned",
+  "selection_metric": "lowest_validation_ibs",
+  "validation_split": {
+    "method": "GroupShuffleSplit",
+    "test_size": 0.1,
+    "group_column": "enrollment_id",
+    "random_seed": 42
+  },
+  "search_space": [
+    {
+      "candidate_id": 1,
+      "n_estimators": 200,
+      "min_samples_leaf": 3,
+      "max_depth": null,
+      "max_features": "sqrt"
+    },
+    {
+      "candidate_id": 2,
+      "n_estimators": 300,
+      "min_samples_leaf": 5,
+      "max_depth": null,
+      "max_features": "sqrt"
+    },
+    {
+      "candidate_id": 3,
+      "n_estimators": 400,
+      "min_samples_leaf": 3,
+      "max_depth": null,
+      "max_features": "sqrt"
+    },
+    {
+      "candidate_id": 4,
+      "n_estimators": 200,
+      "min_samples_leaf": 10,
+      "max_depth": null,
+      "max_features": "sqrt"
+    },
+    {
+      "candidate_id": 5,
+      "n_estimators": 300,
+      "min_samples_leaf": 20,
+      "max_depth": null,
+      "max_features": "sqrt"
+    },
+    {
+      "candidate_id": 6,
+      "n_estimators": 400,
+      "min_samples_leaf": 5,
+      "max_depth": null,
+      "max_features": 0.8
+    },
+    {
+      "candidate_id": 7,
+      "n_estimators": 200,
+      "min_samples_leaf": 3,
+      "max_depth": null,
+      "max_features": 0.7
+    },
+    {
+      "candidate_id": 8,
+      "n_estimators": 300,
+      "min_samples_leaf": 10,
+      "max_depth": null,
+      "max_features": 0.8
+    },
+    {
+      "candidate_id": 9,
+      "n_estimators": 200,
+      "min_samples_leaf": 3,
+      "max_depth": 8,
+      "max_features": "sqrt"
+    },
+    {
+      "candidate_id": 10,
+      "n_estimators": 300,
+      "min_samples_leaf": 5,
+      "max_depth": 8,
+      "max_features": "sqrt"
+    },
+    {
+      "candidate_id": 11,
+      "n_estimators": 400,
+      "min_samples_leaf": 3,
+      "max_depth": 8,
+      "max_features": "sqrt"
+    },
+    {
+      "candidate_id": 12,
+      "n_estimators": 200,
+      "min_samples_leaf": 10,
+      "max_depth": 8,
+      "max_features": 0.8
+    },
+    {
+      "candidate_id": 13,
+      "n_estimators": 300,
+      "min_samples_leaf": 20,
+      "max_depth": 8,
+      "max_features": 0.8
+    },
+    {
+      "candidate_id": 14,
+      "n_estimators": 400,
+      "min_samples_leaf": 5,
+      "max_depth": 8,
+      "max_features": 0.7
+    },
+    {
+      "candidate_id": 15,
+      "n_estimators": 200,
+      "min_samples_leaf": 3,
+      "max_depth": 8,
+      "max_features": 0.7
+    },
+    {
+      "candidate_id": 16,
+      "n_estimators": 300,
+      "min_samples_leaf": 10,
+      "max_depth": 8,
+      "max_features": 0.7
+    },
+    {
+      "candidate_id": 17,
+      "n_estimators": 200,
+      "min_samples_leaf": 3,
+      "max_depth": 15,
+      "max_features": "sqrt"
+    },
+    {
+      "candidate_id": 18,
+      "n_estimators": 300,
+      "min_samples_leaf": 5,
+      "max_depth": 15,
+      "max_features": "sqrt"
+    },
+    {
+      "candidate_id": 19,
+      "n_estimators": 400,
+      "min_samples_leaf": 3,
+      "max_depth": 15,
+      "max_features": "sqrt"
+    },
+    {
+      "candidate_id": 20,
+      "n_estimators": 200,
+      "min_samples_leaf": 10,
+      "max_depth": 15,
+      "max_features": 0.8
+    },
+    {
+      "candidate_id": 21,
+      "n_estimators": 300,
+      "min_samples_leaf": 20,
+      "max_depth": 15,
+      "max_features": 0.8
+    },
+    {
+      "candidate_id": 22,
+      "n_estimators": 400,
+      "min_samples_leaf": 5,
+      "max_depth": 15,
+      "max_features": 0.7
+    },
+    {
+      "candidate_id": 23,
+      "n_estimators": 200,
+      "min_samples_leaf": 3,
+      "max_depth": 15,
+      "max_features": 0.7
+    },
+    {
+      "candidate_id": 24,
+      "n_estimators": 300,
+      "min_samples_leaf": 10,
+      "max_depth": 15,
+      "max_features": 0.7
+    }
+  ],
+  "benchmark_horizons": [
+    10,
+    20,
+    30
+  ],
+  "calibration_bins": 10,
+  "calibration_contract_version": "v2_ipcw_km_observed_risk",
+  "calibration_observed_risk_method": "ipcw_km_pseudo_event_rate",
+  "variance_filter_threshold": 1e-12,
+  "n_jobs": 8,
+  "effective_window_weeks": 4,
+  "input_train_table": "enrollment_cox_ready_train",
+  "input_test_table": "enrollment_cox_ready_test",
+  "best_candidate": {
+    "candidate_id": 19,
+    "params": {
+      "n_estimators": 400,
+      "min_samples_leaf": 3,
+      "max_depth": 15,
+      "max_features": "sqrt"
+    },
+    "val_ibs": 0.11137515188185966,
+    "val_c_index": 0.6526944809746087
+  },
+  "preprocessing": {
+    "categorical_features": [
+      "gender",
+      "region",
+      "highest_education",
+      "imd_band",
+      "age_band",
+      "disability"
+    ],
+    "numeric_features": [
+      "num_of_prev_attempts",
+      "studied_credits",
+      "clicks_first_4_weeks",
+      "active_weeks_first_4",
+      "mean_clicks_first_4_weeks"
+    ],
+    "numeric_prefill_values": {
+      "num_of_prev_attempts": 0.0,
+      "studied_credits": 60.0,
+      "clicks_first_4_weeks": 136.0,
+      "active_weeks_first_4": 4.0,
+      "mean_clicks_first_4_weeks": 41.25
+    },
+    "feature_names_before_filter": [
+      "num__num_of_prev_attempts",
+      "num__studied_credits",
+      "num__clicks_first_4_weeks",
+      "num__active_weeks_first_4",
+      "num__mean_clicks_first_4_weeks",
+      "cat__gender_F",
+      "cat__gender_M",
+      "cat__region_East Anglian Region",
+      "cat__region_East Midlands Region",
+      "cat__region_Ireland",
+      "cat__region_London Region",
+      "cat__region_North Region",
+      "cat__region_North Western Region",
+      "cat__region_Scotland",
+      "cat__region_South East Region",
+      "cat__region_South Region",
+      "cat__region_South West Region",
+      "cat__region_Wales",
+      "cat__region_West Midlands Region",
+      "cat__region_Yorkshire Region",
+      "cat__highest_education_A Level or Equivalent",
+      "cat__highest_education_HE Qualification",
+      "cat__highest_education_Lower Than A Level",
+      "cat__highest_education_No Formal quals",
+      "cat__highest_education_Post Graduate Qualification",
+      "cat__imd_band_0-10%",
+      "cat__imd_band_10-20",
+      "cat__imd_band_20-30%",
+      "cat__imd_band_30-40%",
+      "cat__imd_band_40-50%",
+      "cat__imd_band_50-60%",
+      "cat__imd_band_60-70%",
+      "cat__imd_band_70-80%",
+      "cat__imd_band_80-90%",
+      "cat__imd_band_90-100%",
+      "cat__imd_band_None",
+      "cat__age_band_0-35",
+      "cat__age_band_35-55",
+      "cat__age_band_55<=",
+      "cat__disability_N",
+      "cat__disability_Y"
+    ],
+    "feature_names_out": [
+      "num__num_of_prev_attempts",
+      "num__studied_credits",
+      "num__clicks_first_4_weeks",
+      "num__active_weeks_first_4",
+      "num__mean_clicks_first_4_weeks",
+      "cat__gender_F",
+      "cat__gender_M",
+      "cat__region_East Anglian Region",
+      "cat__region_East Midlands Region",
+      "cat__region_Ireland",
+      "cat__region_London Region",
+      "cat__region_North Region",
+      "cat__region_North Western Region",
+      "cat__region_Scotland",
+      "cat__region_South East Region",
+      "cat__region_South Region",
+      "cat__region_South West Region",
+      "cat__region_Wales",
+      "cat__region_West Midlands Region",
+      "cat__region_Yorkshire Region",
+      "cat__highest_education_A Level or Equivalent",
+      "cat__highest_education_HE Qualification",
+      "cat__highest_education_Lower Than A Level",
+      "cat__highest_education_No Formal quals",
+      "cat__highest_education_Post Graduate Qualification",
+      "cat__imd_band_0-10%",
+      "cat__imd_band_10-20",
+      "cat__imd_band_20-30%",
+      "cat__imd_band_30-40%",
+      "cat__imd_band_40-50%",
+      "cat__imd_band_50-60%",
+      "cat__imd_band_60-70%",
+      "cat__imd_band_70-80%",
+      "cat__imd_band_80-90%",
+      "cat__imd_band_90-100%",
+      "cat__imd_band_None",
+      "cat__age_band_0-35",
+      "cat__age_band_35-55",
+      "cat__age_band_55<=",
+      "cat__disability_N",
+      "cat__disability_Y"
+    ],
+    "dropped_low_variance_features": []
+  },
+  "design_note": "The comparable Random Survival Forest arm preserves the canonical early-window contract, uses the same deterministic preprocessing as the linear continuous-time baselines, and tunes only a compact notebook-traceable forest grid under validation IBS."
+}
+
+ candidate_id                                                                                params  val_ibs  val_c_index
+           19 {'n_estimators': 400, 'min_samples_leaf': 3, 'max_depth': 15, 'max_features': 'sqrt'} 0.111375     0.652694
+[END] 5.9.3 - 2026-06-19 20:42:54
+[START] 5.9 - 2026-06-19 20:42:54
+# ==============================================================
+# 5.9.4 - Close runtime resources
+# ==============================================================
+DuckDB connection closed.
+ARTIFACT | duckdb_connection | closed::/Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/benchmark_survival.duckdb
+[END] 5.9.4 - 2026-06-19 20:42:55
+[RUN_PLAN] comparable_window_weeks=6
+[START] 5.9 - 2026-06-19 20:42:55
+# ==============================================================
+# 5.9.1 - Lightweight runtime bootstrap
+# ==============================================================
+ARTIFACT | benchmark_shared_config | /Users/rafars/dropout_benchmark_desenv/benchmark_shared_config.toml
+ARTIFACT | benchmark_modeling_contract | /Users/rafars/dropout_benchmark_desenv/benchmark_modeling_contract.toml
+ARTIFACT | run_metadata | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/metadata/run_metadata.json
+ARTIFACT | duckdb_path | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/benchmark_survival.duckdb
+{
+  "run_id": "f3766e75053447a7beb7a1c4936d231f",
+  "random_seed": 42,
+  "test_size": 0.3,
+  "early_window_weeks": 4,
+  "main_enrollment_window_weeks": 4,
+  "effective_window_weeks": 6,
+  "input_train_table": "enrollment_cox_ready_train_w6",
+  "input_test_table": "enrollment_cox_ready_test_w6"
+}
+[END] 5.9.1 - 2026-06-19 20:42:55
+[START] 5.9 - 2026-06-19 20:42:55
+# ==============================================================
+# 5.9.2 - Build comparable-window RSF treatment
+# ==============================================================
+[Stage 5.9.2 table_rsf_preprocessing_summary - RSF preprocessing summary]
+table_name=table_rsf_preprocessing_summary_w6
+rows=1, cols=21
+          model_family  train_rows  test_rows  n_input_features_raw  n_numeric_features  n_categorical_features  n_features_after_encoding_before_filter  n_features_after_variance_filter  n_features_dropped_by_variance_filter  n_events_train  n_events_test  mean_duration_train  mean_duration_test                              numeric_prefill_policy categorical_imputation          categorical_encoding                   numeric_scaling  variance_filter_threshold output_dtype                                     rsf_positioning_note  window_weeks
+random_survival_forest       22815       9778                    11                   5                       6                                       41                                41                                      0            5171           2216            30.536182           30.539476 deterministic_train_median_or_zero_when_all_missing       constant_missing one_hot_handle_unknown_ignore standard_scaler_fit_on_train_only               1.000000e-12      float32 early-window comparable random survival forest benchmark             6
+ARTIFACT | Stage 5.9.2 table_rsf_preprocessing_summary - RSF preprocessing summary | duckdb://table_rsf_preprocessing_summary_w6
+[Stage 5.9.2 table_rsf_raw_feature_manifest - RSF raw feature manifest]
+table_name=table_rsf_raw_feature_manifest_w6
+rows=11, cols=6
+ feature_name_operational feature_role  present_in_train  present_in_test  covered_by_canonical_config  numeric_prefill_value
+                   gender  categorical              True             True                        False                    NaN
+                   region  categorical              True             True                        False                    NaN
+        highest_education  categorical              True             True                        False                    NaN
+                 imd_band  categorical              True             True                        False                    NaN
+                 age_band  categorical              True             True                        False                    NaN
+               disability  categorical              True             True                        False                    NaN
+     num_of_prev_attempts      numeric              True             True                         True                    0.0
+          studied_credits      numeric              True             True                         True                   60.0
+     clicks_first_6_weeks      numeric              True             True                         True                  182.0
+     active_weeks_first_6      numeric              True             True                         True                    5.0
+mean_clicks_first_6_weeks      numeric              True             True                         True                   39.0
+ARTIFACT | Stage 5.9.2 table_rsf_raw_feature_manifest - RSF raw feature manifest | duckdb://table_rsf_raw_feature_manifest_w6
+[Stage 5.9.2 table_rsf_feature_names_out - RSF output feature manifest]
+table_name=table_rsf_feature_names_out_w6
+rows=41, cols=2
+                feature_name_out  transformed_variance_train
+       num__num_of_prev_attempts                    1.000000
+            num__studied_credits                    1.000000
+       num__clicks_first_6_weeks                    1.000000
+       num__active_weeks_first_6                    1.000000
+  num__mean_clicks_first_6_weeks                    1.000000
+                   cat__gender_F                    0.247988
+                   cat__gender_M                    0.247988
+ cat__region_East Anglian Region                    0.092080
+cat__region_East Midlands Region                    0.067091
+             cat__region_Ireland                    0.034283
+       cat__region_London Region                    0.088295
+        cat__region_North Region                    0.052060
+cat__region_North Western Region                    0.082139
+            cat__region_Scotland                    0.094370
+   cat__region_South East Region                    0.059974
+        cat__region_South Region                    0.087554
+   cat__region_South West Region                    0.068848
+               cat__region_Wales                    0.059707
+cat__region_West Midlands Region                    0.073261
+    cat__region_Yorkshire Region                    0.058136
+ARTIFACT | Stage 5.9.2 table_rsf_feature_names_out - RSF output feature manifest | duckdb://table_rsf_feature_names_out_w6
+ARTIFACT | rsf_preprocessing_config | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/metadata/rsf_preprocessing_config_w6.json
+{
+  "model_family": "random_survival_forest",
+  "duration_column": "duration",
+  "event_column": "event",
+  "categorical_features": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability"
+  ],
+  "numeric_features": [
+    "num_of_prev_attempts",
+    "studied_credits",
+    "clicks_first_6_weeks",
+    "active_weeks_first_6",
+    "mean_clicks_first_6_weeks"
+  ],
+  "raw_feature_columns": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability",
+    "num_of_prev_attempts",
+    "studied_credits",
+    "clicks_first_6_weeks",
+    "active_weeks_first_6",
+    "mean_clicks_first_6_weeks"
+  ],
+  "expected_features_raw": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "num_of_prev_attempts",
+    "studied_credits",
+    "clicks_first_6_weeks",
+    "active_weeks_first_6",
+    "mean_clicks_first_6_weeks"
+  ],
+  "expected_features_resolved": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "clicks_first_6_weeks",
+    "active_weeks_first_6",
+    "mean_clicks_first_6_weeks"
+  ],
+  "numeric_prefill_policy": "deterministic_train_median_or_zero_when_all_missing",
+  "numeric_fill_values": {
+    "num_of_prev_attempts": 0.0,
+    "studied_credits": 60.0,
+    "clicks_first_6_weeks": 182.0,
+    "active_weeks_first_6": 5.0,
+    "mean_clicks_first_6_weeks": 39.0
+  },
+  "categorical_imputation": "constant_missing",
+  "categorical_encoding": "one_hot_handle_unknown_ignore",
+  "numeric_scaling": "standard_scaler_fit_on_train_only",
+  "variance_filter_threshold": 1e-12,
+  "feature_names_before_filter": [
+    "num__num_of_prev_attempts",
+    "num__studied_credits",
+    "num__clicks_first_6_weeks",
+    "num__active_weeks_first_6",
+    "num__mean_clicks_first_6_weeks",
+    "cat__gender_F",
+    "cat__gender_M",
+    "cat__region_East Anglian Region",
+    "cat__region_East Midlands Region",
+    "cat__region_Ireland",
+    "cat__region_London Region",
+    "cat__region_North Region",
+    "cat__region_North Western Region",
+    "cat__region_Scotland",
+    "cat__region_South East Region",
+    "cat__region_South Region",
+    "cat__region_South West Region",
+    "cat__region_Wales",
+    "cat__region_West Midlands Region",
+    "cat__region_Yorkshire Region",
+    "cat__highest_education_A Level or Equivalent",
+    "cat__highest_education_HE Qualification",
+    "cat__highest_education_Lower Than A Level",
+    "cat__highest_education_No Formal quals",
+    "cat__highest_education_Post Graduate Qualification",
+    "cat__imd_band_0-10%",
+    "cat__imd_band_10-20",
+    "cat__imd_band_20-30%",
+    "cat__imd_band_30-40%",
+    "cat__imd_band_40-50%",
+    "cat__imd_band_50-60%",
+    "cat__imd_band_60-70%",
+    "cat__imd_band_70-80%",
+    "cat__imd_band_80-90%",
+    "cat__imd_band_90-100%",
+    "cat__imd_band_None",
+    "cat__age_band_0-35",
+    "cat__age_band_35-55",
+    "cat__age_band_55<=",
+    "cat__disability_N",
+    "cat__disability_Y"
+  ],
+  "feature_names_out": [
+    "num__num_of_prev_attempts",
+    "num__studied_credits",
+    "num__clicks_first_6_weeks",
+    "num__active_weeks_first_6",
+    "num__mean_clicks_first_6_weeks",
+    "cat__gender_F",
+    "cat__gender_M",
+    "cat__region_East Anglian Region",
+    "cat__region_East Midlands Region",
+    "cat__region_Ireland",
+    "cat__region_London Region",
+    "cat__region_North Region",
+    "cat__region_North Western Region",
+    "cat__region_Scotland",
+    "cat__region_South East Region",
+    "cat__region_South Region",
+    "cat__region_South West Region",
+    "cat__region_Wales",
+    "cat__region_West Midlands Region",
+    "cat__region_Yorkshire Region",
+    "cat__highest_education_A Level or Equivalent",
+    "cat__highest_education_HE Qualification",
+    "cat__highest_education_Lower Than A Level",
+    "cat__highest_education_No Formal quals",
+    "cat__highest_education_Post Graduate Qualification",
+    "cat__imd_band_0-10%",
+    "cat__imd_band_10-20",
+    "cat__imd_band_20-30%",
+    "cat__imd_band_30-40%",
+    "cat__imd_band_40-50%",
+    "cat__imd_band_50-60%",
+    "cat__imd_band_60-70%",
+    "cat__imd_band_70-80%",
+    "cat__imd_band_80-90%",
+    "cat__imd_band_90-100%",
+    "cat__imd_band_None",
+    "cat__age_band_0-35",
+    "cat__age_band_35-55",
+    "cat__age_band_55<=",
+    "cat__disability_N",
+    "cat__disability_Y"
+  ],
+  "dropped_low_variance_features": [],
+  "rsf_positioning_note": "early-window comparable random survival forest benchmark",
+  "window_weeks": 6
+}
+
+[END] 5.9.2 - 2026-06-19 20:42:55
+[START] 5.9 - 2026-06-19 20:42:55
+# ==============================================================
+# 5.9.3 - Tune and evaluate the comparable-window Random Survival Forest
+# ==============================================================
+[Stage 5.9.3 table_rsf_tuning_results - RSF tuning results]
+table_name=table_rsf_tuning_results_w6
+rows=24, cols=7
+ candidate_id  n_estimators  min_samples_leaf  max_depth max_features  val_ibs  val_c_index
+           19           400                 3         15         sqrt 0.107082     0.680541
+           18           300                 5         15         sqrt 0.107185     0.679289
+           17           200                 3         15         sqrt 0.107244     0.680405
+           16           300                10          8          0.7 0.107398     0.679533
+           13           300                20          8          0.8 0.107412     0.680726
+           15           200                 3          8          0.7 0.107418     0.677929
+            3           400                 3         -1         sqrt 0.107429     0.682789
+           14           400                 5          8          0.7 0.107446     0.678772
+            4           200                10         -1         sqrt 0.107454     0.677940
+            2           300                 5         -1         sqrt 0.107464     0.679436
+           12           200                10          8          0.8 0.107545     0.680499
+            1           200                 3         -1         sqrt 0.107830     0.681341
+            5           300                20         -1         sqrt 0.107919     0.676410
+           21           300                20         15          0.8 0.107958     0.684259
+           20           200                10         15          0.8 0.107972     0.686980
+           24           300                10         15          0.7 0.108091     0.684248
+            8           300                10         -1          0.8 0.108362     0.685965
+           22           400                 5         15          0.7 0.108455     0.683587
+           23           200                 3         15          0.7 0.108545     0.682615
+            9           200                 3          8         sqrt 0.108941     0.668203
+ARTIFACT | Stage 5.9.3 table_rsf_tuning_results - RSF tuning results | duckdb://table_rsf_tuning_results_w6
+[Stage 5.9.3 table_rsf_tuned_test_predictions - RSF test predictions]
+table_name=table_rsf_tuned_test_predictions_w6
+rows=29334, cols=6
+      enrollment_id  event  duration  horizon_week  pred_survival_h  pred_risk_h
+ 100561||DDD||2014J      0        37            10         0.917143     0.082857
+ 100621||CCC||2014B      1         6            10         0.704180     0.295820
+ 101187||DDD||2014J      0        37            10         0.818070     0.181930
+ 101279||DDD||2014J      0        37            10         0.958332     0.041668
+ 101414||EEE||2013J      0        38            10         0.752710     0.247290
+ 101700||CCC||2014J      0        38            10         0.607450     0.392550
+ 101781||AAA||2013J      0        38            10         0.981446     0.018554
+ 102209||CCC||2014J      1        15            10         0.962099     0.037901
+ 102343||FFF||2013J      0        38            10         0.986862     0.013138
+1023623||CCC||2014J      0        38            10         0.941733     0.058267
+1033968||DDD||2014B      1        13            10         0.766932     0.233068
+ 103891||DDD||2014B      0        34            10         0.754068     0.245932
+ 104316||FFF||2014B      0        34            10         0.967747     0.032253
+1045203||AAA||2014J      0        38            10         0.972744     0.027256
+1047645||CCC||2014B      0        34            10         0.896520     0.103480
+1053702||EEE||2013J      0        38            10         0.959559     0.040441
+ 105629||FFF||2013J      0        38            10         0.982939     0.017061
+1057883||CCC||2014B      0        34            10         0.908254     0.091746
+ 106383||BBB||2014J      1        21            10         0.896773     0.103227
+ 106553||DDD||2014J      0        37            10         0.938084     0.061916
+ARTIFACT | Stage 5.9.3 table_rsf_tuned_test_predictions - RSF test predictions | duckdb://table_rsf_tuned_test_predictions_w6
+[Stage 5.9.3 table_rsf_tuned_primary_metrics - RSF primary metrics]
+table_name=table_rsf_tuned_primary_metrics_w6
+rows=2, cols=4
+metric_name metric_category  metric_value                         notes
+        ibs         primary      0.106924 sksurv_integrated_brier_score
+    c_index      co_primary      0.697596          pycox_concordance_td
+ARTIFACT | Stage 5.9.3 table_rsf_tuned_primary_metrics - RSF primary metrics | duckdb://table_rsf_tuned_primary_metrics_w6
+[Stage 5.9.3 table_rsf_tuned_brier_by_horizon - RSF Brier scores by horizon]
+table_name=table_rsf_tuned_brier_by_horizon_w6
+rows=3, cols=5
+ horizon_week      metric_name metric_category  metric_value              notes
+           10 brier_at_horizon         primary      0.089233 sksurv_brier_score
+           20 brier_at_horizon         primary      0.128104 sksurv_brier_score
+           30 brier_at_horizon         primary      0.153120 sksurv_brier_score
+ARTIFACT | Stage 5.9.3 table_rsf_tuned_brier_by_horizon - RSF Brier scores by horizon | duckdb://table_rsf_tuned_brier_by_horizon_w6
+[Stage 5.9.3 table_rsf_tuned_secondary_metrics - RSF secondary metrics]
+table_name=table_rsf_tuned_secondary_metrics_w6
+rows=6, cols=5
+ horizon_week         metric_name metric_category  metric_value                                                                                  notes
+           10 risk_auc_at_horizon       secondary      0.807926                                                            roc_auc_on_evaluable_subset
+           10  time_dependent_auc       secondary      0.801911 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.801911; local_ipcw_auc
+           20 risk_auc_at_horizon       secondary      0.726978                                                            roc_auc_on_evaluable_subset
+           20  time_dependent_auc       secondary      0.717367 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.717367; local_ipcw_auc
+           30 risk_auc_at_horizon       secondary      0.696547                                                            roc_auc_on_evaluable_subset
+           30  time_dependent_auc       secondary      0.684604 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.684604; local_ipcw_auc
+ARTIFACT | Stage 5.9.3 table_rsf_tuned_secondary_metrics - RSF secondary metrics | duckdb://table_rsf_tuned_secondary_metrics_w6
+[Stage 5.9.3 table_rsf_tuned_td_auc_support_audit - RSF IPCW support audit]
+table_name=table_rsf_tuned_td_auc_support_audit_w6
+rows=3, cols=6
+ horizon_week  max_ipcw_time  n_total_test_enrollments  n_supported_test_enrollments  mean_auc                                                 notes
+           10           38.0                      9778                          6742  0.801911 IPCW-supported subset used for RSF time-dependent AUC
+           20           38.0                      9778                          6742  0.717367 IPCW-supported subset used for RSF time-dependent AUC
+           30           38.0                      9778                          6742  0.684604 IPCW-supported subset used for RSF time-dependent AUC
+ARTIFACT | Stage 5.9.3 table_rsf_tuned_td_auc_support_audit - RSF IPCW support audit | duckdb://table_rsf_tuned_td_auc_support_audit_w6
+[Stage 5.9.3 table_rsf_tuned_row_diagnostics - RSF row-level diagnostics]
+table_name=table_rsf_tuned_row_diagnostics_w6
+rows=1, cols=6
+model_name  row_level_roc_auc  row_level_pr_auc  row_level_log_loss  row_level_brier                                                                    diagnostic_note
+ rsf_tuned           0.371454          0.188328            0.652367         0.201166 auxiliary enrollment-level proxy only; not a primary cross-family benchmark metric
+ARTIFACT | Stage 5.9.3 table_rsf_tuned_row_diagnostics - RSF row-level diagnostics | duckdb://table_rsf_tuned_row_diagnostics_w6
+[Stage 5.9.3 table_rsf_tuned_support_by_horizon - RSF support by horizon]
+table_name=table_rsf_tuned_support_by_horizon_w6
+rows=3, cols=4
+ horizon_week  n_evaluable_enrollments  n_events_by_horizon  event_rate_by_horizon
+           10                     9778                 1215               0.124259
+           20                     9778                 1736               0.177541
+           30                     9778                 2129               0.217734
+ARTIFACT | Stage 5.9.3 table_rsf_tuned_support_by_horizon - RSF support by horizon | duckdb://table_rsf_tuned_support_by_horizon_w6
+[Stage 5.9.3 table_rsf_tuned_calibration_summary - RSF calibration summary]
+table_name=table_rsf_tuned_calibration_summary_w6
+rows=3, cols=5
+ horizon_week            metric_name metric_category  metric_value                                         notes
+           10 calibration_at_horizon         primary      0.011653 Weighted absolute calibration gap across bins
+           20 calibration_at_horizon         primary      0.012761 Weighted absolute calibration gap across bins
+           30 calibration_at_horizon         primary      0.011552 Weighted absolute calibration gap across bins
+ARTIFACT | Stage 5.9.3 table_rsf_tuned_calibration_summary - RSF calibration summary | duckdb://table_rsf_tuned_calibration_summary_w6
+[Stage 5.9.3 table_rsf_tuned_calibration_bins_by_horizon - RSF calibration bins]
+table_name=table_rsf_tuned_calibration_bins_by_horizon_w6
+rows=30, cols=6
+ calibration_bin   n  mean_predicted_risk  observed_event_rate  horizon_week  abs_calibration_gap
+               0 978             0.018822             0.022495            10             0.003673
+               1 978             0.028065             0.027607            10             0.000458
+               2 978             0.036689             0.029652            10             0.007037
+               3 977             0.047142             0.031730            10             0.015413
+               4 978             0.060490             0.054192            10             0.006297
+               5 978             0.081933             0.069530            10             0.012404
+               6 977             0.115129             0.110542            10             0.004587
+               7 978             0.178392             0.175869            10             0.002523
+               8 978             0.258302             0.254601            10             0.003701
+               9 978             0.405820             0.466258            10             0.060437
+               0 978             0.055159             0.066462            20             0.011303
+               1 978             0.074863             0.068507            20             0.006356
+               2 978             0.089952             0.091002            20             0.001050
+               3 977             0.105510             0.090072            20             0.015438
+               4 978             0.124688             0.118609            20             0.006079
+               5 978             0.149606             0.130879            20             0.018727
+               6 977             0.184715             0.175026            20             0.009690
+               7 978             0.233629             0.230061            20             0.003567
+               8 978             0.298509             0.314928            20             0.016419
+               9 978             0.450793             0.489775            20             0.038982
+ARTIFACT | Stage 5.9.3 table_rsf_tuned_calibration_bins_by_horizon - RSF calibration bins | duckdb://table_rsf_tuned_calibration_bins_by_horizon_w6
+[Stage 5.9.3 table_rsf_tuned_predicted_vs_observed_survival - RSF predicted versus observed survival]
+table_name=table_rsf_tuned_predicted_vs_observed_survival_w6
+rows=3, cols=5
+ horizon_week  n_evaluable_enrollments  mean_predicted_survival  mean_observed_survival  abs_gap
+           10                     9778                 0.876913                0.875741 0.001171
+           20                     9778                 0.823251                0.822459 0.000793
+           30                     9778                 0.782363                0.782266 0.000096
+ARTIFACT | Stage 5.9.3 table_rsf_tuned_predicted_vs_observed_survival - RSF predicted versus observed survival | duckdb://table_rsf_tuned_predicted_vs_observed_survival_w6
+ARTIFACT | rsf_model | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/models/rsf_tuned_w6.joblib
+ARTIFACT | rsf_preprocessor | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/models/rsf_preprocessor_w6.joblib
+ARTIFACT | rsf_tuned_model_config | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/metadata/rsf_tuned_model_config_w6.json
+{
+  "model_name": "rsf_tuned",
+  "selection_metric": "lowest_validation_ibs",
+  "validation_split": {
+    "method": "GroupShuffleSplit",
+    "test_size": 0.1,
+    "group_column": "enrollment_id",
+    "random_seed": 42
+  },
+  "search_space": [
+    {
+      "candidate_id": 1,
+      "n_estimators": 200,
+      "min_samples_leaf": 3,
+      "max_depth": null,
+      "max_features": "sqrt"
+    },
+    {
+      "candidate_id": 2,
+      "n_estimators": 300,
+      "min_samples_leaf": 5,
+      "max_depth": null,
+      "max_features": "sqrt"
+    },
+    {
+      "candidate_id": 3,
+      "n_estimators": 400,
+      "min_samples_leaf": 3,
+      "max_depth": null,
+      "max_features": "sqrt"
+    },
+    {
+      "candidate_id": 4,
+      "n_estimators": 200,
+      "min_samples_leaf": 10,
+      "max_depth": null,
+      "max_features": "sqrt"
+    },
+    {
+      "candidate_id": 5,
+      "n_estimators": 300,
+      "min_samples_leaf": 20,
+      "max_depth": null,
+      "max_features": "sqrt"
+    },
+    {
+      "candidate_id": 6,
+      "n_estimators": 400,
+      "min_samples_leaf": 5,
+      "max_depth": null,
+      "max_features": 0.8
+    },
+    {
+      "candidate_id": 7,
+      "n_estimators": 200,
+      "min_samples_leaf": 3,
+      "max_depth": null,
+      "max_features": 0.7
+    },
+    {
+      "candidate_id": 8,
+      "n_estimators": 300,
+      "min_samples_leaf": 10,
+      "max_depth": null,
+      "max_features": 0.8
+    },
+    {
+      "candidate_id": 9,
+      "n_estimators": 200,
+      "min_samples_leaf": 3,
+      "max_depth": 8,
+      "max_features": "sqrt"
+    },
+    {
+      "candidate_id": 10,
+      "n_estimators": 300,
+      "min_samples_leaf": 5,
+      "max_depth": 8,
+      "max_features": "sqrt"
+    },
+    {
+      "candidate_id": 11,
+      "n_estimators": 400,
+      "min_samples_leaf": 3,
+      "max_depth": 8,
+      "max_features": "sqrt"
+    },
+    {
+      "candidate_id": 12,
+      "n_estimators": 200,
+      "min_samples_leaf": 10,
+      "max_depth": 8,
+      "max_features": 0.8
+    },
+    {
+      "candidate_id": 13,
+      "n_estimators": 300,
+      "min_samples_leaf": 20,
+      "max_depth": 8,
+      "max_features": 0.8
+    },
+    {
+      "candidate_id": 14,
+      "n_estimators": 400,
+      "min_samples_leaf": 5,
+      "max_depth": 8,
+      "max_features": 0.7
+    },
+    {
+      "candidate_id": 15,
+      "n_estimators": 200,
+      "min_samples_leaf": 3,
+      "max_depth": 8,
+      "max_features": 0.7
+    },
+    {
+      "candidate_id": 16,
+      "n_estimators": 300,
+      "min_samples_leaf": 10,
+      "max_depth": 8,
+      "max_features": 0.7
+    },
+    {
+      "candidate_id": 17,
+      "n_estimators": 200,
+      "min_samples_leaf": 3,
+      "max_depth": 15,
+      "max_features": "sqrt"
+    },
+    {
+      "candidate_id": 18,
+      "n_estimators": 300,
+      "min_samples_leaf": 5,
+      "max_depth": 15,
+      "max_features": "sqrt"
+    },
+    {
+      "candidate_id": 19,
+      "n_estimators": 400,
+      "min_samples_leaf": 3,
+      "max_depth": 15,
+      "max_features": "sqrt"
+    },
+    {
+      "candidate_id": 20,
+      "n_estimators": 200,
+      "min_samples_leaf": 10,
+      "max_depth": 15,
+      "max_features": 0.8
+    },
+    {
+      "candidate_id": 21,
+      "n_estimators": 300,
+      "min_samples_leaf": 20,
+      "max_depth": 15,
+      "max_features": 0.8
+    },
+    {
+      "candidate_id": 22,
+      "n_estimators": 400,
+      "min_samples_leaf": 5,
+      "max_depth": 15,
+      "max_features": 0.7
+    },
+    {
+      "candidate_id": 23,
+      "n_estimators": 200,
+      "min_samples_leaf": 3,
+      "max_depth": 15,
+      "max_features": 0.7
+    },
+    {
+      "candidate_id": 24,
+      "n_estimators": 300,
+      "min_samples_leaf": 10,
+      "max_depth": 15,
+      "max_features": 0.7
+    }
+  ],
+  "benchmark_horizons": [
+    10,
+    20,
+    30
+  ],
+  "calibration_bins": 10,
+  "calibration_contract_version": "v2_ipcw_km_observed_risk",
+  "calibration_observed_risk_method": "ipcw_km_pseudo_event_rate",
+  "variance_filter_threshold": 1e-12,
+  "n_jobs": 8,
+  "effective_window_weeks": 6,
+  "input_train_table": "enrollment_cox_ready_train_w6",
+  "input_test_table": "enrollment_cox_ready_test_w6",
+  "best_candidate": {
+    "candidate_id": 19,
+    "params": {
+      "n_estimators": 400,
+      "min_samples_leaf": 3,
+      "max_depth": 15,
+      "max_features": "sqrt"
+    },
+    "val_ibs": 0.10708227096987223,
+    "val_c_index": 0.6805410639189561
+  },
+  "preprocessing": {
+    "categorical_features": [
+      "gender",
+      "region",
+      "highest_education",
+      "imd_band",
+      "age_band",
+      "disability"
+    ],
+    "numeric_features": [
+      "num_of_prev_attempts",
+      "studied_credits",
+      "clicks_first_6_weeks",
+      "active_weeks_first_6",
+      "mean_clicks_first_6_weeks"
+    ],
+    "numeric_prefill_values": {
+      "num_of_prev_attempts": 0.0,
+      "studied_credits": 60.0,
+      "clicks_first_6_weeks": 182.0,
+      "active_weeks_first_6": 5.0,
+      "mean_clicks_first_6_weeks": 39.0
+    },
+    "feature_names_before_filter": [
+      "num__num_of_prev_attempts",
+      "num__studied_credits",
+      "num__clicks_first_6_weeks",
+      "num__active_weeks_first_6",
+      "num__mean_clicks_first_6_weeks",
+      "cat__gender_F",
+      "cat__gender_M",
+      "cat__region_East Anglian Region",
+      "cat__region_East Midlands Region",
+      "cat__region_Ireland",
+      "cat__region_London Region",
+      "cat__region_North Region",
+      "cat__region_North Western Region",
+      "cat__region_Scotland",
+      "cat__region_South East Region",
+      "cat__region_South Region",
+      "cat__region_South West Region",
+      "cat__region_Wales",
+      "cat__region_West Midlands Region",
+      "cat__region_Yorkshire Region",
+      "cat__highest_education_A Level or Equivalent",
+      "cat__highest_education_HE Qualification",
+      "cat__highest_education_Lower Than A Level",
+      "cat__highest_education_No Formal quals",
+      "cat__highest_education_Post Graduate Qualification",
+      "cat__imd_band_0-10%",
+      "cat__imd_band_10-20",
+      "cat__imd_band_20-30%",
+      "cat__imd_band_30-40%",
+      "cat__imd_band_40-50%",
+      "cat__imd_band_50-60%",
+      "cat__imd_band_60-70%",
+      "cat__imd_band_70-80%",
+      "cat__imd_band_80-90%",
+      "cat__imd_band_90-100%",
+      "cat__imd_band_None",
+      "cat__age_band_0-35",
+      "cat__age_band_35-55",
+      "cat__age_band_55<=",
+      "cat__disability_N",
+      "cat__disability_Y"
+    ],
+    "feature_names_out": [
+      "num__num_of_prev_attempts",
+      "num__studied_credits",
+      "num__clicks_first_6_weeks",
+      "num__active_weeks_first_6",
+      "num__mean_clicks_first_6_weeks",
+      "cat__gender_F",
+      "cat__gender_M",
+      "cat__region_East Anglian Region",
+      "cat__region_East Midlands Region",
+      "cat__region_Ireland",
+      "cat__region_London Region",
+      "cat__region_North Region",
+      "cat__region_North Western Region",
+      "cat__region_Scotland",
+      "cat__region_South East Region",
+      "cat__region_South Region",
+      "cat__region_South West Region",
+      "cat__region_Wales",
+      "cat__region_West Midlands Region",
+      "cat__region_Yorkshire Region",
+      "cat__highest_education_A Level or Equivalent",
+      "cat__highest_education_HE Qualification",
+      "cat__highest_education_Lower Than A Level",
+      "cat__highest_education_No Formal quals",
+      "cat__highest_education_Post Graduate Qualification",
+      "cat__imd_band_0-10%",
+      "cat__imd_band_10-20",
+      "cat__imd_band_20-30%",
+      "cat__imd_band_30-40%",
+      "cat__imd_band_40-50%",
+      "cat__imd_band_50-60%",
+      "cat__imd_band_60-70%",
+      "cat__imd_band_70-80%",
+      "cat__imd_band_80-90%",
+      "cat__imd_band_90-100%",
+      "cat__imd_band_None",
+      "cat__age_band_0-35",
+      "cat__age_band_35-55",
+      "cat__age_band_55<=",
+      "cat__disability_N",
+      "cat__disability_Y"
+    ],
+    "dropped_low_variance_features": []
+  },
+  "design_note": "The comparable Random Survival Forest arm preserves the canonical early-window contract, uses the same deterministic preprocessing as the linear continuous-time baselines, and tunes only a compact notebook-traceable forest grid under validation IBS."
+}
+
+ candidate_id                                                                                params  val_ibs  val_c_index
+           19 {'n_estimators': 400, 'min_samples_leaf': 3, 'max_depth': 15, 'max_features': 'sqrt'} 0.107082     0.680541
+[END] 5.9.3 - 2026-06-19 20:48:25
+[START] 5.9 - 2026-06-19 20:48:25
+# ==============================================================
+# 5.9.4 - Close runtime resources
+# ==============================================================
+DuckDB connection closed.
+ARTIFACT | duckdb_connection | closed::/Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/benchmark_survival.duckdb
+[END] 5.9.4 - 2026-06-19 20:48:25
+[RUN_PLAN] comparable_window_weeks=8
+[START] 5.9 - 2026-06-19 20:48:25
+# ==============================================================
+# 5.9.1 - Lightweight runtime bootstrap
+# ==============================================================
+ARTIFACT | benchmark_shared_config | /Users/rafars/dropout_benchmark_desenv/benchmark_shared_config.toml
+ARTIFACT | benchmark_modeling_contract | /Users/rafars/dropout_benchmark_desenv/benchmark_modeling_contract.toml
+ARTIFACT | run_metadata | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/metadata/run_metadata.json
+ARTIFACT | duckdb_path | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/benchmark_survival.duckdb
+{
+  "run_id": "f3766e75053447a7beb7a1c4936d231f",
+  "random_seed": 42,
+  "test_size": 0.3,
+  "early_window_weeks": 4,
+  "main_enrollment_window_weeks": 4,
+  "effective_window_weeks": 8,
+  "input_train_table": "enrollment_cox_ready_train_w8",
+  "input_test_table": "enrollment_cox_ready_test_w8"
+}
+[END] 5.9.1 - 2026-06-19 20:48:26
+[START] 5.9 - 2026-06-19 20:48:26
+# ==============================================================
+# 5.9.2 - Build comparable-window RSF treatment
+# ==============================================================
+[Stage 5.9.2 table_rsf_preprocessing_summary - RSF preprocessing summary]
+table_name=table_rsf_preprocessing_summary_w8
+rows=1, cols=21
+          model_family  train_rows  test_rows  n_input_features_raw  n_numeric_features  n_categorical_features  n_features_after_encoding_before_filter  n_features_after_variance_filter  n_features_dropped_by_variance_filter  n_events_train  n_events_test  mean_duration_train  mean_duration_test                              numeric_prefill_policy categorical_imputation          categorical_encoding                   numeric_scaling  variance_filter_threshold output_dtype                                     rsf_positioning_note  window_weeks
+random_survival_forest       22815       9778                    11                   5                       6                                       41                                41                                      0            5171           2216            30.536182           30.539476 deterministic_train_median_or_zero_when_all_missing       constant_missing one_hot_handle_unknown_ignore standard_scaler_fit_on_train_only               1.000000e-12      float32 early-window comparable random survival forest benchmark             8
+ARTIFACT | Stage 5.9.2 table_rsf_preprocessing_summary - RSF preprocessing summary | duckdb://table_rsf_preprocessing_summary_w8
+[Stage 5.9.2 table_rsf_raw_feature_manifest - RSF raw feature manifest]
+table_name=table_rsf_raw_feature_manifest_w8
+rows=11, cols=6
+ feature_name_operational feature_role  present_in_train  present_in_test  covered_by_canonical_config  numeric_prefill_value
+                   gender  categorical              True             True                        False                    NaN
+                   region  categorical              True             True                        False                    NaN
+        highest_education  categorical              True             True                        False                    NaN
+                 imd_band  categorical              True             True                        False                    NaN
+                 age_band  categorical              True             True                        False                    NaN
+               disability  categorical              True             True                        False                    NaN
+     num_of_prev_attempts      numeric              True             True                         True               0.000000
+          studied_credits      numeric              True             True                         True              60.000000
+     clicks_first_8_weeks      numeric              True             True                         True             229.000000
+     active_weeks_first_8      numeric              True             True                         True               7.000000
+mean_clicks_first_8_weeks      numeric              True             True                         True              37.857143
+ARTIFACT | Stage 5.9.2 table_rsf_raw_feature_manifest - RSF raw feature manifest | duckdb://table_rsf_raw_feature_manifest_w8
+[Stage 5.9.2 table_rsf_feature_names_out - RSF output feature manifest]
+table_name=table_rsf_feature_names_out_w8
+rows=41, cols=2
+                feature_name_out  transformed_variance_train
+       num__num_of_prev_attempts                    1.000000
+            num__studied_credits                    1.000000
+       num__clicks_first_8_weeks                    1.000000
+       num__active_weeks_first_8                    1.000000
+  num__mean_clicks_first_8_weeks                    1.000000
+                   cat__gender_F                    0.247988
+                   cat__gender_M                    0.247988
+ cat__region_East Anglian Region                    0.092080
+cat__region_East Midlands Region                    0.067091
+             cat__region_Ireland                    0.034283
+       cat__region_London Region                    0.088295
+        cat__region_North Region                    0.052060
+cat__region_North Western Region                    0.082139
+            cat__region_Scotland                    0.094370
+   cat__region_South East Region                    0.059974
+        cat__region_South Region                    0.087554
+   cat__region_South West Region                    0.068848
+               cat__region_Wales                    0.059707
+cat__region_West Midlands Region                    0.073261
+    cat__region_Yorkshire Region                    0.058136
+ARTIFACT | Stage 5.9.2 table_rsf_feature_names_out - RSF output feature manifest | duckdb://table_rsf_feature_names_out_w8
+ARTIFACT | rsf_preprocessing_config | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/metadata/rsf_preprocessing_config_w8.json
+{
+  "model_family": "random_survival_forest",
+  "duration_column": "duration",
+  "event_column": "event",
+  "categorical_features": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability"
+  ],
+  "numeric_features": [
+    "num_of_prev_attempts",
+    "studied_credits",
+    "clicks_first_8_weeks",
+    "active_weeks_first_8",
+    "mean_clicks_first_8_weeks"
+  ],
+  "raw_feature_columns": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability",
+    "num_of_prev_attempts",
+    "studied_credits",
+    "clicks_first_8_weeks",
+    "active_weeks_first_8",
+    "mean_clicks_first_8_weeks"
+  ],
+  "expected_features_raw": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "num_of_prev_attempts",
+    "studied_credits",
+    "clicks_first_8_weeks",
+    "active_weeks_first_8",
+    "mean_clicks_first_8_weeks"
+  ],
+  "expected_features_resolved": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "clicks_first_8_weeks",
+    "active_weeks_first_8",
+    "mean_clicks_first_8_weeks"
+  ],
+  "numeric_prefill_policy": "deterministic_train_median_or_zero_when_all_missing",
+  "numeric_fill_values": {
+    "num_of_prev_attempts": 0.0,
+    "studied_credits": 60.0,
+    "clicks_first_8_weeks": 229.0,
+    "active_weeks_first_8": 7.0,
+    "mean_clicks_first_8_weeks": 37.857142857142854
+  },
+  "categorical_imputation": "constant_missing",
+  "categorical_encoding": "one_hot_handle_unknown_ignore",
+  "numeric_scaling": "standard_scaler_fit_on_train_only",
+  "variance_filter_threshold": 1e-12,
+  "feature_names_before_filter": [
+    "num__num_of_prev_attempts",
+    "num__studied_credits",
+    "num__clicks_first_8_weeks",
+    "num__active_weeks_first_8",
+    "num__mean_clicks_first_8_weeks",
+    "cat__gender_F",
+    "cat__gender_M",
+    "cat__region_East Anglian Region",
+    "cat__region_East Midlands Region",
+    "cat__region_Ireland",
+    "cat__region_London Region",
+    "cat__region_North Region",
+    "cat__region_North Western Region",
+    "cat__region_Scotland",
+    "cat__region_South East Region",
+    "cat__region_South Region",
+    "cat__region_South West Region",
+    "cat__region_Wales",
+    "cat__region_West Midlands Region",
+    "cat__region_Yorkshire Region",
+    "cat__highest_education_A Level or Equivalent",
+    "cat__highest_education_HE Qualification",
+    "cat__highest_education_Lower Than A Level",
+    "cat__highest_education_No Formal quals",
+    "cat__highest_education_Post Graduate Qualification",
+    "cat__imd_band_0-10%",
+    "cat__imd_band_10-20",
+    "cat__imd_band_20-30%",
+    "cat__imd_band_30-40%",
+    "cat__imd_band_40-50%",
+    "cat__imd_band_50-60%",
+    "cat__imd_band_60-70%",
+    "cat__imd_band_70-80%",
+    "cat__imd_band_80-90%",
+    "cat__imd_band_90-100%",
+    "cat__imd_band_None",
+    "cat__age_band_0-35",
+    "cat__age_band_35-55",
+    "cat__age_band_55<=",
+    "cat__disability_N",
+    "cat__disability_Y"
+  ],
+  "feature_names_out": [
+    "num__num_of_prev_attempts",
+    "num__studied_credits",
+    "num__clicks_first_8_weeks",
+    "num__active_weeks_first_8",
+    "num__mean_clicks_first_8_weeks",
+    "cat__gender_F",
+    "cat__gender_M",
+    "cat__region_East Anglian Region",
+    "cat__region_East Midlands Region",
+    "cat__region_Ireland",
+    "cat__region_London Region",
+    "cat__region_North Region",
+    "cat__region_North Western Region",
+    "cat__region_Scotland",
+    "cat__region_South East Region",
+    "cat__region_South Region",
+    "cat__region_South West Region",
+    "cat__region_Wales",
+    "cat__region_West Midlands Region",
+    "cat__region_Yorkshire Region",
+    "cat__highest_education_A Level or Equivalent",
+    "cat__highest_education_HE Qualification",
+    "cat__highest_education_Lower Than A Level",
+    "cat__highest_education_No Formal quals",
+    "cat__highest_education_Post Graduate Qualification",
+    "cat__imd_band_0-10%",
+    "cat__imd_band_10-20",
+    "cat__imd_band_20-30%",
+    "cat__imd_band_30-40%",
+    "cat__imd_band_40-50%",
+    "cat__imd_band_50-60%",
+    "cat__imd_band_60-70%",
+    "cat__imd_band_70-80%",
+    "cat__imd_band_80-90%",
+    "cat__imd_band_90-100%",
+    "cat__imd_band_None",
+    "cat__age_band_0-35",
+    "cat__age_band_35-55",
+    "cat__age_band_55<=",
+    "cat__disability_N",
+    "cat__disability_Y"
+  ],
+  "dropped_low_variance_features": [],
+  "rsf_positioning_note": "early-window comparable random survival forest benchmark",
+  "window_weeks": 8
+}
+
+[END] 5.9.2 - 2026-06-19 20:48:26
+[START] 5.9 - 2026-06-19 20:48:26
+# ==============================================================
+# 5.9.3 - Tune and evaluate the comparable-window Random Survival Forest
+# ==============================================================
+[Stage 5.9.3 table_rsf_tuning_results - RSF tuning results]
+table_name=table_rsf_tuning_results_w8
+rows=24, cols=7
+ candidate_id  n_estimators  min_samples_leaf  max_depth max_features  val_ibs  val_c_index
+           19           400                 3         15         sqrt 0.102124     0.706166
+           17           200                 3         15         sqrt 0.102126     0.705351
+           12           200                10          8          0.8 0.102182     0.709659
+           16           300                10          8          0.7 0.102203     0.709786
+            2           300                 5         -1         sqrt 0.102252     0.708376
+           14           400                 5          8          0.7 0.102265     0.709346
+           18           300                 5         15         sqrt 0.102267     0.706982
+           15           200                 3          8          0.7 0.102278     0.707988
+           13           300                20          8          0.8 0.102328     0.710536
+            1           200                 3         -1         sqrt 0.102449     0.706821
+           20           200                10         15          0.8 0.102546     0.711781
+            3           400                 3         -1         sqrt 0.102553     0.706952
+            4           200                10         -1         sqrt 0.102612     0.707094
+           21           300                20         15          0.8 0.102662     0.711764
+           24           300                10         15          0.7 0.102696     0.710561
+           22           400                 5         15          0.7 0.102784     0.710915
+            8           300                10         -1          0.8 0.102936     0.712659
+           23           200                 3         15          0.7 0.103317     0.708987
+            5           300                20         -1         sqrt 0.103393     0.705135
+            6           400                 5         -1          0.8 0.103861     0.711069
+ARTIFACT | Stage 5.9.3 table_rsf_tuning_results - RSF tuning results | duckdb://table_rsf_tuning_results_w8
+[Stage 5.9.3 table_rsf_tuned_test_predictions - RSF test predictions]
+table_name=table_rsf_tuned_test_predictions_w8
+rows=29334, cols=6
+      enrollment_id  event  duration  horizon_week  pred_survival_h  pred_risk_h
+ 100561||DDD||2014J      0        37            10         0.953089     0.046911
+ 100621||CCC||2014B      1         6            10         0.634092     0.365908
+ 101187||DDD||2014J      0        37            10         0.817548     0.182452
+ 101279||DDD||2014J      0        37            10         0.955971     0.044029
+ 101414||EEE||2013J      0        38            10         0.758292     0.241708
+ 101700||CCC||2014J      0        38            10         0.606146     0.393854
+ 101781||AAA||2013J      0        38            10         0.985612     0.014388
+ 102209||CCC||2014J      1        15            10         0.948363     0.051637
+ 102343||FFF||2013J      0        38            10         0.989017     0.010983
+1023623||CCC||2014J      0        38            10         0.907211     0.092789
+1033968||DDD||2014B      1        13            10         0.877149     0.122851
+ 103891||DDD||2014B      0        34            10         0.757149     0.242851
+ 104316||FFF||2014B      0        34            10         0.973228     0.026772
+1045203||AAA||2014J      0        38            10         0.976976     0.023024
+1047645||CCC||2014B      0        34            10         0.889074     0.110926
+1053702||EEE||2013J      0        38            10         0.972206     0.027794
+ 105629||FFF||2013J      0        38            10         0.990138     0.009862
+1057883||CCC||2014B      0        34            10         0.927904     0.072096
+ 106383||BBB||2014J      1        21            10         0.882319     0.117681
+ 106553||DDD||2014J      0        37            10         0.942603     0.057397
+ARTIFACT | Stage 5.9.3 table_rsf_tuned_test_predictions - RSF test predictions | duckdb://table_rsf_tuned_test_predictions_w8
+[Stage 5.9.3 table_rsf_tuned_primary_metrics - RSF primary metrics]
+table_name=table_rsf_tuned_primary_metrics_w8
+rows=2, cols=4
+metric_name metric_category  metric_value                         notes
+        ibs         primary      0.102167 sksurv_integrated_brier_score
+    c_index      co_primary      0.718189          pycox_concordance_td
+ARTIFACT | Stage 5.9.3 table_rsf_tuned_primary_metrics - RSF primary metrics | duckdb://table_rsf_tuned_primary_metrics_w8
+[Stage 5.9.3 table_rsf_tuned_brier_by_horizon - RSF Brier scores by horizon]
+table_name=table_rsf_tuned_brier_by_horizon_w8
+rows=3, cols=5
+ horizon_week      metric_name metric_category  metric_value              notes
+           10 brier_at_horizon         primary      0.083904 sksurv_brier_score
+           20 brier_at_horizon         primary      0.122899 sksurv_brier_score
+           30 brier_at_horizon         primary      0.148449 sksurv_brier_score
+ARTIFACT | Stage 5.9.3 table_rsf_tuned_brier_by_horizon - RSF Brier scores by horizon | duckdb://table_rsf_tuned_brier_by_horizon_w8
+[Stage 5.9.3 table_rsf_tuned_secondary_metrics - RSF secondary metrics]
+table_name=table_rsf_tuned_secondary_metrics_w8
+rows=6, cols=5
+ horizon_week         metric_name metric_category  metric_value                                                                                  notes
+           10 risk_auc_at_horizon       secondary      0.845416                                                            roc_auc_on_evaluable_subset
+           10  time_dependent_auc       secondary      0.839519 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.839519; local_ipcw_auc
+           20 risk_auc_at_horizon       secondary      0.756415                                                            roc_auc_on_evaluable_subset
+           20  time_dependent_auc       secondary      0.746641 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.746641; local_ipcw_auc
+           30 risk_auc_at_horizon       secondary      0.721040                                                            roc_auc_on_evaluable_subset
+           30  time_dependent_auc       secondary      0.709037 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.709037; local_ipcw_auc
+ARTIFACT | Stage 5.9.3 table_rsf_tuned_secondary_metrics - RSF secondary metrics | duckdb://table_rsf_tuned_secondary_metrics_w8
+[Stage 5.9.3 table_rsf_tuned_td_auc_support_audit - RSF IPCW support audit]
+table_name=table_rsf_tuned_td_auc_support_audit_w8
+rows=3, cols=6
+ horizon_week  max_ipcw_time  n_total_test_enrollments  n_supported_test_enrollments  mean_auc                                                 notes
+           10           38.0                      9778                          6742  0.839519 IPCW-supported subset used for RSF time-dependent AUC
+           20           38.0                      9778                          6742  0.746641 IPCW-supported subset used for RSF time-dependent AUC
+           30           38.0                      9778                          6742  0.709037 IPCW-supported subset used for RSF time-dependent AUC
+ARTIFACT | Stage 5.9.3 table_rsf_tuned_td_auc_support_audit - RSF IPCW support audit | duckdb://table_rsf_tuned_td_auc_support_audit_w8
+[Stage 5.9.3 table_rsf_tuned_row_diagnostics - RSF row-level diagnostics]
+table_name=table_rsf_tuned_row_diagnostics_w8
+rows=1, cols=6
+model_name  row_level_roc_auc  row_level_pr_auc  row_level_log_loss  row_level_brier                                                                    diagnostic_note
+ rsf_tuned           0.415319          0.206042            0.637126          0.19739 auxiliary enrollment-level proxy only; not a primary cross-family benchmark metric
+ARTIFACT | Stage 5.9.3 table_rsf_tuned_row_diagnostics - RSF row-level diagnostics | duckdb://table_rsf_tuned_row_diagnostics_w8
+[Stage 5.9.3 table_rsf_tuned_support_by_horizon - RSF support by horizon]
+table_name=table_rsf_tuned_support_by_horizon_w8
+rows=3, cols=4
+ horizon_week  n_evaluable_enrollments  n_events_by_horizon  event_rate_by_horizon
+           10                     9778                 1215               0.124259
+           20                     9778                 1736               0.177541
+           30                     9778                 2129               0.217734
+ARTIFACT | Stage 5.9.3 table_rsf_tuned_support_by_horizon - RSF support by horizon | duckdb://table_rsf_tuned_support_by_horizon_w8
+[Stage 5.9.3 table_rsf_tuned_calibration_summary - RSF calibration summary]
+table_name=table_rsf_tuned_calibration_summary_w8
+rows=3, cols=5
+ horizon_week            metric_name metric_category  metric_value                                         notes
+           10 calibration_at_horizon         primary      0.015535 Weighted absolute calibration gap across bins
+           20 calibration_at_horizon         primary      0.016326 Weighted absolute calibration gap across bins
+           30 calibration_at_horizon         primary      0.015704 Weighted absolute calibration gap across bins
+ARTIFACT | Stage 5.9.3 table_rsf_tuned_calibration_summary - RSF calibration summary | duckdb://table_rsf_tuned_calibration_summary_w8
+[Stage 5.9.3 table_rsf_tuned_calibration_bins_by_horizon - RSF calibration bins]
+table_name=table_rsf_tuned_calibration_bins_by_horizon_w8
+rows=30, cols=6
+ calibration_bin   n  mean_predicted_risk  observed_event_rate  horizon_week  abs_calibration_gap
+               0 978             0.012969             0.010225            10             0.002744
+               1 978             0.019759             0.020450            10             0.000690
+               2 978             0.026097             0.020450            10             0.005647
+               3 977             0.034570             0.020471            10             0.014100
+               4 978             0.047764             0.051125            10             0.003361
+               5 978             0.071074             0.043967            10             0.027107
+               6 977             0.115061             0.096213            10             0.018848
+               7 978             0.185390             0.184049            10             0.001341
+               8 978             0.271179             0.293456            10             0.022277
+               9 978             0.442812             0.502045            10             0.059233
+               0 978             0.047861             0.058282            20             0.010421
+               1 978             0.065158             0.060327            20             0.004831
+               2 978             0.079170             0.069530            20             0.009640
+               3 977             0.094549             0.090072            20             0.004477
+               4 978             0.114024             0.101227            20             0.012797
+               5 978             0.141009             0.126789            20             0.014220
+               6 977             0.182160             0.152508            20             0.029652
+               7 978             0.239487             0.246421            20             0.006935
+               8 978             0.309992             0.312883            20             0.002891
+               9 978             0.489861             0.557260            20             0.067399
+ARTIFACT | Stage 5.9.3 table_rsf_tuned_calibration_bins_by_horizon - RSF calibration bins | duckdb://table_rsf_tuned_calibration_bins_by_horizon_w8
+[Stage 5.9.3 table_rsf_tuned_predicted_vs_observed_survival - RSF predicted versus observed survival]
+table_name=table_rsf_tuned_predicted_vs_observed_survival_w8
+rows=3, cols=5
+ horizon_week  n_evaluable_enrollments  mean_predicted_survival  mean_observed_survival  abs_gap
+           10                     9778                 0.877323                0.875741 0.001581
+           20                     9778                 0.823665                0.822459 0.001206
+           30                     9778                 0.782909                0.782266 0.000642
+ARTIFACT | Stage 5.9.3 table_rsf_tuned_predicted_vs_observed_survival - RSF predicted versus observed survival | duckdb://table_rsf_tuned_predicted_vs_observed_survival_w8
+ARTIFACT | rsf_model | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/models/rsf_tuned_w8.joblib
+ARTIFACT | rsf_preprocessor | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/models/rsf_preprocessor_w8.joblib
+ARTIFACT | rsf_tuned_model_config | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/metadata/rsf_tuned_model_config_w8.json
+{
+  "model_name": "rsf_tuned",
+  "selection_metric": "lowest_validation_ibs",
+  "validation_split": {
+    "method": "GroupShuffleSplit",
+    "test_size": 0.1,
+    "group_column": "enrollment_id",
+    "random_seed": 42
+  },
+  "search_space": [
+    {
+      "candidate_id": 1,
+      "n_estimators": 200,
+      "min_samples_leaf": 3,
+      "max_depth": null,
+      "max_features": "sqrt"
+    },
+    {
+      "candidate_id": 2,
+      "n_estimators": 300,
+      "min_samples_leaf": 5,
+      "max_depth": null,
+      "max_features": "sqrt"
+    },
+    {
+      "candidate_id": 3,
+      "n_estimators": 400,
+      "min_samples_leaf": 3,
+      "max_depth": null,
+      "max_features": "sqrt"
+    },
+    {
+      "candidate_id": 4,
+      "n_estimators": 200,
+      "min_samples_leaf": 10,
+      "max_depth": null,
+      "max_features": "sqrt"
+    },
+    {
+      "candidate_id": 5,
+      "n_estimators": 300,
+      "min_samples_leaf": 20,
+      "max_depth": null,
+      "max_features": "sqrt"
+    },
+    {
+      "candidate_id": 6,
+      "n_estimators": 400,
+      "min_samples_leaf": 5,
+      "max_depth": null,
+      "max_features": 0.8
+    },
+    {
+      "candidate_id": 7,
+      "n_estimators": 200,
+      "min_samples_leaf": 3,
+      "max_depth": null,
+      "max_features": 0.7
+    },
+    {
+      "candidate_id": 8,
+      "n_estimators": 300,
+      "min_samples_leaf": 10,
+      "max_depth": null,
+      "max_features": 0.8
+    },
+    {
+      "candidate_id": 9,
+      "n_estimators": 200,
+      "min_samples_leaf": 3,
+      "max_depth": 8,
+      "max_features": "sqrt"
+    },
+    {
+      "candidate_id": 10,
+      "n_estimators": 300,
+      "min_samples_leaf": 5,
+      "max_depth": 8,
+      "max_features": "sqrt"
+    },
+    {
+      "candidate_id": 11,
+      "n_estimators": 400,
+      "min_samples_leaf": 3,
+      "max_depth": 8,
+      "max_features": "sqrt"
+    },
+    {
+      "candidate_id": 12,
+      "n_estimators": 200,
+      "min_samples_leaf": 10,
+      "max_depth": 8,
+      "max_features": 0.8
+    },
+    {
+      "candidate_id": 13,
+      "n_estimators": 300,
+      "min_samples_leaf": 20,
+      "max_depth": 8,
+      "max_features": 0.8
+    },
+    {
+      "candidate_id": 14,
+      "n_estimators": 400,
+      "min_samples_leaf": 5,
+      "max_depth": 8,
+      "max_features": 0.7
+    },
+    {
+      "candidate_id": 15,
+      "n_estimators": 200,
+      "min_samples_leaf": 3,
+      "max_depth": 8,
+      "max_features": 0.7
+    },
+    {
+      "candidate_id": 16,
+      "n_estimators": 300,
+      "min_samples_leaf": 10,
+      "max_depth": 8,
+      "max_features": 0.7
+    },
+    {
+      "candidate_id": 17,
+      "n_estimators": 200,
+      "min_samples_leaf": 3,
+      "max_depth": 15,
+      "max_features": "sqrt"
+    },
+    {
+      "candidate_id": 18,
+      "n_estimators": 300,
+      "min_samples_leaf": 5,
+      "max_depth": 15,
+      "max_features": "sqrt"
+    },
+    {
+      "candidate_id": 19,
+      "n_estimators": 400,
+      "min_samples_leaf": 3,
+      "max_depth": 15,
+      "max_features": "sqrt"
+    },
+    {
+      "candidate_id": 20,
+      "n_estimators": 200,
+      "min_samples_leaf": 10,
+      "max_depth": 15,
+      "max_features": 0.8
+    },
+    {
+      "candidate_id": 21,
+      "n_estimators": 300,
+      "min_samples_leaf": 20,
+      "max_depth": 15,
+      "max_features": 0.8
+    },
+    {
+      "candidate_id": 22,
+      "n_estimators": 400,
+      "min_samples_leaf": 5,
+      "max_depth": 15,
+      "max_features": 0.7
+    },
+    {
+      "candidate_id": 23,
+      "n_estimators": 200,
+      "min_samples_leaf": 3,
+      "max_depth": 15,
+      "max_features": 0.7
+    },
+    {
+      "candidate_id": 24,
+      "n_estimators": 300,
+      "min_samples_leaf": 10,
+      "max_depth": 15,
+      "max_features": 0.7
+    }
+  ],
+  "benchmark_horizons": [
+    10,
+    20,
+    30
+  ],
+  "calibration_bins": 10,
+  "calibration_contract_version": "v2_ipcw_km_observed_risk",
+  "calibration_observed_risk_method": "ipcw_km_pseudo_event_rate",
+  "variance_filter_threshold": 1e-12,
+  "n_jobs": 8,
+  "effective_window_weeks": 8,
+  "input_train_table": "enrollment_cox_ready_train_w8",
+  "input_test_table": "enrollment_cox_ready_test_w8",
+  "best_candidate": {
+    "candidate_id": 19,
+    "params": {
+      "n_estimators": 400,
+      "min_samples_leaf": 3,
+      "max_depth": 15,
+      "max_features": "sqrt"
+    },
+    "val_ibs": 0.102123831916152,
+    "val_c_index": 0.7061664523028455
+  },
+  "preprocessing": {
+    "categorical_features": [
+      "gender",
+      "region",
+      "highest_education",
+      "imd_band",
+      "age_band",
+      "disability"
+    ],
+    "numeric_features": [
+      "num_of_prev_attempts",
+      "studied_credits",
+      "clicks_first_8_weeks",
+      "active_weeks_first_8",
+      "mean_clicks_first_8_weeks"
+    ],
+    "numeric_prefill_values": {
+      "num_of_prev_attempts": 0.0,
+      "studied_credits": 60.0,
+      "clicks_first_8_weeks": 229.0,
+      "active_weeks_first_8": 7.0,
+      "mean_clicks_first_8_weeks": 37.857142857142854
+    },
+    "feature_names_before_filter": [
+      "num__num_of_prev_attempts",
+      "num__studied_credits",
+      "num__clicks_first_8_weeks",
+      "num__active_weeks_first_8",
+      "num__mean_clicks_first_8_weeks",
+      "cat__gender_F",
+      "cat__gender_M",
+      "cat__region_East Anglian Region",
+      "cat__region_East Midlands Region",
+      "cat__region_Ireland",
+      "cat__region_London Region",
+      "cat__region_North Region",
+      "cat__region_North Western Region",
+      "cat__region_Scotland",
+      "cat__region_South East Region",
+      "cat__region_South Region",
+      "cat__region_South West Region",
+      "cat__region_Wales",
+      "cat__region_West Midlands Region",
+      "cat__region_Yorkshire Region",
+      "cat__highest_education_A Level or Equivalent",
+      "cat__highest_education_HE Qualification",
+      "cat__highest_education_Lower Than A Level",
+      "cat__highest_education_No Formal quals",
+      "cat__highest_education_Post Graduate Qualification",
+      "cat__imd_band_0-10%",
+      "cat__imd_band_10-20",
+      "cat__imd_band_20-30%",
+      "cat__imd_band_30-40%",
+      "cat__imd_band_40-50%",
+      "cat__imd_band_50-60%",
+      "cat__imd_band_60-70%",
+      "cat__imd_band_70-80%",
+      "cat__imd_band_80-90%",
+      "cat__imd_band_90-100%",
+      "cat__imd_band_None",
+      "cat__age_band_0-35",
+      "cat__age_band_35-55",
+      "cat__age_band_55<=",
+      "cat__disability_N",
+      "cat__disability_Y"
+    ],
+    "feature_names_out": [
+      "num__num_of_prev_attempts",
+      "num__studied_credits",
+      "num__clicks_first_8_weeks",
+      "num__active_weeks_first_8",
+      "num__mean_clicks_first_8_weeks",
+      "cat__gender_F",
+      "cat__gender_M",
+      "cat__region_East Anglian Region",
+      "cat__region_East Midlands Region",
+      "cat__region_Ireland",
+      "cat__region_London Region",
+      "cat__region_North Region",
+      "cat__region_North Western Region",
+      "cat__region_Scotland",
+      "cat__region_South East Region",
+      "cat__region_South Region",
+      "cat__region_South West Region",
+      "cat__region_Wales",
+      "cat__region_West Midlands Region",
+      "cat__region_Yorkshire Region",
+      "cat__highest_education_A Level or Equivalent",
+      "cat__highest_education_HE Qualification",
+      "cat__highest_education_Lower Than A Level",
+      "cat__highest_education_No Formal quals",
+      "cat__highest_education_Post Graduate Qualification",
+      "cat__imd_band_0-10%",
+      "cat__imd_band_10-20",
+      "cat__imd_band_20-30%",
+      "cat__imd_band_30-40%",
+      "cat__imd_band_40-50%",
+      "cat__imd_band_50-60%",
+      "cat__imd_band_60-70%",
+      "cat__imd_band_70-80%",
+      "cat__imd_band_80-90%",
+      "cat__imd_band_90-100%",
+      "cat__imd_band_None",
+      "cat__age_band_0-35",
+      "cat__age_band_35-55",
+      "cat__age_band_55<=",
+      "cat__disability_N",
+      "cat__disability_Y"
+    ],
+    "dropped_low_variance_features": []
+  },
+  "design_note": "The comparable Random Survival Forest arm preserves the canonical early-window contract, uses the same deterministic preprocessing as the linear continuous-time baselines, and tunes only a compact notebook-traceable forest grid under validation IBS."
+}
+
+ candidate_id                                                                                params  val_ibs  val_c_index
+           19 {'n_estimators': 400, 'min_samples_leaf': 3, 'max_depth': 15, 'max_features': 'sqrt'} 0.102124     0.706166
+[END] 5.9.3 - 2026-06-19 20:55:30
+[START] 5.9 - 2026-06-19 20:55:30
+# ==============================================================
+# 5.9.4 - Close runtime resources
+# ==============================================================
+DuckDB connection closed.
+ARTIFACT | duckdb_connection | closed::/Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/benchmark_survival.duckdb
+[END] 5.9.4 - 2026-06-19 20:55:31
+[RUN_PLAN] comparable_window_weeks=10
+[START] 5.9 - 2026-06-19 20:55:31
+# ==============================================================
+# 5.9.1 - Lightweight runtime bootstrap
+# ==============================================================
+ARTIFACT | benchmark_shared_config | /Users/rafars/dropout_benchmark_desenv/benchmark_shared_config.toml
+ARTIFACT | benchmark_modeling_contract | /Users/rafars/dropout_benchmark_desenv/benchmark_modeling_contract.toml
+ARTIFACT | run_metadata | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/metadata/run_metadata.json
+ARTIFACT | duckdb_path | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/benchmark_survival.duckdb
+{
+  "run_id": "f3766e75053447a7beb7a1c4936d231f",
+  "random_seed": 42,
+  "test_size": 0.3,
+  "early_window_weeks": 4,
+  "main_enrollment_window_weeks": 4,
+  "effective_window_weeks": 10,
+  "input_train_table": "enrollment_cox_ready_train_w10",
+  "input_test_table": "enrollment_cox_ready_test_w10"
+}
+[END] 5.9.1 - 2026-06-19 20:55:31
+[START] 5.9 - 2026-06-19 20:55:31
+# ==============================================================
+# 5.9.2 - Build comparable-window RSF treatment
+# ==============================================================
+[Stage 5.9.2 table_rsf_preprocessing_summary - RSF preprocessing summary]
+table_name=table_rsf_preprocessing_summary_w10
+rows=1, cols=21
+          model_family  train_rows  test_rows  n_input_features_raw  n_numeric_features  n_categorical_features  n_features_after_encoding_before_filter  n_features_after_variance_filter  n_features_dropped_by_variance_filter  n_events_train  n_events_test  mean_duration_train  mean_duration_test                              numeric_prefill_policy categorical_imputation          categorical_encoding                   numeric_scaling  variance_filter_threshold output_dtype                                     rsf_positioning_note  window_weeks
+random_survival_forest       22815       9778                    11                   5                       6                                       41                                41                                      0            5171           2216            30.536182           30.539476 deterministic_train_median_or_zero_when_all_missing       constant_missing one_hot_handle_unknown_ignore standard_scaler_fit_on_train_only               1.000000e-12      float32 early-window comparable random survival forest benchmark            10
+ARTIFACT | Stage 5.9.2 table_rsf_preprocessing_summary - RSF preprocessing summary | duckdb://table_rsf_preprocessing_summary_w10
+[Stage 5.9.2 table_rsf_raw_feature_manifest - RSF raw feature manifest]
+table_name=table_rsf_raw_feature_manifest_w10
+rows=11, cols=6
+  feature_name_operational feature_role  present_in_train  present_in_test  covered_by_canonical_config  numeric_prefill_value
+                    gender  categorical              True             True                        False                    NaN
+                    region  categorical              True             True                        False                    NaN
+         highest_education  categorical              True             True                        False                    NaN
+                  imd_band  categorical              True             True                        False                    NaN
+                  age_band  categorical              True             True                        False                    NaN
+                disability  categorical              True             True                        False                    NaN
+      num_of_prev_attempts      numeric              True             True                         True                    0.0
+           studied_credits      numeric              True             True                         True                   60.0
+     clicks_first_10_weeks      numeric              True             True                         True                  260.0
+     active_weeks_first_10      numeric              True             True                         True                    8.0
+mean_clicks_first_10_weeks      numeric              True             True                         True                   36.4
+ARTIFACT | Stage 5.9.2 table_rsf_raw_feature_manifest - RSF raw feature manifest | duckdb://table_rsf_raw_feature_manifest_w10
+[Stage 5.9.2 table_rsf_feature_names_out - RSF output feature manifest]
+table_name=table_rsf_feature_names_out_w10
+rows=41, cols=2
+                feature_name_out  transformed_variance_train
+       num__num_of_prev_attempts                    1.000000
+            num__studied_credits                    1.000000
+      num__clicks_first_10_weeks                    1.000000
+      num__active_weeks_first_10                    1.000000
+ num__mean_clicks_first_10_weeks                    1.000000
+                   cat__gender_F                    0.247988
+                   cat__gender_M                    0.247988
+ cat__region_East Anglian Region                    0.092080
+cat__region_East Midlands Region                    0.067091
+             cat__region_Ireland                    0.034283
+       cat__region_London Region                    0.088295
+        cat__region_North Region                    0.052060
+cat__region_North Western Region                    0.082139
+            cat__region_Scotland                    0.094370
+   cat__region_South East Region                    0.059974
+        cat__region_South Region                    0.087554
+   cat__region_South West Region                    0.068848
+               cat__region_Wales                    0.059707
+cat__region_West Midlands Region                    0.073261
+    cat__region_Yorkshire Region                    0.058136
+ARTIFACT | Stage 5.9.2 table_rsf_feature_names_out - RSF output feature manifest | duckdb://table_rsf_feature_names_out_w10
+ARTIFACT | rsf_preprocessing_config | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/metadata/rsf_preprocessing_config_w10.json
+{
+  "model_family": "random_survival_forest",
+  "duration_column": "duration",
+  "event_column": "event",
+  "categorical_features": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability"
+  ],
+  "numeric_features": [
+    "num_of_prev_attempts",
+    "studied_credits",
+    "clicks_first_10_weeks",
+    "active_weeks_first_10",
+    "mean_clicks_first_10_weeks"
+  ],
+  "raw_feature_columns": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability",
+    "num_of_prev_attempts",
+    "studied_credits",
+    "clicks_first_10_weeks",
+    "active_weeks_first_10",
+    "mean_clicks_first_10_weeks"
+  ],
+  "expected_features_raw": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "num_of_prev_attempts",
+    "studied_credits",
+    "clicks_first_10_weeks",
+    "active_weeks_first_10",
+    "mean_clicks_first_10_weeks"
+  ],
+  "expected_features_resolved": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "clicks_first_10_weeks",
+    "active_weeks_first_10",
+    "mean_clicks_first_10_weeks"
+  ],
+  "numeric_prefill_policy": "deterministic_train_median_or_zero_when_all_missing",
+  "numeric_fill_values": {
+    "num_of_prev_attempts": 0.0,
+    "studied_credits": 60.0,
+    "clicks_first_10_weeks": 260.0,
+    "active_weeks_first_10": 8.0,
+    "mean_clicks_first_10_weeks": 36.4
+  },
+  "categorical_imputation": "constant_missing",
+  "categorical_encoding": "one_hot_handle_unknown_ignore",
+  "numeric_scaling": "standard_scaler_fit_on_train_only",
+  "variance_filter_threshold": 1e-12,
+  "feature_names_before_filter": [
+    "num__num_of_prev_attempts",
+    "num__studied_credits",
+    "num__clicks_first_10_weeks",
+    "num__active_weeks_first_10",
+    "num__mean_clicks_first_10_weeks",
+    "cat__gender_F",
+    "cat__gender_M",
+    "cat__region_East Anglian Region",
+    "cat__region_East Midlands Region",
+    "cat__region_Ireland",
+    "cat__region_London Region",
+    "cat__region_North Region",
+    "cat__region_North Western Region",
+    "cat__region_Scotland",
+    "cat__region_South East Region",
+    "cat__region_South Region",
+    "cat__region_South West Region",
+    "cat__region_Wales",
+    "cat__region_West Midlands Region",
+    "cat__region_Yorkshire Region",
+    "cat__highest_education_A Level or Equivalent",
+    "cat__highest_education_HE Qualification",
+    "cat__highest_education_Lower Than A Level",
+    "cat__highest_education_No Formal quals",
+    "cat__highest_education_Post Graduate Qualification",
+    "cat__imd_band_0-10%",
+    "cat__imd_band_10-20",
+    "cat__imd_band_20-30%",
+    "cat__imd_band_30-40%",
+    "cat__imd_band_40-50%",
+    "cat__imd_band_50-60%",
+    "cat__imd_band_60-70%",
+    "cat__imd_band_70-80%",
+    "cat__imd_band_80-90%",
+    "cat__imd_band_90-100%",
+    "cat__imd_band_None",
+    "cat__age_band_0-35",
+    "cat__age_band_35-55",
+    "cat__age_band_55<=",
+    "cat__disability_N",
+    "cat__disability_Y"
+  ],
+  "feature_names_out": [
+    "num__num_of_prev_attempts",
+    "num__studied_credits",
+    "num__clicks_first_10_weeks",
+    "num__active_weeks_first_10",
+    "num__mean_clicks_first_10_weeks",
+    "cat__gender_F",
+    "cat__gender_M",
+    "cat__region_East Anglian Region",
+    "cat__region_East Midlands Region",
+    "cat__region_Ireland",
+    "cat__region_London Region",
+    "cat__region_North Region",
+    "cat__region_North Western Region",
+    "cat__region_Scotland",
+    "cat__region_South East Region",
+    "cat__region_South Region",
+    "cat__region_South West Region",
+    "cat__region_Wales",
+    "cat__region_West Midlands Region",
+    "cat__region_Yorkshire Region",
+    "cat__highest_education_A Level or Equivalent",
+    "cat__highest_education_HE Qualification",
+    "cat__highest_education_Lower Than A Level",
+    "cat__highest_education_No Formal quals",
+    "cat__highest_education_Post Graduate Qualification",
+    "cat__imd_band_0-10%",
+    "cat__imd_band_10-20",
+    "cat__imd_band_20-30%",
+    "cat__imd_band_30-40%",
+    "cat__imd_band_40-50%",
+    "cat__imd_band_50-60%",
+    "cat__imd_band_60-70%",
+    "cat__imd_band_70-80%",
+    "cat__imd_band_80-90%",
+    "cat__imd_band_90-100%",
+    "cat__imd_band_None",
+    "cat__age_band_0-35",
+    "cat__age_band_35-55",
+    "cat__age_band_55<=",
+    "cat__disability_N",
+    "cat__disability_Y"
+  ],
+  "dropped_low_variance_features": [],
+  "rsf_positioning_note": "early-window comparable random survival forest benchmark",
+  "window_weeks": 10
+}
+
+[END] 5.9.2 - 2026-06-19 20:55:31
+[START] 5.9 - 2026-06-19 20:55:31
+# ==============================================================
+# 5.9.3 - Tune and evaluate the comparable-window Random Survival Forest
+# ==============================================================
+[Stage 5.9.3 table_rsf_tuning_results - RSF tuning results]
+table_name=table_rsf_tuning_results_w10
+rows=24, cols=7
+ candidate_id  n_estimators  min_samples_leaf  max_depth max_features  val_ibs  val_c_index
+           19           400                 3         15         sqrt 0.099278     0.721212
+           12           200                10          8          0.8 0.099280     0.724396
+           17           200                 3         15         sqrt 0.099318     0.719774
+           14           400                 5          8          0.7 0.099370     0.723957
+           22           400                 5         15          0.7 0.099427     0.726022
+           16           300                10          8          0.7 0.099431     0.723998
+           15           200                 3          8          0.7 0.099487     0.724364
+           20           200                10         15          0.8 0.099546     0.726280
+           24           300                10         15          0.7 0.099567     0.725024
+           18           300                 5         15         sqrt 0.099603     0.720242
+           13           300                20          8          0.8 0.099605     0.723990
+            2           300                 5         -1         sqrt 0.099647     0.719323
+           23           200                 3         15          0.7 0.099740     0.724250
+            3           400                 3         -1         sqrt 0.099783     0.720468
+           21           300                20         15          0.8 0.099804     0.725455
+            8           300                10         -1          0.8 0.099867     0.726156
+            1           200                 3         -1         sqrt 0.099891     0.719546
+            4           200                10         -1         sqrt 0.099961     0.720842
+            5           300                20         -1         sqrt 0.100511     0.718517
+            6           400                 5         -1          0.8 0.100628     0.725694
+ARTIFACT | Stage 5.9.3 table_rsf_tuning_results - RSF tuning results | duckdb://table_rsf_tuning_results_w10
+[Stage 5.9.3 table_rsf_tuned_test_predictions - RSF test predictions]
+table_name=table_rsf_tuned_test_predictions_w10
+rows=29334, cols=6
+      enrollment_id  event  duration  horizon_week  pred_survival_h  pred_risk_h
+ 100561||DDD||2014J      0        37            10         0.968280     0.031720
+ 100621||CCC||2014B      1         6            10         0.678094     0.321906
+ 101187||DDD||2014J      0        37            10         0.805117     0.194883
+ 101279||DDD||2014J      0        37            10         0.940215     0.059785
+ 101414||EEE||2013J      0        38            10         0.735974     0.264026
+ 101700||CCC||2014J      0        38            10         0.594038     0.405962
+ 101781||AAA||2013J      0        38            10         0.989689     0.010311
+ 102209||CCC||2014J      1        15            10         0.982030     0.017970
+ 102343||FFF||2013J      0        38            10         0.992347     0.007653
+1023623||CCC||2014J      0        38            10         0.959771     0.040229
+1033968||DDD||2014B      1        13            10         0.912798     0.087202
+ 103891||DDD||2014B      0        34            10         0.754801     0.245199
+ 104316||FFF||2014B      0        34            10         0.985124     0.014876
+1045203||AAA||2014J      0        38            10         0.981535     0.018465
+1047645||CCC||2014B      0        34            10         0.890441     0.109559
+1053702||EEE||2013J      0        38            10         0.973508     0.026492
+ 105629||FFF||2013J      0        38            10         0.992682     0.007318
+1057883||CCC||2014B      0        34            10         0.942313     0.057687
+ 106383||BBB||2014J      1        21            10         0.885490     0.114510
+ 106553||DDD||2014J      0        37            10         0.959419     0.040581
+ARTIFACT | Stage 5.9.3 table_rsf_tuned_test_predictions - RSF test predictions | duckdb://table_rsf_tuned_test_predictions_w10
+[Stage 5.9.3 table_rsf_tuned_primary_metrics - RSF primary metrics]
+table_name=table_rsf_tuned_primary_metrics_w10
+rows=2, cols=4
+metric_name metric_category  metric_value                         notes
+        ibs         primary      0.099449 sksurv_integrated_brier_score
+    c_index      co_primary      0.731903          pycox_concordance_td
+ARTIFACT | Stage 5.9.3 table_rsf_tuned_primary_metrics - RSF primary metrics | duckdb://table_rsf_tuned_primary_metrics_w10
+[Stage 5.9.3 table_rsf_tuned_brier_by_horizon - RSF Brier scores by horizon]
+table_name=table_rsf_tuned_brier_by_horizon_w10
+rows=3, cols=5
+ horizon_week      metric_name metric_category  metric_value              notes
+           10 brier_at_horizon         primary      0.080680 sksurv_brier_score
+           20 brier_at_horizon         primary      0.119976 sksurv_brier_score
+           30 brier_at_horizon         primary      0.145646 sksurv_brier_score
+ARTIFACT | Stage 5.9.3 table_rsf_tuned_brier_by_horizon - RSF Brier scores by horizon | duckdb://table_rsf_tuned_brier_by_horizon_w10
+[Stage 5.9.3 table_rsf_tuned_secondary_metrics - RSF secondary metrics]
+table_name=table_rsf_tuned_secondary_metrics_w10
+rows=6, cols=5
+ horizon_week         metric_name metric_category  metric_value                                                                                  notes
+           10 risk_auc_at_horizon       secondary      0.868247                                                            roc_auc_on_evaluable_subset
+           10  time_dependent_auc       secondary      0.861820 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.861820; local_ipcw_auc
+           20 risk_auc_at_horizon       secondary      0.772336                                                            roc_auc_on_evaluable_subset
+           20  time_dependent_auc       secondary      0.761849 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.761849; local_ipcw_auc
+           30 risk_auc_at_horizon       secondary      0.734756                                                            roc_auc_on_evaluable_subset
+           30  time_dependent_auc       secondary      0.721940 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.721940; local_ipcw_auc
+ARTIFACT | Stage 5.9.3 table_rsf_tuned_secondary_metrics - RSF secondary metrics | duckdb://table_rsf_tuned_secondary_metrics_w10
+[Stage 5.9.3 table_rsf_tuned_td_auc_support_audit - RSF IPCW support audit]
+table_name=table_rsf_tuned_td_auc_support_audit_w10
+rows=3, cols=6
+ horizon_week  max_ipcw_time  n_total_test_enrollments  n_supported_test_enrollments  mean_auc                                                 notes
+           10           38.0                      9778                          6742  0.861820 IPCW-supported subset used for RSF time-dependent AUC
+           20           38.0                      9778                          6742  0.761849 IPCW-supported subset used for RSF time-dependent AUC
+           30           38.0                      9778                          6742  0.721940 IPCW-supported subset used for RSF time-dependent AUC
+ARTIFACT | Stage 5.9.3 table_rsf_tuned_td_auc_support_audit - RSF IPCW support audit | duckdb://table_rsf_tuned_td_auc_support_audit_w10
+[Stage 5.9.3 table_rsf_tuned_row_diagnostics - RSF row-level diagnostics]
+table_name=table_rsf_tuned_row_diagnostics_w10
+rows=1, cols=6
+model_name  row_level_roc_auc  row_level_pr_auc  row_level_log_loss  row_level_brier                                                                    diagnostic_note
+ rsf_tuned           0.445964           0.21914            0.627447         0.194976 auxiliary enrollment-level proxy only; not a primary cross-family benchmark metric
+ARTIFACT | Stage 5.9.3 table_rsf_tuned_row_diagnostics - RSF row-level diagnostics | duckdb://table_rsf_tuned_row_diagnostics_w10
+[Stage 5.9.3 table_rsf_tuned_support_by_horizon - RSF support by horizon]
+table_name=table_rsf_tuned_support_by_horizon_w10
+rows=3, cols=4
+ horizon_week  n_evaluable_enrollments  n_events_by_horizon  event_rate_by_horizon
+           10                     9778                 1215               0.124259
+           20                     9778                 1736               0.177541
+           30                     9778                 2129               0.217734
+ARTIFACT | Stage 5.9.3 table_rsf_tuned_support_by_horizon - RSF support by horizon | duckdb://table_rsf_tuned_support_by_horizon_w10
+[Stage 5.9.3 table_rsf_tuned_calibration_summary - RSF calibration summary]
+table_name=table_rsf_tuned_calibration_summary_w10
+rows=3, cols=5
+ horizon_week            metric_name metric_category  metric_value                                         notes
+           10 calibration_at_horizon         primary      0.015815 Weighted absolute calibration gap across bins
+           20 calibration_at_horizon         primary      0.014678 Weighted absolute calibration gap across bins
+           30 calibration_at_horizon         primary      0.013485 Weighted absolute calibration gap across bins
+ARTIFACT | Stage 5.9.3 table_rsf_tuned_calibration_summary - RSF calibration summary | duckdb://table_rsf_tuned_calibration_summary_w10
+[Stage 5.9.3 table_rsf_tuned_calibration_bins_by_horizon - RSF calibration bins]
+table_name=table_rsf_tuned_calibration_bins_by_horizon_w10
+rows=30, cols=6
+ calibration_bin   n  mean_predicted_risk  observed_event_rate  horizon_week  abs_calibration_gap
+               0 978             0.009433             0.005112            10             0.004320
+               1 978             0.014814             0.008180            10             0.006634
+               2 978             0.019838             0.018405            10             0.001433
+               3 977             0.026739             0.019447            10             0.007292
+               4 978             0.038807             0.030675            10             0.008132
+               5 978             0.062626             0.048057            10             0.014568
+               6 977             0.111363             0.092119            10             0.019244
+               7 978             0.191855             0.183027            10             0.008828
+               8 978             0.283706             0.301636            10             0.017930
+               9 978             0.466029             0.535787            10             0.069758
+               0 978             0.042769             0.043967            20             0.001198
+               1 978             0.059684             0.063395            20             0.003711
+               2 978             0.072122             0.069530            20             0.002592
+               3 977             0.086260             0.077789            20             0.008471
+               4 978             0.105426             0.086912            20             0.018514
+               5 978             0.135276             0.123722            20             0.011554
+               6 977             0.178642             0.164790            20             0.013852
+               7 978             0.241394             0.231084            20             0.010310
+               8 978             0.321009             0.347648            20             0.026640
+               9 978             0.516532             0.566462            20             0.049930
+ARTIFACT | Stage 5.9.3 table_rsf_tuned_calibration_bins_by_horizon - RSF calibration bins | duckdb://table_rsf_tuned_calibration_bins_by_horizon_w10
+[Stage 5.9.3 table_rsf_tuned_predicted_vs_observed_survival - RSF predicted versus observed survival]
+table_name=table_rsf_tuned_predicted_vs_observed_survival_w10
+rows=3, cols=5
+ horizon_week  n_evaluable_enrollments  mean_predicted_survival  mean_observed_survival  abs_gap
+           10                     9778                 0.877468                0.875741 0.001727
+           20                     9778                 0.824080                0.822459 0.001621
+           30                     9778                 0.783224                0.782266 0.000958
+ARTIFACT | Stage 5.9.3 table_rsf_tuned_predicted_vs_observed_survival - RSF predicted versus observed survival | duckdb://table_rsf_tuned_predicted_vs_observed_survival_w10
+ARTIFACT | rsf_model | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/models/rsf_tuned_w10.joblib
+ARTIFACT | rsf_preprocessor | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/models/rsf_preprocessor_w10.joblib
+ARTIFACT | rsf_tuned_model_config | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/metadata/rsf_tuned_model_config_w10.json
+{
+  "model_name": "rsf_tuned",
+  "selection_metric": "lowest_validation_ibs",
+  "validation_split": {
+    "method": "GroupShuffleSplit",
+    "test_size": 0.1,
+    "group_column": "enrollment_id",
+    "random_seed": 42
+  },
+  "search_space": [
+    {
+      "candidate_id": 1,
+      "n_estimators": 200,
+      "min_samples_leaf": 3,
+      "max_depth": null,
+      "max_features": "sqrt"
+    },
+    {
+      "candidate_id": 2,
+      "n_estimators": 300,
+      "min_samples_leaf": 5,
+      "max_depth": null,
+      "max_features": "sqrt"
+    },
+    {
+      "candidate_id": 3,
+      "n_estimators": 400,
+      "min_samples_leaf": 3,
+      "max_depth": null,
+      "max_features": "sqrt"
+    },
+    {
+      "candidate_id": 4,
+      "n_estimators": 200,
+      "min_samples_leaf": 10,
+      "max_depth": null,
+      "max_features": "sqrt"
+    },
+    {
+      "candidate_id": 5,
+      "n_estimators": 300,
+      "min_samples_leaf": 20,
+      "max_depth": null,
+      "max_features": "sqrt"
+    },
+    {
+      "candidate_id": 6,
+      "n_estimators": 400,
+      "min_samples_leaf": 5,
+      "max_depth": null,
+      "max_features": 0.8
+    },
+    {
+      "candidate_id": 7,
+      "n_estimators": 200,
+      "min_samples_leaf": 3,
+      "max_depth": null,
+      "max_features": 0.7
+    },
+    {
+      "candidate_id": 8,
+      "n_estimators": 300,
+      "min_samples_leaf": 10,
+      "max_depth": null,
+      "max_features": 0.8
+    },
+    {
+      "candidate_id": 9,
+      "n_estimators": 200,
+      "min_samples_leaf": 3,
+      "max_depth": 8,
+      "max_features": "sqrt"
+    },
+    {
+      "candidate_id": 10,
+      "n_estimators": 300,
+      "min_samples_leaf": 5,
+      "max_depth": 8,
+      "max_features": "sqrt"
+    },
+    {
+      "candidate_id": 11,
+      "n_estimators": 400,
+      "min_samples_leaf": 3,
+      "max_depth": 8,
+      "max_features": "sqrt"
+    },
+    {
+      "candidate_id": 12,
+      "n_estimators": 200,
+      "min_samples_leaf": 10,
+      "max_depth": 8,
+      "max_features": 0.8
+    },
+    {
+      "candidate_id": 13,
+      "n_estimators": 300,
+      "min_samples_leaf": 20,
+      "max_depth": 8,
+      "max_features": 0.8
+    },
+    {
+      "candidate_id": 14,
+      "n_estimators": 400,
+      "min_samples_leaf": 5,
+      "max_depth": 8,
+      "max_features": 0.7
+    },
+    {
+      "candidate_id": 15,
+      "n_estimators": 200,
+      "min_samples_leaf": 3,
+      "max_depth": 8,
+      "max_features": 0.7
+    },
+    {
+      "candidate_id": 16,
+      "n_estimators": 300,
+      "min_samples_leaf": 10,
+      "max_depth": 8,
+      "max_features": 0.7
+    },
+    {
+      "candidate_id": 17,
+      "n_estimators": 200,
+      "min_samples_leaf": 3,
+      "max_depth": 15,
+      "max_features": "sqrt"
+    },
+    {
+      "candidate_id": 18,
+      "n_estimators": 300,
+      "min_samples_leaf": 5,
+      "max_depth": 15,
+      "max_features": "sqrt"
+    },
+    {
+      "candidate_id": 19,
+      "n_estimators": 400,
+      "min_samples_leaf": 3,
+      "max_depth": 15,
+      "max_features": "sqrt"
+    },
+    {
+      "candidate_id": 20,
+      "n_estimators": 200,
+      "min_samples_leaf": 10,
+      "max_depth": 15,
+      "max_features": 0.8
+    },
+    {
+      "candidate_id": 21,
+      "n_estimators": 300,
+      "min_samples_leaf": 20,
+      "max_depth": 15,
+      "max_features": 0.8
+    },
+    {
+      "candidate_id": 22,
+      "n_estimators": 400,
+      "min_samples_leaf": 5,
+      "max_depth": 15,
+      "max_features": 0.7
+    },
+    {
+      "candidate_id": 23,
+      "n_estimators": 200,
+      "min_samples_leaf": 3,
+      "max_depth": 15,
+      "max_features": 0.7
+    },
+    {
+      "candidate_id": 24,
+      "n_estimators": 300,
+      "min_samples_leaf": 10,
+      "max_depth": 15,
+      "max_features": 0.7
+    }
+  ],
+  "benchmark_horizons": [
+    10,
+    20,
+    30
+  ],
+  "calibration_bins": 10,
+  "calibration_contract_version": "v2_ipcw_km_observed_risk",
+  "calibration_observed_risk_method": "ipcw_km_pseudo_event_rate",
+  "variance_filter_threshold": 1e-12,
+  "n_jobs": 8,
+  "effective_window_weeks": 10,
+  "input_train_table": "enrollment_cox_ready_train_w10",
+  "input_test_table": "enrollment_cox_ready_test_w10",
+  "best_candidate": {
+    "candidate_id": 19,
+    "params": {
+      "n_estimators": 400,
+      "min_samples_leaf": 3,
+      "max_depth": 15,
+      "max_features": "sqrt"
+    },
+    "val_ibs": 0.09927826084857695,
+    "val_c_index": 0.7212123839665496
+  },
+  "preprocessing": {
+    "categorical_features": [
+      "gender",
+      "region",
+      "highest_education",
+      "imd_band",
+      "age_band",
+      "disability"
+    ],
+    "numeric_features": [
+      "num_of_prev_attempts",
+      "studied_credits",
+      "clicks_first_10_weeks",
+      "active_weeks_first_10",
+      "mean_clicks_first_10_weeks"
+    ],
+    "numeric_prefill_values": {
+      "num_of_prev_attempts": 0.0,
+      "studied_credits": 60.0,
+      "clicks_first_10_weeks": 260.0,
+      "active_weeks_first_10": 8.0,
+      "mean_clicks_first_10_weeks": 36.4
+    },
+    "feature_names_before_filter": [
+      "num__num_of_prev_attempts",
+      "num__studied_credits",
+      "num__clicks_first_10_weeks",
+      "num__active_weeks_first_10",
+      "num__mean_clicks_first_10_weeks",
+      "cat__gender_F",
+      "cat__gender_M",
+      "cat__region_East Anglian Region",
+      "cat__region_East Midlands Region",
+      "cat__region_Ireland",
+      "cat__region_London Region",
+      "cat__region_North Region",
+      "cat__region_North Western Region",
+      "cat__region_Scotland",
+      "cat__region_South East Region",
+      "cat__region_South Region",
+      "cat__region_South West Region",
+      "cat__region_Wales",
+      "cat__region_West Midlands Region",
+      "cat__region_Yorkshire Region",
+      "cat__highest_education_A Level or Equivalent",
+      "cat__highest_education_HE Qualification",
+      "cat__highest_education_Lower Than A Level",
+      "cat__highest_education_No Formal quals",
+      "cat__highest_education_Post Graduate Qualification",
+      "cat__imd_band_0-10%",
+      "cat__imd_band_10-20",
+      "cat__imd_band_20-30%",
+      "cat__imd_band_30-40%",
+      "cat__imd_band_40-50%",
+      "cat__imd_band_50-60%",
+      "cat__imd_band_60-70%",
+      "cat__imd_band_70-80%",
+      "cat__imd_band_80-90%",
+      "cat__imd_band_90-100%",
+      "cat__imd_band_None",
+      "cat__age_band_0-35",
+      "cat__age_band_35-55",
+      "cat__age_band_55<=",
+      "cat__disability_N",
+      "cat__disability_Y"
+    ],
+    "feature_names_out": [
+      "num__num_of_prev_attempts",
+      "num__studied_credits",
+      "num__clicks_first_10_weeks",
+      "num__active_weeks_first_10",
+      "num__mean_clicks_first_10_weeks",
+      "cat__gender_F",
+      "cat__gender_M",
+      "cat__region_East Anglian Region",
+      "cat__region_East Midlands Region",
+      "cat__region_Ireland",
+      "cat__region_London Region",
+      "cat__region_North Region",
+      "cat__region_North Western Region",
+      "cat__region_Scotland",
+      "cat__region_South East Region",
+      "cat__region_South Region",
+      "cat__region_South West Region",
+      "cat__region_Wales",
+      "cat__region_West Midlands Region",
+      "cat__region_Yorkshire Region",
+      "cat__highest_education_A Level or Equivalent",
+      "cat__highest_education_HE Qualification",
+      "cat__highest_education_Lower Than A Level",
+      "cat__highest_education_No Formal quals",
+      "cat__highest_education_Post Graduate Qualification",
+      "cat__imd_band_0-10%",
+      "cat__imd_band_10-20",
+      "cat__imd_band_20-30%",
+      "cat__imd_band_30-40%",
+      "cat__imd_band_40-50%",
+      "cat__imd_band_50-60%",
+      "cat__imd_band_60-70%",
+      "cat__imd_band_70-80%",
+      "cat__imd_band_80-90%",
+      "cat__imd_band_90-100%",
+      "cat__imd_band_None",
+      "cat__age_band_0-35",
+      "cat__age_band_35-55",
+      "cat__age_band_55<=",
+      "cat__disability_N",
+      "cat__disability_Y"
+    ],
+    "dropped_low_variance_features": []
+  },
+  "design_note": "The comparable Random Survival Forest arm preserves the canonical early-window contract, uses the same deterministic preprocessing as the linear continuous-time baselines, and tunes only a compact notebook-traceable forest grid under validation IBS."
+}
+
+ candidate_id                                                                                params  val_ibs  val_c_index
+           19 {'n_estimators': 400, 'min_samples_leaf': 3, 'max_depth': 15, 'max_features': 'sqrt'} 0.099278     0.721212
+[END] 5.9.3 - 2026-06-19 21:05:15
+[START] 5.9 - 2026-06-19 21:05:15
+# ==============================================================
+# 5.9.4 - Close runtime resources
+# ==============================================================
+DuckDB connection closed.
+ARTIFACT | duckdb_connection | closed::/Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/benchmark_survival.duckdb
+[END] 5.9.4 - 2026-06-19 21:05:15

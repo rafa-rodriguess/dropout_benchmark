@@ -1,0 +1,1942 @@
+[START] 5.3 - 2026-06-19 18:10:46
+# ==============================================================
+# 5.3.1 - Lightweight runtime bootstrap
+# ==============================================================
+- SCRIPT_NAME: dropout_bench_v3_D_03_A_dynamic_neural_neural_discrete_time_survival.py
+- RUN_ID: f3766e75053447a7beb7a1c4936d231f
+- CPU_CORES: 8
+- DUCKDB_PATH: /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/benchmark_survival.duckdb
+- BENCHMARK_HORIZONS: [10, 20, 30]
+- CALIBRATION_BINS: 10
+- EARLY_WINDOW_SENSITIVITY_WEEKS: [2, 4, 6, 8, 10]
+ARTIFACT | shared_config | /Users/rafars/dropout_benchmark_desenv/benchmark_shared_config.toml
+ARTIFACT | modeling_contract | /Users/rafars/dropout_benchmark_desenv/benchmark_modeling_contract.toml
+ARTIFACT | run_metadata | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/metadata/run_metadata.json
+[END] 5.3.1 - 2026-06-19 18:10:46
+[RUN_PLAN] neural_dynamic_execution=dynamic_window_w2(suffix=_w2), dynamic_window_w4(suffix=_w4), dynamic_window_w6(suffix=_w6), dynamic_window_w8(suffix=_w8), dynamic_window_w10(suffix=_w10)
+[RUN] dynamic_window_weeks=2 output_suffix=_w2
+[START] 5.3 - 2026-06-19 18:10:46
+# ==============================================================
+# 5.3.2 - Prepare the neural discrete-time treatment
+# ==============================================================
+[Stage 5.3.2 table_p18_neural_not_weighted_treatment_summary_w2 — Neural treatment summary]
+table_name=table_p18_neural_not_weighted_treatment_summary_w2
+rows=1, cols=9
+                 model_family  train_rows  test_rows  n_input_features_raw  n_numeric_features  n_categorical_features  n_output_features_after_preprocessing  train_event_rate  test_event_rate
+neural_discrete_time_survival       66712      28573                    16                  10                       6                                     46          0.021091         0.020614
+ARTIFACT | Stage 5.3.2 table_p18_neural_not_weighted_treatment_summary_w2 — Neural treatment summary | duckdb://table_p18_neural_not_weighted_treatment_summary_w2
+[Stage 5.3.2 table_p18_neural_not_weighted_feature_manifest_w2 — Neural feature manifest]
+table_name=table_p18_neural_not_weighted_feature_manifest_w2
+rows=16, cols=6
+feature_name_operational feature_role  present_in_train  present_in_test  covered_by_canonical_config_after_alias canonical_source_name
+                  gender  categorical              True             True                                    False                      
+                  region  categorical              True             True                                    False                      
+       highest_education  categorical              True             True                                    False                      
+                imd_band  categorical              True             True                                    False                      
+                age_band  categorical              True             True                                    False                      
+              disability  categorical              True             True                                    False                      
+    num_of_prev_attempts      numeric              True             True                                     True  num_of_prev_attempts
+         studied_credits      numeric              True             True                                     True       studied_credits
+                    week      numeric              True             True                                     True                  week
+       total_clicks_week      numeric              True             True                                     True          total_clicks
+        active_this_week      numeric              True             True                                    False                      
+         n_vle_rows_week      numeric              True             True                                    False                      
+   n_distinct_sites_week      numeric              True             True                                    False                      
+      cum_clicks_until_t      numeric              True             True                                    False                      
+                 recency      numeric              True             True                                    False                      
+                  streak      numeric              True             True                                    False                      
+ARTIFACT | Stage 5.3.2 table_p18_neural_not_weighted_feature_manifest_w2 — Neural feature manifest | duckdb://table_p18_neural_not_weighted_feature_manifest_w2
+[Stage 5.3.2 table_p18_neural_not_weighted_canonical_alignment_w2 — Canonical feature alignment]
+table_name=table_p18_neural_not_weighted_canonical_alignment_w2
+rows=4, cols=3
+canonical_feature_raw canonical_feature_resolved  covered_by_operational_treatment_spec
+      studied_credits            studied_credits                                   True
+ num_of_prev_attempts       num_of_prev_attempts                                   True
+                 week                       week                                   True
+         total_clicks          total_clicks_week                                   True
+ARTIFACT | Stage 5.3.2 table_p18_neural_not_weighted_canonical_alignment_w2 — Canonical feature alignment | duckdb://table_p18_neural_not_weighted_canonical_alignment_w2
+[Stage 5.3.2 table_p18_neural_not_weighted_output_feature_manifest_w2 — Preprocessed feature manifest]
+table_name=table_p18_neural_not_weighted_output_feature_manifest_w2
+rows=46, cols=1
+       preprocessed_feature_name
+       num__num_of_prev_attempts
+            num__studied_credits
+                       num__week
+          num__total_clicks_week
+           num__active_this_week
+            num__n_vle_rows_week
+      num__n_distinct_sites_week
+         num__cum_clicks_until_t
+                    num__recency
+                     num__streak
+                   cat__gender_F
+                   cat__gender_M
+ cat__region_East Anglian Region
+cat__region_East Midlands Region
+             cat__region_Ireland
+       cat__region_London Region
+        cat__region_North Region
+cat__region_North Western Region
+            cat__region_Scotland
+   cat__region_South East Region
+ARTIFACT | Stage 5.3.2 table_p18_neural_not_weighted_output_feature_manifest_w2 — Preprocessed feature manifest | duckdb://table_p18_neural_not_weighted_output_feature_manifest_w2
+ARTIFACT | metadata_p18_neural_treatment | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/metadata/metadata_p18_neural_not_weighted_treatment_w2.json
+{
+  "step": "P18",
+  "model_family": "neural_discrete_time_survival",
+  "run_label": "dynamic_window_w2",
+  "is_window_truncated_run": true,
+  "active_window_weeks": 2,
+  "output_suffix": "_w2",
+  "train_table": "pp_neural_hazard_ready_train",
+  "test_table": "pp_neural_hazard_ready_test",
+  "target_column": "event_t",
+  "categorical_features": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability"
+  ],
+  "numeric_features": [
+    "num_of_prev_attempts",
+    "studied_credits",
+    "week",
+    "total_clicks_week",
+    "active_this_week",
+    "n_vle_rows_week",
+    "n_distinct_sites_week",
+    "cum_clicks_until_t",
+    "recency",
+    "streak"
+  ],
+  "operational_feature_columns": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability",
+    "num_of_prev_attempts",
+    "studied_credits",
+    "week",
+    "total_clicks_week",
+    "active_this_week",
+    "n_vle_rows_week",
+    "n_distinct_sites_week",
+    "cum_clicks_until_t",
+    "recency",
+    "streak"
+  ],
+  "canonical_expected_features_raw": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "week",
+    "total_clicks"
+  ],
+  "canonical_expected_features_resolved": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "week",
+    "total_clicks_week"
+  ],
+  "feature_alias_map": {
+    "total_clicks": "total_clicks_week"
+  },
+  "n_train_rows": 66712,
+  "n_test_rows": 28573,
+  "n_output_features_after_preprocessing": 46,
+  "train_event_rate": 0.02109065835232042,
+  "test_event_rate": 0.020613866237356945,
+  "methodological_note": "All learned preprocessing operations were fit on training data only and then applied unchanged to test data.",
+  "design_note": "Enrollment truth for neural evaluation is derived directly from the neural person-period tables to preserve identifier consistency with the person-period prediction surface.",
+  "cross_arm_parity_note": "This run truncates weekly person-period information at or before the active window and is intended for cross-arm information-parity analysis."
+}
+
+[END] 5.3.2 - 2026-06-19 18:10:47
+[START] 5.3 - 2026-06-19 18:10:47
+# ==============================================================
+# 5.3.3 - Tune and evaluate the neural discrete-time hazard model
+# ==============================================================
+- DATA_LOADER_WORKERS: 7
+[Stage 5.3.3 table_neural_not_weighted_tuning_results_w2 — Neural tuning results]
+table_name=table_neural_not_weighted_tuning_results_w2
+rows=24, cols=7
+ candidate_id hidden_dims  dropout  learning_rate  weight_decay  best_val_loss  best_epoch
+           17   [128, 64]     0.10         0.0010       0.00001       0.082299          27
+           21   [128, 64]     0.30         0.0010       0.00001       0.082631          27
+           22   [128, 64]     0.30         0.0010       0.00010       0.082650          27
+           18   [128, 64]     0.10         0.0010       0.00010       0.082698          27
+           10    [64, 32]     0.10         0.0010       0.00010       0.083034          27
+           14    [64, 32]     0.30         0.0010       0.00010       0.083038          25
+            2    [32, 16]     0.10         0.0010       0.00010       0.083045          25
+            1    [32, 16]     0.10         0.0010       0.00001       0.083145          25
+            9    [64, 32]     0.05         0.0010       0.00001       0.083146          23
+            6    [32, 16]     0.30         0.0010       0.00010       0.083189          29
+           13    [64, 32]     0.30         0.0010       0.00001       0.083223          25
+           12    [64, 32]     0.10         0.0005       0.00010       0.083266          30
+           11    [64, 32]     0.10         0.0005       0.00001       0.083284          30
+           24   [128, 64]     0.30         0.0005       0.00010       0.083311          25
+           23   [128, 64]     0.30         0.0005       0.00001       0.083331          25
+           16    [64, 32]     0.30         0.0005       0.00010       0.083349          30
+           20   [128, 64]     0.10         0.0005       0.00010       0.083374          28
+           19   [128, 64]     0.10         0.0005       0.00001       0.083386          26
+           15    [64, 32]     0.30         0.0005       0.00001       0.083405          30
+            5    [32, 16]     0.30         0.0010       0.00001       0.083587          19
+ARTIFACT | Stage 5.3.3 table_neural_not_weighted_tuning_results_w2 — Neural tuning results | duckdb://table_neural_not_weighted_tuning_results_w2
+[Stage 5.3.3 table_neural_not_weighted_tuned_training_history_w2 — Neural best-candidate training summary]
+table_name=table_neural_not_weighted_tuned_training_history_w2
+rows=1, cols=7
+ candidate_id hidden_dims  dropout  learning_rate  weight_decay  best_val_loss  best_epoch
+           17   [128, 64]      0.1          0.001       0.00001       0.082299          27
+ARTIFACT | Stage 5.3.3 table_neural_not_weighted_tuned_training_history_w2 — Neural best-candidate training summary | duckdb://table_neural_not_weighted_tuned_training_history_w2
+[Stage 5.3.3 table_neural_not_weighted_tuned_test_predictions_w2 — Neural test predictions]
+table_name=table_neural_not_weighted_tuned_test_predictions_w2
+rows=28573, cols=29
+   enrollment_id  id_student code_module code_presentation  week  event_t  event_observed  t_event_week  t_final_week  used_zero_week_fallback_for_censoring gender               region     highest_education imd_band age_band  num_of_prev_attempts  studied_credits disability  total_clicks_week  active_this_week  n_vle_rows_week  n_distinct_sites_week  cum_clicks_until_t  recency  streak split  pred_hazard  pred_survival  pred_risk
+100561|DDD|2014J      100561         DDD             2014J     0        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               10.0                 1                8                      4                10.0        0       1  test     0.044808       0.955192   0.044808
+100561|DDD|2014J      100561         DDD             2014J     1        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N                0.0                 0                0                      0                10.0        1       0  test     0.092020       0.867295   0.132705
+100561|DDD|2014J      100561         DDD             2014J     2        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               91.0                 1               26                     11               101.0        0       2  test     0.005732       0.862324   0.137676
+100621|CCC|2014B      100621         CCC             2014B     0        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                0.0                 0                0                      0                 0.0        1       0  test     0.046801       0.953199   0.046801
+100621|CCC|2014B      100621         CCC             2014B     1        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                3.0                 1                2                      2                 3.0        0       2  test     0.054289       0.901451   0.098549
+100621|CCC|2014B      100621         CCC             2014B     2        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                1.0                 1                1                      1                 4.0        0       3  test     0.003523       0.898275   0.101725
+101187|DDD|2014J      101187         DDD             2014J     0        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        1       0  test     0.014521       0.985479   0.014521
+101187|DDD|2014J      101187         DDD             2014J     1        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        2       0  test     0.022593       0.963214   0.036786
+101187|DDD|2014J      101187         DDD             2014J     2        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        3       0  test     0.096142       0.870608   0.129392
+101279|DDD|2014J      101279         DDD             2014J     0        0               0           NaN            37                                      0      F     Yorkshire Region A Level or Equivalent    0-10%    35-55                     0               60          N               79.0                 1               31                     21                79.0        0       1  test     0.010217       0.989783   0.010217
+101279|DDD|2014J      101279         DDD             2014J     1        0               0           NaN            37                                      0      F     Yorkshire Region A Level or Equivalent    0-10%    35-55                     0               60          N                1.0                 1                1                      1                80.0        0       2  test     0.053542       0.936788   0.063212
+101279|DDD|2014J      101279         DDD             2014J     2        0               0           NaN            37                                      0      F     Yorkshire Region A Level or Equivalent    0-10%    35-55                     0               60          N                1.0                 1                1                      1                81.0        0       3  test     0.022184       0.916007   0.083993
+101414|EEE|2013J      101414         EEE             2013J     0        0               0           NaN            38                                      0      M     Yorkshire Region    Lower Than A Level   70-80%    35-55                     0              105          N                0.0                 0                0                      0                 0.0        1       0  test     0.046211       0.953789   0.046211
+101414|EEE|2013J      101414         EEE             2013J     1        0               0           NaN            38                                      0      M     Yorkshire Region    Lower Than A Level   70-80%    35-55                     0              105          N                0.0                 0                0                      0                 0.0        2       0  test     0.148407       0.812240   0.187760
+101414|EEE|2013J      101414         EEE             2013J     2        0               0           NaN            38                                      0      M     Yorkshire Region    Lower Than A Level   70-80%    35-55                     0              105          N                0.0                 0                0                      0                 0.0        3       0  test     0.006777       0.806735   0.193265
+101700|CCC|2014J      101700         CCC             2014J     0        0               0           NaN            38                                      0      M        London Region A Level or Equivalent    10-20     0-35                     0               60          Y                0.0                 0                0                      0                 0.0        1       0  test     0.000984       0.999016   0.000984
+101700|CCC|2014J      101700         CCC             2014J     1        0               0           NaN            38                                      0      M        London Region A Level or Equivalent    10-20     0-35                     0               60          Y                0.0                 0                0                      0                 0.0        2       0  test     0.001898       0.997120   0.002880
+101700|CCC|2014J      101700         CCC             2014J     2        0               0           NaN            38                                      0      M        London Region A Level or Equivalent    10-20     0-35                     0               60          Y                0.0                 0                0                      0                 0.0        3       0  test     0.001231       0.995893   0.004107
+101781|AAA|2013J      101781         AAA             2013J     0        0               0           NaN            38                                      0      M         South Region    Lower Than A Level   80-90%    35-55                     0               60          N              182.0                 1               43                     11               182.0        0       1  test     0.043412       0.956588   0.043412
+101781|AAA|2013J      101781         AAA             2013J     1        0               0           NaN            38                                      0      M         South Region    Lower Than A Level   80-90%    35-55                     0               60          N              514.0                 1               59                     20               696.0        0       2  test     0.018020       0.939350   0.060650
+ARTIFACT | Stage 5.3.3 table_neural_not_weighted_tuned_test_predictions_w2 — Neural test predictions | duckdb://table_neural_not_weighted_tuned_test_predictions_w2
+[Stage 5.3.3 table_neural_not_weighted_tuned_primary_metrics_w2 — Neural primary metrics]
+table_name=table_neural_not_weighted_tuned_primary_metrics_w2
+rows=2, cols=4
+metric_name metric_category  metric_value                         notes
+        ibs         primary      0.141203 sksurv_integrated_brier_score
+    c_index      co_primary      0.503497          pycox_concordance_td
+ARTIFACT | Stage 5.3.3 table_neural_not_weighted_tuned_primary_metrics_w2 — Neural primary metrics | duckdb://table_neural_not_weighted_tuned_primary_metrics_w2
+[Stage 5.3.3 table_neural_not_weighted_tuned_brier_by_horizon_w2 — Neural Brier scores by horizon]
+table_name=table_neural_not_weighted_tuned_brier_by_horizon_w2
+rows=3, cols=5
+ horizon_week      metric_name metric_category  metric_value              notes
+           10 brier_at_horizon         primary      0.118659 sksurv_brier_score
+           20 brier_at_horizon         primary      0.165908 sksurv_brier_score
+           30 brier_at_horizon         primary      0.201650 sksurv_brier_score
+ARTIFACT | Stage 5.3.3 table_neural_not_weighted_tuned_brier_by_horizon_w2 — Neural Brier scores by horizon | duckdb://table_neural_not_weighted_tuned_brier_by_horizon_w2
+[Stage 5.3.3 table_neural_not_weighted_tuned_secondary_metrics_w2 — Neural secondary metrics]
+table_name=table_neural_not_weighted_tuned_secondary_metrics_w2
+rows=6, cols=5
+ horizon_week         metric_name metric_category  metric_value                                                                                  notes
+           10 risk_auc_at_horizon       secondary      0.412916                                                            roc_auc_on_evaluable_subset
+           10  time_dependent_auc       secondary      0.411883 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.411883; local_ipcw_auc
+           20 risk_auc_at_horizon       secondary      0.442791                                                            roc_auc_on_evaluable_subset
+           20  time_dependent_auc       secondary      0.442248 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.442248; local_ipcw_auc
+           30 risk_auc_at_horizon       secondary      0.454641                                                            roc_auc_on_evaluable_subset
+           30  time_dependent_auc       secondary      0.454304 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.454304; local_ipcw_auc
+ARTIFACT | Stage 5.3.3 table_neural_not_weighted_tuned_secondary_metrics_w2 — Neural secondary metrics | duckdb://table_neural_not_weighted_tuned_secondary_metrics_w2
+[Stage 5.3.3 table_neural_not_weighted_tuned_td_auc_support_audit_w2 — Neural IPCW support audit]
+table_name=table_neural_not_weighted_tuned_td_auc_support_audit_w2
+rows=3, cols=6
+ horizon_week  max_ipcw_time  n_total_test_enrollments  n_supported_test_enrollments  mean_auc                                                                                  notes
+           10           38.0                      9778                          6742  0.411883 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.411883; local_ipcw_auc
+           20           38.0                      9778                          6742  0.442248 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.442248; local_ipcw_auc
+           30           38.0                      9778                          6742  0.454304 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.454304; local_ipcw_auc
+ARTIFACT | Stage 5.3.3 table_neural_not_weighted_tuned_td_auc_support_audit_w2 — Neural IPCW support audit | duckdb://table_neural_not_weighted_tuned_td_auc_support_audit_w2
+[Stage 5.3.3 table_neural_not_weighted_tuned_row_diagnostics_w2 — Neural row-level diagnostics]
+table_name=table_neural_not_weighted_tuned_row_diagnostics_w2
+rows=1, cols=5
+                                      model_name  row_level_roc_auc  row_level_pr_auc  row_level_log_loss  row_level_brier
+neural_discrete_time_survival_not_weighted_tuned           0.809202          0.084389            0.087159         0.019477
+ARTIFACT | Stage 5.3.3 table_neural_not_weighted_tuned_row_diagnostics_w2 — Neural row-level diagnostics | duckdb://table_neural_not_weighted_tuned_row_diagnostics_w2
+[Stage 5.3.3 table_neural_not_weighted_tuned_support_by_horizon_w2 — Neural support by horizon]
+table_name=table_neural_not_weighted_tuned_support_by_horizon_w2
+rows=3, cols=4
+ horizon_week  n_evaluable_enrollments  n_events_by_horizon  event_rate_by_horizon
+           10                     9778                 1215               0.124259
+           20                     9778                 1736               0.177541
+           30                     9778                 2129               0.217734
+ARTIFACT | Stage 5.3.3 table_neural_not_weighted_tuned_support_by_horizon_w2 — Neural support by horizon | duckdb://table_neural_not_weighted_tuned_support_by_horizon_w2
+[Stage 5.3.3 table_neural_not_weighted_tuned_calibration_summary_w2 — Neural calibration summary]
+table_name=table_neural_not_weighted_tuned_calibration_summary_w2
+rows=3, cols=5
+ horizon_week            metric_name metric_category  metric_value                                         notes
+           10 calibration_at_horizon         primary      0.088095 Weighted absolute calibration gap across bins
+           20 calibration_at_horizon         primary      0.127625 Weighted absolute calibration gap across bins
+           30 calibration_at_horizon         primary      0.162820 Weighted absolute calibration gap across bins
+ARTIFACT | Stage 5.3.3 table_neural_not_weighted_tuned_calibration_summary_w2 — Neural calibration summary | duckdb://table_neural_not_weighted_tuned_calibration_summary_w2
+[Stage 5.3.3 table_neural_not_weighted_tuned_calibration_bins_by_horizon_w2 — Neural calibration bins]
+table_name=table_neural_not_weighted_tuned_calibration_bins_by_horizon_w2
+rows=30, cols=6
+ calibration_bin   n  mean_predicted_risk  observed_event_rate  horizon_week  abs_calibration_gap
+               0 978             0.004047             0.242331            10             0.238284
+               1 978             0.011222             0.150307            10             0.139084
+               2 978             0.017668             0.117587            10             0.099919
+               3 977             0.025215             0.114637            10             0.089422
+               4 978             0.034271             0.117587            10             0.083316
+               5 978             0.044750             0.099182            10             0.054432
+               6 977             0.058523             0.111566            10             0.053043
+               7 978             0.077679             0.107362            10             0.029683
+               8 978             0.105561             0.089980            10             0.015581
+               9 978             0.170178             0.092025            10             0.078153
+               0 978             0.004047             0.277096            20             0.273049
+               1 978             0.011222             0.210634            20             0.199412
+               2 978             0.017668             0.162577            20             0.144909
+               3 977             0.025215             0.165814            20             0.140599
+               4 978             0.034271             0.177914            20             0.143643
+               5 978             0.044750             0.153374            20             0.108625
+               6 977             0.058523             0.168884            20             0.110361
+               7 978             0.077679             0.170757            20             0.093077
+               8 978             0.105561             0.143149            20             0.037588
+               9 978             0.170178             0.145194            20             0.024983
+ARTIFACT | Stage 5.3.3 table_neural_not_weighted_tuned_calibration_bins_by_horizon_w2 — Neural calibration bins | duckdb://table_neural_not_weighted_tuned_calibration_bins_by_horizon_w2
+[Stage 5.3.3 table_neural_not_weighted_tuned_predicted_vs_observed_survival_w2 — Neural predicted versus observed survival]
+table_name=table_neural_not_weighted_tuned_predicted_vs_observed_survival_w2
+rows=3, cols=5
+ horizon_week  n_evaluable_enrollments  mean_predicted_survival  mean_observed_survival  abs_gap
+           10                     9778                 0.945086                0.875741 0.069345
+           20                     9778                 0.945086                0.822459 0.122627
+           30                     9778                 0.945086                0.782266 0.162820
+ARTIFACT | Stage 5.3.3 table_neural_not_weighted_tuned_predicted_vs_observed_survival_w2 — Neural predicted versus observed survival | duckdb://table_neural_not_weighted_tuned_predicted_vs_observed_survival_w2
+[Stage 5.3.3 table_neural_not_weighted_tuned_hazard_audit_summary_w2 — Neural hazard audit summary]
+table_name=table_neural_not_weighted_tuned_hazard_audit_summary_w2
+rows=1, cols=6
+ mean_pred_hazard_test  median_pred_hazard_test  p90_pred_hazard_test  p99_pred_hazard_test  min_pred_hazard_test  max_pred_hazard_test
+              0.019208                 0.008034              0.052654              0.141934          1.000000e-08              0.350645
+ARTIFACT | Stage 5.3.3 table_neural_not_weighted_tuned_hazard_audit_summary_w2 — Neural hazard audit summary | duckdb://table_neural_not_weighted_tuned_hazard_audit_summary_w2
+[Stage 5.3.3 table_neural_not_weighted_tuned_hazard_by_week_w2 — Neural hazard by week]
+table_name=table_neural_not_weighted_tuned_hazard_by_week_w2
+rows=3, cols=6
+ week  mean_pred_hazard  median_pred_hazard  mean_pred_survival  mean_pred_risk  n_rows
+    0          0.018975            0.007997            0.981026        0.018975    9778
+    1          0.019129            0.008087            0.962266        0.037734    9553
+    2          0.019539            0.008033            0.943656        0.056344    9242
+ARTIFACT | Stage 5.3.3 table_neural_not_weighted_tuned_hazard_by_week_w2 — Neural hazard by week | duckdb://table_neural_not_weighted_tuned_hazard_by_week_w2
+ARTIFACT | neural_model | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/models/neural_discrete_time_survival_not_weighted_tuned_w2.pt
+ARTIFACT | neural_preprocessor | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/models/neural_discrete_time_not_weighted_preprocessor_w2.joblib
+ARTIFACT | neural_tuned_model_config | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/metadata/neural_not_weighted_tuned_model_config_w2.json
+{
+  "model_name": "neural_discrete_time_survival_not_weighted_tuned",
+  "search_strategy": "controlled_grid_search",
+  "selection_criterion": "lowest_validation_loss",
+  "validation_split": {
+    "method": "GroupShuffleSplit",
+    "unit": "enrollment_id",
+    "test_size": 0.1,
+    "random_seed": 42
+  },
+  "batch_size": 1024,
+  "max_epochs": 30,
+  "early_stopping_patience": 5,
+  "optimizer": "Adam",
+  "loss": "BCEWithLogitsLoss()",
+  "random_state": 42,
+  "run_label": "dynamic_window_w2",
+  "is_window_truncated_run": true,
+  "active_window_weeks": 2,
+  "output_suffix": "_w2",
+  "device": "cpu",
+  "benchmark_horizons": [
+    10,
+    20,
+    30
+  ],
+  "calibration_bins": 10,
+  "calibration_contract_version": "v2_ipcw_km_observed_risk",
+  "calibration_observed_risk_method": "ipcw_km_pseudo_event_rate",
+  "best_candidate": {
+    "candidate_id": 17,
+    "hidden_dims": [
+      128,
+      64
+    ],
+    "dropout": 0.1,
+    "learning_rate": 0.001,
+    "weight_decay": 1e-05,
+    "best_val_loss": 0.08229864814451762,
+    "best_epoch": 27
+  },
+  "preprocessing": {
+    "categorical_features": [
+      "gender",
+      "region",
+      "highest_education",
+      "imd_band",
+      "age_band",
+      "disability"
+    ],
+    "numeric_features": [
+      "num_of_prev_attempts",
+      "studied_credits",
+      "week",
+      "total_clicks_week",
+      "active_this_week",
+      "n_vle_rows_week",
+      "n_distinct_sites_week",
+      "cum_clicks_until_t",
+      "recency",
+      "streak"
+    ],
+    "categorical_encoder": "OneHotEncoder(handle_unknown=ignore, sparse_output=False)",
+    "numeric_scaler": "StandardScaler"
+  },
+  "weighting_strategy": "none; this official D5.3 variant uses the same grouped validation protocol and evaluation contract without positive-class loss weighting.",
+  "design_note": "Enrollment truth and evaluation alignment are derived directly from the neural person-period tables so the Item 6 comparison changes only the fitting loss in the weighted sensitivity counterpart, not the evaluation contract."
+}
+
+ candidate_id hidden_dims  dropout  learning_rate  weight_decay  best_val_loss  best_epoch
+           17   [128, 64]      0.1          0.001       0.00001       0.082299          27
+[END] 5.3.3 - 2026-06-19 18:15:45
+[RUN] dynamic_window_weeks=4 output_suffix=_w4
+[START] 5.3 - 2026-06-19 18:15:45
+# ==============================================================
+# 5.3.2 - Prepare the neural discrete-time treatment
+# ==============================================================
+[Stage 5.3.2 table_p18_neural_not_weighted_treatment_summary_w4 — Neural treatment summary]
+table_name=table_p18_neural_not_weighted_treatment_summary_w4
+rows=1, cols=9
+                 model_family  train_rows  test_rows  n_input_features_raw  n_numeric_features  n_categorical_features  n_output_features_after_preprocessing  train_event_rate  test_event_rate
+neural_discrete_time_survival      109284      46835                    16                  10                       6                                     46           0.01702          0.01706
+ARTIFACT | Stage 5.3.2 table_p18_neural_not_weighted_treatment_summary_w4 — Neural treatment summary | duckdb://table_p18_neural_not_weighted_treatment_summary_w4
+[Stage 5.3.2 table_p18_neural_not_weighted_feature_manifest_w4 — Neural feature manifest]
+table_name=table_p18_neural_not_weighted_feature_manifest_w4
+rows=16, cols=6
+feature_name_operational feature_role  present_in_train  present_in_test  covered_by_canonical_config_after_alias canonical_source_name
+                  gender  categorical              True             True                                    False                      
+                  region  categorical              True             True                                    False                      
+       highest_education  categorical              True             True                                    False                      
+                imd_band  categorical              True             True                                    False                      
+                age_band  categorical              True             True                                    False                      
+              disability  categorical              True             True                                    False                      
+    num_of_prev_attempts      numeric              True             True                                     True  num_of_prev_attempts
+         studied_credits      numeric              True             True                                     True       studied_credits
+                    week      numeric              True             True                                     True                  week
+       total_clicks_week      numeric              True             True                                     True          total_clicks
+        active_this_week      numeric              True             True                                    False                      
+         n_vle_rows_week      numeric              True             True                                    False                      
+   n_distinct_sites_week      numeric              True             True                                    False                      
+      cum_clicks_until_t      numeric              True             True                                    False                      
+                 recency      numeric              True             True                                    False                      
+                  streak      numeric              True             True                                    False                      
+ARTIFACT | Stage 5.3.2 table_p18_neural_not_weighted_feature_manifest_w4 — Neural feature manifest | duckdb://table_p18_neural_not_weighted_feature_manifest_w4
+[Stage 5.3.2 table_p18_neural_not_weighted_canonical_alignment_w4 — Canonical feature alignment]
+table_name=table_p18_neural_not_weighted_canonical_alignment_w4
+rows=4, cols=3
+canonical_feature_raw canonical_feature_resolved  covered_by_operational_treatment_spec
+      studied_credits            studied_credits                                   True
+ num_of_prev_attempts       num_of_prev_attempts                                   True
+                 week                       week                                   True
+         total_clicks          total_clicks_week                                   True
+ARTIFACT | Stage 5.3.2 table_p18_neural_not_weighted_canonical_alignment_w4 — Canonical feature alignment | duckdb://table_p18_neural_not_weighted_canonical_alignment_w4
+[Stage 5.3.2 table_p18_neural_not_weighted_output_feature_manifest_w4 — Preprocessed feature manifest]
+table_name=table_p18_neural_not_weighted_output_feature_manifest_w4
+rows=46, cols=1
+       preprocessed_feature_name
+       num__num_of_prev_attempts
+            num__studied_credits
+                       num__week
+          num__total_clicks_week
+           num__active_this_week
+            num__n_vle_rows_week
+      num__n_distinct_sites_week
+         num__cum_clicks_until_t
+                    num__recency
+                     num__streak
+                   cat__gender_F
+                   cat__gender_M
+ cat__region_East Anglian Region
+cat__region_East Midlands Region
+             cat__region_Ireland
+       cat__region_London Region
+        cat__region_North Region
+cat__region_North Western Region
+            cat__region_Scotland
+   cat__region_South East Region
+ARTIFACT | Stage 5.3.2 table_p18_neural_not_weighted_output_feature_manifest_w4 — Preprocessed feature manifest | duckdb://table_p18_neural_not_weighted_output_feature_manifest_w4
+ARTIFACT | metadata_p18_neural_treatment | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/metadata/metadata_p18_neural_not_weighted_treatment_w4.json
+{
+  "step": "P18",
+  "model_family": "neural_discrete_time_survival",
+  "run_label": "dynamic_window_w4",
+  "is_window_truncated_run": true,
+  "active_window_weeks": 4,
+  "output_suffix": "_w4",
+  "train_table": "pp_neural_hazard_ready_train",
+  "test_table": "pp_neural_hazard_ready_test",
+  "target_column": "event_t",
+  "categorical_features": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability"
+  ],
+  "numeric_features": [
+    "num_of_prev_attempts",
+    "studied_credits",
+    "week",
+    "total_clicks_week",
+    "active_this_week",
+    "n_vle_rows_week",
+    "n_distinct_sites_week",
+    "cum_clicks_until_t",
+    "recency",
+    "streak"
+  ],
+  "operational_feature_columns": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability",
+    "num_of_prev_attempts",
+    "studied_credits",
+    "week",
+    "total_clicks_week",
+    "active_this_week",
+    "n_vle_rows_week",
+    "n_distinct_sites_week",
+    "cum_clicks_until_t",
+    "recency",
+    "streak"
+  ],
+  "canonical_expected_features_raw": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "week",
+    "total_clicks"
+  ],
+  "canonical_expected_features_resolved": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "week",
+    "total_clicks_week"
+  ],
+  "feature_alias_map": {
+    "total_clicks": "total_clicks_week"
+  },
+  "n_train_rows": 109284,
+  "n_test_rows": 46835,
+  "n_output_features_after_preprocessing": 46,
+  "train_event_rate": 0.01701987482156583,
+  "test_event_rate": 0.01705989110707804,
+  "methodological_note": "All learned preprocessing operations were fit on training data only and then applied unchanged to test data.",
+  "design_note": "Enrollment truth for neural evaluation is derived directly from the neural person-period tables to preserve identifier consistency with the person-period prediction surface.",
+  "cross_arm_parity_note": "This run truncates weekly person-period information at or before the active window and is intended for cross-arm information-parity analysis."
+}
+
+[END] 5.3.2 - 2026-06-19 18:15:45
+[START] 5.3 - 2026-06-19 18:15:45
+# ==============================================================
+# 5.3.3 - Tune and evaluate the neural discrete-time hazard model
+# ==============================================================
+- DATA_LOADER_WORKERS: 7
+[Stage 5.3.3 table_neural_not_weighted_tuning_results_w4 — Neural tuning results]
+table_name=table_neural_not_weighted_tuning_results_w4
+rows=24, cols=7
+ candidate_id hidden_dims  dropout  learning_rate  weight_decay  best_val_loss  best_epoch
+           18   [128, 64]     0.10         0.0010       0.00010       0.073616          25
+           17   [128, 64]     0.10         0.0010       0.00001       0.073791          23
+           20   [128, 64]     0.10         0.0005       0.00010       0.074158          30
+            2    [32, 16]     0.10         0.0010       0.00010       0.074183          30
+           19   [128, 64]     0.10         0.0005       0.00001       0.074198          30
+           22   [128, 64]     0.30         0.0010       0.00010       0.074216          25
+           10    [64, 32]     0.10         0.0010       0.00010       0.074224          30
+           21   [128, 64]     0.30         0.0010       0.00001       0.074251          23
+            1    [32, 16]     0.10         0.0010       0.00001       0.074377          26
+            6    [32, 16]     0.30         0.0010       0.00010       0.074396          30
+           24   [128, 64]     0.30         0.0005       0.00010       0.074475          30
+            5    [32, 16]     0.30         0.0010       0.00001       0.074482          30
+           14    [64, 32]     0.30         0.0010       0.00010       0.074489          26
+            9    [64, 32]     0.05         0.0010       0.00001       0.074545          23
+           23   [128, 64]     0.30         0.0005       0.00001       0.074549          30
+           12    [64, 32]     0.10         0.0005       0.00010       0.074556          30
+           16    [64, 32]     0.30         0.0005       0.00010       0.074632          30
+            3    [32, 16]     0.10         0.0005       0.00001       0.074644          30
+            4    [32, 16]     0.10         0.0005       0.00010       0.074672          30
+           11    [64, 32]     0.10         0.0005       0.00001       0.074686          26
+ARTIFACT | Stage 5.3.3 table_neural_not_weighted_tuning_results_w4 — Neural tuning results | duckdb://table_neural_not_weighted_tuning_results_w4
+[Stage 5.3.3 table_neural_not_weighted_tuned_training_history_w4 — Neural best-candidate training summary]
+table_name=table_neural_not_weighted_tuned_training_history_w4
+rows=1, cols=7
+ candidate_id hidden_dims  dropout  learning_rate  weight_decay  best_val_loss  best_epoch
+           18   [128, 64]      0.1          0.001        0.0001       0.073616          25
+ARTIFACT | Stage 5.3.3 table_neural_not_weighted_tuned_training_history_w4 — Neural best-candidate training summary | duckdb://table_neural_not_weighted_tuned_training_history_w4
+[Stage 5.3.3 table_neural_not_weighted_tuned_test_predictions_w4 — Neural test predictions]
+table_name=table_neural_not_weighted_tuned_test_predictions_w4
+rows=46835, cols=29
+   enrollment_id  id_student code_module code_presentation  week  event_t  event_observed  t_event_week  t_final_week  used_zero_week_fallback_for_censoring gender               region     highest_education imd_band age_band  num_of_prev_attempts  studied_credits disability  total_clicks_week  active_this_week  n_vle_rows_week  n_distinct_sites_week  cum_clicks_until_t  recency  streak split  pred_hazard  pred_survival  pred_risk
+100561|DDD|2014J      100561         DDD             2014J     0        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               10.0                 1                8                      4                10.0        0       1  test     0.060723       0.939277   0.060723
+100561|DDD|2014J      100561         DDD             2014J     1        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N                0.0                 0                0                      0                10.0        1       0  test     0.067051       0.876297   0.123703
+100561|DDD|2014J      100561         DDD             2014J     2        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               91.0                 1               26                     11               101.0        0       2  test     0.043046       0.838576   0.161424
+100561|DDD|2014J      100561         DDD             2014J     3        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N                6.0                 1                4                      2               107.0        0       3  test     0.054033       0.793265   0.206735
+100561|DDD|2014J      100561         DDD             2014J     4        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               30.0                 1               17                      8               137.0        0       4  test     0.024069       0.774172   0.225828
+100621|CCC|2014B      100621         CCC             2014B     0        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                0.0                 0                0                      0                 0.0        1       0  test     0.004061       0.995939   0.004061
+100621|CCC|2014B      100621         CCC             2014B     1        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                3.0                 1                2                      2                 3.0        0       2  test     0.005998       0.989965   0.010035
+100621|CCC|2014B      100621         CCC             2014B     2        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                1.0                 1                1                      1                 4.0        0       3  test     0.004488       0.985523   0.014477
+100621|CCC|2014B      100621         CCC             2014B     3        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                1.0                 1                1                      1                 5.0        0       4  test     0.043877       0.942281   0.057719
+100621|CCC|2014B      100621         CCC             2014B     4        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                0.0                 0                0                      0                 5.0        1       0  test     0.008501       0.934271   0.065729
+101187|DDD|2014J      101187         DDD             2014J     0        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        1       0  test     0.019813       0.980187   0.019813
+101187|DDD|2014J      101187         DDD             2014J     1        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        2       0  test     0.021919       0.958703   0.041297
+101187|DDD|2014J      101187         DDD             2014J     2        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        3       0  test     0.088345       0.874006   0.125994
+101187|DDD|2014J      101187         DDD             2014J     3        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        4       0  test     0.022667       0.854195   0.145805
+101187|DDD|2014J      101187         DDD             2014J     4        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        5       0  test     0.008207       0.847184   0.152816
+101279|DDD|2014J      101279         DDD             2014J     0        0               0           NaN            37                                      0      F     Yorkshire Region A Level or Equivalent    0-10%    35-55                     0               60          N               79.0                 1               31                     21                79.0        0       1  test     0.014781       0.985219   0.014781
+101279|DDD|2014J      101279         DDD             2014J     1        0               0           NaN            37                                      0      F     Yorkshire Region A Level or Equivalent    0-10%    35-55                     0               60          N                1.0                 1                1                      1                80.0        0       2  test     0.049727       0.936227   0.063773
+101279|DDD|2014J      101279         DDD             2014J     2        0               0           NaN            37                                      0      F     Yorkshire Region A Level or Equivalent    0-10%    35-55                     0               60          N                1.0                 1                1                      1                81.0        0       3  test     0.018502       0.918905   0.081095
+101279|DDD|2014J      101279         DDD             2014J     3        0               0           NaN            37                                      0      F     Yorkshire Region A Level or Equivalent    0-10%    35-55                     0               60          N                0.0                 0                0                      0                81.0        1       0  test     0.006757       0.912696   0.087304
+101279|DDD|2014J      101279         DDD             2014J     4        0               0           NaN            37                                      0      F     Yorkshire Region A Level or Equivalent    0-10%    35-55                     0               60          N                9.0                 1                5                      4                90.0        0       2  test     0.019673       0.894740   0.105260
+ARTIFACT | Stage 5.3.3 table_neural_not_weighted_tuned_test_predictions_w4 — Neural test predictions | duckdb://table_neural_not_weighted_tuned_test_predictions_w4
+[Stage 5.3.3 table_neural_not_weighted_tuned_primary_metrics_w4 — Neural primary metrics]
+table_name=table_neural_not_weighted_tuned_primary_metrics_w4
+rows=2, cols=4
+metric_name metric_category  metric_value                         notes
+        ibs         primary      0.141009 sksurv_integrated_brier_score
+    c_index      co_primary      0.499218          pycox_concordance_td
+ARTIFACT | Stage 5.3.3 table_neural_not_weighted_tuned_primary_metrics_w4 — Neural primary metrics | duckdb://table_neural_not_weighted_tuned_primary_metrics_w4
+[Stage 5.3.3 table_neural_not_weighted_tuned_brier_by_horizon_w4 — Neural Brier scores by horizon]
+table_name=table_neural_not_weighted_tuned_brier_by_horizon_w4
+rows=3, cols=5
+ horizon_week      metric_name metric_category  metric_value              notes
+           10 brier_at_horizon         primary      0.119927 sksurv_brier_score
+           20 brier_at_horizon         primary      0.164802 sksurv_brier_score
+           30 brier_at_horizon         primary      0.198989 sksurv_brier_score
+ARTIFACT | Stage 5.3.3 table_neural_not_weighted_tuned_brier_by_horizon_w4 — Neural Brier scores by horizon | duckdb://table_neural_not_weighted_tuned_brier_by_horizon_w4
+[Stage 5.3.3 table_neural_not_weighted_tuned_secondary_metrics_w4 — Neural secondary metrics]
+table_name=table_neural_not_weighted_tuned_secondary_metrics_w4
+rows=6, cols=5
+ horizon_week         metric_name metric_category  metric_value                                                                                  notes
+           10 risk_auc_at_horizon       secondary      0.345222                                                            roc_auc_on_evaluable_subset
+           10  time_dependent_auc       secondary      0.345453 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.345453; local_ipcw_auc
+           20 risk_auc_at_horizon       secondary      0.389445                                                            roc_auc_on_evaluable_subset
+           20  time_dependent_auc       secondary      0.389358 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.389358; local_ipcw_auc
+           30 risk_auc_at_horizon       secondary      0.402682                                                            roc_auc_on_evaluable_subset
+           30  time_dependent_auc       secondary      0.401581 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.401581; local_ipcw_auc
+ARTIFACT | Stage 5.3.3 table_neural_not_weighted_tuned_secondary_metrics_w4 — Neural secondary metrics | duckdb://table_neural_not_weighted_tuned_secondary_metrics_w4
+[Stage 5.3.3 table_neural_not_weighted_tuned_td_auc_support_audit_w4 — Neural IPCW support audit]
+table_name=table_neural_not_weighted_tuned_td_auc_support_audit_w4
+rows=3, cols=6
+ horizon_week  max_ipcw_time  n_total_test_enrollments  n_supported_test_enrollments  mean_auc                                                                                  notes
+           10           38.0                      9778                          6742  0.345453 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.345453; local_ipcw_auc
+           20           38.0                      9778                          6742  0.389358 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.389358; local_ipcw_auc
+           30           38.0                      9778                          6742  0.401581 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.401581; local_ipcw_auc
+ARTIFACT | Stage 5.3.3 table_neural_not_weighted_tuned_td_auc_support_audit_w4 — Neural IPCW support audit | duckdb://table_neural_not_weighted_tuned_td_auc_support_audit_w4
+[Stage 5.3.3 table_neural_not_weighted_tuned_row_diagnostics_w4 — Neural row-level diagnostics]
+table_name=table_neural_not_weighted_tuned_row_diagnostics_w4
+rows=1, cols=5
+                                      model_name  row_level_roc_auc  row_level_pr_auc  row_level_log_loss  row_level_brier
+neural_discrete_time_survival_not_weighted_tuned            0.79462          0.064831            0.076289         0.016329
+ARTIFACT | Stage 5.3.3 table_neural_not_weighted_tuned_row_diagnostics_w4 — Neural row-level diagnostics | duckdb://table_neural_not_weighted_tuned_row_diagnostics_w4
+[Stage 5.3.3 table_neural_not_weighted_tuned_support_by_horizon_w4 — Neural support by horizon]
+table_name=table_neural_not_weighted_tuned_support_by_horizon_w4
+rows=3, cols=4
+ horizon_week  n_evaluable_enrollments  n_events_by_horizon  event_rate_by_horizon
+           10                     9778                 1215               0.124259
+           20                     9778                 1736               0.177541
+           30                     9778                 2129               0.217734
+ARTIFACT | Stage 5.3.3 table_neural_not_weighted_tuned_support_by_horizon_w4 — Neural support by horizon | duckdb://table_neural_not_weighted_tuned_support_by_horizon_w4
+[Stage 5.3.3 table_neural_not_weighted_tuned_calibration_summary_w4 — Neural calibration summary]
+table_name=table_neural_not_weighted_tuned_calibration_summary_w4
+rows=3, cols=5
+ horizon_week            metric_name metric_category  metric_value                                         notes
+           10 calibration_at_horizon         primary      0.091494 Weighted absolute calibration gap across bins
+           20 calibration_at_horizon         primary      0.117411 Weighted absolute calibration gap across bins
+           30 calibration_at_horizon         primary      0.149048 Weighted absolute calibration gap across bins
+ARTIFACT | Stage 5.3.3 table_neural_not_weighted_tuned_calibration_summary_w4 — Neural calibration summary | duckdb://table_neural_not_weighted_tuned_calibration_summary_w4
+[Stage 5.3.3 table_neural_not_weighted_tuned_calibration_bins_by_horizon_w4 — Neural calibration bins]
+table_name=table_neural_not_weighted_tuned_calibration_bins_by_horizon_w4
+rows=30, cols=6
+ calibration_bin   n  mean_predicted_risk  observed_event_rate  horizon_week  abs_calibration_gap
+               0 978             0.008928             0.333333            10             0.324405
+               1 978             0.022027             0.157464            10             0.135438
+               2 978             0.033017             0.150307            10             0.117290
+               3 977             0.044310             0.091095            10             0.046785
+               4 978             0.056469             0.106339            10             0.049870
+               5 978             0.070686             0.088957            10             0.018271
+               6 977             0.087762             0.077789            10             0.009973
+               7 978             0.109458             0.089980            10             0.019478
+               8 978             0.138882             0.075665            10             0.063217
+               9 978             0.201662             0.071575            10             0.130087
+               0 978             0.008928             0.365031            20             0.356102
+               1 978             0.022027             0.210634            20             0.188607
+               2 978             0.033017             0.201431            20             0.168415
+               3 977             0.044310             0.150461            20             0.106150
+               4 978             0.056469             0.172802            20             0.116333
+               5 978             0.070686             0.154397            20             0.083711
+               6 977             0.087762             0.127943            20             0.040181
+               7 978             0.109458             0.138037            20             0.028579
+               8 978             0.138882             0.132924            20             0.005958
+               9 978             0.201662             0.121677            20             0.079985
+ARTIFACT | Stage 5.3.3 table_neural_not_weighted_tuned_calibration_bins_by_horizon_w4 — Neural calibration bins | duckdb://table_neural_not_weighted_tuned_calibration_bins_by_horizon_w4
+[Stage 5.3.3 table_neural_not_weighted_tuned_predicted_vs_observed_survival_w4 — Neural predicted versus observed survival]
+table_name=table_neural_not_weighted_tuned_predicted_vs_observed_survival_w4
+rows=3, cols=5
+ horizon_week  n_evaluable_enrollments  mean_predicted_survival  mean_observed_survival  abs_gap
+           10                     9778                 0.922678                0.875741 0.046936
+           20                     9778                 0.922678                0.822459 0.100219
+           30                     9778                 0.922678                0.782266 0.140411
+ARTIFACT | Stage 5.3.3 table_neural_not_weighted_tuned_predicted_vs_observed_survival_w4 — Neural predicted versus observed survival | duckdb://table_neural_not_weighted_tuned_predicted_vs_observed_survival_w4
+[Stage 5.3.3 table_neural_not_weighted_tuned_hazard_audit_summary_w4 — Neural hazard audit summary]
+table_name=table_neural_not_weighted_tuned_hazard_audit_summary_w4
+rows=1, cols=6
+ mean_pred_hazard_test  median_pred_hazard_test  p90_pred_hazard_test  p99_pred_hazard_test  min_pred_hazard_test  max_pred_hazard_test
+              0.016808                 0.008305              0.044525              0.109423          1.000000e-08              0.232604
+ARTIFACT | Stage 5.3.3 table_neural_not_weighted_tuned_hazard_audit_summary_w4 — Neural hazard audit summary | duckdb://table_neural_not_weighted_tuned_hazard_audit_summary_w4
+[Stage 5.3.3 table_neural_not_weighted_tuned_hazard_by_week_w4 — Neural hazard by week]
+table_name=table_neural_not_weighted_tuned_hazard_by_week_w4
+rows=5, cols=6
+ week  mean_pred_hazard  median_pred_hazard  mean_pred_survival  mean_pred_risk  n_rows
+    0          0.016701            0.008417            0.983299        0.016701    9778
+    1          0.016970            0.008315            0.966791        0.033209    9553
+    2          0.016813            0.008202            0.950754        0.049246    9242
+    3          0.016834            0.008425            0.934934        0.065066    9189
+    4          0.016723            0.008171            0.919473        0.080527    9073
+ARTIFACT | Stage 5.3.3 table_neural_not_weighted_tuned_hazard_by_week_w4 — Neural hazard by week | duckdb://table_neural_not_weighted_tuned_hazard_by_week_w4
+ARTIFACT | neural_model | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/models/neural_discrete_time_survival_not_weighted_tuned_w4.pt
+ARTIFACT | neural_preprocessor | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/models/neural_discrete_time_not_weighted_preprocessor_w4.joblib
+ARTIFACT | neural_tuned_model_config | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/metadata/neural_not_weighted_tuned_model_config_w4.json
+{
+  "model_name": "neural_discrete_time_survival_not_weighted_tuned",
+  "search_strategy": "controlled_grid_search",
+  "selection_criterion": "lowest_validation_loss",
+  "validation_split": {
+    "method": "GroupShuffleSplit",
+    "unit": "enrollment_id",
+    "test_size": 0.1,
+    "random_seed": 42
+  },
+  "batch_size": 1024,
+  "max_epochs": 30,
+  "early_stopping_patience": 5,
+  "optimizer": "Adam",
+  "loss": "BCEWithLogitsLoss()",
+  "random_state": 42,
+  "run_label": "dynamic_window_w4",
+  "is_window_truncated_run": true,
+  "active_window_weeks": 4,
+  "output_suffix": "_w4",
+  "device": "cpu",
+  "benchmark_horizons": [
+    10,
+    20,
+    30
+  ],
+  "calibration_bins": 10,
+  "calibration_contract_version": "v2_ipcw_km_observed_risk",
+  "calibration_observed_risk_method": "ipcw_km_pseudo_event_rate",
+  "best_candidate": {
+    "candidate_id": 18,
+    "hidden_dims": [
+      128,
+      64
+    ],
+    "dropout": 0.1,
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001,
+    "best_val_loss": 0.07361627099188892,
+    "best_epoch": 25
+  },
+  "preprocessing": {
+    "categorical_features": [
+      "gender",
+      "region",
+      "highest_education",
+      "imd_band",
+      "age_band",
+      "disability"
+    ],
+    "numeric_features": [
+      "num_of_prev_attempts",
+      "studied_credits",
+      "week",
+      "total_clicks_week",
+      "active_this_week",
+      "n_vle_rows_week",
+      "n_distinct_sites_week",
+      "cum_clicks_until_t",
+      "recency",
+      "streak"
+    ],
+    "categorical_encoder": "OneHotEncoder(handle_unknown=ignore, sparse_output=False)",
+    "numeric_scaler": "StandardScaler"
+  },
+  "weighting_strategy": "none; this official D5.3 variant uses the same grouped validation protocol and evaluation contract without positive-class loss weighting.",
+  "design_note": "Enrollment truth and evaluation alignment are derived directly from the neural person-period tables so the Item 6 comparison changes only the fitting loss in the weighted sensitivity counterpart, not the evaluation contract."
+}
+
+ candidate_id hidden_dims  dropout  learning_rate  weight_decay  best_val_loss  best_epoch
+           18   [128, 64]      0.1          0.001        0.0001       0.073616          25
+[END] 5.3.3 - 2026-06-19 18:21:00
+[RUN] dynamic_window_weeks=6 output_suffix=_w6
+[START] 5.3 - 2026-06-19 18:21:00
+# ==============================================================
+# 5.3.2 - Prepare the neural discrete-time treatment
+# ==============================================================
+[Stage 5.3.2 table_p18_neural_not_weighted_treatment_summary_w6 — Neural treatment summary]
+table_name=table_p18_neural_not_weighted_treatment_summary_w6
+rows=1, cols=9
+                 model_family  train_rows  test_rows  n_input_features_raw  n_numeric_features  n_categorical_features  n_output_features_after_preprocessing  train_event_rate  test_event_rate
+neural_discrete_time_survival      151041      64730                    16                  10                       6                                     46          0.014499         0.014383
+ARTIFACT | Stage 5.3.2 table_p18_neural_not_weighted_treatment_summary_w6 — Neural treatment summary | duckdb://table_p18_neural_not_weighted_treatment_summary_w6
+[Stage 5.3.2 table_p18_neural_not_weighted_feature_manifest_w6 — Neural feature manifest]
+table_name=table_p18_neural_not_weighted_feature_manifest_w6
+rows=16, cols=6
+feature_name_operational feature_role  present_in_train  present_in_test  covered_by_canonical_config_after_alias canonical_source_name
+                  gender  categorical              True             True                                    False                      
+                  region  categorical              True             True                                    False                      
+       highest_education  categorical              True             True                                    False                      
+                imd_band  categorical              True             True                                    False                      
+                age_band  categorical              True             True                                    False                      
+              disability  categorical              True             True                                    False                      
+    num_of_prev_attempts      numeric              True             True                                     True  num_of_prev_attempts
+         studied_credits      numeric              True             True                                     True       studied_credits
+                    week      numeric              True             True                                     True                  week
+       total_clicks_week      numeric              True             True                                     True          total_clicks
+        active_this_week      numeric              True             True                                    False                      
+         n_vle_rows_week      numeric              True             True                                    False                      
+   n_distinct_sites_week      numeric              True             True                                    False                      
+      cum_clicks_until_t      numeric              True             True                                    False                      
+                 recency      numeric              True             True                                    False                      
+                  streak      numeric              True             True                                    False                      
+ARTIFACT | Stage 5.3.2 table_p18_neural_not_weighted_feature_manifest_w6 — Neural feature manifest | duckdb://table_p18_neural_not_weighted_feature_manifest_w6
+[Stage 5.3.2 table_p18_neural_not_weighted_canonical_alignment_w6 — Canonical feature alignment]
+table_name=table_p18_neural_not_weighted_canonical_alignment_w6
+rows=4, cols=3
+canonical_feature_raw canonical_feature_resolved  covered_by_operational_treatment_spec
+      studied_credits            studied_credits                                   True
+ num_of_prev_attempts       num_of_prev_attempts                                   True
+                 week                       week                                   True
+         total_clicks          total_clicks_week                                   True
+ARTIFACT | Stage 5.3.2 table_p18_neural_not_weighted_canonical_alignment_w6 — Canonical feature alignment | duckdb://table_p18_neural_not_weighted_canonical_alignment_w6
+[Stage 5.3.2 table_p18_neural_not_weighted_output_feature_manifest_w6 — Preprocessed feature manifest]
+table_name=table_p18_neural_not_weighted_output_feature_manifest_w6
+rows=46, cols=1
+       preprocessed_feature_name
+       num__num_of_prev_attempts
+            num__studied_credits
+                       num__week
+          num__total_clicks_week
+           num__active_this_week
+            num__n_vle_rows_week
+      num__n_distinct_sites_week
+         num__cum_clicks_until_t
+                    num__recency
+                     num__streak
+                   cat__gender_F
+                   cat__gender_M
+ cat__region_East Anglian Region
+cat__region_East Midlands Region
+             cat__region_Ireland
+       cat__region_London Region
+        cat__region_North Region
+cat__region_North Western Region
+            cat__region_Scotland
+   cat__region_South East Region
+ARTIFACT | Stage 5.3.2 table_p18_neural_not_weighted_output_feature_manifest_w6 — Preprocessed feature manifest | duckdb://table_p18_neural_not_weighted_output_feature_manifest_w6
+ARTIFACT | metadata_p18_neural_treatment | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/metadata/metadata_p18_neural_not_weighted_treatment_w6.json
+{
+  "step": "P18",
+  "model_family": "neural_discrete_time_survival",
+  "run_label": "dynamic_window_w6",
+  "is_window_truncated_run": true,
+  "active_window_weeks": 6,
+  "output_suffix": "_w6",
+  "train_table": "pp_neural_hazard_ready_train",
+  "test_table": "pp_neural_hazard_ready_test",
+  "target_column": "event_t",
+  "categorical_features": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability"
+  ],
+  "numeric_features": [
+    "num_of_prev_attempts",
+    "studied_credits",
+    "week",
+    "total_clicks_week",
+    "active_this_week",
+    "n_vle_rows_week",
+    "n_distinct_sites_week",
+    "cum_clicks_until_t",
+    "recency",
+    "streak"
+  ],
+  "operational_feature_columns": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability",
+    "num_of_prev_attempts",
+    "studied_credits",
+    "week",
+    "total_clicks_week",
+    "active_this_week",
+    "n_vle_rows_week",
+    "n_distinct_sites_week",
+    "cum_clicks_until_t",
+    "recency",
+    "streak"
+  ],
+  "canonical_expected_features_raw": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "week",
+    "total_clicks"
+  ],
+  "canonical_expected_features_resolved": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "week",
+    "total_clicks_week"
+  ],
+  "feature_alias_map": {
+    "total_clicks": "total_clicks_week"
+  },
+  "n_train_rows": 151041,
+  "n_test_rows": 64730,
+  "n_output_features_after_preprocessing": 46,
+  "train_event_rate": 0.014499374342066062,
+  "test_event_rate": 0.014382820948555539,
+  "methodological_note": "All learned preprocessing operations were fit on training data only and then applied unchanged to test data.",
+  "design_note": "Enrollment truth for neural evaluation is derived directly from the neural person-period tables to preserve identifier consistency with the person-period prediction surface.",
+  "cross_arm_parity_note": "This run truncates weekly person-period information at or before the active window and is intended for cross-arm information-parity analysis."
+}
+
+[END] 5.3.2 - 2026-06-19 18:21:01
+[START] 5.3 - 2026-06-19 18:21:01
+# ==============================================================
+# 5.3.3 - Tune and evaluate the neural discrete-time hazard model
+# ==============================================================
+- DATA_LOADER_WORKERS: 7
+[Stage 5.3.3 table_neural_not_weighted_tuning_results_w6 — Neural tuning results]
+table_name=table_neural_not_weighted_tuning_results_w6
+rows=24, cols=7
+ candidate_id hidden_dims  dropout  learning_rate  weight_decay  best_val_loss  best_epoch
+           18   [128, 64]     0.10         0.0010       0.00010       0.065908          29
+            2    [32, 16]     0.10         0.0010       0.00010       0.066021          26
+           20   [128, 64]     0.10         0.0005       0.00010       0.066074          26
+            1    [32, 16]     0.10         0.0010       0.00001       0.066158          26
+           19   [128, 64]     0.10         0.0005       0.00001       0.066211          26
+           17   [128, 64]     0.10         0.0010       0.00001       0.066305          16
+           14    [64, 32]     0.30         0.0010       0.00010       0.066324          26
+           24   [128, 64]     0.30         0.0005       0.00010       0.066365          26
+           10    [64, 32]     0.10         0.0010       0.00010       0.066373          16
+            3    [32, 16]     0.10         0.0005       0.00001       0.066428          30
+           12    [64, 32]     0.10         0.0005       0.00010       0.066444          26
+           23   [128, 64]     0.30         0.0005       0.00001       0.066447          26
+            4    [32, 16]     0.10         0.0005       0.00010       0.066450          30
+           22   [128, 64]     0.30         0.0010       0.00010       0.066453          10
+            6    [32, 16]     0.30         0.0010       0.00010       0.066459          26
+           21   [128, 64]     0.30         0.0010       0.00001       0.066479          10
+            9    [64, 32]     0.05         0.0010       0.00001       0.066522          16
+           11    [64, 32]     0.10         0.0005       0.00001       0.066552          27
+           16    [64, 32]     0.30         0.0005       0.00010       0.066592          27
+           15    [64, 32]     0.30         0.0005       0.00001       0.066776          30
+ARTIFACT | Stage 5.3.3 table_neural_not_weighted_tuning_results_w6 — Neural tuning results | duckdb://table_neural_not_weighted_tuning_results_w6
+[Stage 5.3.3 table_neural_not_weighted_tuned_training_history_w6 — Neural best-candidate training summary]
+table_name=table_neural_not_weighted_tuned_training_history_w6
+rows=1, cols=7
+ candidate_id hidden_dims  dropout  learning_rate  weight_decay  best_val_loss  best_epoch
+           18   [128, 64]      0.1          0.001        0.0001       0.065908          29
+ARTIFACT | Stage 5.3.3 table_neural_not_weighted_tuned_training_history_w6 — Neural best-candidate training summary | duckdb://table_neural_not_weighted_tuned_training_history_w6
+[Stage 5.3.3 table_neural_not_weighted_tuned_test_predictions_w6 — Neural test predictions]
+table_name=table_neural_not_weighted_tuned_test_predictions_w6
+rows=64730, cols=29
+   enrollment_id  id_student code_module code_presentation  week  event_t  event_observed  t_event_week  t_final_week  used_zero_week_fallback_for_censoring gender               region     highest_education imd_band age_band  num_of_prev_attempts  studied_credits disability  total_clicks_week  active_this_week  n_vle_rows_week  n_distinct_sites_week  cum_clicks_until_t  recency  streak split  pred_hazard  pred_survival  pred_risk
+100561|DDD|2014J      100561         DDD             2014J     0        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               10.0                 1                8                      4                10.0        0       1  test     0.058913       0.941087   0.058913
+100561|DDD|2014J      100561         DDD             2014J     1        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N                0.0                 0                0                      0                10.0        1       0  test     0.047244       0.896626   0.103374
+100561|DDD|2014J      100561         DDD             2014J     2        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               91.0                 1               26                     11               101.0        0       2  test     0.029024       0.870602   0.129398
+100561|DDD|2014J      100561         DDD             2014J     3        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N                6.0                 1                4                      2               107.0        0       3  test     0.004589       0.866606   0.133394
+100561|DDD|2014J      100561         DDD             2014J     4        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               30.0                 1               17                      8               137.0        0       4  test     0.038630       0.833129   0.166871
+100561|DDD|2014J      100561         DDD             2014J     5        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               65.0                 1               36                     14               202.0        0       5  test     0.016192       0.819639   0.180361
+100561|DDD|2014J      100561         DDD             2014J     6        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               27.0                 1               15                      9               229.0        0       6  test     0.003324       0.816914   0.183086
+100621|CCC|2014B      100621         CCC             2014B     0        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                0.0                 0                0                      0                 0.0        1       0  test     0.005212       0.994788   0.005212
+100621|CCC|2014B      100621         CCC             2014B     1        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                3.0                 1                2                      2                 3.0        0       2  test     0.005373       0.989443   0.010557
+100621|CCC|2014B      100621         CCC             2014B     2        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                1.0                 1                1                      1                 4.0        0       3  test     0.010462       0.979091   0.020909
+100621|CCC|2014B      100621         CCC             2014B     3        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                1.0                 1                1                      1                 5.0        0       4  test     0.047220       0.932858   0.067142
+100621|CCC|2014B      100621         CCC             2014B     4        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                0.0                 0                0                      0                 5.0        1       0  test     0.007693       0.925682   0.074318
+100621|CCC|2014B      100621         CCC             2014B     5        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                0.0                 0                0                      0                 5.0        2       0  test     0.006536       0.919631   0.080369
+100621|CCC|2014B      100621         CCC             2014B     6        1               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                0.0                 0                0                      0                 5.0        3       0  test     0.005580       0.914500   0.085500
+101187|DDD|2014J      101187         DDD             2014J     0        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        1       0  test     0.023927       0.976073   0.023927
+101187|DDD|2014J      101187         DDD             2014J     1        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        2       0  test     0.018493       0.958022   0.041978
+101187|DDD|2014J      101187         DDD             2014J     2        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        3       0  test     0.080015       0.881366   0.118634
+101187|DDD|2014J      101187         DDD             2014J     3        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        4       0  test     0.028409       0.856327   0.143673
+101187|DDD|2014J      101187         DDD             2014J     4        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        5       0  test     0.014149       0.844211   0.155789
+101187|DDD|2014J      101187         DDD             2014J     5        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        6       0  test     0.013432       0.832872   0.167128
+ARTIFACT | Stage 5.3.3 table_neural_not_weighted_tuned_test_predictions_w6 — Neural test predictions | duckdb://table_neural_not_weighted_tuned_test_predictions_w6
+[Stage 5.3.3 table_neural_not_weighted_tuned_primary_metrics_w6 — Neural primary metrics]
+table_name=table_neural_not_weighted_tuned_primary_metrics_w6
+rows=2, cols=4
+metric_name metric_category  metric_value                         notes
+        ibs         primary       0.14219 sksurv_integrated_brier_score
+    c_index      co_primary       0.49412          pycox_concordance_td
+ARTIFACT | Stage 5.3.3 table_neural_not_weighted_tuned_primary_metrics_w6 — Neural primary metrics | duckdb://table_neural_not_weighted_tuned_primary_metrics_w6
+[Stage 5.3.3 table_neural_not_weighted_tuned_brier_by_horizon_w6 — Neural Brier scores by horizon]
+table_name=table_neural_not_weighted_tuned_brier_by_horizon_w6
+rows=3, cols=5
+ horizon_week      metric_name metric_category  metric_value              notes
+           10 brier_at_horizon         primary      0.122440 sksurv_brier_score
+           20 brier_at_horizon         primary      0.165919 sksurv_brier_score
+           30 brier_at_horizon         primary      0.198991 sksurv_brier_score
+ARTIFACT | Stage 5.3.3 table_neural_not_weighted_tuned_brier_by_horizon_w6 — Neural Brier scores by horizon | duckdb://table_neural_not_weighted_tuned_brier_by_horizon_w6
+[Stage 5.3.3 table_neural_not_weighted_tuned_secondary_metrics_w6 — Neural secondary metrics]
+table_name=table_neural_not_weighted_tuned_secondary_metrics_w6
+rows=6, cols=5
+ horizon_week         metric_name metric_category  metric_value                                                                                  notes
+           10 risk_auc_at_horizon       secondary      0.274656                                                            roc_auc_on_evaluable_subset
+           10  time_dependent_auc       secondary      0.274972 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.274972; local_ipcw_auc
+           20 risk_auc_at_horizon       secondary      0.343929                                                            roc_auc_on_evaluable_subset
+           20  time_dependent_auc       secondary      0.344338 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.344338; local_ipcw_auc
+           30 risk_auc_at_horizon       secondary      0.371340                                                            roc_auc_on_evaluable_subset
+           30  time_dependent_auc       secondary      0.371706 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.371706; local_ipcw_auc
+ARTIFACT | Stage 5.3.3 table_neural_not_weighted_tuned_secondary_metrics_w6 — Neural secondary metrics | duckdb://table_neural_not_weighted_tuned_secondary_metrics_w6
+[Stage 5.3.3 table_neural_not_weighted_tuned_td_auc_support_audit_w6 — Neural IPCW support audit]
+table_name=table_neural_not_weighted_tuned_td_auc_support_audit_w6
+rows=3, cols=6
+ horizon_week  max_ipcw_time  n_total_test_enrollments  n_supported_test_enrollments  mean_auc                                                                                  notes
+           10           38.0                      9778                          6742  0.274972 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.274972; local_ipcw_auc
+           20           38.0                      9778                          6742  0.344338 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.344338; local_ipcw_auc
+           30           38.0                      9778                          6742  0.371706 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.371706; local_ipcw_auc
+ARTIFACT | Stage 5.3.3 table_neural_not_weighted_tuned_td_auc_support_audit_w6 — Neural IPCW support audit | duckdb://table_neural_not_weighted_tuned_td_auc_support_audit_w6
+[Stage 5.3.3 table_neural_not_weighted_tuned_row_diagnostics_w6 — Neural row-level diagnostics]
+table_name=table_neural_not_weighted_tuned_row_diagnostics_w6
+rows=1, cols=5
+                                      model_name  row_level_roc_auc  row_level_pr_auc  row_level_log_loss  row_level_brier
+neural_discrete_time_survival_not_weighted_tuned            0.80998          0.059807            0.065672         0.013813
+ARTIFACT | Stage 5.3.3 table_neural_not_weighted_tuned_row_diagnostics_w6 — Neural row-level diagnostics | duckdb://table_neural_not_weighted_tuned_row_diagnostics_w6
+[Stage 5.3.3 table_neural_not_weighted_tuned_support_by_horizon_w6 — Neural support by horizon]
+table_name=table_neural_not_weighted_tuned_support_by_horizon_w6
+rows=3, cols=4
+ horizon_week  n_evaluable_enrollments  n_events_by_horizon  event_rate_by_horizon
+           10                     9778                 1215               0.124259
+           20                     9778                 1736               0.177541
+           30                     9778                 2129               0.217734
+ARTIFACT | Stage 5.3.3 table_neural_not_weighted_tuned_support_by_horizon_w6 — Neural support by horizon | duckdb://table_neural_not_weighted_tuned_support_by_horizon_w6
+[Stage 5.3.3 table_neural_not_weighted_tuned_calibration_summary_w6 — Neural calibration summary]
+table_name=table_neural_not_weighted_tuned_calibration_summary_w6
+rows=3, cols=5
+ horizon_week            metric_name metric_category  metric_value                                         notes
+           10 calibration_at_horizon         primary      0.109173 Weighted absolute calibration gap across bins
+           20 calibration_at_horizon         primary      0.116906 Weighted absolute calibration gap across bins
+           30 calibration_at_horizon         primary      0.142208 Weighted absolute calibration gap across bins
+ARTIFACT | Stage 5.3.3 table_neural_not_weighted_tuned_calibration_summary_w6 — Neural calibration summary | duckdb://table_neural_not_weighted_tuned_calibration_summary_w6
+[Stage 5.3.3 table_neural_not_weighted_tuned_calibration_bins_by_horizon_w6 — Neural calibration bins]
+table_name=table_neural_not_weighted_tuned_calibration_bins_by_horizon_w6
+rows=30, cols=6
+ calibration_bin   n  mean_predicted_risk  observed_event_rate  horizon_week  abs_calibration_gap
+               0 978             0.009134             0.453988            10             0.444853
+               1 978             0.024867             0.164622            10             0.139754
+               2 978             0.039141             0.121677            10             0.082536
+               3 977             0.052326             0.104401            10             0.052075
+               4 978             0.066470             0.084867            10             0.018398
+               5 978             0.082180             0.071575            10             0.010605
+               6 977             0.100142             0.064483            10             0.035659
+               7 978             0.122175             0.069530            10             0.052645
+               8 978             0.151121             0.050102            10             0.101019
+               9 978             0.211315             0.057260            10             0.154056
+               0 978             0.009134             0.488753            20             0.479618
+               1 978             0.024867             0.208589            20             0.183721
+               2 978             0.039141             0.175869            20             0.136729
+               3 977             0.052326             0.163767            20             0.111441
+               4 978             0.066470             0.147239            20             0.080770
+               5 978             0.082180             0.117587            20             0.035407
+               6 977             0.100142             0.114637            20             0.014495
+               7 978             0.122175             0.122699            20             0.000525
+               8 978             0.151121             0.117587            20             0.033534
+               9 978             0.211315             0.118609            20             0.092706
+ARTIFACT | Stage 5.3.3 table_neural_not_weighted_tuned_calibration_bins_by_horizon_w6 — Neural calibration bins | duckdb://table_neural_not_weighted_tuned_calibration_bins_by_horizon_w6
+[Stage 5.3.3 table_neural_not_weighted_tuned_predicted_vs_observed_survival_w6 — Neural predicted versus observed survival]
+table_name=table_neural_not_weighted_tuned_predicted_vs_observed_survival_w6
+rows=3, cols=5
+ horizon_week  n_evaluable_enrollments  mean_predicted_survival  mean_observed_survival  abs_gap
+           10                     9778                 0.914111                0.875741 0.038369
+           20                     9778                 0.914111                0.822459 0.091652
+           30                     9778                 0.914111                0.782266 0.131845
+ARTIFACT | Stage 5.3.3 table_neural_not_weighted_tuned_predicted_vs_observed_survival_w6 — Neural predicted versus observed survival | duckdb://table_neural_not_weighted_tuned_predicted_vs_observed_survival_w6
+[Stage 5.3.3 table_neural_not_weighted_tuned_hazard_audit_summary_w6 — Neural hazard audit summary]
+table_name=table_neural_not_weighted_tuned_hazard_audit_summary_w6
+rows=1, cols=6
+ mean_pred_hazard_test  median_pred_hazard_test  p90_pred_hazard_test  p99_pred_hazard_test  min_pred_hazard_test  max_pred_hazard_test
+              0.013621                 0.006165              0.037143              0.092225          1.000000e-08              0.371475
+ARTIFACT | Stage 5.3.3 table_neural_not_weighted_tuned_hazard_audit_summary_w6 — Neural hazard audit summary | duckdb://table_neural_not_weighted_tuned_hazard_audit_summary_w6
+[Stage 5.3.3 table_neural_not_weighted_tuned_hazard_by_week_w6 — Neural hazard by week]
+table_name=table_neural_not_weighted_tuned_hazard_by_week_w6
+rows=7, cols=6
+ week  mean_pred_hazard  median_pred_hazard  mean_pred_survival  mean_pred_risk  n_rows
+    0          0.013681            0.006023            0.986319        0.013681    9778
+    1          0.013582            0.006287            0.973010        0.026990    9553
+    2          0.013570            0.006269            0.959869        0.040131    9242
+    3          0.013467            0.006050            0.947031        0.052969    9189
+    4          0.013455            0.006069            0.934427        0.065573    9073
+    5          0.013695            0.006145            0.921749        0.078251    8979
+    6          0.013903            0.006335            0.909042        0.090958    8916
+ARTIFACT | Stage 5.3.3 table_neural_not_weighted_tuned_hazard_by_week_w6 — Neural hazard by week | duckdb://table_neural_not_weighted_tuned_hazard_by_week_w6
+ARTIFACT | neural_model | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/models/neural_discrete_time_survival_not_weighted_tuned_w6.pt
+ARTIFACT | neural_preprocessor | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/models/neural_discrete_time_not_weighted_preprocessor_w6.joblib
+ARTIFACT | neural_tuned_model_config | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/metadata/neural_not_weighted_tuned_model_config_w6.json
+{
+  "model_name": "neural_discrete_time_survival_not_weighted_tuned",
+  "search_strategy": "controlled_grid_search",
+  "selection_criterion": "lowest_validation_loss",
+  "validation_split": {
+    "method": "GroupShuffleSplit",
+    "unit": "enrollment_id",
+    "test_size": 0.1,
+    "random_seed": 42
+  },
+  "batch_size": 1024,
+  "max_epochs": 30,
+  "early_stopping_patience": 5,
+  "optimizer": "Adam",
+  "loss": "BCEWithLogitsLoss()",
+  "random_state": 42,
+  "run_label": "dynamic_window_w6",
+  "is_window_truncated_run": true,
+  "active_window_weeks": 6,
+  "output_suffix": "_w6",
+  "device": "cpu",
+  "benchmark_horizons": [
+    10,
+    20,
+    30
+  ],
+  "calibration_bins": 10,
+  "calibration_contract_version": "v2_ipcw_km_observed_risk",
+  "calibration_observed_risk_method": "ipcw_km_pseudo_event_rate",
+  "best_candidate": {
+    "candidate_id": 18,
+    "hidden_dims": [
+      128,
+      64
+    ],
+    "dropout": 0.1,
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001,
+    "best_val_loss": 0.06590829168756802,
+    "best_epoch": 29
+  },
+  "preprocessing": {
+    "categorical_features": [
+      "gender",
+      "region",
+      "highest_education",
+      "imd_band",
+      "age_band",
+      "disability"
+    ],
+    "numeric_features": [
+      "num_of_prev_attempts",
+      "studied_credits",
+      "week",
+      "total_clicks_week",
+      "active_this_week",
+      "n_vle_rows_week",
+      "n_distinct_sites_week",
+      "cum_clicks_until_t",
+      "recency",
+      "streak"
+    ],
+    "categorical_encoder": "OneHotEncoder(handle_unknown=ignore, sparse_output=False)",
+    "numeric_scaler": "StandardScaler"
+  },
+  "weighting_strategy": "none; this official D5.3 variant uses the same grouped validation protocol and evaluation contract without positive-class loss weighting.",
+  "design_note": "Enrollment truth and evaluation alignment are derived directly from the neural person-period tables so the Item 6 comparison changes only the fitting loss in the weighted sensitivity counterpart, not the evaluation contract."
+}
+
+ candidate_id hidden_dims  dropout  learning_rate  weight_decay  best_val_loss  best_epoch
+           18   [128, 64]      0.1          0.001        0.0001       0.065908          29
+[END] 5.3.3 - 2026-06-19 18:26:26
+[RUN] dynamic_window_weeks=8 output_suffix=_w8
+[START] 5.3 - 2026-06-19 18:26:26
+# ==============================================================
+# 5.3.2 - Prepare the neural discrete-time treatment
+# ==============================================================
+[Stage 5.3.2 table_p18_neural_not_weighted_treatment_summary_w8 — Neural treatment summary]
+table_name=table_p18_neural_not_weighted_treatment_summary_w8
+rows=1, cols=9
+                 model_family  train_rows  test_rows  n_input_features_raw  n_numeric_features  n_categorical_features  n_output_features_after_preprocessing  train_event_rate  test_event_rate
+neural_discrete_time_survival      192111      82348                    16                  10                       6                                     46          0.013149         0.013127
+ARTIFACT | Stage 5.3.2 table_p18_neural_not_weighted_treatment_summary_w8 — Neural treatment summary | duckdb://table_p18_neural_not_weighted_treatment_summary_w8
+[Stage 5.3.2 table_p18_neural_not_weighted_feature_manifest_w8 — Neural feature manifest]
+table_name=table_p18_neural_not_weighted_feature_manifest_w8
+rows=16, cols=6
+feature_name_operational feature_role  present_in_train  present_in_test  covered_by_canonical_config_after_alias canonical_source_name
+                  gender  categorical              True             True                                    False                      
+                  region  categorical              True             True                                    False                      
+       highest_education  categorical              True             True                                    False                      
+                imd_band  categorical              True             True                                    False                      
+                age_band  categorical              True             True                                    False                      
+              disability  categorical              True             True                                    False                      
+    num_of_prev_attempts      numeric              True             True                                     True  num_of_prev_attempts
+         studied_credits      numeric              True             True                                     True       studied_credits
+                    week      numeric              True             True                                     True                  week
+       total_clicks_week      numeric              True             True                                     True          total_clicks
+        active_this_week      numeric              True             True                                    False                      
+         n_vle_rows_week      numeric              True             True                                    False                      
+   n_distinct_sites_week      numeric              True             True                                    False                      
+      cum_clicks_until_t      numeric              True             True                                    False                      
+                 recency      numeric              True             True                                    False                      
+                  streak      numeric              True             True                                    False                      
+ARTIFACT | Stage 5.3.2 table_p18_neural_not_weighted_feature_manifest_w8 — Neural feature manifest | duckdb://table_p18_neural_not_weighted_feature_manifest_w8
+[Stage 5.3.2 table_p18_neural_not_weighted_canonical_alignment_w8 — Canonical feature alignment]
+table_name=table_p18_neural_not_weighted_canonical_alignment_w8
+rows=4, cols=3
+canonical_feature_raw canonical_feature_resolved  covered_by_operational_treatment_spec
+      studied_credits            studied_credits                                   True
+ num_of_prev_attempts       num_of_prev_attempts                                   True
+                 week                       week                                   True
+         total_clicks          total_clicks_week                                   True
+ARTIFACT | Stage 5.3.2 table_p18_neural_not_weighted_canonical_alignment_w8 — Canonical feature alignment | duckdb://table_p18_neural_not_weighted_canonical_alignment_w8
+[Stage 5.3.2 table_p18_neural_not_weighted_output_feature_manifest_w8 — Preprocessed feature manifest]
+table_name=table_p18_neural_not_weighted_output_feature_manifest_w8
+rows=46, cols=1
+       preprocessed_feature_name
+       num__num_of_prev_attempts
+            num__studied_credits
+                       num__week
+          num__total_clicks_week
+           num__active_this_week
+            num__n_vle_rows_week
+      num__n_distinct_sites_week
+         num__cum_clicks_until_t
+                    num__recency
+                     num__streak
+                   cat__gender_F
+                   cat__gender_M
+ cat__region_East Anglian Region
+cat__region_East Midlands Region
+             cat__region_Ireland
+       cat__region_London Region
+        cat__region_North Region
+cat__region_North Western Region
+            cat__region_Scotland
+   cat__region_South East Region
+ARTIFACT | Stage 5.3.2 table_p18_neural_not_weighted_output_feature_manifest_w8 — Preprocessed feature manifest | duckdb://table_p18_neural_not_weighted_output_feature_manifest_w8
+ARTIFACT | metadata_p18_neural_treatment | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/metadata/metadata_p18_neural_not_weighted_treatment_w8.json
+{
+  "step": "P18",
+  "model_family": "neural_discrete_time_survival",
+  "run_label": "dynamic_window_w8",
+  "is_window_truncated_run": true,
+  "active_window_weeks": 8,
+  "output_suffix": "_w8",
+  "train_table": "pp_neural_hazard_ready_train",
+  "test_table": "pp_neural_hazard_ready_test",
+  "target_column": "event_t",
+  "categorical_features": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability"
+  ],
+  "numeric_features": [
+    "num_of_prev_attempts",
+    "studied_credits",
+    "week",
+    "total_clicks_week",
+    "active_this_week",
+    "n_vle_rows_week",
+    "n_distinct_sites_week",
+    "cum_clicks_until_t",
+    "recency",
+    "streak"
+  ],
+  "operational_feature_columns": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability",
+    "num_of_prev_attempts",
+    "studied_credits",
+    "week",
+    "total_clicks_week",
+    "active_this_week",
+    "n_vle_rows_week",
+    "n_distinct_sites_week",
+    "cum_clicks_until_t",
+    "recency",
+    "streak"
+  ],
+  "canonical_expected_features_raw": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "week",
+    "total_clicks"
+  ],
+  "canonical_expected_features_resolved": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "week",
+    "total_clicks_week"
+  ],
+  "feature_alias_map": {
+    "total_clicks": "total_clicks_week"
+  },
+  "n_train_rows": 192111,
+  "n_test_rows": 82348,
+  "n_output_features_after_preprocessing": 46,
+  "train_event_rate": 0.013148648437622,
+  "test_event_rate": 0.013127216204400835,
+  "methodological_note": "All learned preprocessing operations were fit on training data only and then applied unchanged to test data.",
+  "design_note": "Enrollment truth for neural evaluation is derived directly from the neural person-period tables to preserve identifier consistency with the person-period prediction surface.",
+  "cross_arm_parity_note": "This run truncates weekly person-period information at or before the active window and is intended for cross-arm information-parity analysis."
+}
+
+[END] 5.3.2 - 2026-06-19 18:26:27
+[START] 5.3 - 2026-06-19 18:26:27
+# ==============================================================
+# 5.3.3 - Tune and evaluate the neural discrete-time hazard model
+# ==============================================================
+- DATA_LOADER_WORKERS: 7
+[Stage 5.3.3 table_neural_not_weighted_tuning_results_w8 — Neural tuning results]
+table_name=table_neural_not_weighted_tuning_results_w8
+rows=24, cols=7
+ candidate_id hidden_dims  dropout  learning_rate  weight_decay  best_val_loss  best_epoch
+           18   [128, 64]     0.10         0.0010       0.00010       0.061286          22
+           19   [128, 64]     0.10         0.0005       0.00001       0.061288          23
+           20   [128, 64]     0.10         0.0005       0.00010       0.061305          30
+            1    [32, 16]     0.10         0.0010       0.00001       0.061423          23
+           10    [64, 32]     0.10         0.0010       0.00010       0.061430          30
+            9    [64, 32]     0.05         0.0010       0.00001       0.061439          23
+           17   [128, 64]     0.10         0.0010       0.00001       0.061517          19
+            2    [32, 16]     0.10         0.0010       0.00010       0.061525          23
+           22   [128, 64]     0.30         0.0010       0.00010       0.061560          23
+           21   [128, 64]     0.30         0.0010       0.00001       0.061581          23
+           24   [128, 64]     0.30         0.0005       0.00010       0.061695          23
+           23   [128, 64]     0.30         0.0005       0.00001       0.061722          23
+           14    [64, 32]     0.30         0.0010       0.00010       0.061785          25
+           12    [64, 32]     0.10         0.0005       0.00010       0.061803          25
+           11    [64, 32]     0.10         0.0005       0.00001       0.061854          25
+            5    [32, 16]     0.30         0.0010       0.00001       0.061922          25
+            6    [32, 16]     0.30         0.0010       0.00010       0.061966          25
+           13    [64, 32]     0.30         0.0010       0.00001       0.061974          23
+            4    [32, 16]     0.10         0.0005       0.00010       0.062021          25
+           16    [64, 32]     0.30         0.0005       0.00010       0.062045          25
+ARTIFACT | Stage 5.3.3 table_neural_not_weighted_tuning_results_w8 — Neural tuning results | duckdb://table_neural_not_weighted_tuning_results_w8
+[Stage 5.3.3 table_neural_not_weighted_tuned_training_history_w8 — Neural best-candidate training summary]
+table_name=table_neural_not_weighted_tuned_training_history_w8
+rows=1, cols=7
+ candidate_id hidden_dims  dropout  learning_rate  weight_decay  best_val_loss  best_epoch
+           18   [128, 64]      0.1          0.001        0.0001       0.061286          22
+ARTIFACT | Stage 5.3.3 table_neural_not_weighted_tuned_training_history_w8 — Neural best-candidate training summary | duckdb://table_neural_not_weighted_tuned_training_history_w8
+[Stage 5.3.3 table_neural_not_weighted_tuned_test_predictions_w8 — Neural test predictions]
+table_name=table_neural_not_weighted_tuned_test_predictions_w8
+rows=82348, cols=29
+   enrollment_id  id_student code_module code_presentation  week  event_t  event_observed  t_event_week  t_final_week  used_zero_week_fallback_for_censoring gender               region     highest_education imd_band age_band  num_of_prev_attempts  studied_credits disability  total_clicks_week  active_this_week  n_vle_rows_week  n_distinct_sites_week  cum_clicks_until_t  recency  streak split  pred_hazard  pred_survival  pred_risk
+100561|DDD|2014J      100561         DDD             2014J     0        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               10.0                 1                8                      4                10.0        0       1  test     0.061180       0.938820   0.061180
+100561|DDD|2014J      100561         DDD             2014J     1        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N                0.0                 0                0                      0                10.0        1       0  test     0.033618       0.907259   0.092741
+100561|DDD|2014J      100561         DDD             2014J     2        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               91.0                 1               26                     11               101.0        0       2  test     0.028760       0.881166   0.118834
+100561|DDD|2014J      100561         DDD             2014J     3        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N                6.0                 1                4                      2               107.0        0       3  test     0.008127       0.874005   0.125995
+100561|DDD|2014J      100561         DDD             2014J     4        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               30.0                 1               17                      8               137.0        0       4  test     0.040876       0.838278   0.161722
+100561|DDD|2014J      100561         DDD             2014J     5        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               65.0                 1               36                     14               202.0        0       5  test     0.016579       0.824381   0.175619
+100561|DDD|2014J      100561         DDD             2014J     6        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               27.0                 1               15                      9               229.0        0       6  test     0.004878       0.820360   0.179640
+100561|DDD|2014J      100561         DDD             2014J     7        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               59.0                 1               14                      5               288.0        0       7  test     0.011611       0.810834   0.189166
+100561|DDD|2014J      100561         DDD             2014J     8        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               62.0                 1               22                      7               350.0        0       8  test     0.011051       0.801873   0.198127
+100621|CCC|2014B      100621         CCC             2014B     0        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                0.0                 0                0                      0                 0.0        1       0  test     0.016551       0.983449   0.016551
+100621|CCC|2014B      100621         CCC             2014B     1        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                3.0                 1                2                      2                 3.0        0       2  test     0.041948       0.942196   0.057804
+100621|CCC|2014B      100621         CCC             2014B     2        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                1.0                 1                1                      1                 4.0        0       3  test     0.012048       0.930844   0.069156
+100621|CCC|2014B      100621         CCC             2014B     3        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                1.0                 1                1                      1                 5.0        0       4  test     0.009319       0.922170   0.077830
+100621|CCC|2014B      100621         CCC             2014B     4        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                0.0                 0                0                      0                 5.0        1       0  test     0.008005       0.914787   0.085213
+100621|CCC|2014B      100621         CCC             2014B     5        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                0.0                 0                0                      0                 5.0        2       0  test     0.005158       0.910069   0.089931
+100621|CCC|2014B      100621         CCC             2014B     6        1               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                0.0                 0                0                      0                 5.0        3       0  test     0.005019       0.905501   0.094499
+101187|DDD|2014J      101187         DDD             2014J     0        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        1       0  test     0.015227       0.984773   0.015227
+101187|DDD|2014J      101187         DDD             2014J     1        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        2       0  test     0.022801       0.962319   0.037681
+101187|DDD|2014J      101187         DDD             2014J     2        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        3       0  test     0.011235       0.951508   0.048492
+101187|DDD|2014J      101187         DDD             2014J     3        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        4       0  test     0.070274       0.884641   0.115359
+ARTIFACT | Stage 5.3.3 table_neural_not_weighted_tuned_test_predictions_w8 — Neural test predictions | duckdb://table_neural_not_weighted_tuned_test_predictions_w8
+[Stage 5.3.3 table_neural_not_weighted_tuned_primary_metrics_w8 — Neural primary metrics]
+table_name=table_neural_not_weighted_tuned_primary_metrics_w8
+rows=2, cols=4
+metric_name metric_category  metric_value                         notes
+        ibs         primary      0.142767 sksurv_integrated_brier_score
+    c_index      co_primary      0.503609          pycox_concordance_td
+ARTIFACT | Stage 5.3.3 table_neural_not_weighted_tuned_primary_metrics_w8 — Neural primary metrics | duckdb://table_neural_not_weighted_tuned_primary_metrics_w8
+[Stage 5.3.3 table_neural_not_weighted_tuned_brier_by_horizon_w8 — Neural Brier scores by horizon]
+table_name=table_neural_not_weighted_tuned_brier_by_horizon_w8
+rows=3, cols=5
+ horizon_week      metric_name metric_category  metric_value              notes
+           10 brier_at_horizon         primary      0.124961 sksurv_brier_score
+           20 brier_at_horizon         primary      0.166624 sksurv_brier_score
+           30 brier_at_horizon         primary      0.197909 sksurv_brier_score
+ARTIFACT | Stage 5.3.3 table_neural_not_weighted_tuned_brier_by_horizon_w8 — Neural Brier scores by horizon | duckdb://table_neural_not_weighted_tuned_brier_by_horizon_w8
+[Stage 5.3.3 table_neural_not_weighted_tuned_secondary_metrics_w8 — Neural secondary metrics]
+table_name=table_neural_not_weighted_tuned_secondary_metrics_w8
+rows=6, cols=5
+ horizon_week         metric_name metric_category  metric_value                                                                                  notes
+           10 risk_auc_at_horizon       secondary      0.233388                                                            roc_auc_on_evaluable_subset
+           10  time_dependent_auc       secondary      0.233347 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.233347; local_ipcw_auc
+           20 risk_auc_at_horizon       secondary      0.313767                                                            roc_auc_on_evaluable_subset
+           20  time_dependent_auc       secondary      0.313572 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.313572; local_ipcw_auc
+           30 risk_auc_at_horizon       secondary      0.350786                                                            roc_auc_on_evaluable_subset
+           30  time_dependent_auc       secondary      0.350809 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.350809; local_ipcw_auc
+ARTIFACT | Stage 5.3.3 table_neural_not_weighted_tuned_secondary_metrics_w8 — Neural secondary metrics | duckdb://table_neural_not_weighted_tuned_secondary_metrics_w8
+[Stage 5.3.3 table_neural_not_weighted_tuned_td_auc_support_audit_w8 — Neural IPCW support audit]
+table_name=table_neural_not_weighted_tuned_td_auc_support_audit_w8
+rows=3, cols=6
+ horizon_week  max_ipcw_time  n_total_test_enrollments  n_supported_test_enrollments  mean_auc                                                                                  notes
+           10           38.0                      9778                          6742  0.233347 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.233347; local_ipcw_auc
+           20           38.0                      9778                          6742  0.313572 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.313572; local_ipcw_auc
+           30           38.0                      9778                          6742  0.350809 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.350809; local_ipcw_auc
+ARTIFACT | Stage 5.3.3 table_neural_not_weighted_tuned_td_auc_support_audit_w8 — Neural IPCW support audit | duckdb://table_neural_not_weighted_tuned_td_auc_support_audit_w8
+[Stage 5.3.3 table_neural_not_weighted_tuned_row_diagnostics_w8 — Neural row-level diagnostics]
+table_name=table_neural_not_weighted_tuned_row_diagnostics_w8
+rows=1, cols=5
+                                      model_name  row_level_roc_auc  row_level_pr_auc  row_level_log_loss  row_level_brier
+neural_discrete_time_survival_not_weighted_tuned           0.803791          0.053834            0.061501         0.012659
+ARTIFACT | Stage 5.3.3 table_neural_not_weighted_tuned_row_diagnostics_w8 — Neural row-level diagnostics | duckdb://table_neural_not_weighted_tuned_row_diagnostics_w8
+[Stage 5.3.3 table_neural_not_weighted_tuned_support_by_horizon_w8 — Neural support by horizon]
+table_name=table_neural_not_weighted_tuned_support_by_horizon_w8
+rows=3, cols=4
+ horizon_week  n_evaluable_enrollments  n_events_by_horizon  event_rate_by_horizon
+           10                     9778                 1215               0.124259
+           20                     9778                 1736               0.177541
+           30                     9778                 2129               0.217734
+ARTIFACT | Stage 5.3.3 table_neural_not_weighted_tuned_support_by_horizon_w8 — Neural support by horizon | duckdb://table_neural_not_weighted_tuned_support_by_horizon_w8
+[Stage 5.3.3 table_neural_not_weighted_tuned_calibration_summary_w8 — Neural calibration summary]
+table_name=table_neural_not_weighted_tuned_calibration_summary_w8
+rows=3, cols=5
+ horizon_week            metric_name metric_category  metric_value                                         notes
+           10 calibration_at_horizon         primary      0.123556 Weighted absolute calibration gap across bins
+           20 calibration_at_horizon         primary      0.121707 Weighted absolute calibration gap across bins
+           30 calibration_at_horizon         primary      0.134696 Weighted absolute calibration gap across bins
+ARTIFACT | Stage 5.3.3 table_neural_not_weighted_tuned_calibration_summary_w8 — Neural calibration summary | duckdb://table_neural_not_weighted_tuned_calibration_summary_w8
+[Stage 5.3.3 table_neural_not_weighted_tuned_calibration_bins_by_horizon_w8 — Neural calibration bins]
+table_name=table_neural_not_weighted_tuned_calibration_bins_by_horizon_w8
+rows=30, cols=6
+ calibration_bin   n  mean_predicted_risk  observed_event_rate  horizon_week  abs_calibration_gap
+               0 978             0.013460             0.519427            10             0.505968
+               1 978             0.035325             0.183027            10             0.147701
+               2 978             0.053164             0.100204            10             0.047041
+               3 977             0.069896             0.097236            10             0.027340
+               4 978             0.086134             0.072597            10             0.013537
+               5 978             0.103601             0.062372            10             0.041229
+               6 977             0.121780             0.066530            10             0.055250
+               7 978             0.142746             0.059305            10             0.083442
+               8 978             0.171044             0.053170            10             0.117875
+               9 978             0.224642             0.028630            10             0.196012
+               0 978             0.013460             0.549080            20             0.535620
+               1 978             0.035325             0.232106            20             0.196781
+               2 978             0.053164             0.158487            20             0.105323
+               3 977             0.069896             0.151484            20             0.081588
+               4 978             0.086134             0.122699            20             0.036566
+               5 978             0.103601             0.121677            20             0.018075
+               6 977             0.121780             0.133060            20             0.011280
+               7 978             0.142746             0.102249            20             0.040497
+               8 978             0.171044             0.105317            20             0.065727
+               9 978             0.224642             0.099182            20             0.125460
+ARTIFACT | Stage 5.3.3 table_neural_not_weighted_tuned_calibration_bins_by_horizon_w8 — Neural calibration bins | duckdb://table_neural_not_weighted_tuned_calibration_bins_by_horizon_w8
+[Stage 5.3.3 table_neural_not_weighted_tuned_predicted_vs_observed_survival_w8 — Neural predicted versus observed survival]
+table_name=table_neural_not_weighted_tuned_predicted_vs_observed_survival_w8
+rows=3, cols=5
+ horizon_week  n_evaluable_enrollments  mean_predicted_survival  mean_observed_survival  abs_gap
+           10                     9778                 0.897819                0.875741 0.022078
+           20                     9778                 0.897819                0.822459 0.075361
+           30                     9778                 0.897819                0.782266 0.115553
+ARTIFACT | Stage 5.3.3 table_neural_not_weighted_tuned_predicted_vs_observed_survival_w8 — Neural predicted versus observed survival | duckdb://table_neural_not_weighted_tuned_predicted_vs_observed_survival_w8
+[Stage 5.3.3 table_neural_not_weighted_tuned_hazard_audit_summary_w8 — Neural hazard audit summary]
+table_name=table_neural_not_weighted_tuned_hazard_audit_summary_w8
+rows=1, cols=6
+ mean_pred_hazard_test  median_pred_hazard_test  p90_pred_hazard_test  p99_pred_hazard_test  min_pred_hazard_test  max_pred_hazard_test
+              0.012876                 0.006761              0.033335              0.077161          1.000000e-08              0.224301
+ARTIFACT | Stage 5.3.3 table_neural_not_weighted_tuned_hazard_audit_summary_w8 — Neural hazard audit summary | duckdb://table_neural_not_weighted_tuned_hazard_audit_summary_w8
+[Stage 5.3.3 table_neural_not_weighted_tuned_hazard_by_week_w8 — Neural hazard by week]
+table_name=table_neural_not_weighted_tuned_hazard_by_week_w8
+rows=9, cols=6
+ week  mean_pred_hazard  median_pred_hazard  mean_pred_survival  mean_pred_risk  n_rows
+    0          0.012830            0.006844            0.987170        0.012830    9778
+    1          0.012826            0.006660            0.974572        0.025428    9553
+    2          0.012896            0.006785            0.962068        0.037932    9242
+    3          0.012770            0.006771            0.949961        0.050039    9189
+    4          0.012794            0.006821            0.938101        0.061900    9073
+    5          0.012824            0.006849            0.926190        0.073810    8979
+    6          0.013040            0.006774            0.914242        0.085758    8916
+    7          0.013066            0.006707            0.902393        0.097607    8847
+    8          0.012848            0.006688            0.890989        0.109011    8771
+ARTIFACT | Stage 5.3.3 table_neural_not_weighted_tuned_hazard_by_week_w8 — Neural hazard by week | duckdb://table_neural_not_weighted_tuned_hazard_by_week_w8
+ARTIFACT | neural_model | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/models/neural_discrete_time_survival_not_weighted_tuned_w8.pt
+ARTIFACT | neural_preprocessor | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/models/neural_discrete_time_not_weighted_preprocessor_w8.joblib
+ARTIFACT | neural_tuned_model_config | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/metadata/neural_not_weighted_tuned_model_config_w8.json
+{
+  "model_name": "neural_discrete_time_survival_not_weighted_tuned",
+  "search_strategy": "controlled_grid_search",
+  "selection_criterion": "lowest_validation_loss",
+  "validation_split": {
+    "method": "GroupShuffleSplit",
+    "unit": "enrollment_id",
+    "test_size": 0.1,
+    "random_seed": 42
+  },
+  "batch_size": 1024,
+  "max_epochs": 30,
+  "early_stopping_patience": 5,
+  "optimizer": "Adam",
+  "loss": "BCEWithLogitsLoss()",
+  "random_state": 42,
+  "run_label": "dynamic_window_w8",
+  "is_window_truncated_run": true,
+  "active_window_weeks": 8,
+  "output_suffix": "_w8",
+  "device": "cpu",
+  "benchmark_horizons": [
+    10,
+    20,
+    30
+  ],
+  "calibration_bins": 10,
+  "calibration_contract_version": "v2_ipcw_km_observed_risk",
+  "calibration_observed_risk_method": "ipcw_km_pseudo_event_rate",
+  "best_candidate": {
+    "candidate_id": 18,
+    "hidden_dims": [
+      128,
+      64
+    ],
+    "dropout": 0.1,
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001,
+    "best_val_loss": 0.06128634963380663,
+    "best_epoch": 22
+  },
+  "preprocessing": {
+    "categorical_features": [
+      "gender",
+      "region",
+      "highest_education",
+      "imd_band",
+      "age_band",
+      "disability"
+    ],
+    "numeric_features": [
+      "num_of_prev_attempts",
+      "studied_credits",
+      "week",
+      "total_clicks_week",
+      "active_this_week",
+      "n_vle_rows_week",
+      "n_distinct_sites_week",
+      "cum_clicks_until_t",
+      "recency",
+      "streak"
+    ],
+    "categorical_encoder": "OneHotEncoder(handle_unknown=ignore, sparse_output=False)",
+    "numeric_scaler": "StandardScaler"
+  },
+  "weighting_strategy": "none; this official D5.3 variant uses the same grouped validation protocol and evaluation contract without positive-class loss weighting.",
+  "design_note": "Enrollment truth and evaluation alignment are derived directly from the neural person-period tables so the Item 6 comparison changes only the fitting loss in the weighted sensitivity counterpart, not the evaluation contract."
+}
+
+ candidate_id hidden_dims  dropout  learning_rate  weight_decay  best_val_loss  best_epoch
+           18   [128, 64]      0.1          0.001        0.0001       0.061286          22
+[END] 5.3.3 - 2026-06-19 18:32:46
+[RUN] dynamic_window_weeks=10 output_suffix=_w10
+[START] 5.3 - 2026-06-19 18:32:46
+# ==============================================================
+# 5.3.2 - Prepare the neural discrete-time treatment
+# ==============================================================
+[Stage 5.3.2 table_p18_neural_not_weighted_treatment_summary_w10 — Neural treatment summary]
+table_name=table_p18_neural_not_weighted_treatment_summary_w10
+rows=1, cols=9
+                 model_family  train_rows  test_rows  n_input_features_raw  n_numeric_features  n_categorical_features  n_output_features_after_preprocessing  train_event_rate  test_event_rate
+neural_discrete_time_survival      232541      99670                    16                  10                       6                                     46          0.012105          0.01219
+ARTIFACT | Stage 5.3.2 table_p18_neural_not_weighted_treatment_summary_w10 — Neural treatment summary | duckdb://table_p18_neural_not_weighted_treatment_summary_w10
+[Stage 5.3.2 table_p18_neural_not_weighted_feature_manifest_w10 — Neural feature manifest]
+table_name=table_p18_neural_not_weighted_feature_manifest_w10
+rows=16, cols=6
+feature_name_operational feature_role  present_in_train  present_in_test  covered_by_canonical_config_after_alias canonical_source_name
+                  gender  categorical              True             True                                    False                      
+                  region  categorical              True             True                                    False                      
+       highest_education  categorical              True             True                                    False                      
+                imd_band  categorical              True             True                                    False                      
+                age_band  categorical              True             True                                    False                      
+              disability  categorical              True             True                                    False                      
+    num_of_prev_attempts      numeric              True             True                                     True  num_of_prev_attempts
+         studied_credits      numeric              True             True                                     True       studied_credits
+                    week      numeric              True             True                                     True                  week
+       total_clicks_week      numeric              True             True                                     True          total_clicks
+        active_this_week      numeric              True             True                                    False                      
+         n_vle_rows_week      numeric              True             True                                    False                      
+   n_distinct_sites_week      numeric              True             True                                    False                      
+      cum_clicks_until_t      numeric              True             True                                    False                      
+                 recency      numeric              True             True                                    False                      
+                  streak      numeric              True             True                                    False                      
+ARTIFACT | Stage 5.3.2 table_p18_neural_not_weighted_feature_manifest_w10 — Neural feature manifest | duckdb://table_p18_neural_not_weighted_feature_manifest_w10
+[Stage 5.3.2 table_p18_neural_not_weighted_canonical_alignment_w10 — Canonical feature alignment]
+table_name=table_p18_neural_not_weighted_canonical_alignment_w10
+rows=4, cols=3
+canonical_feature_raw canonical_feature_resolved  covered_by_operational_treatment_spec
+      studied_credits            studied_credits                                   True
+ num_of_prev_attempts       num_of_prev_attempts                                   True
+                 week                       week                                   True
+         total_clicks          total_clicks_week                                   True
+ARTIFACT | Stage 5.3.2 table_p18_neural_not_weighted_canonical_alignment_w10 — Canonical feature alignment | duckdb://table_p18_neural_not_weighted_canonical_alignment_w10
+[Stage 5.3.2 table_p18_neural_not_weighted_output_feature_manifest_w10 — Preprocessed feature manifest]
+table_name=table_p18_neural_not_weighted_output_feature_manifest_w10
+rows=46, cols=1
+       preprocessed_feature_name
+       num__num_of_prev_attempts
+            num__studied_credits
+                       num__week
+          num__total_clicks_week
+           num__active_this_week
+            num__n_vle_rows_week
+      num__n_distinct_sites_week
+         num__cum_clicks_until_t
+                    num__recency
+                     num__streak
+                   cat__gender_F
+                   cat__gender_M
+ cat__region_East Anglian Region
+cat__region_East Midlands Region
+             cat__region_Ireland
+       cat__region_London Region
+        cat__region_North Region
+cat__region_North Western Region
+            cat__region_Scotland
+   cat__region_South East Region
+ARTIFACT | Stage 5.3.2 table_p18_neural_not_weighted_output_feature_manifest_w10 — Preprocessed feature manifest | duckdb://table_p18_neural_not_weighted_output_feature_manifest_w10
+ARTIFACT | metadata_p18_neural_treatment | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/metadata/metadata_p18_neural_not_weighted_treatment_w10.json
+{
+  "step": "P18",
+  "model_family": "neural_discrete_time_survival",
+  "run_label": "dynamic_window_w10",
+  "is_window_truncated_run": true,
+  "active_window_weeks": 10,
+  "output_suffix": "_w10",
+  "train_table": "pp_neural_hazard_ready_train",
+  "test_table": "pp_neural_hazard_ready_test",
+  "target_column": "event_t",
+  "categorical_features": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability"
+  ],
+  "numeric_features": [
+    "num_of_prev_attempts",
+    "studied_credits",
+    "week",
+    "total_clicks_week",
+    "active_this_week",
+    "n_vle_rows_week",
+    "n_distinct_sites_week",
+    "cum_clicks_until_t",
+    "recency",
+    "streak"
+  ],
+  "operational_feature_columns": [
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability",
+    "num_of_prev_attempts",
+    "studied_credits",
+    "week",
+    "total_clicks_week",
+    "active_this_week",
+    "n_vle_rows_week",
+    "n_distinct_sites_week",
+    "cum_clicks_until_t",
+    "recency",
+    "streak"
+  ],
+  "canonical_expected_features_raw": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "week",
+    "total_clicks"
+  ],
+  "canonical_expected_features_resolved": [
+    "studied_credits",
+    "num_of_prev_attempts",
+    "week",
+    "total_clicks_week"
+  ],
+  "feature_alias_map": {
+    "total_clicks": "total_clicks_week"
+  },
+  "n_train_rows": 232541,
+  "n_test_rows": 99670,
+  "n_output_features_after_preprocessing": 46,
+  "train_event_rate": 0.012105392167402737,
+  "test_event_rate": 0.012190227751580214,
+  "methodological_note": "All learned preprocessing operations were fit on training data only and then applied unchanged to test data.",
+  "design_note": "Enrollment truth for neural evaluation is derived directly from the neural person-period tables to preserve identifier consistency with the person-period prediction surface.",
+  "cross_arm_parity_note": "This run truncates weekly person-period information at or before the active window and is intended for cross-arm information-parity analysis."
+}
+
+[END] 5.3.2 - 2026-06-19 18:32:47
+[START] 5.3 - 2026-06-19 18:32:47
+# ==============================================================
+# 5.3.3 - Tune and evaluate the neural discrete-time hazard model
+# ==============================================================
+- DATA_LOADER_WORKERS: 7
+[Stage 5.3.3 table_neural_not_weighted_tuning_results_w10 — Neural tuning results]
+table_name=table_neural_not_weighted_tuning_results_w10
+rows=24, cols=7
+ candidate_id hidden_dims  dropout  learning_rate  weight_decay  best_val_loss  best_epoch
+           19   [128, 64]     0.10         0.0005       0.00001       0.057195          26
+           17   [128, 64]     0.10         0.0010       0.00001       0.057242          20
+           18   [128, 64]     0.10         0.0010       0.00010       0.057336          20
+            9    [64, 32]     0.05         0.0010       0.00001       0.057368          20
+            1    [32, 16]     0.10         0.0010       0.00001       0.057371          26
+           20   [128, 64]     0.10         0.0005       0.00010       0.057387          25
+           10    [64, 32]     0.10         0.0010       0.00010       0.057398          25
+           22   [128, 64]     0.30         0.0010       0.00010       0.057488          25
+            2    [32, 16]     0.10         0.0010       0.00010       0.057506          26
+           23   [128, 64]     0.30         0.0005       0.00001       0.057508          26
+           24   [128, 64]     0.30         0.0005       0.00010       0.057606          26
+           12    [64, 32]     0.10         0.0005       0.00010       0.057660          28
+           21   [128, 64]     0.30         0.0010       0.00001       0.057664          20
+           11    [64, 32]     0.10         0.0005       0.00001       0.057726          28
+            3    [32, 16]     0.10         0.0005       0.00001       0.057890          28
+            4    [32, 16]     0.10         0.0005       0.00010       0.057912          28
+           16    [64, 32]     0.30         0.0005       0.00010       0.058006          28
+           15    [64, 32]     0.30         0.0005       0.00001       0.058035          28
+           14    [64, 32]     0.30         0.0010       0.00010       0.058229          11
+           13    [64, 32]     0.30         0.0010       0.00001       0.058326          11
+ARTIFACT | Stage 5.3.3 table_neural_not_weighted_tuning_results_w10 — Neural tuning results | duckdb://table_neural_not_weighted_tuning_results_w10
+[Stage 5.3.3 table_neural_not_weighted_tuned_training_history_w10 — Neural best-candidate training summary]
+table_name=table_neural_not_weighted_tuned_training_history_w10
+rows=1, cols=7
+ candidate_id hidden_dims  dropout  learning_rate  weight_decay  best_val_loss  best_epoch
+           19   [128, 64]      0.1         0.0005       0.00001       0.057195          26
+ARTIFACT | Stage 5.3.3 table_neural_not_weighted_tuned_training_history_w10 — Neural best-candidate training summary | duckdb://table_neural_not_weighted_tuned_training_history_w10
+[Stage 5.3.3 table_neural_not_weighted_tuned_test_predictions_w10 — Neural test predictions]
+table_name=table_neural_not_weighted_tuned_test_predictions_w10
+rows=99670, cols=29
+   enrollment_id  id_student code_module code_presentation  week  event_t  event_observed  t_event_week  t_final_week  used_zero_week_fallback_for_censoring gender               region     highest_education imd_band age_band  num_of_prev_attempts  studied_credits disability  total_clicks_week  active_this_week  n_vle_rows_week  n_distinct_sites_week  cum_clicks_until_t  recency  streak split  pred_hazard  pred_survival  pred_risk
+100561|DDD|2014J      100561         DDD             2014J     0        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               10.0                 1                8                      4                10.0        0       1  test     0.011931       0.988069   0.011931
+100561|DDD|2014J      100561         DDD             2014J     1        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N                0.0                 0                0                      0                10.0        1       0  test     0.066639       0.922225   0.077775
+100561|DDD|2014J      100561         DDD             2014J     2        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               91.0                 1               26                     11               101.0        0       2  test     0.030613       0.893993   0.106007
+100561|DDD|2014J      100561         DDD             2014J     3        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N                6.0                 1                4                      2               107.0        0       3  test     0.031143       0.866151   0.133849
+100561|DDD|2014J      100561         DDD             2014J     4        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               30.0                 1               17                      8               137.0        0       4  test     0.008636       0.858672   0.141328
+100561|DDD|2014J      100561         DDD             2014J     5        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               65.0                 1               36                     14               202.0        0       5  test     0.000813       0.857974   0.142026
+100561|DDD|2014J      100561         DDD             2014J     6        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               27.0                 1               15                      9               229.0        0       6  test     0.009602       0.849736   0.150264
+100561|DDD|2014J      100561         DDD             2014J     7        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               59.0                 1               14                      5               288.0        0       7  test     0.054525       0.803404   0.196596
+100561|DDD|2014J      100561         DDD             2014J     8        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N               62.0                 1               22                      7               350.0        0       8  test     0.023062       0.784876   0.215124
+100561|DDD|2014J      100561         DDD             2014J     9        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N                4.0                 1                3                      2               354.0        0       9  test     0.006344       0.779897   0.220103
+100561|DDD|2014J      100561         DDD             2014J    10        0               0           NaN            37                                      0      M  East Anglian Region    Lower Than A Level   70-80%     0-35                     1               60          N                3.0                 1                3                      3               357.0        0      10  test     0.010649       0.771592   0.228408
+100621|CCC|2014B      100621         CCC             2014B     0        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                0.0                 0                0                      0                 0.0        1       0  test     0.009969       0.990031   0.009969
+100621|CCC|2014B      100621         CCC             2014B     1        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                3.0                 1                2                      2                 3.0        0       2  test     0.018022       0.972189   0.027811
+100621|CCC|2014B      100621         CCC             2014B     2        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                1.0                 1                1                      1                 4.0        0       3  test     0.040800       0.932524   0.067476
+100621|CCC|2014B      100621         CCC             2014B     3        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                1.0                 1                1                      1                 5.0        0       4  test     0.011545       0.921758   0.078242
+100621|CCC|2014B      100621         CCC             2014B     4        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                0.0                 0                0                      0                 5.0        1       0  test     0.010003       0.912538   0.087462
+100621|CCC|2014B      100621         CCC             2014B     5        0               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                0.0                 0                0                      0                 5.0        2       0  test     0.010271       0.903165   0.096835
+100621|CCC|2014B      100621         CCC             2014B     6        1               1           6.0             6                                      0      M West Midlands Region A Level or Equivalent   50-60%    35-55                     0               60          N                0.0                 0                0                      0                 5.0        3       0  test     0.008058       0.895887   0.104113
+101187|DDD|2014J      101187         DDD             2014J     0        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        1       0  test     0.004452       0.995548   0.004452
+101187|DDD|2014J      101187         DDD             2014J     1        0               0           NaN            37                                      0      F        London Region      HE Qualification   30-40%    35-55                     0              120          N                0.0                 0                0                      0                 0.0        2       0  test     0.017149       0.978475   0.021525
+ARTIFACT | Stage 5.3.3 table_neural_not_weighted_tuned_test_predictions_w10 — Neural test predictions | duckdb://table_neural_not_weighted_tuned_test_predictions_w10
+[Stage 5.3.3 table_neural_not_weighted_tuned_primary_metrics_w10 — Neural primary metrics]
+table_name=table_neural_not_weighted_tuned_primary_metrics_w10
+rows=2, cols=4
+metric_name metric_category  metric_value                         notes
+        ibs         primary      0.145106 sksurv_integrated_brier_score
+    c_index      co_primary      0.507824          pycox_concordance_td
+ARTIFACT | Stage 5.3.3 table_neural_not_weighted_tuned_primary_metrics_w10 — Neural primary metrics | duckdb://table_neural_not_weighted_tuned_primary_metrics_w10
+[Stage 5.3.3 table_neural_not_weighted_tuned_brier_by_horizon_w10 — Neural Brier scores by horizon]
+table_name=table_neural_not_weighted_tuned_brier_by_horizon_w10
+rows=3, cols=5
+ horizon_week      metric_name metric_category  metric_value              notes
+           10 brier_at_horizon         primary      0.129957 sksurv_brier_score
+           20 brier_at_horizon         primary      0.169567 sksurv_brier_score
+           30 brier_at_horizon         primary      0.199513 sksurv_brier_score
+ARTIFACT | Stage 5.3.3 table_neural_not_weighted_tuned_brier_by_horizon_w10 — Neural Brier scores by horizon | duckdb://table_neural_not_weighted_tuned_brier_by_horizon_w10
+[Stage 5.3.3 table_neural_not_weighted_tuned_secondary_metrics_w10 — Neural secondary metrics]
+table_name=table_neural_not_weighted_tuned_secondary_metrics_w10
+rows=6, cols=5
+ horizon_week         metric_name metric_category  metric_value                                                                                  notes
+           10 risk_auc_at_horizon       secondary      0.180165                                                            roc_auc_on_evaluable_subset
+           10  time_dependent_auc       secondary      0.180044 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.180044; local_ipcw_auc
+           20 risk_auc_at_horizon       secondary      0.280773                                                            roc_auc_on_evaluable_subset
+           20  time_dependent_auc       secondary      0.281152 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.281152; local_ipcw_auc
+           30 risk_auc_at_horizon       secondary      0.323621                                                            roc_auc_on_evaluable_subset
+           30  time_dependent_auc       secondary      0.324513 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.324513; local_ipcw_auc
+ARTIFACT | Stage 5.3.3 table_neural_not_weighted_tuned_secondary_metrics_w10 — Neural secondary metrics | duckdb://table_neural_not_weighted_tuned_secondary_metrics_w10
+[Stage 5.3.3 table_neural_not_weighted_tuned_td_auc_support_audit_w10 — Neural IPCW support audit]
+table_name=table_neural_not_weighted_tuned_td_auc_support_audit_w10
+rows=3, cols=6
+ horizon_week  max_ipcw_time  n_total_test_enrollments  n_supported_test_enrollments  mean_auc                                                                                  notes
+           10           38.0                      9778                          6742  0.180044 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.180044; local_ipcw_auc
+           20           38.0                      9778                          6742  0.281152 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.281152; local_ipcw_auc
+           30           38.0                      9778                          6742  0.324513 ipcw_supported_subset(duration < 38); retained=6742/9778; auc=0.324513; local_ipcw_auc
+ARTIFACT | Stage 5.3.3 table_neural_not_weighted_tuned_td_auc_support_audit_w10 — Neural IPCW support audit | duckdb://table_neural_not_weighted_tuned_td_auc_support_audit_w10
+[Stage 5.3.3 table_neural_not_weighted_tuned_row_diagnostics_w10 — Neural row-level diagnostics]
+table_name=table_neural_not_weighted_tuned_row_diagnostics_w10
+rows=1, cols=5
+                                      model_name  row_level_roc_auc  row_level_pr_auc  row_level_log_loss  row_level_brier
+neural_discrete_time_survival_not_weighted_tuned           0.794973          0.049293            0.058435         0.011799
+ARTIFACT | Stage 5.3.3 table_neural_not_weighted_tuned_row_diagnostics_w10 — Neural row-level diagnostics | duckdb://table_neural_not_weighted_tuned_row_diagnostics_w10
+[Stage 5.3.3 table_neural_not_weighted_tuned_support_by_horizon_w10 — Neural support by horizon]
+table_name=table_neural_not_weighted_tuned_support_by_horizon_w10
+rows=3, cols=4
+ horizon_week  n_evaluable_enrollments  n_events_by_horizon  event_rate_by_horizon
+           10                     9778                 1215               0.124259
+           20                     9778                 1736               0.177541
+           30                     9778                 2129               0.217734
+ARTIFACT | Stage 5.3.3 table_neural_not_weighted_tuned_support_by_horizon_w10 — Neural support by horizon | duckdb://table_neural_not_weighted_tuned_support_by_horizon_w10
+[Stage 5.3.3 table_neural_not_weighted_tuned_calibration_summary_w10 — Neural calibration summary]
+table_name=table_neural_not_weighted_tuned_calibration_summary_w10
+rows=3, cols=5
+ horizon_week            metric_name metric_category  metric_value                                         notes
+           10 calibration_at_horizon         primary      0.150459 Weighted absolute calibration gap across bins
+           20 calibration_at_horizon         primary      0.136415 Weighted absolute calibration gap across bins
+           30 calibration_at_horizon         primary      0.139586 Weighted absolute calibration gap across bins
+ARTIFACT | Stage 5.3.3 table_neural_not_weighted_tuned_calibration_summary_w10 — Neural calibration summary | duckdb://table_neural_not_weighted_tuned_calibration_summary_w10
+[Stage 5.3.3 table_neural_not_weighted_tuned_calibration_bins_by_horizon_w10 — Neural calibration bins]
+table_name=table_neural_not_weighted_tuned_calibration_bins_by_horizon_w10
+rows=30, cols=6
+ calibration_bin   n  mean_predicted_risk  observed_event_rate  horizon_week  abs_calibration_gap
+               0 978             0.014944             0.593047            10             0.578103
+               1 978             0.040897             0.184049            10             0.143152
+               2 978             0.062299             0.130879            10             0.068580
+               3 977             0.081306             0.066530            10             0.014776
+               4 978             0.099583             0.078732            10             0.020850
+               5 978             0.117927             0.059305            10             0.058622
+               6 977             0.138046             0.035824            10             0.102222
+               7 978             0.161394             0.043967            10             0.117427
+               8 978             0.192973             0.027607            10             0.165366
+               9 978             0.257799             0.022495            10             0.235304
+               0 978             0.014944             0.618609            20             0.603666
+               1 978             0.040897             0.224949            20             0.184052
+               2 978             0.062299             0.186094            20             0.123795
+               3 977             0.081306             0.114637            20             0.033330
+               4 978             0.099583             0.140082            20             0.040499
+               5 978             0.117927             0.118609            20             0.000682
+               6 977             0.138046             0.088025            20             0.050021
+               7 978             0.161394             0.110429            20             0.050965
+               8 978             0.192973             0.085890            20             0.107083
+               9 978             0.257799             0.087935            20             0.169865
+ARTIFACT | Stage 5.3.3 table_neural_not_weighted_tuned_calibration_bins_by_horizon_w10 — Neural calibration bins | duckdb://table_neural_not_weighted_tuned_calibration_bins_by_horizon_w10
+[Stage 5.3.3 table_neural_not_weighted_tuned_predicted_vs_observed_survival_w10 — Neural predicted versus observed survival]
+table_name=table_neural_not_weighted_tuned_predicted_vs_observed_survival_w10
+rows=3, cols=5
+ horizon_week  n_evaluable_enrollments  mean_predicted_survival  mean_observed_survival  abs_gap
+           10                     9778                 0.883282                0.875741 0.007540
+           20                     9778                 0.883282                0.822459 0.060823
+           30                     9778                 0.883282                0.782266 0.101015
+ARTIFACT | Stage 5.3.3 table_neural_not_weighted_tuned_predicted_vs_observed_survival_w10 — Neural predicted versus observed survival | duckdb://table_neural_not_weighted_tuned_predicted_vs_observed_survival_w10
+[Stage 5.3.3 table_neural_not_weighted_tuned_hazard_audit_summary_w10 — Neural hazard audit summary]
+table_name=table_neural_not_weighted_tuned_hazard_audit_summary_w10
+rows=1, cols=6
+ mean_pred_hazard_test  median_pred_hazard_test  p90_pred_hazard_test  p99_pred_hazard_test  min_pred_hazard_test  max_pred_hazard_test
+              0.012285                 0.006308              0.030659              0.082326          1.000000e-08              0.240242
+ARTIFACT | Stage 5.3.3 table_neural_not_weighted_tuned_hazard_audit_summary_w10 — Neural hazard audit summary | duckdb://table_neural_not_weighted_tuned_hazard_audit_summary_w10
+[Stage 5.3.3 table_neural_not_weighted_tuned_hazard_by_week_w10 — Neural hazard by week]
+table_name=table_neural_not_weighted_tuned_hazard_by_week_w10
+rows=11, cols=6
+ week  mean_pred_hazard  median_pred_hazard  mean_pred_survival  mean_pred_risk  n_rows
+    0          0.012133            0.006238            0.987867        0.012133    9778
+    1          0.012157            0.006153            0.976027        0.023973    9553
+    2          0.012319            0.006194            0.964118        0.035882    9242
+    3          0.012424            0.006404            0.952259        0.047741    9189
+    4          0.012471            0.006467            0.940511        0.059489    9073
+    5          0.012087            0.006302            0.929314        0.070686    8979
+    6          0.012216            0.006385            0.918029        0.081971    8916
+    7          0.012033            0.006271            0.907170        0.092830    8847
+    8          0.012198            0.006289            0.896350        0.103650    8771
+    9          0.012735            0.006473            0.885111        0.114889    8697
+   10          0.012390            0.006246            0.874167        0.125833    8625
+ARTIFACT | Stage 5.3.3 table_neural_not_weighted_tuned_hazard_by_week_w10 — Neural hazard by week | duckdb://table_neural_not_weighted_tuned_hazard_by_week_w10
+ARTIFACT | neural_model | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/models/neural_discrete_time_survival_not_weighted_tuned_w10.pt
+ARTIFACT | neural_preprocessor | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/models/neural_discrete_time_not_weighted_preprocessor_w10.joblib
+ARTIFACT | neural_tuned_model_config | /Users/rafars/dropout_benchmark_desenv/outputs_benchmark_survival/metadata/neural_not_weighted_tuned_model_config_w10.json
+{
+  "model_name": "neural_discrete_time_survival_not_weighted_tuned",
+  "search_strategy": "controlled_grid_search",
+  "selection_criterion": "lowest_validation_loss",
+  "validation_split": {
+    "method": "GroupShuffleSplit",
+    "unit": "enrollment_id",
+    "test_size": 0.1,
+    "random_seed": 42
+  },
+  "batch_size": 1024,
+  "max_epochs": 30,
+  "early_stopping_patience": 5,
+  "optimizer": "Adam",
+  "loss": "BCEWithLogitsLoss()",
+  "random_state": 42,
+  "run_label": "dynamic_window_w10",
+  "is_window_truncated_run": true,
+  "active_window_weeks": 10,
+  "output_suffix": "_w10",
+  "device": "cpu",
+  "benchmark_horizons": [
+    10,
+    20,
+    30
+  ],
+  "calibration_bins": 10,
+  "calibration_contract_version": "v2_ipcw_km_observed_risk",
+  "calibration_observed_risk_method": "ipcw_km_pseudo_event_rate",
+  "best_candidate": {
+    "candidate_id": 19,
+    "hidden_dims": [
+      128,
+      64
+    ],
+    "dropout": 0.1,
+    "learning_rate": 0.0005,
+    "weight_decay": 1e-05,
+    "best_val_loss": 0.05719457785396472,
+    "best_epoch": 26
+  },
+  "preprocessing": {
+    "categorical_features": [
+      "gender",
+      "region",
+      "highest_education",
+      "imd_band",
+      "age_band",
+      "disability"
+    ],
+    "numeric_features": [
+      "num_of_prev_attempts",
+      "studied_credits",
+      "week",
+      "total_clicks_week",
+      "active_this_week",
+      "n_vle_rows_week",
+      "n_distinct_sites_week",
+      "cum_clicks_until_t",
+      "recency",
+      "streak"
+    ],
+    "categorical_encoder": "OneHotEncoder(handle_unknown=ignore, sparse_output=False)",
+    "numeric_scaler": "StandardScaler"
+  },
+  "weighting_strategy": "none; this official D5.3 variant uses the same grouped validation protocol and evaluation contract without positive-class loss weighting.",
+  "design_note": "Enrollment truth and evaluation alignment are derived directly from the neural person-period tables so the Item 6 comparison changes only the fitting loss in the weighted sensitivity counterpart, not the evaluation contract."
+}
+
+ candidate_id hidden_dims  dropout  learning_rate  weight_decay  best_val_loss  best_epoch
+           19   [128, 64]      0.1         0.0005       0.00001       0.057195          26
+[END] 5.3.3 - 2026-06-19 18:40:00
+[START] 5.3 - 2026-06-19 18:40:00
+# ==============================================================
+# 5.3.4 - Close the DuckDB runtime cleanly
+# ==============================================================
+DuckDB connection closed.
+[END] 5.3.4 - 2026-06-19 18:40:01

@@ -93,9 +93,9 @@
     "learning_rate": 0.05,
     "iterations": 450,
     "l2_leaf_reg": 10.0,
-    "val_log_loss": 0.07453237441952382,
-    "val_brier": 0.0159300278469914,
-    "val_roc_auc": 0.7948289627452988
+    "val_log_loss": 0.07465428615311238,
+    "val_brier": 0.015947559497639704,
+    "val_roc_auc": 0.7946122199185832
   },
   "implementation": {
     "library": "catboost",
