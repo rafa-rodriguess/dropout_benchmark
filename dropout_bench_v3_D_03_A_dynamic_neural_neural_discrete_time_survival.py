@@ -210,7 +210,7 @@ NEURAL_GRID = tuple(
     }
     for candidate_id, (hidden_dims, dropout, learning_rate, weight_decay) in enumerate(
         itertools.product(
-            ([64, 32], [128, 64]),
+            ([32, 16], [64, 32], [128, 64]),
             (0.10, 0.30),
             (1e-3, 5e-4),
             (1e-5, 1e-4),

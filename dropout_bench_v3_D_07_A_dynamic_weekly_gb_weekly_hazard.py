@@ -106,10 +106,30 @@ VALIDATION_TEST_SIZE = base.VALIDATION_TEST_SIZE
 HGB_SEARCH_ROW_CAP = 80_000
 HGB_FINAL_ROW_CAP = 120_000
 HGB_CANDIDATE_GRID = (
-	{"max_depth": 2, "learning_rate": 0.02, "max_iter": 80, "min_samples_leaf": 300, "l2_regularization": 5.0},
-	{"max_depth": 3, "learning_rate": 0.03, "max_iter": 120, "min_samples_leaf": 200, "l2_regularization": 5.0},
-	{"max_depth": 3, "learning_rate": 0.05, "max_iter": 200, "min_samples_leaf": 160, "l2_regularization": 10.0},
+	{"max_depth": 2, "learning_rate": 0.02, "max_iter": 80,  "min_samples_leaf": 300, "l2_regularization": 5.0},
+	{"max_depth": 2, "learning_rate": 0.02, "max_iter": 150, "min_samples_leaf": 200, "l2_regularization": 5.0},
+	{"max_depth": 2, "learning_rate": 0.03, "max_iter": 120, "min_samples_leaf": 300, "l2_regularization": 5.0},
 	{"max_depth": 2, "learning_rate": 0.05, "max_iter": 120, "min_samples_leaf": 300, "l2_regularization": 1.0},
+	{"max_depth": 2, "learning_rate": 0.05, "max_iter": 200, "min_samples_leaf": 160, "l2_regularization": 5.0},
+	{"max_depth": 2, "learning_rate": 0.08, "max_iter": 150, "min_samples_leaf": 200, "l2_regularization": 5.0},
+	{"max_depth": 2, "learning_rate": 0.10, "max_iter": 100, "min_samples_leaf": 250, "l2_regularization": 5.0},
+	{"max_depth": 2, "learning_rate": 0.10, "max_iter": 200, "min_samples_leaf": 160, "l2_regularization": 10.0},
+	{"max_depth": 3, "learning_rate": 0.02, "max_iter": 150, "min_samples_leaf": 300, "l2_regularization": 10.0},
+	{"max_depth": 3, "learning_rate": 0.03, "max_iter": 120, "min_samples_leaf": 200, "l2_regularization": 5.0},
+	{"max_depth": 3, "learning_rate": 0.03, "max_iter": 200, "min_samples_leaf": 160, "l2_regularization": 5.0},
+	{"max_depth": 3, "learning_rate": 0.05, "max_iter": 120, "min_samples_leaf": 160, "l2_regularization": 5.0},
+	{"max_depth": 3, "learning_rate": 0.05, "max_iter": 200, "min_samples_leaf": 200, "l2_regularization": 10.0},
+	{"max_depth": 3, "learning_rate": 0.08, "max_iter": 100, "min_samples_leaf": 300, "l2_regularization": 5.0},
+	{"max_depth": 3, "learning_rate": 0.08, "max_iter": 200, "min_samples_leaf": 160, "l2_regularization": 10.0},
+	{"max_depth": 3, "learning_rate": 0.10, "max_iter": 80,  "min_samples_leaf": 300, "l2_regularization": 10.0},
+	{"max_depth": 4, "learning_rate": 0.02, "max_iter": 200, "min_samples_leaf": 300, "l2_regularization": 10.0},
+	{"max_depth": 4, "learning_rate": 0.03, "max_iter": 150, "min_samples_leaf": 250, "l2_regularization": 10.0},
+	{"max_depth": 4, "learning_rate": 0.05, "max_iter": 100, "min_samples_leaf": 300, "l2_regularization": 10.0},
+	{"max_depth": 4, "learning_rate": 0.05, "max_iter": 200, "min_samples_leaf": 200, "l2_regularization": 10.0},
+	{"max_depth": 4, "learning_rate": 0.08, "max_iter": 80,  "min_samples_leaf": 300, "l2_regularization": 5.0},
+	{"max_depth": 4, "learning_rate": 0.10, "max_iter": 80,  "min_samples_leaf": 200, "l2_regularization": 10.0},
+	{"max_depth": 4, "learning_rate": 0.10, "max_iter": 150, "min_samples_leaf": 160, "l2_regularization": 10.0},
+	{"max_depth": 4, "learning_rate": 0.10, "max_iter": 250, "min_samples_leaf": 160, "l2_regularization": 10.0},
 )
 WINDOW_WEEK_COLUMN = "week"
 

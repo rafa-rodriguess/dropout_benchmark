@@ -1155,6 +1155,7 @@ from sklearn.preprocessing import OneHotEncoder, StandardScaler
 try:
     from pycox.evaluation import EvalSurv
     from pycox.models import LogisticHazard
+    from pycox import utils as _pycox_utils
     PYCOX_AVAILABLE = True
 except Exception:
     PYCOX_AVAILABLE = False
@@ -1228,7 +1229,7 @@ def _build_truth_pp(df: pd.DataFrame) -> pd.DataFrame:
         .reset_index(drop=True)
     )
     truth["duration"] = truth.apply(
-        lambda r: int(r["t_event_week"]) if pd.notna(r["t_event_week"]) else int(r["t_final_week"]),
+        lambda r: max(1, int(r["t_event_week"])) if pd.notna(r["t_event_week"]) else max(1, int(r["t_final_week"])),
         axis=1,
     ).astype(int)
     truth["event"] = truth["event"].astype(int)
@@ -1244,9 +1245,17 @@ def _reconstruct_survival(test_df: pd.DataFrame, hazard_probs: np.ndarray, max_w
     df = df.sort_values(["enrollment_id", "week"])
     df["cumulative_survival"] = df.groupby("enrollment_id")["survival_factor"].cumprod()
     pivot = df.pivot(index="week", columns="enrollment_id", values="cumulative_survival")
-    # Fill any missing weeks by forward-filling, then backward-filling
-    week_grid = pd.RangeIndex(start=1, stop=max_week + 1, step=1)
-    pivot = pivot.reindex(week_grid).ffill().bfill().clip(lower=0.0, upper=1.0)
+    # Reindex including week 0 so that enrollments with data only at week=0
+    # have an anchor value for forward-fill; week 0 defaults to 1.0 (no dropout yet).
+    extended_grid = pd.RangeIndex(start=0, stop=max_week + 1, step=1)
+    pivot = pivot.reindex(extended_grid)
+    # Seed week-0 row with 1.0 for any column that has no week-0 observation
+    pivot.loc[0] = pivot.loc[0].fillna(1.0)
+    # Forward-fill (week 0 anchors subjects without early observations), then
+    # backward-fill (handles any remaining NaN at the start), then drop week 0.
+    pivot = pivot.ffill().bfill().clip(lower=0.0, upper=1.0)
+    pivot = pivot.drop(index=0)
+    pivot.index = pd.RangeIndex(start=1, stop=max_week + 1, step=1)
     pivot.columns.name = "enrollment_id"
     return pivot
 
@@ -1256,7 +1265,8 @@ def _evaluate_pp_survival(surv_df: pd.DataFrame, truth_test: pd.DataFrame, horiz
     durations = truth_test["duration"].astype(int).to_numpy()
     events = truth_test["event"].astype(int).to_numpy()
 
-    eval_surv = EvalSurv(surv=surv_df, durations=durations, events=events, censor_surv="km")
+    eval_surv = EvalSurv(surv=surv_df, durations=durations, events=events,
+                         censor_surv=_build_censor_surv_df(surv_df.shape[1]))
 
     primary_rows = []
     try:
@@ -1273,7 +1283,6 @@ def _evaluate_pp_survival(surv_df: pd.DataFrame, truth_test: pd.DataFrame, horiz
     except Exception as exc:
         ibs_value = np.nan
         ibs_note = f"failed: {exc}"
-
     primary_rows.append({"metric_name": "ibs", "metric_value": ibs_value, "notes": ibs_note})
     primary_rows.append({"metric_name": "c_index", "metric_value": c_index, "notes": c_note})
     primary_df = pd.DataFrame(primary_rows)
@@ -1382,6 +1391,27 @@ def _evaluate_pp_survival(surv_df: pd.DataFrame, truth_test: pd.DataFrame, horiz
 def _load_neural_config(window: int = 4) -> dict:
     cfg_path = METADATA_DIR / f"neural_not_weighted_tuned_model_config_w{window}.json"
     return _read_json_f3(cfg_path)["best_candidate"]
+
+
+# ------------------------------
+# Shared Ĝ(t) — KM censoring estimator built once from the canonical
+# enrollment-level test data. Passed to both F3 (person-period arm) and
+# F4 (comparable arm) so IPCW weights are identical across arms and
+# scenarios. Built from enrollment_cox_ready_test because that table uses
+# the post-processed `duration` column (minimum ≥ 1), matching F4's source.
+# ------------------------------
+_enroll_ref = load_duckdb_table_or_raise("enrollment_cox_ready_test")
+_dur_ref = _enroll_ref["duration"].astype(int).to_numpy()
+_ev_ref  = _enroll_ref["event"].astype(int).to_numpy()
+_KM_G_HAT = _pycox_utils.kaplan_meier(_dur_ref, 1 - _ev_ref)
+
+
+def _build_censor_surv_df(n_subjects: int) -> pd.DataFrame:
+    """Replicate the shared KM censoring curve as a n_subjects-column DataFrame."""
+    return pd.DataFrame(
+        np.repeat(_KM_G_HAT.values.reshape(-1, 1), n_subjects, axis=1),
+        index=_KM_G_HAT.index,
+    )
 
 
 # ------------------------------
@@ -1868,7 +1898,7 @@ def evaluate_continuous_survival(surv_df: pd.DataFrame, truth_test: pd.DataFrame
         surv=surv_df,
         durations=durations_test,
         events=events_test,
-        censor_surv="km",
+        censor_surv=_build_censor_surv_df(surv_df.shape[1]),
     )
 
     primary_rows = []

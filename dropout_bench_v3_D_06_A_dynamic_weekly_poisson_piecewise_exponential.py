@@ -77,7 +77,16 @@ PREPROCESSING_CONFIG_NAME = "poisson_piecewise_exponential_not_weighted_preproce
 MODEL_CONFIG_NAME = "poisson_piecewise_exponential_not_weighted_tuned_model_config.json"
 MODEL_ARTIFACT_NAME = "poisson_piecewise_exponential_not_weighted_tuned.joblib"
 PREPROCESSOR_ARTIFACT_NAME = "poisson_piecewise_exponential_not_weighted_preprocessor.joblib"
-ALPHA_GRID = (2e-5, 5e-5, 1e-4, 1e-3, 1e-2, 5e-2)
+ALPHA_GRID = (
+    1e-5, 2e-5, 5e-5,
+    1e-4, 2e-4, 5e-4,
+    1e-3, 2e-3, 5e-3,
+    1e-2, 2e-2, 5e-2,
+    1e-1, 2e-1, 3e-1,
+    5e-1, 7e-1, 1.0,
+    2.0,  5.0,  10.0,
+    20.0, 50.0, 100.0,
+)
 WINDOW_WEEK_COLUMN = "week"
 STAGE_PREFIX = "5.6b"
 PREVIEW_ROWS = shared_base.PREVIEW_ROWS

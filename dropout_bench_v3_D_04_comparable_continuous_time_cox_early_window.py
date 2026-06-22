@@ -182,10 +182,10 @@ STATIC_NUMERIC_FEATURES = [
 ]
 FULL_COX_GRID = tuple(
     (float(penalizer), float(l1_ratio))
-    for penalizer in (0.001, 0.01, 0.05, 0.1, 0.2)
-    for l1_ratio in (0.0, 0.25, 0.5, 0.75, 1.0)
+    for penalizer in (0.001, 0.01, 0.05, 0.1, 0.2, 0.5)
+    for l1_ratio in (0.0, 0.25, 0.5, 0.75)
 )
-EXCLUDED_COX_GRID = frozenset({(0.001, 1.0), (0.01, 1.0)})
+EXCLUDED_COX_GRID = frozenset()
 COX_TUNING_GRID = tuple(
     {
         "candidate_id": candidate_id,

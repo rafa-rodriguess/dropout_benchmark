@@ -4490,10 +4490,10 @@ def generate_benchmark_figure(output_path):
     axes[1].set_axisbelow(True)
     # Shared legend for arm identity
     from matplotlib.patches import Patch
-    legend_handles = [Patch(color="#2a9d8f", label="Dynamic arm"), Patch(color="#1a6b5f", label="Comparable arm")]
+    legend_handles = [Patch(color="#2a9d8f", label="Family A — Dynamic Weekly"), Patch(color="#1a6b5f", label="Family B — Static Early-Window")]
     figure.legend(handles=legend_handles, loc="lower center", ncol=2, fontsize=10,
                   frameon=False, bbox_to_anchor=(0.5, -0.04))
-    figure.suptitle("Benchmark comparison across all tuned model families", fontsize=14, y=1.02)
+    figure.suptitle("Benchmark comparison across all tuned models", fontsize=14, y=1.02)
     figure.savefig(output_path, dpi=200, bbox_inches="tight")
     plt.close(figure)
     return True
@@ -4596,22 +4596,17 @@ def generate_ablation_figure(output_path):
     ibs_temporal_all = pd.to_numeric(plot_df["Delta IBS temporal"].replace("---", _np.nan), errors="coerce")
     td_static = pd.to_numeric(plot_df["Delta TD concordance static"].replace("---", _np.nan), errors="coerce").abs()
     td_temporal = pd.to_numeric(plot_df["Delta TD concordance temporal"].replace("---", _np.nan), errors="coerce").abs()
-    # IBS panel: only rows where IBS data exists (comparable arm only)
-    ibs_mask = ibs_static_all.notna() | ibs_temporal_all.notna()
-    ibs_df = plot_df[ibs_mask].copy()
-    ibs_static = ibs_static_all[ibs_mask]
-    ibs_temporal = ibs_temporal_all[ibs_mask]
     figure, axes = plt.subplots(1, 2, figsize=(16, 7), constrained_layout=True)
     height = 0.35
-    # IBS panel — comparable arm only (filtered rows)
-    y_ibs = list(range(len(ibs_df)))
+    # IBS panel — all paradigms (both Family A and Family B)
+    y_ibs = list(range(len(plot_df)))
     y_ibs_static = [y + height / 2 for y in y_ibs]
     y_ibs_temporal = [y - height / 2 for y in y_ibs]
-    axes[0].barh(y_ibs_static, ibs_static.values, height=height, color="#8ecae6", label="Remove static")
-    axes[0].barh(y_ibs_temporal, ibs_temporal.values, height=height, color="#219ebc", label="Remove temporal")
+    axes[0].barh(y_ibs_static, ibs_static_all.values, height=height, color="#8ecae6", label="Remove static")
+    axes[0].barh(y_ibs_temporal, ibs_temporal_all.values, height=height, color="#219ebc", label="Remove temporal")
     axes[0].set_yticks(y_ibs)
-    axes[0].set_yticklabels(ibs_df["Model"].values, fontsize=10)
-    axes[0].set_title("IBS increase (comparable arm only)", fontsize=12)
+    axes[0].set_yticklabels(plot_df["Model"].values, fontsize=10)
+    axes[0].set_title("IBS increase (Family A + Family B)", fontsize=12)
     axes[0].set_xlabel("Delta IBS", fontsize=11)
     axes[0].xaxis.grid(True, linestyle="--", alpha=0.5)
     axes[0].set_axisbelow(True)
@@ -4624,7 +4619,7 @@ def generate_ablation_figure(output_path):
     axes[1].barh(y_td_temporal, td_temporal.values, height=height, color="#fb8500", label="Remove temporal")
     axes[1].set_yticks(y_td)
     axes[1].set_yticklabels(plot_df["Model"].values, fontsize=10)
-    axes[1].set_title("TD concordance drop (both arms)", fontsize=12)
+    axes[1].set_title("TD concordance drop (both families)", fontsize=12)
     axes[1].set_xlabel("|\u0394 TD Concordance|", fontsize=11)
     axes[1].xaxis.grid(True, linestyle="--", alpha=0.5)
     axes[1].set_axisbelow(True)
@@ -4784,7 +4779,7 @@ def generate_explainability_figure(output_path):
     n_comp = sum(1 for m in labels if m in set(comparable_order))
     if 0 < n_comp < n_models:
         axis.axhline(n_comp - 0.5, color="#555", linewidth=1.0, linestyle="--")
-        axis.text(1.01, n_comp - 0.5, "  Dynamic arm", va="center", ha="left",
+        axis.text(1.01, n_comp - 0.5, "  Family A — Dynamic Weekly", va="center", ha="left",
                   transform=axis.get_yaxis_transform(), fontsize=9, color="#444")
         axis.text(1.01, n_comp - 0.5 - (n_models - n_comp) / 2, "", va="center", ha="left",
                   transform=axis.get_yaxis_transform(), fontsize=9, color="#444")
@@ -4792,15 +4787,15 @@ def generate_explainability_figure(output_path):
     axis.set_yticklabels(labels, fontsize=11)
     axis.set_xlim(0, 1.0)
     axis.set_xlabel("Proportion of total importance", fontsize=11)
-    axis.set_title("Feature block dominance by model family (row-normalized)", fontsize=13)
+    axis.set_title("Feature block dominance by model (row-normalized)", fontsize=13)
     axis.xaxis.set_major_formatter(plt.matplotlib.ticker.PercentFormatter(xmax=1))
     axis.xaxis.grid(True, linestyle="--", alpha=0.4)
     axis.set_axisbelow(True)
     # Arm labels on Y axis side
-    axis.annotate("Comparable arm", xy=(0, 0), xytext=(-0.32, (n_comp - 1) / 2.0),
+    axis.annotate("Family B — Static Early-Window", xy=(0, 0), xytext=(-0.32, (n_comp - 1) / 2.0),
                   xycoords="data", textcoords=("axes fraction", "data"),
                   fontsize=9, color="#333", rotation=90, ha="center", va="center")
-    axis.annotate("Dynamic arm", xy=(0, 0), xytext=(-0.32, n_comp + (n_models - n_comp - 1) / 2.0),
+    axis.annotate("Family A — Dynamic Weekly", xy=(0, 0), xytext=(-0.32, n_comp + (n_models - n_comp - 1) / 2.0),
                   xycoords="data", textcoords=("axes fraction", "data"),
                   fontsize=9, color="#333", rotation=90, ha="center", va="center")
     axis.legend(loc="upper center", bbox_to_anchor=(0.5, -0.10), ncol=len(block_columns),

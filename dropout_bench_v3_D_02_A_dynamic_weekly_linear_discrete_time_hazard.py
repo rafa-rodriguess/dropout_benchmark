@@ -187,14 +187,30 @@ FEATURE_ALIAS_MAP = {"total_clicks": "total_clicks_week"}
 MODEL_NAME = "linear_discrete_time_hazard_not_weighted_tuned"
 VALIDATION_TEST_SIZE = 0.20
 LINEAR_TUNING_GRID = (
-    {"candidate_id": 1, "penalty": "l1", "C": 0.01},
-    {"candidate_id": 2, "penalty": "l1", "C": 0.1},
-    {"candidate_id": 3, "penalty": "l1", "C": 1.0},
-    {"candidate_id": 4, "penalty": "l1", "C": 10.0},
-    {"candidate_id": 5, "penalty": "l2", "C": 0.01},
-    {"candidate_id": 6, "penalty": "l2", "C": 0.1},
-    {"candidate_id": 7, "penalty": "l2", "C": 1.0},
-    {"candidate_id": 8, "penalty": "l2", "C": 10.0},
+    {"candidate_id": 1,  "penalty": "l1", "C": 0.001},
+    {"candidate_id": 2,  "penalty": "l1", "C": 0.005},
+    {"candidate_id": 3,  "penalty": "l1", "C": 0.01},
+    {"candidate_id": 4,  "penalty": "l1", "C": 0.05},
+    {"candidate_id": 5,  "penalty": "l1", "C": 0.1},
+    {"candidate_id": 6,  "penalty": "l1", "C": 0.5},
+    {"candidate_id": 7,  "penalty": "l1", "C": 1.0},
+    {"candidate_id": 8,  "penalty": "l1", "C": 5.0},
+    {"candidate_id": 9,  "penalty": "l1", "C": 10.0},
+    {"candidate_id": 10, "penalty": "l1", "C": 50.0},
+    {"candidate_id": 11, "penalty": "l1", "C": 100.0},
+    {"candidate_id": 12, "penalty": "l1", "C": 500.0},
+    {"candidate_id": 13, "penalty": "l2", "C": 0.001},
+    {"candidate_id": 14, "penalty": "l2", "C": 0.005},
+    {"candidate_id": 15, "penalty": "l2", "C": 0.01},
+    {"candidate_id": 16, "penalty": "l2", "C": 0.05},
+    {"candidate_id": 17, "penalty": "l2", "C": 0.1},
+    {"candidate_id": 18, "penalty": "l2", "C": 0.5},
+    {"candidate_id": 19, "penalty": "l2", "C": 1.0},
+    {"candidate_id": 20, "penalty": "l2", "C": 5.0},
+    {"candidate_id": 21, "penalty": "l2", "C": 10.0},
+    {"candidate_id": 22, "penalty": "l2", "C": 50.0},
+    {"candidate_id": 23, "penalty": "l2", "C": 100.0},
+    {"candidate_id": 24, "penalty": "l2", "C": 500.0},
 )
 
 
