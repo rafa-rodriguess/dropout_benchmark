@@ -34,37 +34,27 @@ digraph M1 {
     label="Raw OULAD sources";
     color="#C8D5E0";
     style="rounded";
-
-    raw_admin [label="Administrative records\nDemographics · registration · courses", fillcolor="#FFF7E6"];
-    raw_learning [label="Learning activity records\nWeekly VLE interactions · assessments", fillcolor="#FFF7E6"];
+    raw_admin [label="Load administrative records", fillcolor="#FFF7E6"];
+    raw_learning [label="Load learning activity records", fillcolor="#FFF7E6"];
   }
 
-  outcome [label="Define dropout outcome\nWithdrawn + unregistration date → event\nRemaining enrollments → right-censored", fillcolor="#E9F5F2"];
-
-  features [label=<Construct feature blocks<BR/>Static: demographic and academic attributes<BR/>Temporal: weekly click and activity summaries<BR/>Early-window: cumulative activity over weeks 0&#8211;3<BR/><B><FONT COLOR="darkgreen">&#8594; Table 'Feature Blocks'</FONT></B>>, fillcolor="#E9F5F2"];
-
-  split [label=<Partition into train / test sets<BR/>Stratified by outcome &#183; deterministic<BR/><B><FONT COLOR="darkgreen">&#8594; Table 'Split and Contextual Overlap Audit'</FONT></B>>, fillcolor="#E9F5F2"];
+  outcome [label="Define dropout outcome", fillcolor="#E9F5F2"];
+  features [label="Construct feature blocks", fillcolor="#E9F5F2"];
+  split [label="Partition into train and test sets", fillcolor="#E9F5F2"];
 
   subgraph cluster_dynamic {
-    label="Dynamic arm representation";
+    label="Family A — Dynamic Weekly";
     color="#9AD1D4";
     style="rounded";
-    dyn [label="Weekly person-period rows\nOne row per enrollment × week\nBinary dropout target at each week", fillcolor="#F2FBFB"];
+    dyn [label="Build weekly person-period rows", fillcolor="#F2FBFB"];
   }
 
   subgraph cluster_comparable {
-    label="Comparable arm representation";
+    label="Family B — Static Early-Window";
     color="#F4A261";
     style="rounded";
-    comp [label="Enrollment-level feature vectors\nFixed early-window snapshot per enrollment\nTime-to-event and censoring label", fillcolor="#FFF8F1"];
+    comp [label="Build enrollment-level feature vectors", fillcolor="#FFF8F1"];
   }
-
-  note_repr [
-    shape=note,
-    label="Two data contracts:\nweekly granularity for the dynamic arm\nfixed enrollment snapshot for the comparable arm",
-    fillcolor="#FFFDEB",
-    color="#B08900"
-  ];
 
   raw_admin -> outcome;
   raw_learning -> outcome;
@@ -72,6 +62,4 @@ digraph M1 {
   features -> split;
   split -> dyn;
   split -> comp;
-  dyn -> note_repr;
-  comp -> note_repr;
 }

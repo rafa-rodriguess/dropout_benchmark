@@ -2,7 +2,7 @@ digraph M2 {
   graph [
     rankdir=TB,
     labelloc=t,
-    label="Harmonized benchmark evaluation flow",
+    label="Unified benchmark evaluation flow",
     fontname="Helvetica",
     fontsize=18,
     pad=0.35,
@@ -32,13 +32,12 @@ digraph M2 {
   ];
 
   ready_tables [
-    label="Benchmark-ready datasets\nWeekly person-period + enrollment vectors",
+    label="Load benchmark-ready datasets",
     fillcolor="#E9F5F2"
   ];
 
-  // ── Dynamic arm ───────────────────────────────────────────────────────
   subgraph cluster_dynamic {
-    label="Dynamic arm — 5 tuned families";
+    label="Family A — Dynamic Weekly (5 models)";
     color="#9AD1D4";
     style="rounded";
 
@@ -58,9 +57,8 @@ digraph M2 {
     d7 -> d8 [style=invis, weight=10];
   }
 
-  // ── Comparable arm ────────────────────────────────────────────────────
   subgraph cluster_comparable {
-    label="Comparable arm — 9 tuned families";
+    label="Family B — Static Early-Window (9 models)";
     color="#F4A261";
     style="rounded";
 
@@ -87,34 +85,31 @@ digraph M2 {
     d12 -> d15 [style=invis, weight=10];
   }
 
-  // ── Shared downstream ────────────────────────────────────────────────
   per_model [
-    label=<Per-model frozen outputs<BR/>Tuned artifact &#183; test predictions<BR/>IBS &#183; TD concordance &#183; Brier by horizon &#183; calibration<BR/><B><FONT COLOR="darkgreen">&#8594; Table 'Preprocessing and Tuning Audit'</FONT></B>>,
+    label="Freeze per-model evaluation outputs",
     fillcolor="#F3F7FA"
   ];
 
   d16 [
-    label=<Consolidate benchmark results<BR/>Primary metric summary by arm<BR/>Window-sensitivity &#183; parity status<BR/><B><FONT COLOR="darkgreen">&#8594; Table 'Main Benchmark Comparison'</FONT></B><BR/><B><FONT COLOR="darkgreen">&#8594; Figure 'Benchmark Comparison — All 14 Families'</FONT></B><BR/><B><FONT COLOR="darkgreen">&#8594; Table 'Evaluation Protocol Audit'</FONT></B><BR/><B><FONT COLOR="darkgreen">&#8594; Table 'Discrete-Time Diagnostic Summary'</FONT></B><BR/><B><FONT COLOR="darkgreen">&#8594; Table 'Discrete-Time Hypothesis Audit'</FONT></B>>,
+    label="Consolidate benchmark results",
     fillcolor="#EAF4EA"
   ];
 
   f_stage [
-    label="Stability and scope layer\nFeature-block ablation · bootstrap uncertainty\nInterpretive-boundary qualification",
+    label="Apply stability and ablation audit",
     fillcolor="#FCEFE8"
   ];
 
   decision [
     shape=note,
-    label="Results reported within each arm separately;\nno single cross-arm ranking is claimed",
+    label="Report results within each family separately",
     fillcolor="#FFFDEB",
     color="#B08900"
   ];
 
-  // Feed into clusters via compound edges (lhead targets the cluster border)
   ready_tables -> d2 [lhead=cluster_dynamic];
   ready_tables -> d4 [lhead=cluster_comparable];
 
-  // Collect via cluster boundary
   d8  -> per_model [ltail=cluster_dynamic];
   d15 -> per_model [ltail=cluster_comparable];
 
