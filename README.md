@@ -100,6 +100,7 @@ Foundation  Features    Split       Modelling             Post-hoc    Ablation  
 | **F** | `dropout_bench_v3_F_ablation_stability_refatorado_v30.py` | Ablation analysis (static vs. temporal-behavioural block removal) on the manuscript-facing representative subset |
 | **G** | `dropout_bench_v3_G_explainability_paper_refatorado_v7.py` | SHAP explainability, calibration figures, and full paper-facing evidence freeze (tables, figures, metadata) |
 | **G13** | `dropout_bench_v3_G_13_supplementary_hyperparameter_grids.py` | Auto-generates `S1_hyperparameter_grids.md` — the complete candidate search grids for all tuned models, sourced from pipeline metadata JSON files |
+| **G14** | `dropout_bench_v3_G_permutation_repeats.py` | Repeated grouped permutation importance (n=30, percentile CI) for all 14 tuned models. DuckDB read-only. Safe to run in a separate terminal. |
 
 All stages read from and write to a single **DuckDB** database (`outputs_benchmark_survival/benchmark_survival.duckdb`), which acts as the canonical analytical store.
 
@@ -197,6 +198,7 @@ Results are reported **within each arm separately**; a cross-arm ranking is not 
 ├── dropout_bench_v3_F_ablation_stability_refatorado_v30.py
 ├── dropout_bench_v3_G_explainability_paper_refatorado_v7.py
 ├── dropout_bench_v3_G_13_supplementary_hyperparameter_grids.py
+├── dropout_bench_v3_G_permutation_repeats.py
 ├── benchmark_shared_config.toml          # Shared runtime configuration (written by Stage A)
 ├── benchmark_modeling_contract.toml      # Feature contract (written by Stage B)
 ├── util.py                               # Shared low-level utilities
@@ -283,6 +285,13 @@ bash exe/status_a1_to_d15_sequential.sh
 /Users/rafars/.pyenv/versions/3.9.13/bin/python dropout_bench_v3_F_ablation_stability_refatorado_v30.py
 /Users/rafars/.pyenv/versions/3.9.13/bin/python dropout_bench_v3_G_explainability_paper_refatorado_v7.py
 /Users/rafars/.pyenv/versions/3.9.13/bin/python dropout_bench_v3_G_13_supplementary_hyperparameter_grids.py
+/Users/rafars/.pyenv/versions/3.9.13/bin/python dropout_bench_v3_G_permutation_repeats.py --n-repeats 30 --resume
+```
+
+G14 is long (14 models × features × 30 repeats). Prefer a **separate terminal**:
+
+```bash
+bash exe/run_permutation_repeats.sh
 ```
 
 ### Re-run only the Experiment AA sequence (D stages onward)
@@ -293,8 +302,8 @@ For re-tuning after grid changes without re-running A/B/C:
 bash exe/run_exp_aa.sh
 ```
 
-This covers: D02 → D03 → D04 → D06 → D07 → D09 → D10 → D11 → D12 → D13 → D14 → D15 → D16 → E → F → G → G13.  
-Estimated total runtime: **5–8 hours**.
+This covers: D02 → D03 → D04 → D06 → D07 → D09 → D10 → D11 → D12 → D13 → D14 → D15 → D16 → E → F → G → G13 → G14.
+Estimated total runtime: **5–8 hours** plus G14 permutation repeats (hours, model-dependent).
 
 ### Run a specific model subset
 
